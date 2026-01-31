@@ -3,7 +3,7 @@ using UnityEngine;
 public class MapManager
 {
     [Header("Play Zone Settings (%)")]
-    [Range(0, 0.5f)] public float topMargin = 0.15f;    // 상단 10% 비움
+    [Range(0, 0.5f)] public float topMargin = 0f;    // 상단 10% 비움
     [Range(0, 0.5f)] public float bottomMargin = 0f; // 하단 15% 비움
 
     public float wallThickness = 0.03f; // 벽의 두께

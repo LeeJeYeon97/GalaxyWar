@@ -282,7 +282,6 @@ public class PlayerController : MonoBehaviour
         // 탄창 가득 채우기
         for (int i = 0; i < bulletCount; i++)
         {
-            //랜덤으로 재장전 불릿 데이터 가져오기
             BulletController bullet = Managers.Pool.Get<BulletController>(Define.Pool.Bullet);
             if (bullet != null)
             {

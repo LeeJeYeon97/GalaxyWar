@@ -14,12 +14,12 @@ public struct AbilityInfo
     [Header("선행 조건 설정")]
     // 이 값이 Unknown이면 선행 조건이 없는 것임
     public AbilityType _requiredAbility;
-
+    public IAbilityApplier _applier;        // 능력치 얻었을 때 실행할 함수
     public float values;
 }
 public class AbilityManager 
 {
-    // 현재 플레이어가 보유한 능력 (UI 표시용)
+    // 현재 플레이어가 보유한 능력
     private Dictionary<AbilityType, AbilityInfo> _abilities = new Dictionary<AbilityType, AbilityInfo>();
 
     public void Init()
@@ -79,15 +79,9 @@ public class AbilityManager
             // --- [이미 보유한 경우: 레벨업 및 수치 추가] ---
             info.curLevel++;
 
-            // 데이터에 정의된 해당 레벨의 증가치를 현재 합산 리스트에 반영
-            if (data.values.Count >= info.curLevel)
-            {
-                float value = data.values[info.curLevel - 1];
-                // 합산된 총 수치를 저장
-                info.values += value;
-
-                Debug.Log($"[{data.abilityname}] 강화! Lv.{info.curLevel}, 총합: {info.values}");
-            }
+            Debug.Log($"[{data.abilityname}] 강화! Lv.{info.curLevel}, 총합: {info.values}");
+            // 능력 실행
+            info._applier.Apply(data, info.curLevel);
 
             // ★ 중요: 구조체는 값 타입이므로 수정한 뒤 다시 딕셔너리에 넣어줘야 합니다.
             _abilities[data.type] = info;
@@ -101,7 +95,10 @@ public class AbilityManager
                 maxLevel = data.maxLevel,
                 curLevel = 1,
                 _requiredAbility = data._requiredAbility,
-                values = data.values[0]
+                values = data.values[0],
+                // ★ 자동으로 이름 찾아서 new 해줌!
+                _applier = CreateApplier(data)
+                
             };
             
             _abilities.Add(data.type, newInfo);
@@ -111,36 +108,6 @@ public class AbilityManager
 
         // 2. ★ StatManager의 BulletStat에 수치 반영 ★
         float increaseValue = data.values[GetCurrentLevel(data.type) - 1];
-
-        switch (data.type)
-        {
-            case AbilityType.Unknown:
-                break;
-            case AbilityType.UpgradeBaseBulletDamage:
-                break;
-            case AbilityType.UpgradeBaseBulletHp:
-                break;
-            case AbilityType.UpgradeBaseBulletCount:
-                break;
-            case AbilityType.ActivateSplitBullet:
-                break;
-            case AbilityType.UpgradeSplitBulletDamage:
-                break;
-            case AbilityType.UpgradeSplitBulletCount:
-                break;
-            case AbilityType.UpgradeSplitBulletChance:
-                break;
-            case AbilityType.ActivateExplosionBullet:
-                BulletStat stat = Managers.Stat.GetBulletStat(BulletType.ExplosionBullet);
-                stat.isActivated = true;
-                break;
-            case AbilityType.UpgradeExplosionDamage:
-                break;
-            case AbilityType.UpgradeExplosionRange:
-                break;
-            case AbilityType.UpgradeExplosionChance:
-                break;
-        }
     }
     // 특정 능력의 현재 레벨 반환
     public int GetCurrentLevel(AbilityType type)
@@ -148,6 +115,26 @@ public class AbilityManager
         if (_abilities.TryGetValue(type, out AbilityInfo info))
             return info.curLevel;
         return 0;
+    }
+
+    private IAbilityApplier CreateApplier(AbilityDataSO data)
+    {
+        // 1. Enum 이름을 문자열로 변환 (예: "ActivateExplosionBullet")
+        string className = data.type.ToString();
+
+        // 2. 현재 어셈블리(내 프로젝트 코드)에서 해당 이름의 클래스 타입을 찾음
+        System.Type t = System.Type.GetType(className);
+
+        if (t != null)
+        {
+            // 3. 찾은 타입으로 인스턴스 생성 (new 하는 것과 동일)
+            IAbilityApplier applier = System.Activator.CreateInstance(t) as IAbilityApplier;
+            applier.Apply(data, 1);
+            return applier;
+        }
+
+        Debug.LogError($"[AbilityManager] {className} 클래스를 찾을 수 없습니다!");
+        return null;
     }
 
 }

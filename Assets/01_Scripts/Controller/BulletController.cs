@@ -32,9 +32,6 @@ public class BulletController : MonoBehaviour
     {
         if(_rb == null) _rb = Util.GetOrAddComponent<Rigidbody2D>(gameObject);
         
-       
-
-
     }
     private void OnEnable()
     {

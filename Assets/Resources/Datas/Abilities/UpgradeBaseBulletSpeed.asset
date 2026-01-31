@@ -10,19 +10,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 889aa765f6861a545b2407506586b41f, type: 3}
-  m_Name: UpgradeExplosionChance
+  m_Name: UpgradeBaseBulletSpeed
   m_EditorClassIdentifier: Assembly-CSharp::AbilityDataSO
-  type: 11
-  abilityname: "\uD3ED\uBC1C\uD0C4 \uD655\uB960 \uC99D\uAC00"
-  description: "\uD3ED\uBC1C\uD0C4\uC758 \uBC1C\uB3D9 \uD655\uB960 {0}%\uB9CC\uD07C
+  type: 2
+  abilityname: "\uAE30\uBCF8\uD0C4 \uCCB4\uB825\uAC15\uD654"
+  description: "\uAE30\uBCF8\uD0C4\uC758 \uD295\uAE30\uB294 \uD69F\uC218\uAC00 {0}\uB9CC\uD07C
     \uC99D\uAC00\uD569\uB2C8\uB2E4."
   icon: {fileID: 0}
   maxLevel: 5
   curLevel: 0
-  _requiredAbility: 8
+  _requiredAbility: 0
   values:
-  - 10
-  - 10
-  - 10
-  - 10
-  - 10
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
