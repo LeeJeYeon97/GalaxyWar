@@ -13,7 +13,7 @@ using UnityEngine.InputSystem;
 public class DataManager 
 {
     // 모든 데이터 담고 있는 딕셔너리
-    public Dictionary<Define.BulletType, BulletDataSO> BulletDataDict { get; private set; }
+    public Dictionary<Define.BulletType, BulletStatDataSO> BulletDataDict { get; private set; }
     public Dictionary<Define.AbilityType, AbilityDataSO> AbilityDataDict { get; private set; }
 
     public GameDataSO GameData { get; private set; }
@@ -21,7 +21,7 @@ public class DataManager
     {
         // [사용 예시]
         // 1. Bullets는 SO의 'name'을 키로 사용
-        BulletDataDict = LoadDataToDict<Define.BulletType, BulletDataSO>("Bullets", data => data.type);
+        BulletDataDict = LoadDataToDict<Define.BulletType, BulletStatDataSO>("Bullets", data => data.type);
 
         // 2. Abilities는 만약 내부에 'abilityID' 같은 별도 필드가 있다면 그것을 키로 사용
         // AbilityDataDict = LoadDataToDict<string, AbilityDataSO>("Abilities", data => data.abilityID);
@@ -66,7 +66,7 @@ public class DataManager
         return dict;
     }
 
-    public BulletDataSO GetBulletData(Define.BulletType type)
+    public BulletStatDataSO GetBulletData(Define.BulletType type)
     {
         if(BulletDataDict.TryGetValue(type, out var data))
         {

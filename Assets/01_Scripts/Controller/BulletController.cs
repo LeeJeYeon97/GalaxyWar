@@ -42,30 +42,73 @@ public class BulletController : MonoBehaviour
     {
         Managers.Game.RemoveActiveObject(this);
     }
+    private void FixedUpdate()
+    {
+        // 정지 상태가 아닐 때만 회전 처리
+        if (_rb.bodyType == RigidbodyType2D.Dynamic && _rb.linearVelocity.sqrMagnitude > 0.1f)
+        {
+            // 1. 현재 물리 엔진이 계산한 속도의 방향을 가져옴
+            Vector2 currentDir = _rb.linearVelocity.normalized;
 
-    public void SetBullet()
-    {      
+            // 2. 방향을 각도로 변환
+            float angle = Mathf.Atan2(currentDir.y, currentDir.x) * Mathf.Rad2Deg;
+
+            // 3. 회전 적용 (파티클이 뒤로 뿜어져 나오는 구조라면 -90f 유지)
+            transform.rotation = Quaternion.Euler(0, 0, angle - 90f);
+
+            // 4. (선택사항) 내 방향 변수도 최신화해서 분열탄 등에 사용
+            _direction = currentDir;
+        }
+    }
+    public void SetBullet(BulletStat stat = null)
+    {
+        if (gameObject.activeSelf == true)
+        {
+            gameObject.SetActive(false);
+        }
+
         // 불릿 데이터 뽑기
-        _stat = Managers.Game.GetRandomBullet();
+        if (stat == null)
+        {
+            _stat = Managers.Game.GetRandomBullet();
+        }
+        else
+        {
+            _stat = stat;
+        }
 
+        SetPhysicsState(true); // 대기 중엔 물리 끄기
         _currentHp = (int)_stat.hp.TotalValue;
 
         _rb.angularVelocity = 0f;
     }
-
+    // 스플릿된 불릿 설정용
+    public void SetSplitBullet()
+    {
+        _stat.canSplit = true;
+    }
 
     // 충돌
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void OnCollisionEnter2D(Collision2D collision)
     {
+        PlayHitEffect(collision);
+
         // "brick" 변수를 선언함과 동시에 컴포넌트가 있는지 시도함
-        if (collision.gameObject.TryGetComponent<MeteorController>(out MeteorController brick))
+        MeteorController meteor = collision.gameObject.GetComponentInParent<MeteorController>();
+        if (meteor)
         {
+            // 파라미터 팩 만들기
+            AbilityExecuteParams param = new AbilityExecuteParams
+            {
+                stat = _stat,
+                target = meteor,
+                collision = collision, // 충돌 정보 통째로 전달
+                incomingDirection = _rb.linearVelocity.normalized // 들어온 방향
+            };
+
             _currentHp--;
-
-            PlayHitEffect(collision);
-
             // 가지고 있는 능력 실행
-            _stat.ability.Execute(_stat, brick);
+            _stat.ability.Execute(param);
 
             if (_currentHp <= 0)
             {
@@ -73,37 +116,25 @@ public class BulletController : MonoBehaviour
                 Managers.Pool.Release(gameObject);
             }
         }
-       else if (collision.CompareTag("Wall"))
-       {
-           // 벽의 노멀값(Normal)을 가져오기 위해 레이캐스트를 살짝 쏩니다.
-           RaycastHit2D hit = Physics2D.Raycast(transform.position, _direction, 0.5f, LayerMask.GetMask("Wall"));
-       
-           if (hit.collider != null)
-           {
-               // Vector2.Reflect(입사벡터, 법선벡터) = 반사벡터
-               _direction = Vector2.Reflect(_direction, hit.normal);
-               _rb.linearVelocity = _direction * _stat.speed.TotalValue;
-       
-               // 총알의 회전도 반사 방향에 맞춰 업데이트 (선택 사항)
-               float angle = Mathf.Atan2(_direction.y, _direction.x) * Mathf.Rad2Deg;
-               transform.rotation = Quaternion.Euler(0, 0, angle - 90f);
-           }
-       }
     }
     
     // 발사
     public void Shot(Vector2 dragVector)
     {
+        if (gameObject.activeSelf == false)
+        {
+            gameObject.SetActive(true);
+        }
         _direction = dragVector.normalized;
         Vector2 force = dragVector * _stat.speed.TotalValue;
-        _rb.bodyType = RigidbodyType2D.Dynamic;
-        _rb.linearVelocity = Vector2.zero;
+
+        SetPhysicsState(false);
         _rb.AddForce(force, ForceMode2D.Impulse);
 
-        // --- 추가: 발사 방향으로 총알 회전 ---
-        float angle = Mathf.Atan2(_direction.y, _direction.x) * Mathf.Rad2Deg;
-        // 파티클이 기본적으로 위(Y축)를 향해 뿜어져 나온다면 -90을 해줍니다.
-        transform.rotation = Quaternion.Euler(0, 0, angle - 90f);
+        //// --- 추가: 발사 방향으로 총알 회전 ---
+        //float angle = Mathf.Atan2(_direction.y, _direction.x) * Mathf.Rad2Deg;
+        //// 파티클이 기본적으로 위(Y축)를 향해 뿜어져 나온다면 -90을 해줍니다.
+        //transform.rotation = Quaternion.Euler(0, 0, angle - 90f);
 
     }
     
@@ -114,7 +145,7 @@ public class BulletController : MonoBehaviour
         if (isKinematic) _rb.linearVelocity = Vector2.zero;
     }
     // 히트 이펙트를 재생하는 별도 함수
-    private void PlayHitEffect(Collider2D collision)
+    private void PlayHitEffect(Collision2D collision)
     {
         // 1. 풀에서 이펙트 오브젝트를 꺼냅니다. (Enum 사용)
         GameObject hitGo = Managers.Pool.Get<GameObject>(Define.Pool.NormalBullet_Hit);
@@ -124,11 +155,13 @@ public class BulletController : MonoBehaviour
             // 2. 충돌 위치 결정
             // OnTrigger는 정확한 ContactPoint를 제공하지 않으므로, 
             // 가장 가까운 지점을 찾거나 총알의 현재 위치를 사용합니다.
-            Vector3 hitPos = collision.ClosestPoint(transform.position);
+            Vector3 hitPos = collision.contacts[0].point;
             hitGo.transform.position = hitPos;
 
-            // 3. 만약 이펙트 프리팹에 ParticleAutoRelease(아까 만든 것)가 붙어있다면
-            // 여기서 별도로 꺼줄 필요 없이 지가 알아서 재생하고 풀로 돌아갑니다.
+            // : 이펙트가 튕겨나가는 방향(Normal)을 바라보게 하고 싶다면?
+            Vector2 hitNormal = collision.contacts[0].normal;
+            float angle = Mathf.Atan2(hitNormal.y, hitNormal.x) * Mathf.Rad2Deg;
+            hitGo.transform.rotation = Quaternion.Euler(0, 0, angle);
         }
     }
 

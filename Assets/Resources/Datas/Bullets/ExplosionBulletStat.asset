@@ -9,16 +9,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c29e3f03ef5089e4fb1857e30a60dc7e, type: 3}
-  m_Name: ExplosionBullet
-  m_EditorClassIdentifier: Assembly-CSharp::ExplosionBulletSO
+  m_Script: {fileID: 11500000, guid: 160ff4ffeb9274541aa09556305862c8, type: 3}
+  m_Name: ExplosionBulletStat
+  m_EditorClassIdentifier: Assembly-CSharp::BulletStatDataSO
   type: 2
   bulletName: "\uD3ED\uBC1C\uD0C4"
-  bulletColor: {fileID: 21300000, guid: 9cb00a5fbe0b54c49a2e4c6a6ad910d3, type: 3}
-  chance: 20
+  chance: 10
   damage: 1
   speed: 10
   hp: 1
   isActivated: 0
   baseExplosionRange: 1
   baseExplosionDamage: 1
+  baseSplitCount: 0
+  baseSplitBulletDamage: 0

@@ -25,7 +25,7 @@ public class GameManager : MonoBehaviour
         // 플레이어 세팅
         _player = GameObject.Find("Player");
         
-        GameObject go = GameObject.Find("SPawner");
+        GameObject go = GameObject.Find("Spawner");
         go.GetComponent<MeteorSpawner>().Init();
 
         

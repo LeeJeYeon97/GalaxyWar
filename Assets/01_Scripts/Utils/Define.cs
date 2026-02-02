@@ -24,7 +24,6 @@ public class Define
         ExplosionRangeIndicator,
         NormalBullet_Hit,
         NormalBullet_Flash,
-
     }
     public enum UIEvent
     {
@@ -57,6 +56,7 @@ public class Define
 
         UpgradeBaseBulletDamage = 1,        // 기본탄 데미지 증가
         UpgradeBaseBulletSpeed = 2,         // 기본탄 속도 증가
+
         UpgradeReloadCount = 3,             // 재장전 개수 증가
 
         ActivateSplitBullet = 4,            // 분열탄 활성화
@@ -66,15 +66,18 @@ public class Define
 
         ActivateExplosionBullet = 8,        // 폭발탄 활성화
         UpgradeExplosionDamage = 9,         // 폭발탄 범위 데미지 증가
-        UpgradeExplosionRange = 10,          // 폭발탄 범위 증가
-        UpgradeExplosionChance = 11,         // 폭발탄 발동 확률 증가
+        UpgradeExplosionRange = 10,         // 폭발탄 범위 증가
+        UpgradeExplosionChance = 11,        // 폭발탄 발동 확률 증가
 
     }
     public enum BulletType
     {
-        NormalBullet = 0,
-        SplitBullet = 1,
-        ExplosionBullet = 2,
+        NormalBullet = 0,       // 기본탄
+        SplitBullet = 1,        // 분열탄
+        ExplosionBullet = 2,    // 폭발탄
+        // 번개탄
+        //~~
+        
     }
 }
 

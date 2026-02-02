@@ -234,18 +234,21 @@ public class PlayerController : MonoBehaviour
             if (bullet != null)
             {
                 bullet.transform.position = _bulletPos.position;
-                bullet.gameObject.SetActive(true);
-                bullet.SetPhysicsState(true);         // 물리 활성화
                 
                // _currentAimDir = (_target.transform.position - transform.position).normalized;
 
                 _currentAimDir = dragDir.normalized;
                 bullet.Shot(_currentAimDir);          // 발사
+
+
+                // 파티클
                 GameObject flash = Managers.Pool.Get<GameObject>(Define.Pool.NormalBullet_Flash);
                 if(flash != null)
                 {
                     flash.transform.position = _bulletPos.position;
                 }
+
+                // 발사 시간 설정
                 _lastShotTime = Time.time;
             }
         }
@@ -285,9 +288,8 @@ public class PlayerController : MonoBehaviour
             BulletController bullet = Managers.Pool.Get<BulletController>(Define.Pool.Bullet);
             if (bullet != null)
             {
-                bullet.gameObject.SetActive(false);
+                
                 bullet.SetBullet();
-                bullet.SetPhysicsState(false); // 대기 중엔 물리 끄기
                 bullets.Add(bullet);
             }
         }

@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7994210264769737220}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: BulletPos
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -41,7 +41,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1919413265439106118}
   - component: {fileID: 5304174863936672186}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Launcher_Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -135,9 +135,9 @@ GameObject:
   - component: {fileID: 1048203270788291924}
   - component: {fileID: -5176430382263173496}
   - component: {fileID: 4662415312149919506}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -177,7 +177,7 @@ MonoBehaviour:
   maxLineLength: 7
   moveForce: 1
   maxSpeed: 1
-  targetRange: 2
+  targetRange: 9.32
   _bulletPos: {fileID: 7994210264769737220}
   bullets: []
   _target: {fileID: 0}

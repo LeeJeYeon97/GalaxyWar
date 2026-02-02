@@ -1,39 +1,49 @@
 using DG.Tweening;
 using UnityEngine;
 
+
+public struct AbilityExecuteParams
+{
+    public BulletStat stat;
+    public MeteorController target;
+    public Collision2D collision; // 여기에 쿨리전 정보를 담습니다
+                                  // .
+    // 필요하다면 들어오는 방향 등도 미리 계산해서 넣을 수 있습니다.
+    public Vector2 incomingDirection;
+}
+
 public interface IBulletAbility
 {
-    void Execute(BulletStat stat, MeteorController target);
+    void Execute(AbilityExecuteParams param);
 }
 
 // 기본탄 
 public class NormalBulletAbility : IBulletAbility
 {
-    public void Execute(BulletStat stat, MeteorController target)
+    public void Execute(AbilityExecuteParams param)
     {
-        if (target == null)
+        if (param.target == null)
         {
             return;
         }
-
-        target.OnDamage(stat.damage.TotalValue);
+        param.target.OnDamage(param.stat.damage.TotalValue);
     }
 }
 // 폭발탄
 public class ExplosionBulletAbility : IBulletAbility
 {
-    public void Execute(BulletStat stat, MeteorController target)
+    public void Execute(AbilityExecuteParams param)
     {
         Debug.Log("폭발탄 실행!");
-        if (stat.type != Define.BulletType.ExplosionBullet ||
-            stat.isActivated == false) return;
+        if (param.stat.type != Define.BulletType.ExplosionBullet ||
+            param.stat.isActivated == false) return;
 
-        float finalRadius = stat.explosionRadius.TotalValue;
-        float finalExplosionDmg = stat.explosionDamage.TotalValue;
+        float finalRadius = param.stat.explosionRadius.TotalValue;
+        float finalExplosionDmg = param.stat.explosionDamage.TotalValue;
 
         // --- 시각적 연출 (기존 로직 그대로 활용) ---
         GameObject indicator = Managers.Pool.Get<GameObject>(Define.Pool.ExplosionRangeIndicator);
-        indicator.transform.position = target.transform.position;
+        indicator.transform.position = param.target.transform.position;
         indicator.transform.localScale = Vector3.zero;
 
         SpriteRenderer sr = indicator.GetComponent<SpriteRenderer>();
@@ -48,7 +58,7 @@ public class ExplosionBulletAbility : IBulletAbility
 
         // --- 실제 범위 데미지 로직 ---
         int layerMask = 1 << LayerMask.NameToLayer("Meteor");
-        Collider2D[] colliders = Physics2D.OverlapCircleAll(target.transform.position, finalRadius, layerMask);
+        Collider2D[] colliders = Physics2D.OverlapCircleAll(param.target.transform.position, finalRadius, layerMask);
         foreach (var col in colliders)
         {
             if (col.TryGetComponent<MeteorController>(out MeteorController meteor))
@@ -61,59 +71,69 @@ public class ExplosionBulletAbility : IBulletAbility
 }
 
 // 분열탄
-public class SplitAbility : IBulletAbility
+public class SplitBulletAbility : IBulletAbility
 {
-    public void Execute(BulletStat stat, MeteorController target)
+    public void Execute(AbilityExecuteParams param)
     {
-        //// 분열탄 활성화 안되어있으면 리턴
-        //if (stat.type != Define.BulletType.SplitBullet || 
-        //    stat.isActivated == false) return;
-        //
-        //// 1. 확률 계산: 기본 사양 + 강화 수치
-        ////float totalChance = stat.chance.TotalValue;
-        ////
-        ////if (Random.value > totalChance) return;
-        ////
-        ////Debug.Log("분열 완료!");
-        //// 2. 최종 분열 개수 (float을 int로 반올림)
-        //
-        //int totalCount = Mathf.RoundToInt(stat.splitCount.TotalValue);
-        //
-        //// 2. 현재 공의 물리 정보 (진행 방향 및 속도)
-        //Vector2 currentVelocity = _rb.linearVelocity;
-        //float currentSpeed = currentVelocity.magnitude;
-        //
-        //// 공이 너무 느리거나 멈춰있을 경우를 대비해 최소 속도 보정
-        //if (currentSpeed < 0.1f)
-        //    currentSpeed = stat.speed.TotalValue;
-        //
-        //// 3. 부채꼴 각도 설정 (예: 전체 40도 범위 내에서 분산)
-        //float spreadRange = 40f;
-        //
-        //for (int i = 0; i < totalCount; i++)
-        //{
-        //    // 4. 각도 계산 (가운데를 중심으로 골고루 배분)
-        //    // i=0, 1 일 때 -> -20도, +20도
-        //    // i=0, 1, 2 일 때 -> -20도, 0도, +20도
-        //    float angleOffset = 0;
-        //    if (totalCount > 1)
-        //    {
-        //        angleOffset = (i - (totalCount - 1) * 0.5f) * (spreadRange / (totalCount - 1));
-        //    }
-        //
-        //    Vector2 spawnDir = RotateVector(currentVelocity.normalized, angleOffset);
-        //
-        //    // 5. 풀에서 분열탄 생성
-        //    BulletController splitBullet = Managers.Pool.Get<BulletController>("Bullet");
-        //
-        //    // 현재 부딪힌 위치에서 생성
-        //    splitBullet.transform.position = transform.position;
-        //
-        //    // 중요: 타입을 SplitBullet으로 넘겨서 재분열을 방지함 (_canSplit = false 로직 실행됨)
-        //    //splitBullet.SetBullet(transform.position, BulletType.SplitBullet);
-        //
-        //    // 6. 물리 적용 (속도 부여)
-        //    splitBullet.ShotWithVelocity(spawnDir * currentSpeed);
-        //}
+        Debug.Log("분열탄 실행!");
+        // 분열탄 활성화 안되어있으면 리턴
+        if (param.stat.type != Define.BulletType.SplitBullet ||
+            param.stat.isActivated == false) return;
+
+        // 이미 분열된 애면
+        if(param.stat.canSplit == true)
+        {
+            // 뎀지만 주기
+            param.target.OnDamage(param.stat.damage.TotalValue);
+            return;
+        }
+
+        // 3. 반사 방향 계산 (튕겨나가는 기준 방향)
+        // 충돌 지점의 Normal(법선)을 기준으로 들어온 방향을 반사시킵니다.
+        Vector2 incomingDir = param.incomingDirection;
+        Vector2 normal = param.collision.contacts[0].normal;
+        Vector2 reflectDir = Vector2.Reflect(incomingDir, normal).normalized;
+
+        // 4. 메테오 반지름 계산 (생성 위치 오프셋용)
+        float meteorRadius = 0.5f;
+        CircleCollider2D col = param.target.GetComponent<CircleCollider2D>();
+        if (col != null)
+        {
+            meteorRadius = col.radius * param.target.transform.localScale.x;
+        }
+
+        // 5. 분열탄 생성 루프
+        int totalCount = Mathf.RoundToInt(param.stat.splitCount.TotalValue);
+        float spreadRange = 70f; // 부채꼴 퍼짐 각도
+
+        for (int i = 0; i < totalCount; i++)
+        {
+            float angleOffset = 0;
+            if (totalCount > 1)
+            {
+                angleOffset = (i - (totalCount - 1) * 0.5f) * (spreadRange / (totalCount - 1));
+            }
+
+            // 6. 기준 반사 방향(reflectDir)에서 angleOffset만큼 회전
+            Vector2 spawnDir = Quaternion.Euler(0, 0, angleOffset) * reflectDir;
+
+            // 7. 풀에서 생성 및 설정
+            BulletController splitBullet = Managers.Pool.Get<BulletController>(Define.Pool.Bullet);
+
+            // 생성 위치: 메테오 중심 + (날아갈 방향 * 반지름 * 1.1f)
+            // 이렇게 하면 메테오 표면 바로 밖에서 튀어나오는 연출이 됩니다.
+            Vector3 spawnPos = param.target.transform.position + (Vector3)(spawnDir * (meteorRadius * 1.1f));
+            splitBullet.transform.position = spawnPos;
+
+            // 스탯 설정 및 분열탄 플래그 세팅
+            splitBullet.SetBullet(Managers.Stat.GetBulletStat(Define.BulletType.SplitBullet));
+            splitBullet.SetSplitBullet();
+
+            // 8. 발사!
+            splitBullet.Shot(spawnDir);
+
+            // (선택 사항) 생성된 분열탄이 방금 맞은 메테오와는 즉시 다시 부딪히지 않게 설정
+            Physics2D.IgnoreCollision(splitBullet.GetComponent<Collider2D>(), param.collision.collider, true);
+        }
     }
 }

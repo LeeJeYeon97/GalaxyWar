@@ -28,7 +28,8 @@ public class MeteorController : MonoBehaviour
     private void Awake()
     {
         _hpBar = Util.FindChild<Image>(gameObject, "HpBar", true);
-        _rb = Util.GetOrAddComponent<Rigidbody2D>(this.gameObject);
+        _rb = Util.GetOrAddComponent<Rigidbody2D>(gameObject);
+        
         // 우주이므로 중력은 0이어야 함
         _rb.gravityScale = 0;
         _hasEnteredView = false;
@@ -45,26 +46,16 @@ public class MeteorController : MonoBehaviour
         float snappedScale = Mathf.Round(rawRandom * 100f) / 100f;
         transform.localScale = new Vector3(snappedScale, snappedScale, 1f);
 
-        // 3. 이동속도 및 방향 설정
-        // 플레이존중 한 점으로 랜덤한 각도 계산 (-30도 ~ 30도 사이)
-        //float randomX = Random.Range(Managers.Map.PlayZoneMin.x, Managers.Map.PlayZoneMax.x);
-        //float randomY = Random.Range(Managers.Map.PlayZoneMin.y, Managers.Map.PlayZoneMax.y);
-        //Vector2 dir = (new Vector2(randomX, randomY) - pos).normalized;
-
+       
         // 플레이어 방향으로 방향 계산
         Vector2 dir = ((Vector2)Managers.Game._player.transform.position - pos).normalized;
         float speed = Random.Range(minSpeed, maxSpeed);
         _rb.linearVelocity = dir * speed;
 
-
         // 3. 랜덤한 회전 속도 부여 (초당 회전 각도)
         // -100 ~ 100 사이의 값을 주면 왼쪽 혹은 오른쪽으로 랜덤하게 돕니다.
         float randomTorque = Random.Range(-100f, 100f);
         _rb.angularVelocity = randomTorque;
-
-        //transform.DOKill();
-        //transform.localScale = Vector3.zero;
-        //transform.DOScale(scale, 0.5f).SetEase(Ease.OutBack);
 
         _maxHp = 2;
         _currentHp = _maxHp;
@@ -82,8 +73,8 @@ public class MeteorController : MonoBehaviour
         _hpBar.DOKill(); // 이전 애니메이션이 실행 중이면 중지
         _hpBar.DOFillAmount(ratio, 0.2f).SetEase(Ease.OutCubic);
 
-        // 추가: 체력이 깎일 때 살짝 반짝이거나 색을 바꾸고 싶다면 아래처럼 활용 가능
-        // _hpBar.DOColor(Color.red, 0.1f).OnComplete(() => _hpBar.DOColor(Color.white, 0.1f));
+         //추가: 체력이 깎일 때 살짝 반짝이거나 색을 바꾸고 싶다면 아래처럼 활용 가능
+         _hpBar.DOColor(Color.red, 0.1f).OnComplete(() => _hpBar.DOColor(Color.white, 0.1f));
     }
     private void OnEnable()
     {
@@ -102,11 +93,6 @@ public class MeteorController : MonoBehaviour
         if(damage > 0)
         {
             _currentHp -= damage;
-
-            //// 때릴 때 커졌다가 다시 작아지는 연출 (Punch 효과)
-            //transform.DOKill(); // 이전 애니메이션 종료
-            //transform.localScale = _myscale; // 원래 크기에서 시작
-            //transform.DOPunchScale(new Vector3(0.2f, 0.2f, 0), 0.1f);
 
             // 때릴때마다 점수 1점
             Managers.Game.AddScore(1);
@@ -146,4 +132,5 @@ public class MeteorController : MonoBehaviour
             }
         }
     }
+    
 }
