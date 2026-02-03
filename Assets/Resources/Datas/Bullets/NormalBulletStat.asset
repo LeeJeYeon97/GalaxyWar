@@ -14,11 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BulletStatDataSO
   type: 0
   bulletName: "\uAE30\uBCF8\uD0C4"
-  bulletColor: {fileID: 0}
   chance: 100
   damage: 1
   speed: 10
-  hp: 1
+  bounceCount: 0
   isActivated: 1
   baseExplosionRange: 0
   baseExplosionDamage: 0

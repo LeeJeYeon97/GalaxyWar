@@ -12,14 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 889aa765f6861a545b2407506586b41f, type: 3}
   m_Name: UpgradeExplosionBulletChance
   m_EditorClassIdentifier: Assembly-CSharp::AbilityDataSO
-  type: 11
+  type: 33
   abilityname: "\uD3ED\uBC1C\uD0C4 \uD655\uB960 \uC99D\uAC00"
   description: "\uD3ED\uBC1C\uD0C4\uC758 \uBC1C\uB3D9 \uD655\uB960 {0}%\uB9CC\uD07C
     \uC99D\uAC00\uD569\uB2C8\uB2E4."
   icon: {fileID: 0}
   maxLevel: 5
   curLevel: 0
-  _requiredAbility: 8
+  _requiredAbility: 30
   values:
   - 10
   - 10

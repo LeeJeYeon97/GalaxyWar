@@ -17,6 +17,7 @@ public class DataManager
     public Dictionary<Define.AbilityType, AbilityDataSO> AbilityDataDict { get; private set; }
 
     public GameDataSO GameData { get; private set; }
+    public PlayerStatDataSO playerStatData { get; private set; }
     public void Init()
     {
         // [사용 예시]
@@ -31,6 +32,11 @@ public class DataManager
         if(GameData == null)
         {
             Debug.LogError("GameData Null");
+        }
+        playerStatData = Managers.Resource.Load<PlayerStatDataSO>("Datas/PlayerStatData");
+        if (playerStatData == null)
+        {
+            Debug.LogError("playerStatData Null");
         }
     }
 

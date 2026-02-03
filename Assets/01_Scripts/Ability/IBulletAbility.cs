@@ -39,7 +39,7 @@ public class ExplosionBulletAbility : IBulletAbility
             param.stat.isActivated == false) return;
 
         float finalRadius = param.stat.explosionRadius.TotalValue;
-        float finalExplosionDmg = param.stat.explosionDamage.TotalValue;
+        float finalExplosionDmg = param.stat.damage.TotalValue;
 
         // --- 시각적 연출 (기존 로직 그대로 활용) ---
         GameObject indicator = Managers.Pool.Get<GameObject>(Define.Pool.ExplosionRangeIndicator);
@@ -61,9 +61,9 @@ public class ExplosionBulletAbility : IBulletAbility
         Collider2D[] colliders = Physics2D.OverlapCircleAll(param.target.transform.position, finalRadius, layerMask);
         foreach (var col in colliders)
         {
-            if (col.TryGetComponent<MeteorController>(out MeteorController meteor))
+            MeteorController meteor = col.GetComponentInParent<MeteorController>();
+            if(meteor)
             {
-                // 맞은애 포함 운석들에게 폭발 데미지 전달
                 meteor.OnDamage(finalExplosionDmg);
             }
         }
@@ -90,9 +90,8 @@ public class SplitBulletAbility : IBulletAbility
 
         // 3. 반사 방향 계산 (튕겨나가는 기준 방향)
         // 충돌 지점의 Normal(법선)을 기준으로 들어온 방향을 반사시킵니다.
-        Vector2 incomingDir = param.incomingDirection;
         Vector2 normal = param.collision.contacts[0].normal;
-        Vector2 reflectDir = Vector2.Reflect(incomingDir, normal).normalized;
+        Vector2 reflectDir = normal.normalized;
 
         // 4. 메테오 반지름 계산 (생성 위치 오프셋용)
         float meteorRadius = 0.5f;
@@ -105,6 +104,8 @@ public class SplitBulletAbility : IBulletAbility
         // 5. 분열탄 생성 루프
         int totalCount = Mathf.RoundToInt(param.stat.splitCount.TotalValue);
         float spreadRange = 70f; // 부채꼴 퍼짐 각도
+
+        param.target.OnDamage(param.stat.damage.TotalValue);
 
         for (int i = 0; i < totalCount; i++)
         {
@@ -133,7 +134,7 @@ public class SplitBulletAbility : IBulletAbility
             splitBullet.Shot(spawnDir);
 
             // (선택 사항) 생성된 분열탄이 방금 맞은 메테오와는 즉시 다시 부딪히지 않게 설정
-            Physics2D.IgnoreCollision(splitBullet.GetComponent<Collider2D>(), param.collision.collider, true);
+            //Physics2D.IgnoreCollision(splitBullet.GetComponent<Collider2D>(), param.collision.collider, true);
         }
     }
 }

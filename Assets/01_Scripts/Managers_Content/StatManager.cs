@@ -10,13 +10,9 @@ public class StatManager
     [SerializeField]
     public Dictionary<BulletType, BulletStat> bulletStatDict = new Dictionary<BulletType, BulletStat>();
 
-    // «√∑π¿ÃæÓ Ω∫≈»
-    //[SerializeField]
-    //public PlayerStat playerStat;
     public void Init()
     {
-        // «√∑π¿ÃæÓ Ω∫≈»
-
+        
         // ∫“∏¥µÈ Ω∫≈»
         foreach(var data in Managers.Data.BulletDataDict)
         {

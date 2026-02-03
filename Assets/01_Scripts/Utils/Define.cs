@@ -54,21 +54,24 @@ public class Define
     {
         Unknown = 0,
 
-        UpgradeBaseBulletDamage = 1,        // 기본탄 데미지 증가
-        UpgradeBaseBulletSpeed = 2,         // 기본탄 속도 증가
-
+        UpgradePlayerHp = 1,                // 플레이어 체력 증가
+        UpgradePlayerSpeed = 2,             // 플레이어 이동속도 증가
         UpgradeReloadCount = 3,             // 재장전 개수 증가
 
-        ActivateSplitBullet = 4,            // 분열탄 활성화
-        UpgradeSplitBulletDamage = 5,       // 분열탄 데미지 강화
-        UpgradeSplitBulletCount = 6,        // 분열탄 갯수 강화
-        UpgradeSplitBulletChance = 7,       // 분열탄 확률 강화
+        UpgradeBaseBulletDamage = 10,        // 기본탄 데미지 증가
+        UpgradeBaseBulletSpeed = 11,         // 기본탄 속도 증가
+        UpgradeBaseBulletBounceCount = 12,   // 기본탄 튕기는 횟수 증가
 
-        ActivateExplosionBullet = 8,        // 폭발탄 활성화
-        UpgradeExplosionDamage = 9,         // 폭발탄 범위 데미지 증가
-        UpgradeExplosionRange = 10,         // 폭발탄 범위 증가
-        UpgradeExplosionChance = 11,        // 폭발탄 발동 확률 증가
+        ActivateSplitBullet = 20,            // 분열탄 활성화
+        UpgradeSplitBulletDamage = 21,       // 분열탄 데미지 강화
+        UpgradeSplitBulletCount = 22,        // 분열탄 갯수 강화
+        UpgradeSplitBulletChance = 23,       // 분열탄 확률 강화
 
+        ActivateExplosionBullet = 30,        // 폭발탄 활성화
+        UpgradeExplosionDamage = 31,         // 폭발탄 데미지 증가
+        UpgradeExplosionRange = 32,          // 폭발탄 범위 증가
+        UpgradeExplosionChance = 33,         // 폭발탄 발동 확률 증가
+        
     }
     public enum BulletType
     {

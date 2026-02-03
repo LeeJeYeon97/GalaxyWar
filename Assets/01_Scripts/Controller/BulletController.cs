@@ -77,9 +77,11 @@ public class BulletController : MonoBehaviour
             _stat = stat;
         }
 
+        
         SetPhysicsState(true); // 대기 중엔 물리 끄기
-        _currentHp = (int)_stat.hp.TotalValue;
+        _currentHp = (int)_stat.bounceCount.TotalValue;
 
+        _stat.canSplit = false;
         _rb.angularVelocity = 0f;
     }
     // 스플릿된 불릿 설정용
@@ -110,7 +112,7 @@ public class BulletController : MonoBehaviour
             // 가지고 있는 능력 실행
             _stat.ability.Execute(param);
 
-            if (_currentHp <= 0)
+            if (_currentHp < 0)
             {
                 // 반납처리 필요
                 Managers.Pool.Release(gameObject);
@@ -130,11 +132,6 @@ public class BulletController : MonoBehaviour
 
         SetPhysicsState(false);
         _rb.AddForce(force, ForceMode2D.Impulse);
-
-        //// --- 추가: 발사 방향으로 총알 회전 ---
-        //float angle = Mathf.Atan2(_direction.y, _direction.x) * Mathf.Rad2Deg;
-        //// 파티클이 기본적으로 위(Y축)를 향해 뿜어져 나온다면 -90을 해줍니다.
-        //transform.rotation = Quaternion.Euler(0, 0, angle - 90f);
 
     }
     

@@ -11,7 +11,7 @@ public class BulletStatDataSO : ScriptableObject
     public float chance;                // 해당 불릿이 장전될 확률
     public float damage;                // 기본 데미지
     public float speed;                 // 기본 속도
-    public float hp;                    // 기본 체력
+    public float bounceCount;           // 튕기는 횟수
     public bool isActivated;            // 활성화 여부
 
     [Header("Explosion Stat Settings")]
@@ -23,5 +23,6 @@ public class BulletStatDataSO : ScriptableObject
     public float baseSplitBulletDamage; // 기본 스플릿 탄의 데미지
 
     //[Header("Lighting Stat Settings")]
+
 
 }

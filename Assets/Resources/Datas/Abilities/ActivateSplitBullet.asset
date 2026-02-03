@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 889aa765f6861a545b2407506586b41f, type: 3}
   m_Name: ActivateSplitBullet
   m_EditorClassIdentifier: Assembly-CSharp::AbilityDataSO
-  type: 4
+  type: 20
   abilityname: "\uBD84\uC5F4\uD0C4 \uD68D\uB4DD"
   description: "\uCD1D\uC54C \uD30C\uAD34 \uC2DC \uC77C\uC815\uD655\uB960\uB85C \uBD84\uC5F4\uB418\uB294
     \uCD1D\uC54C\uC744 \uD68D\uB4DD\uD569\uB2C8\uB2E4."

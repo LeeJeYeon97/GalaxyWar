@@ -12,18 +12,16 @@ public class BulletStat
     // 기본 공통 스탯
     public Stat speed = new Stat();
     public Stat damage = new Stat();
-    public Stat hp = new Stat();
+    public Stat bounceCount = new Stat();
     public Stat chance = new Stat();         // 장전될 확률
     public bool isActivated;    // 현재 탄이 활성화 되었는지 확인하는 변수
 
     // 폭발탄 스탯
     public Stat explosionRadius = new Stat();
-    public Stat explosionDamage = new Stat();
 
     // 분열탄 스탯
     public bool canSplit;
     public Stat splitCount = new Stat();
-    public Stat splitDamage = new Stat();
 
     public void SettingStat(BulletStatDataSO data)
     {
@@ -33,18 +31,16 @@ public class BulletStat
 
         speed.Init(data.speed);
         damage.Init(data.damage);
-        hp.Init(data.hp);
+        bounceCount.Init(data.bounceCount);
         chance.Init(data.chance);
         isActivated = data.isActivated;
 
         // 폭발탄 세팅
         explosionRadius.Init(data.baseExplosionRange);
-        explosionDamage.Init(data.baseExplosionDamage);
 
         // 스플릿탄 세팅
         canSplit = false;
         splitCount.Init(data.baseSplitCount);
-        splitDamage.Init(data.baseSplitBulletDamage);
 
         // 어빌리티 능력(실행코드) 세팅
         ability = CreateAbility(data);

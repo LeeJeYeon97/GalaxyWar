@@ -10,19 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 889aa765f6861a545b2407506586b41f, type: 3}
-  m_Name: UpgradeExplosionBulletRange
+  m_Name: UpgradeBaseBulletBounceCount
   m_EditorClassIdentifier: Assembly-CSharp::AbilityDataSO
-  type: 32
-  abilityname: "\uD3ED\uBC1C\uD0C4 \uBC94\uC704 \uC99D\uAC00"
-  description: "\uD3ED\uBC1C\uD0C4\uC758 \uBC94\uC704\uAC00\uAC00 {0}%\uB9CC\uD07C
-    \uC99D\uAC00\uD569\uB2C8\uB2E4."
+  type: 12
+  abilityname: "\uAE30\uBCF8\uD0C4 \uD295\uAE30\uB294 \uD69F\uC218 \uC99D\uAC00"
+  description: "\uAE30\uBCF8\uD0C4 \uD295\uAE30\uB294 \uD69F\uC218 \uC99D\uAC00"
   icon: {fileID: 0}
   maxLevel: 5
   curLevel: 0
-  _requiredAbility: 30
+  _requiredAbility: 0
   values:
-  - 10
-  - 10
-  - 10
-  - 10
-  - 10
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1

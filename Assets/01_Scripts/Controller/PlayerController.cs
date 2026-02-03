@@ -1,7 +1,10 @@
 using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.AppUI.UI;
 using UnityEngine;
+using UnityEngine.Experimental.AI;
+using UnityEngine.UIElements;
 using static Define;
 using static UnityEditor.PlayerSettings;
 using static UnityEngine.GraphicsBuffer;
@@ -18,14 +21,9 @@ public class PlayerController : MonoBehaviour
     private bool _isReloading = false;
     private bool _isMoving;
 
-    [Header("Stat")]
-    public float shotDelay = 1.0f;      // 연사 속도 (니케처럼 빠르게 하려면 0.1~0.2)
-    public float reloadTime = 1.5f;     // 재장전 소요 시간
-    public int bulletCount = 5;        // 탄창 크기
+    [Header("Stat")]    
     public float maxLineLength = 7f;    // 조준선 길이
-    public float moveForce = 0.2f;    // 밀어주는 힘의 세기
-    public float maxSpeed = 0.1f;     // 최대 속도 제한
-    public float targetRange = 10.0f;   // 운석 탐지범위
+    public PlayerStat stat;
 
     [Header("Bullet")]
     public Transform _bulletPos;        // 총알이 나갈 발사구 위치
@@ -42,16 +40,18 @@ public class PlayerController : MonoBehaviour
     private float _targetUpdateInterval = 0.1f;
     private float _targetTimer;
 
-
     void Awake()
     {
         _rb = GetComponent<Rigidbody2D>();
         _rb.gravityScale = 0f;  // 우주니까 중력은 0
-        //_rb.linearDamping = 2.5f; 
+        //_rb.linearDamping = 2.5f;
 
         mainCam = Camera.main;
         lr = GetComponent<LineRenderer>();
         lr.enabled = false;
+
+        stat = new PlayerStat();
+        stat.SetStat(Managers.Data.playerStatData);
     }
     public void OnEnable()
     {
@@ -71,6 +71,8 @@ public class PlayerController : MonoBehaviour
     }
     private void Start()
     {
+        // 스탯 데이터 세팅
+
         if (Managers.Game.currentGameState != GameState.Playing) return;
         // 게임 시작 시 첫 장전
         Reload();
@@ -79,7 +81,7 @@ public class PlayerController : MonoBehaviour
     {
         if (Managers.Game.currentGameState != GameState.Playing) return;
         // 적 탐색
-        FindTarget();
+        //FindTarget();
         Shoot();
     }
     private void FixedUpdate()
@@ -118,7 +120,6 @@ public class PlayerController : MonoBehaviour
         dragStartPos = pos;
         _isMoving = true;
         lr.enabled = true;
-
     }
     void OnDragUpdate(Vector2 pos)
     {
@@ -141,20 +142,25 @@ public class PlayerController : MonoBehaviour
     {
         _isMoving = false;
         lr.enabled = false; // 드래그 떼면 조준선 끄기
-        dragDir = Vector2.zero;
+        //dragDir = Vector2.zero;
     }
     private void Move()
     {
         // 이동 입력이 없을 때는 리턴
         if (!_isMoving || dragDir == Vector2.zero) return;
 
+        // 2. 가속 힘 계산
+        // moveForce를 고정값으로 두면 속도가 빠를수록 최고 속도 도달이 답답하게 느껴집니다.
+        // 그래서 보통 maxSpeed의 일정 비율(예: 2~3배)을 힘으로 주면 체감이 좋습니다.
+        float finalForce = stat.speed.TotalValue * 5f;
+
         // 1. 힘 가하기 (가속)
-        _rb.AddForce(dragDir * moveForce, ForceMode2D.Force);
+        _rb.AddForce(dragDir * finalForce, ForceMode2D.Force);
 
         // 2. 속도 제한
-        if (_rb.linearVelocity.magnitude > maxSpeed)
+        if (_rb.linearVelocity.magnitude > stat.speed.TotalValue)
         {
-            _rb.linearVelocity = _rb.linearVelocity.normalized * maxSpeed;
+            _rb.linearVelocity = _rb.linearVelocity.normalized * stat.speed.TotalValue;
         }
     }
     private void Rotate()
@@ -171,51 +177,51 @@ public class PlayerController : MonoBehaviour
     #region Weapon
 
     // 주변 적 탐색
-    public void FindTarget()
-    {
-        // 타겟팅 타이머 (매 프레임 계산 방지)
-        _targetTimer += Time.deltaTime;
-        if (_targetTimer < _targetUpdateInterval)
-        {
-            return;
-        }
-        // 사거리에 따른 적 탐색
-        // 리로딩 중이면 타겟 안 찾음
-        if (_isReloading)
-        {
-            _target = null;
-            return;
-        }
-        // Managers.Game에 있는 활성화된 메테오 리스트를 가져옵니다.
-        if (Managers.Game.activeMeteors.Count == 0)
-        {
-            _target = null;
-            return;
-        }
+    //public void FindTarget()
+    //{
+    //    // 타겟팅 타이머 (매 프레임 계산 방지)
+    //    _targetTimer += Time.deltaTime;
+    //    if (_targetTimer < _targetUpdateInterval)
+    //    {
+    //        return;
+    //    }
+    //    // 사거리에 따른 적 탐색
+    //    // 리로딩 중이면 타겟 안 찾음
+    //    if (_isReloading)
+    //    {
+    //        _target = null;
+    //        return;
+    //    }
+    //    // Managers.Game에 있는 활성화된 메테오 리스트를 가져옵니다.
+    //    if (Managers.Game.activeMeteors.Count == 0)
+    //    {
+    //        _target = null;
+    //        return;
+    //    }
 
-        float minDistance = Mathf.Infinity; // 가장 짧은 거리를 저장할 변수
-        foreach (var meteor in Managers.Game.activeMeteors)
-        {
-            if (meteor == null) continue;
+    //    float minDistance = Mathf.Infinity; // 가장 짧은 거리를 저장할 변수
+    //    foreach (var meteor in Managers.Game.activeMeteors)
+    //    {
+    //        if (meteor == null) continue;
 
-            // 플레이어와 메테오 사이의 거리 계산
-            float distance = Vector3.Distance(transform.position, meteor.transform.position);
+    //        // 플레이어와 메테오 사이의 거리 계산
+    //        float distance = Vector3.Distance(transform.position, meteor.transform.position);
             
-            //탐지 범위 안에 있고, 지금까지 찾은 것보다 더 가깝다면 갱신
-            if (distance <= targetRange && distance < minDistance)
-            {
-                minDistance = distance;
-                _target = meteor.gameObject;
-            }
+    //        //탐지 범위 안에 있고, 지금까지 찾은 것보다 더 가깝다면 갱신
+    //        if (distance <= stat.shotRange.TotalValue && distance < minDistance)
+    //        {
+    //            minDistance = distance;
+    //            _target = meteor.gameObject;
+    //        }
 
-        }
-        _targetTimer = 0;
-    }
+    //    }
+    //    _targetTimer = 0;
+    //}
     // 발사
     void Shoot()
     {
         if (_isReloading) return;
-        if (_target == null) return;
+        
 
         // 탄창이 비었으면 자동 리로드
         if (bullets.Count <= 0 && !_isReloading)
@@ -226,7 +232,7 @@ public class PlayerController : MonoBehaviour
 
 
         // 3. 재장전 중이 아닐 때 연사 속도에 맞춰 사격
-        if (Time.time - _lastShotTime >= shotDelay)
+        if (Time.time - _lastShotTime >= stat.shotTime.TotalValue)
         {
             BulletController bullet = bullets[0];
             bullets.RemoveAt(0);
@@ -235,7 +241,6 @@ public class PlayerController : MonoBehaviour
             {
                 bullet.transform.position = _bulletPos.position;
                 
-               // _currentAimDir = (_target.transform.position - transform.position).normalized;
 
                 _currentAimDir = dragDir.normalized;
                 bullet.Shot(_currentAimDir);          // 발사
@@ -264,7 +269,7 @@ public class PlayerController : MonoBehaviour
         Debug.Log("재장전 시작...");
 
         // 여기에 리로드 UI 게이즈 연출 추가 가능
-        yield return new WaitForSeconds(reloadTime);
+        yield return new WaitForSeconds(stat.reloadTime.TotalValue);
 
         Reload();
 
@@ -283,7 +288,8 @@ public class PlayerController : MonoBehaviour
         bullets.Clear();
 
         // 탄창 가득 채우기
-        for (int i = 0; i < bulletCount; i++)
+        int reloadCount = Mathf.FloorToInt(stat.reloadCount.TotalValue);
+        for (int i = 0; i < reloadCount; i++)
         {
             BulletController bullet = Managers.Pool.Get<BulletController>(Define.Pool.Bullet);
             if (bullet != null)
@@ -295,4 +301,33 @@ public class PlayerController : MonoBehaviour
         }
     }
     #endregion
+
+    public void OnDamage(float damage)
+    {
+        // 무적 상태
+        // if (_isInvincible) return;
+
+        stat.currentHp -= damage;
+
+        if(stat.currentHp <= 0)
+        {
+            // 죽는 처리
+            Die();
+        }
+        else
+        {
+            // 피격후에 짧은 무적시간
+            //StartCoroutine(CoInvincible());
+        }
+
+    }
+    private void Die()
+    {
+        // 죽음 처리
+    }
+
+    IEnumerator CoInvincible()
+    {
+        return null;
+    }
 }

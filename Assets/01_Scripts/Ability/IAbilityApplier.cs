@@ -61,6 +61,14 @@ public class UpgradeBaseBulletSpeed : NormalBulletApplier
         Stat.speed.AddValue(data.GetValue(level));
     }
 }
+// ±âº»Åº Æ¨±â´Â È½¼ö Áõ°¡
+public class UpgradeBaseBulletBounceCount : NormalBulletApplier
+{
+    public override void Apply(AbilityDataSO data, int level)
+    {
+        Stat.bounceCount.AddValue(data.GetValue(level));
+    }
+}
 #endregion
 
 #region ºÐ¿­Åº
@@ -79,12 +87,12 @@ public class ActivateSplitBullet : SplitBulletApplier
     }
 }
 
-// ºÐ¿­Åº °¢ ÅºÀÇ µ¥¹ÌÁö Áõ°¡
+// ºÐ¿­ÅºÀÇ µ¥¹ÌÁö Áõ°¡
 public class UpgradeSplitBulletDamage : SplitBulletApplier
 {
     public override void Apply(AbilityDataSO data, int level)
     {
-
+        Stat.damage.AddValue(data.GetValue(level));        
     }
 }
 
@@ -102,7 +110,7 @@ public class UpgradeSplitBulletChance : SplitBulletApplier
 {
     public override void Apply(AbilityDataSO data, int level)
     {
-        
+        Stat.chance.AddValue(data.GetValue(level));
     }
 }
 #endregion
@@ -128,6 +136,7 @@ public class UpgradeExplosionDamage : ExplosionBulletApplier
 {
     public override void Apply(AbilityDataSO data, int level)
     {
+        Stat.damage.AddValue(data.GetValue(level));
     }
 }
 
@@ -136,6 +145,7 @@ public class UpgradeExplosionRange : ExplosionBulletApplier
 {
     public override void Apply(AbilityDataSO data, int level)
     {
+        Stat.explosionRadius.AddValue(data.GetValue(level));
     }
 }
 
@@ -144,6 +154,7 @@ public class UpgradeExplosionChance : ExplosionBulletApplier
 {
     public override void Apply(AbilityDataSO data, int level)
     {
+        Stat.chance.AddValue(data.GetValue(level));
     }
 }
 #endregion
