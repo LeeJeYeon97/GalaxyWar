@@ -13,13 +13,14 @@ MonoBehaviour:
   m_Name: ExplosionBulletStat
   m_EditorClassIdentifier: Assembly-CSharp::BulletStatDataSO
   type: 2
+  poolType: 1
   bulletName: "\uD3ED\uBC1C\uD0C4"
-  chance: 300
+  prefabs: {fileID: 7431507651775079818, guid: 2c14ce09832f3484ba6a3f677a4b0ba3, type: 3}
+  chance: 10
   damage: 1
-  speed: 10
+  speed: 3
   bounceCount: 0
   isActivated: 0
   baseExplosionRange: 1
-  baseExplosionDamage: 1
   baseSplitCount: 0
-  baseSplitBulletDamage: 0
+  lightningRange: 0

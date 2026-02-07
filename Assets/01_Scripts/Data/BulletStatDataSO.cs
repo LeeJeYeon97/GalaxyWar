@@ -5,7 +5,9 @@ public class BulletStatDataSO : ScriptableObject
 {
     [Header("Common Settings")]
     public Define.BulletType type;
+    public Define.Pool poolType;
     public string bulletName;
+    public GameObject prefabs;
     
     [Header("Base Stat")]
     public float chance;                // 해당 불릿이 장전될 확률
@@ -16,13 +18,14 @@ public class BulletStatDataSO : ScriptableObject
 
     [Header("Explosion Stat Settings")]
     public float baseExplosionRange;    // 기본 폭발 범위
-    public float baseExplosionDamage;   // 기본 폭발 데미지
-
+    
     [Header("Split Stat Settings")]
     public int baseSplitCount;          // 기본 스플릿 카운트
-    public float baseSplitBulletDamage; // 기본 스플릿 탄의 데미지
 
-    //[Header("Lighting Stat Settings")]
+
+    [Header("Lighting Stat Settings")]
+    public float lightningRange;
+    public int lightningCount;
 
 
 }

@@ -13,16 +13,11 @@ public class BulletController : MonoBehaviour
 {
     [SerializeField]
     private Rigidbody2D _rb;
-
     [SerializeField]
     private BulletStat _stat;
-
-    public int _currentHp = 0;
-    public float _damage = 0;
-
-    [SerializeField]
-    private Vector2 _direction;
-
+    // 바뀌는 값은 여기서 선언
+    public bool canSplit { get; private set; }
+    public float currentBounceCount { get; private set; }
 
     #region Particle변수
 
@@ -56,45 +51,32 @@ public class BulletController : MonoBehaviour
             // 3. 회전 적용 (파티클이 뒤로 뿜어져 나오는 구조라면 -90f 유지)
             transform.rotation = Quaternion.Euler(0, 0, angle - 90f);
 
-            // 4. (선택사항) 내 방향 변수도 최신화해서 분열탄 등에 사용
-            _direction = currentDir;
         }
     }
-    public void SetBullet(BulletStat stat = null)
+    public void SetBullet(BulletStat stat)
     {
         if (gameObject.activeSelf == true)
         {
             gameObject.SetActive(false);
         }
 
-        // 불릿 데이터 뽑기
-        if (stat == null)
-        {
-            _stat = Managers.Game.GetRandomBullet();
-        }
-        else
-        {
-            _stat = stat;
-        }
+        _stat = stat;
+        currentBounceCount = stat.bounceCount.TotalValue;
+        canSplit = true;
 
-        
         SetPhysicsState(true); // 대기 중엔 물리 끄기
-        _currentHp = (int)_stat.bounceCount.TotalValue;
-
-        _stat.canSplit = false;
         _rb.angularVelocity = 0f;
     }
-    // 스플릿된 불릿 설정용
-    public void SetSplitBullet()
+    public void SetSplit()
     {
-        _stat.canSplit = true;
+        canSplit = false;
     }
-
     // 충돌
     private void OnCollisionEnter2D(Collision2D collision)
     {
         PlayHitEffect(collision);
 
+        currentBounceCount--;
         // "brick" 변수를 선언함과 동시에 컴포넌트가 있는지 시도함
         MeteorController meteor = collision.gameObject.GetComponentInParent<MeteorController>();
         if (meteor)
@@ -103,20 +85,19 @@ public class BulletController : MonoBehaviour
             AbilityExecuteParams param = new AbilityExecuteParams
             {
                 stat = _stat,
+                bullet = this,
                 target = meteor,
                 collision = collision, // 충돌 정보 통째로 전달
                 incomingDirection = _rb.linearVelocity.normalized // 들어온 방향
             };
 
-            _currentHp--;
             // 가지고 있는 능력 실행
-            _stat.ability.Execute(param);
-
-            if (_currentHp < 0)
-            {
-                // 반납처리 필요
-                Managers.Pool.Release(gameObject);
-            }
+            _stat.ability.Execute(param);   
+        }
+        if (currentBounceCount < 0)
+        {
+            // 반납처리 필요
+            Managers.Pool.Release(gameObject);
         }
     }
     
@@ -127,7 +108,6 @@ public class BulletController : MonoBehaviour
         {
             gameObject.SetActive(true);
         }
-        _direction = dragVector.normalized;
         Vector2 force = dragVector * _stat.speed.TotalValue;
 
         SetPhysicsState(false);

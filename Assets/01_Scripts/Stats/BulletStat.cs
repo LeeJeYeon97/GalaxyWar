@@ -5,6 +5,7 @@ using UnityEngine;
 public class BulletStat
 {
     public Define.BulletType type;
+    public Define.Pool poolType;
     public IBulletAbility ability;
     public string name;
     public int level;
@@ -18,29 +19,34 @@ public class BulletStat
 
     // Æø¹ßÅº ½ºÅÈ
     public Stat explosionRadius = new Stat();
-
-    // ºÐ¿­Åº ½ºÅÈ
-    public bool canSplit;
+    
     public Stat splitCount = new Stat();
 
+    public Stat lightningRange = new Stat();
+    public Stat lightningCount = new Stat();
     public void SettingStat(BulletStatDataSO data)
     {
         level = 0;
         type = data.type;
+        
         name = data.bulletName;
-
+        poolType = data.poolType;
         speed.Init(data.speed);
         damage.Init(data.damage);
         bounceCount.Init(data.bounceCount);
+
         chance.Init(data.chance);
         isActivated = data.isActivated;
 
         // Æø¹ßÅº ¼¼ÆÃ
         explosionRadius.Init(data.baseExplosionRange);
 
-        // ½ºÇÃ¸´Åº ¼¼ÆÃ
-        canSplit = false;
         splitCount.Init(data.baseSplitCount);
+
+
+        lightningRange.Init(data.lightningRange);
+        lightningCount.Init(data.lightningCount);
+
 
         // ¾îºô¸®Æ¼ ´É·Â(½ÇÇàÄÚµå) ¼¼ÆÃ
         ability = CreateAbility(data);

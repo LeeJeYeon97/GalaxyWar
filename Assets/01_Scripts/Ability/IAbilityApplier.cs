@@ -158,3 +158,20 @@ public class UpgradeExplosionChance : ExplosionBulletApplier
     }
 }
 #endregion
+
+
+#region ¹ø°³Åº
+public abstract class LightningBulletApplier : BulletAbilityApplier
+{
+    protected override BulletType TargetBulletType => BulletType.LightningBullet;
+}
+
+
+public class ActivateLightningBullet : LightningBulletApplier
+{
+    public override void Apply(AbilityDataSO data, int level)
+    {
+        Stat.isActivated = true;
+    }
+}
+#endregion

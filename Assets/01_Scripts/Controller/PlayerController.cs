@@ -36,11 +36,12 @@ public class PlayerController : MonoBehaviour
     private Vector2 dragPos;
     private Vector2 dragDir;
 
-    public GameObject _target;
-    private float _targetUpdateInterval = 0.1f;
-    private float _targetTimer;
+    // 자동 탐색 변수
+    //public GameObject _target;
+    //private float _targetUpdateInterval = 0.1f;
+    //private float _targetTimer;
 
-    void Awake()
+    public void Init()
     {
         _rb = GetComponent<Rigidbody2D>();
         _rb.gravityScale = 0f;  // 우주니까 중력은 0
@@ -50,8 +51,14 @@ public class PlayerController : MonoBehaviour
         lr = GetComponent<LineRenderer>();
         lr.enabled = false;
 
+
+        // 스탯 데이터 세팅
         stat = new PlayerStat();
         stat.SetStat(Managers.Data.playerStatData);
+
+        if (Managers.Game.currentGameState != GameState.Playing) return;
+        // 게임 시작 시 첫 장전
+        Reload();
     }
     public void OnEnable()
     {
@@ -68,14 +75,6 @@ public class PlayerController : MonoBehaviour
             Managers.Input.OnDragging -= OnDragUpdate;
             Managers.Input.OnDragEnded -= OnDragRelease;
         }
-    }
-    private void Start()
-    {
-        // 스탯 데이터 세팅
-
-        if (Managers.Game.currentGameState != GameState.Playing) return;
-        // 게임 시작 시 첫 장전
-        Reload();
     }
     void Update()
     {
@@ -217,6 +216,7 @@ public class PlayerController : MonoBehaviour
     //    }
     //    _targetTimer = 0;
     //}
+
     // 발사
     void Shoot()
     {
@@ -243,7 +243,7 @@ public class PlayerController : MonoBehaviour
                 
 
                 _currentAimDir = dragDir.normalized;
-                bullet.Shot(_currentAimDir);          // 발사
+                bullet.Shot(transform.up);          // 발사
 
 
                 // 파티클
@@ -291,11 +291,13 @@ public class PlayerController : MonoBehaviour
         int reloadCount = Mathf.FloorToInt(stat.reloadCount.TotalValue);
         for (int i = 0; i < reloadCount; i++)
         {
-            BulletController bullet = Managers.Pool.Get<BulletController>(Define.Pool.Bullet);
+
+            BulletStat stat = Managers.Game.GetRandomBullet();
+            BulletController bullet = Managers.Pool.Get<BulletController>(stat.poolType);
+
             if (bullet != null)
             {
-                
-                bullet.SetBullet();
+                bullet.SetBullet(stat);
                 bullets.Add(bullet);
             }
         }

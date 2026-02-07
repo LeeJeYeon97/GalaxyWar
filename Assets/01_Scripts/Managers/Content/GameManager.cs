@@ -16,18 +16,19 @@ public class GameManager : MonoBehaviour
 
     public Action<float> OnUpdateScore;
 
-    public GameObject _player;
+    public PlayerController _player;
     public void Init()
     {
 
         ChangeGameState(GameState.Playing);
 
         // 플레이어 세팅
-        _player = GameObject.Find("Player");
-        
-        GameObject go = GameObject.Find("Spawner");
-        go.GetComponent<MeteorSpawner>().Init();
+        GameObject go = Managers.Resource.Instantiate("Prefabs/Object/Player");
+        _player = go.GetComponent<PlayerController>();
+        _player?.Init();
 
+        GameObject spawner = Managers.Resource.Instantiate(Path.Spawner);
+        spawner.GetComponent<MeteorSpawner>()?.Init();
         
         Score = 0;
     }

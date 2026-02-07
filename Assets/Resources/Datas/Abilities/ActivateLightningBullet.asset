@@ -10,18 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 889aa765f6861a545b2407506586b41f, type: 3}
-  m_Name: UpgradeSplitBulletCount
+  m_Name: ActivateLightningBullet
   m_EditorClassIdentifier: Assembly-CSharp::AbilityDataSO
-  type: 22
-  abilityname: "\uBD84\uC5F4\uD0C4 \uAC1C\uC218 \uAC15\uD654"
-  description: "\uBD84\uC5F4\uD0C4\uC758 \uAC2F\uC218\uAC00 {0}\uB9CC\uD07C \uC99D\uAC00\uD569\uB2C8\uB2E4."
+  type: 40
+  abilityname: "\uBC88\uAC1C\uD0C4 \uD65C\uC131\uD654"
+  description: "\uBC88\uAC1C\uD0C4 \uD65C\uC131"
   icon: {fileID: 0}
-  maxLevel: 5
+  maxLevel: 1
   curLevel: 0
-  _requiredAbility: 20
+  _requiredAbility: 0
   values:
-  - 1
-  - 1
-  - 1
-  - 1
   - 1

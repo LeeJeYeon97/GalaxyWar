@@ -6,7 +6,6 @@ using UnityEngine.UI;
 
 public class MeteorController : MonoBehaviour
 {
-
     [SerializeField] 
     private Image _hpBar;
     
@@ -72,9 +71,6 @@ public class MeteorController : MonoBehaviour
         // DOFillAmount(목표값, 시간) 사용
         _hpBar.DOKill(); // 이전 애니메이션이 실행 중이면 중지
         _hpBar.DOFillAmount(ratio, 0.2f).SetEase(Ease.OutCubic);
-
-         //추가: 체력이 깎일 때 살짝 반짝이거나 색을 바꾸고 싶다면 아래처럼 활용 가능
-         _hpBar.DOColor(Color.red, 0.1f).OnComplete(() => _hpBar.DOColor(Color.white, 0.1f));
     }
     private void OnEnable()
     {

@@ -19,11 +19,17 @@ public class Define
     }
     public enum Pool
     {
-        Bullet,
+        NormalBullet,
+        ExplosionBullet,
+        SplitBullet,
+        LightningBullet,
+
         Meteor,
         ExplosionRangeIndicator,
         NormalBullet_Hit,
         NormalBullet_Flash,
+
+        LightningEffect
     }
     public enum UIEvent
     {
@@ -72,14 +78,15 @@ public class Define
         UpgradeExplosionRange = 32,          // 폭발탄 범위 증가
         UpgradeExplosionChance = 33,         // 폭발탄 발동 확률 증가
         
+        ActivateLightningBullet = 40,        // 번개탄 활성화
+
     }
     public enum BulletType
     {
         NormalBullet = 0,       // 기본탄
         SplitBullet = 1,        // 분열탄
         ExplosionBullet = 2,    // 폭발탄
-        // 번개탄
-        //~~
+        LightningBullet =3,     // 번개탄
         
     }
 }

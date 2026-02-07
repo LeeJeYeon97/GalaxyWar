@@ -18,6 +18,8 @@ public class DataManager
 
     public GameDataSO GameData { get; private set; }
     public PlayerStatDataSO playerStatData { get; private set; }
+    public PoolingDataSO poolingData { get; private set; }
+
     public void Init()
     {
         // [사용 예시]
@@ -28,15 +30,21 @@ public class DataManager
         // AbilityDataDict = LoadDataToDict<string, AbilityDataSO>("Abilities", data => data.abilityID);
         AbilityDataDict = LoadDataToDict<Define.AbilityType, AbilityDataSO>("Abilities", data => data.type);
 
-        GameData = Managers.Resource.Load<GameDataSO>("Datas/GameData");
+        GameData = Managers.Resource.Load<GameDataSO>(Path.GameData);
         if(GameData == null)
         {
             Debug.LogError("GameData Null");
         }
-        playerStatData = Managers.Resource.Load<PlayerStatDataSO>("Datas/PlayerStatData");
+        playerStatData = Managers.Resource.Load<PlayerStatDataSO>(Path.PlayerStatData);
         if (playerStatData == null)
         {
             Debug.LogError("playerStatData Null");
+        }
+
+        poolingData = Managers.Resource.Load<PoolingDataSO>(Path.PoolingData);
+        if (poolingData == null)
+        {
+            Debug.LogError("poolingData Null");
         }
     }
 
