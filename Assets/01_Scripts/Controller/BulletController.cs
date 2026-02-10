@@ -15,10 +15,13 @@ public class BulletController : MonoBehaviour
     private Rigidbody2D _rb;
     [SerializeField]
     private BulletStat _stat;
+
+    private Vector2 _shotDir;
+    private Collider2D _collider;
     // 바뀌는 값은 여기서 선언
     public bool canSplit { get; private set; }
-    public float currentBounceCount { get; private set; }
-
+    public int currentBounceCount { get; private set; }
+    public int currentPierceCount { get; private set; }
     #region Particle변수
 
     #endregion
@@ -26,7 +29,7 @@ public class BulletController : MonoBehaviour
     public void Awake()
     {
         if(_rb == null) _rb = Util.GetOrAddComponent<Rigidbody2D>(gameObject);
-        
+        _collider = Util.GetOrAddComponent<Collider2D>(gameObject);
     }
     private void OnEnable()
     {
@@ -38,6 +41,43 @@ public class BulletController : MonoBehaviour
         Managers.Game.RemoveActiveObject(this);
     }
     private void FixedUpdate()
+    {
+        WallBounce();
+        Rotate();
+    }
+
+    private void WallBounce()
+    {
+        // 관통탄(Trigger)일 때만 수동 튕기기 체크
+        if (_stat.type == BulletType.PierceBullet && _collider.isTrigger)
+        {
+            // 1. 다음 프레임에 이동할 거리 계산 (속도 * 시간)
+            float moveDistance = _stat.speed.TotalValue * Time.fixedDeltaTime;
+
+            // 2. 레이캐스트 발사 (현재 위치에서 이동 방향으로 moveDistance보다 살짝 더 길게 쏨)
+            // 1.2~1.5 정도를 곱해줘야 벽에 박히기 전에 미리 튕깁니다.
+            int wallLayerMask = LayerMask.GetMask("Wall");
+            RaycastHit2D hit = Physics2D.Raycast(_rb.position, _shotDir, moveDistance * 1.5f, wallLayerMask);
+
+            if (hit.collider != null)
+            {
+                // ★ 벽을 만났다!
+                // 3. 반사각 계산
+                _shotDir = Vector2.Reflect(_shotDir, hit.normal).normalized;
+
+                // 4. 즉시 위치 보정 (벽 안으로 파고드는 것 방지)
+                // 충돌 지점에서 법선 방향으로 살짝 띄워줍니다.
+                _rb.position = hit.point + (hit.normal * 0.05f);
+
+                // 5. 속도 재설정
+                _rb.linearVelocity = _shotDir * _stat.speed.TotalValue;
+
+                // 바운스 카운트 감소
+                DecreaseBounceCount();
+            }
+        }
+    }
+    private void Rotate()
     {
         // 정지 상태가 아닐 때만 회전 처리
         if (_rb.bodyType == RigidbodyType2D.Dynamic && _rb.linearVelocity.sqrMagnitude > 0.1f)
@@ -59,10 +99,21 @@ public class BulletController : MonoBehaviour
         {
             gameObject.SetActive(false);
         }
-
+        
         _stat = stat;
-        currentBounceCount = stat.bounceCount.TotalValue;
+        currentBounceCount = Mathf.FloorToInt(stat.bounceCount.TotalValue);
+        currentPierceCount = Mathf.FloorToInt(stat.pierceCount.TotalValue);
         canSplit = true;
+
+        // ★ 관통탄이면 Trigger를 켭니다. (적을 뚫기 위해)
+        if (_stat.type == Define.BulletType.PierceBullet)
+        {
+            _collider.isTrigger = true;
+        }
+        else
+        {
+            _collider.isTrigger = false;
+        }
 
         SetPhysicsState(true); // 대기 중엔 물리 끄기
         _rb.angularVelocity = 0f;
@@ -74,33 +125,41 @@ public class BulletController : MonoBehaviour
     // 충돌
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        PlayHitEffect(collision);
 
-        currentBounceCount--;
-        // "brick" 변수를 선언함과 동시에 컴포넌트가 있는지 시도함
-        MeteorController meteor = collision.gameObject.GetComponentInParent<MeteorController>();
-        if (meteor)
+        PlayHitEffect(collision.contacts[0].point, collision.contacts[0].normal);
+        // 파라미터 팩 만들기
+        AbilityExecuteParams param = new AbilityExecuteParams
         {
-            // 파라미터 팩 만들기
-            AbilityExecuteParams param = new AbilityExecuteParams
-            {
-                stat = _stat,
-                bullet = this,
-                target = meteor,
-                collision = collision, // 충돌 정보 통째로 전달
-                incomingDirection = _rb.linearVelocity.normalized // 들어온 방향
-            };
+            stat = _stat,
+            bullet = this,
+            meteor = collision.gameObject.GetComponent<MeteorController>(),
+            collision = collision, // 충돌 정보 통째로 전달
+            incomingDirection = _rb.linearVelocity.normalized, // 들어온 방향
+            shotDir = _shotDir
+        };
 
-            // 가지고 있는 능력 실행
-            _stat.ability.Execute(param);   
-        }
-        if (currentBounceCount < 0)
-        {
-            // 반납처리 필요
-            Managers.Pool.Release(gameObject);
-        }
+        // 가지고 있는 능력 실행
+        _stat.ability.Execute(param);
     }
-    
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        // 관통탄
+        PlayHitEffect(gameObject.transform.position,Vector2.zero);
+        // 파라미터 팩 만들기
+        AbilityExecuteParams param = new AbilityExecuteParams
+        {
+            stat = _stat,
+            bullet = this,
+            meteor = collision.gameObject.GetComponent<MeteorController>(),
+            trigger = collision, // 충돌 정보 통째로 전달
+            incomingDirection = _rb.linearVelocity.normalized, // 들어온 방향
+            shotDir = _shotDir
+            
+        };
+
+        // 가지고 있는 능력 실행
+        _stat.ability.Execute(param);
+    }
     // 발사
     public void Shot(Vector2 dragVector)
     {
@@ -108,10 +167,10 @@ public class BulletController : MonoBehaviour
         {
             gameObject.SetActive(true);
         }
-        Vector2 force = dragVector * _stat.speed.TotalValue;
+        _shotDir = dragVector * _stat.speed.TotalValue;
 
         SetPhysicsState(false);
-        _rb.AddForce(force, ForceMode2D.Impulse);
+        _rb.AddForce(_shotDir, ForceMode2D.Impulse);
 
     }
     
@@ -122,24 +181,44 @@ public class BulletController : MonoBehaviour
         if (isKinematic) _rb.linearVelocity = Vector2.zero;
     }
     // 히트 이펙트를 재생하는 별도 함수
-    private void PlayHitEffect(Collision2D collision)
+    private void PlayHitEffect(Vector2 hitPos, Vector2 hitNormal)
     {
         // 1. 풀에서 이펙트 오브젝트를 꺼냅니다. (Enum 사용)
         GameObject hitGo = Managers.Pool.Get<GameObject>(Define.Pool.NormalBullet_Hit);
 
         if (hitGo != null)
         {
-            // 2. 충돌 위치 결정
-            // OnTrigger는 정확한 ContactPoint를 제공하지 않으므로, 
-            // 가장 가까운 지점을 찾거나 총알의 현재 위치를 사용합니다.
-            Vector3 hitPos = collision.contacts[0].point;
             hitGo.transform.position = hitPos;
-
-            // : 이펙트가 튕겨나가는 방향(Normal)을 바라보게 하고 싶다면?
-            Vector2 hitNormal = collision.contacts[0].normal;
             float angle = Mathf.Atan2(hitNormal.y, hitNormal.x) * Mathf.Rad2Deg;
             hitGo.transform.rotation = Quaternion.Euler(0, 0, angle);
         }
+    }
+    public void DecreasePierceCount()
+    {
+        currentPierceCount--;
+        if(currentPierceCount < 0)
+        {
+            // 반납처리 필요
+            Managers.Pool.Release(gameObject);
+        }
+        // 필요하다면 여기서 0 이하가 됐을 때의 로직을 추가할 수도 있음
+    }
+
+    // ★ [추가] 튕김 처리를 요청할 때 사용하는 함수
+    public void DecreaseBounceCount()
+    {
+        currentBounceCount--;
+
+        if (currentBounceCount < 0)
+        {
+            // 반납처리 필요
+            Managers.Pool.Release(gameObject);
+        }
+    }
+
+    public void SetRigidVelocity(Vector2 velocity)
+    {
+        _rb.linearVelocity = velocity;
     }
 
     #region ParticleSystem

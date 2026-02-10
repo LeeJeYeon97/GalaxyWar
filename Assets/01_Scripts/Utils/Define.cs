@@ -19,17 +19,22 @@ public class Define
     }
     public enum Pool
     {
-        NormalBullet,
-        ExplosionBullet,
-        SplitBullet,
-        LightningBullet,
+        // 프리팹
+        None = 0,
+        NormalBullet = 1,
+        ExplosionBullet = 2,
+        SplitBullet = 3,
+        LightningBullet = 4,
+        LightningEffect = 5,
+        Meteor = 6,
+        PierceBullet = 7,
 
-        Meteor,
-        ExplosionRangeIndicator,
-        NormalBullet_Hit,
-        NormalBullet_Flash,
+        
+        // 파티클
+        ExplosionRangeIndicator = 100,
+        NormalBullet_Hit = 101,
+        NormalBullet_Flash = 102,
 
-        LightningEffect
     }
     public enum UIEvent
     {
@@ -79,6 +84,14 @@ public class Define
         UpgradeExplosionChance = 33,         // 폭발탄 발동 확률 증가
         
         ActivateLightningBullet = 40,        // 번개탄 활성화
+        UpgradeLigthningCount = 41,          // 번개탄 전이 횟수 증가
+        UpgradeLigthningDamage = 42,         // 번개탄 번개 데미지 증가
+        UpgradeLightningRange = 43,          // 번개탄 전이 범위 증가
+
+        ActivatePierceBullet = 50,           // 관통탄 활성화
+        UpgradePierceCount = 51,             // 관통횟수 증가
+        UpgradePierceDamage = 52,            // 관통 데미지 증가
+        UpgradePierceSpeed = 53,             // 관통탄 속도 증가
 
     }
     public enum BulletType
@@ -86,7 +99,8 @@ public class Define
         NormalBullet = 0,       // 기본탄
         SplitBullet = 1,        // 분열탄
         ExplosionBullet = 2,    // 폭발탄
-        LightningBullet =3,     // 번개탄
+        LightningBullet = 3,     // 번개탄
+        PierceBullet = 4,       // 관통탄
         
     }
 }

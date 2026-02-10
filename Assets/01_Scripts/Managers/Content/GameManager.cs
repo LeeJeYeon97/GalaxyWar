@@ -169,4 +169,16 @@ public class GameManager : MonoBehaviour
 
         return Managers.Stat.GetBulletStat(BulletType.NormalBullet);
     }
+
+    // 테스트용
+    public void TestAbility()
+    {
+        // 1. 게임 일시정지 (시간 배율 0)
+        Managers.Game.ChangeGameState(Define.GameState.Pause);
+
+        Managers.UI.ShowPopupUI<UI_GameTestPopup>();
+        
+    }
+    
+    
 }

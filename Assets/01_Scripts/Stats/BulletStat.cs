@@ -24,6 +24,8 @@ public class BulletStat
 
     public Stat lightningRange = new Stat();
     public Stat lightningCount = new Stat();
+
+    public Stat pierceCount = new Stat();
     public void SettingStat(BulletStatDataSO data)
     {
         level = 0;
@@ -41,12 +43,15 @@ public class BulletStat
         // Æø¹ßÅº ¼¼ÆÃ
         explosionRadius.Init(data.baseExplosionRange);
 
+        // ºÐ¿­Åº
         splitCount.Init(data.baseSplitCount);
 
-
+        // ¹ø°³Åº
         lightningRange.Init(data.lightningRange);
         lightningCount.Init(data.lightningCount);
 
+        // °üÅëÅº
+        pierceCount.Init(data.pierceCount);
 
         // ¾îºô¸®Æ¼ ´É·Â(½ÇÇàÄÚµå) ¼¼ÆÃ
         ability = CreateAbility(data);

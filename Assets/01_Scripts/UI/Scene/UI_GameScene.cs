@@ -77,11 +77,12 @@ public class UI_GameScene : UI_Scene
         UpdateScoreText(Managers.Game.Score);
 
         Button restartButton = GetButton((int)Buttons.RestartButton);
-        restartButton.onClick.AddListener(OnClickRestartButton);
+        restartButton.onClick.AddListener(OnClickGameTestButton);
         Button PauseButton = GetButton((int)Buttons.PauseButton);
     }
 
-    public void OnClickRestartButton()
+    public void OnClickGameTestButton()
     {
+        Managers.Game.TestAbility();
     }
 }

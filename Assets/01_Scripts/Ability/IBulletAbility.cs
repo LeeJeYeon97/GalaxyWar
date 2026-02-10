@@ -1,17 +1,20 @@
 using DG.Tweening;
+using GLTFast.Schema;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.RuleTile.TilingRuleOutput;
 
 
 public struct AbilityExecuteParams
 {
     public BulletStat stat;
     public BulletController bullet;
-    public MeteorController target;
+    public MeteorController meteor;
     public Collision2D collision; // 여기에 쿨리전 정보를 담습니다
-                                  // .
+    public Collider2D trigger;                   // .
     // 필요하다면 들어오는 방향 등도 미리 계산해서 넣을 수 있습니다.
     public Vector2 incomingDirection;
+    public Vector2 shotDir;
 }
 
 public interface IBulletAbility
@@ -24,11 +27,8 @@ public class NormalBulletAbility : IBulletAbility
 {
     public void Execute(AbilityExecuteParams param)
     {
-        if (param.target == null)
-        {
-            return;
-        }
-        param.target.OnDamage(param.stat.damage.TotalValue);
+        param.bullet.DecreaseBounceCount();
+        param.meteor?.OnDamage(param.stat.damage.TotalValue);
     }
 }
 // 폭발탄
@@ -45,7 +45,7 @@ public class ExplosionBulletAbility : IBulletAbility
 
         // --- 시각적 연출 (기존 로직 그대로 활용) ---
         GameObject indicator = Managers.Pool.Get<GameObject>(Define.Pool.ExplosionRangeIndicator);
-        indicator.transform.position = param.target.transform.position;
+        indicator.transform.position = param.collision.transform.position;
         indicator.transform.localScale = Vector3.zero;
 
         SpriteRenderer sr = indicator.GetComponent<SpriteRenderer>();
@@ -60,7 +60,7 @@ public class ExplosionBulletAbility : IBulletAbility
 
         // --- 실제 범위 데미지 로직 ---
         int layerMask = 1 << LayerMask.NameToLayer("Meteor");
-        Collider2D[] colliders = Physics2D.OverlapCircleAll(param.target.transform.position, finalRadius, layerMask);
+        Collider2D[] colliders = Physics2D.OverlapCircleAll(param.collision.transform.position, finalRadius, layerMask);
         foreach (var col in colliders)
         {
             MeteorController meteor = col.GetComponent<MeteorController>();
@@ -69,6 +69,7 @@ public class ExplosionBulletAbility : IBulletAbility
                 meteor.OnDamage(finalExplosionDmg);
             }
         }
+        param.bullet.DecreaseBounceCount();
     }
 }
 
@@ -82,14 +83,14 @@ public class SplitBulletAbility : IBulletAbility
         if (param.stat.type != Define.BulletType.SplitBullet ||
             param.stat.isActivated == false) return;
 
+        param.bullet.DecreaseBounceCount();
+        param.meteor?.OnDamage(param.stat.damage.TotalValue);
+
         // 이미 분열된 애면
-        if(param.bullet.canSplit == false)
+        if (param.bullet.canSplit == false)
         {
-            // 뎀지만 주기
-            param.target.OnDamage(param.stat.damage.TotalValue);
             return;
         }
-
         // 3. 반사 방향 계산 (튕겨나가는 기준 방향)
         // 충돌 지점의 Normal(법선)을 기준으로 들어온 방향을 반사시킵니다.
         Vector2 normal = param.collision.contacts[0].normal;
@@ -97,17 +98,15 @@ public class SplitBulletAbility : IBulletAbility
 
         // 4. 메테오 반지름 계산 (생성 위치 오프셋용)
         float meteorRadius = 0.5f;
-        CircleCollider2D col = param.target.GetComponent<CircleCollider2D>();
+        CircleCollider2D col = param.meteor.GetComponent<CircleCollider2D>();
         if (col != null)
         {
-            meteorRadius = col.radius * param.target.transform.localScale.x;
+            meteorRadius = col.radius * param.meteor.transform.localScale.x;
         }
 
         // 5. 분열탄 생성 루프
         int totalCount = Mathf.RoundToInt(param.stat.splitCount.TotalValue);
         float spreadRange = 70f; // 부채꼴 퍼짐 각도
-
-        param.target.OnDamage(param.stat.damage.TotalValue);
 
         for (int i = 0; i < totalCount; i++)
         {
@@ -125,7 +124,7 @@ public class SplitBulletAbility : IBulletAbility
 
             // 생성 위치: 메테오 중심 + (날아갈 방향 * 반지름 * 1.1f)
             // 이렇게 하면 메테오 표면 바로 밖에서 튀어나오는 연출이 됩니다.
-            Vector3 spawnPos = param.target.transform.position + (Vector3)(spawnDir * (meteorRadius * 1.1f));
+            Vector3 spawnPos = param.meteor.transform.position + (Vector3)(spawnDir * (meteorRadius * 1.1f));
             splitBullet.transform.position = spawnPos;
 
             // 스탯 설정 및 분열탄 플래그 세팅
@@ -152,18 +151,19 @@ public class LightningBulletAbility : IBulletAbility
         if (param.stat.type != Define.BulletType.LightningBullet||
             param.stat.isActivated == false) return;
 
-        // 1. 현재 맞은 놈(Target)의 위치
-        if(param.target == null)
+        
+        if(param.meteor == null)
         {
+            param.bullet.DecreaseBounceCount();
             return;
         }
         // 맨 처음 맞은놈 데미지 주기
-        param.target.OnDamage(param.stat.damage.TotalValue);
-        Vector3 hitPos = param.target.transform.position;
+        param.meteor.OnDamage(param.stat.damage.TotalValue);
+        Vector3 hitPos = param.meteor.transform.position;
 
         // 이미 번개에 맞은 적들을 저장 (중복 타격 방지)
         HashSet<GameObject> visitedTargets = new HashSet<GameObject>();
-        visitedTargets.Add(param.target.gameObject);
+        visitedTargets.Add(param.meteor.gameObject);
 
         // 2. 주변 적들 탐색 (OverlapCircle)
         LayerMask targetLayer = LayerMask.GetMask("Meteor");
@@ -181,7 +181,7 @@ public class LightningBulletAbility : IBulletAbility
                 if (visitedTargets.Contains(col.gameObject)) continue;
 
                 // 방금 맞은 놈은 제외
-                if (col.gameObject == param.target.gameObject) continue;
+                if (col.gameObject == param.meteor.gameObject) continue;
 
                 float dist = Vector2.Distance(hitPos, col.transform.position);
                 if (dist < minDistance)
@@ -221,10 +221,28 @@ public class LightningBulletAbility : IBulletAbility
                 break;
             }
         }
-        
+        param.bullet.DecreaseBounceCount();
+    }
+}
 
-        
+// 관통탄
+public class PierceBulletAbility : IBulletAbility
+{
+    public void Execute(AbilityExecuteParams param)
+    {
+        Debug.Log("관통탄 실행!");
+        // 분열탄 활성화 안되어있으면 리턴
+        if (param.stat.type != Define.BulletType.PierceBullet ||
+            param.stat.isActivated == false) return;
 
-        
+        if(param.meteor)
+        {
+            // 메테오에 맞았으면
+            // 1. 관통횟수 감소
+            param.meteor.OnDamage(param.stat.damage.TotalValue);
+            param.bullet.DecreasePierceCount();
+
+        }
+        // 벽에 튕겼을 떄는 Bullet의 FixedUpdate에서 진행
     }
 }

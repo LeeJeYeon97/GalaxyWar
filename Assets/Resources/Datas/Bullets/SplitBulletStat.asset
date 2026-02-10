@@ -13,9 +13,8 @@ MonoBehaviour:
   m_Name: SplitBulletStat
   m_EditorClassIdentifier: Assembly-CSharp::BulletStatDataSO
   type: 1
-  poolType: 2
+  poolType: 3
   bulletName: "\uBD84\uC5F4\uD0C4"
-  prefabs: {fileID: 7431507651775079818, guid: 8e50c80ce1f42e348a4202493bba907b, type: 3}
   chance: 10
   damage: 1
   speed: 5
@@ -24,3 +23,5 @@ MonoBehaviour:
   baseExplosionRange: 0
   baseSplitCount: 5
   lightningRange: 0
+  lightningCount: 0
+  pierceCount: 0

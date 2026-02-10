@@ -175,3 +175,19 @@ public class ActivateLightningBullet : LightningBulletApplier
     }
 }
 #endregion
+
+#region °üÅëÅº
+public abstract class PierceBulletApplier : BulletAbilityApplier
+{
+    protected override BulletType TargetBulletType => BulletType.PierceBullet;
+}
+
+public class ActivatePierceBullet : PierceBulletApplier
+{
+    public override void Apply(AbilityDataSO data, int level)
+    {
+        Stat.isActivated = true;
+    }
+}
+
+#endregion

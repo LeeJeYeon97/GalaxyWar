@@ -10,18 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 160ff4ffeb9274541aa09556305862c8, type: 3}
-  m_Name: LightningBulletStat
+  m_Name: PierceBulletStat
   m_EditorClassIdentifier: Assembly-CSharp::BulletStatDataSO
-  type: 3
-  poolType: 4
+  type: 4
+  poolType: 7
   bulletName: 
-  chance: 100
+  chance: 300
   damage: 1
   speed: 5
-  bounceCount: 0
+  bounceCount: 1
   isActivated: 0
   baseExplosionRange: 0
   baseSplitCount: 0
-  lightningRange: 5
-  lightningCount: 3
-  pierceCount: 0
+  lightningRange: 0
+  lightningCount: 0
+  pierceCount: 10

@@ -206,7 +206,7 @@ GameObject:
   - component: {fileID: 6517979640718755207}
   m_Layer: 7
   m_Name: Meteor
-  m_TagString: Untagged
+  m_TagString: Meteor
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

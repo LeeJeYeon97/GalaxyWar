@@ -7,7 +7,6 @@ public class BulletStatDataSO : ScriptableObject
     public Define.BulletType type;
     public Define.Pool poolType;
     public string bulletName;
-    public GameObject prefabs;
     
     [Header("Base Stat")]
     public float chance;                // 해당 불릿이 장전될 확률
@@ -27,5 +26,7 @@ public class BulletStatDataSO : ScriptableObject
     public float lightningRange;
     public int lightningCount;
 
+    [Header("PierceBullet Stat Settings")]
+    public int pierceCount;
 
 }

@@ -56,7 +56,7 @@ public class MeteorController : MonoBehaviour
         float randomTorque = Random.Range(-100f, 100f);
         _rb.angularVelocity = randomTorque;
 
-        _maxHp = 2;
+        _maxHp = 1;
         _currentHp = _maxHp;
         UpdateHPBar();
     }
