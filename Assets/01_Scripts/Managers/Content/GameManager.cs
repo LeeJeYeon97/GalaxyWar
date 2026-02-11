@@ -28,7 +28,7 @@ public class GameManager : MonoBehaviour
         _player?.Init();
 
         GameObject spawner = Managers.Resource.Instantiate(Path.Spawner);
-        spawner.GetComponent<MeteorSpawner>()?.Init();
+        spawner.GetComponent<Spawner>()?.Init();
         
         Score = 0;
     }

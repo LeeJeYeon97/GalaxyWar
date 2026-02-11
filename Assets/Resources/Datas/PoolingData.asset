@@ -43,3 +43,6 @@ MonoBehaviour:
   - type: 7
     original: {fileID: 7431507651775079818, guid: ca7277024f0a8cf4185b6d126fe4107e, type: 3}
     defaultCount: 100
+  - type: 50
+    original: {fileID: 3631116037356875380, guid: 189a08e76de87424ab733d2918193270, type: 3}
+    defaultCount: 100

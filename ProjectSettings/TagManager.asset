@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Wall
   - Meteor
+  - Item
   layers:
   - Default
   - TransparentFX
@@ -17,7 +18,7 @@ TagManager:
   - Meteor
   - Wall
   - Player
-  - 
+  - Item
   - 
   - 
   - 

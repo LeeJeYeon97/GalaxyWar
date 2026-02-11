@@ -36,10 +36,6 @@ public class PlayerController : MonoBehaviour
     private Vector2 dragPos;
     private Vector2 dragDir;
 
-    // 자동 탐색 변수
-    //public GameObject _target;
-    //private float _targetUpdateInterval = 0.1f;
-    //private float _targetTimer;
 
     public void Init()
     {

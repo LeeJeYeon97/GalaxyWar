@@ -11,15 +11,12 @@ public class MeteorController : MonoBehaviour
     
     [SerializeField]
     private float _currentHp;
+
     [SerializeField]
     private float _maxHp;
-    
-    private Vector3 minScale = new Vector3(0.1f, 0.1f, 1f);
-    private Vector3 maxScale = new Vector3(0.3f, 0.3f, 1f);
+    public MeteorStat Stat;
 
     private Rigidbody2D _rb;
-    [SerializeField] private float minSpeed = 0.5f;
-    [SerializeField] private float maxSpeed = 1f;
 
     public bool _hasEnteredView;
     private float _checkOffset = 2.0f; // 경계 밖 여유 공간
@@ -35,20 +32,23 @@ public class MeteorController : MonoBehaviour
     }
     public void Init(Vector2 pos)
     {
+        // 랜덤으로 스탯뽑기
+        Stat = Managers.Stat.GetRandomMeteorStat();
+        if (Stat == null) return;
 
         // 1.위치 설정
         transform.position = pos;
         _hasEnteredView = false;
 
         // 2. 랜덤 스케일 설정
-        float rawRandom = Random.Range(minScale.x, maxScale.x);
-        float snappedScale = Mathf.Round(rawRandom * 100f) / 100f;
-        transform.localScale = new Vector3(snappedScale, snappedScale, 1f);
+        //float rawRandom = Random.Range(minScale.x, maxScale.x);
+        //float snappedScale = Mathf.Round(rawRandom * 100f) / 100f;
+        //transform.localScale = new Vector3(snappedScale, snappedScale, 1f);
 
        
         // 플레이어 방향으로 방향 계산
         Vector2 dir = ((Vector2)Managers.Game._player.transform.position - pos).normalized;
-        float speed = Random.Range(minSpeed, maxSpeed);
+        float speed = Random.Range(Stat.MinSpeed.TotalValue, Stat.MaxSpeed.TotalValue);
         _rb.linearVelocity = dir * speed;
 
         // 3. 랜덤한 회전 속도 부여 (초당 회전 각도)
@@ -56,7 +56,7 @@ public class MeteorController : MonoBehaviour
         float randomTorque = Random.Range(-100f, 100f);
         _rb.angularVelocity = randomTorque;
 
-        _maxHp = 1;
+        _maxHp = Stat.MaxHp.TotalValue;
         _currentHp = _maxHp;
         UpdateHPBar();
     }
@@ -91,11 +91,11 @@ public class MeteorController : MonoBehaviour
             _currentHp -= damage;
 
             // 때릴때마다 점수 1점
-            Managers.Game.AddScore(1);
+            Managers.Game.AddScore(Mathf.FloorToInt(Stat.Score.TotalValue));
 
             if (_currentHp <= 0)
             {
-                Managers.Level.AddExp(1);
+                Managers.Level.AddExp(Stat.Exp.TotalValue);
                 Managers.Pool.Release(gameObject);
             }
             else

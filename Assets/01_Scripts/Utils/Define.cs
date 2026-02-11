@@ -29,6 +29,8 @@ public class Define
         Meteor = 6,
         PierceBullet = 7,
 
+        Item = 50,
+
         
         // 파티클
         ExplosionRangeIndicator = 100,
@@ -102,6 +104,15 @@ public class Define
         LightningBullet = 3,     // 번개탄
         PierceBullet = 4,       // 관통탄
         
+    }
+    public enum MeteorType
+    {
+        NormalMeteor = 0,
+
+    }
+    public enum ItemType
+    {
+        RecoveryHp,             // HP 회복
     }
 }
 

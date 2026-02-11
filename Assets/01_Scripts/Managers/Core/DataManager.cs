@@ -1,6 +1,8 @@
 using JetBrains.Annotations;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using UnityEditor.Search;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -19,7 +21,9 @@ public class DataManager
     public GameDataSO GameData { get; private set; }
     public PlayerStatDataSO playerStatData { get; private set; }
     public PoolingDataSO poolingData { get; private set; }
+    public Dictionary<Define.ItemType,ItemDataSO> ItemDataList { get; private set; }
 
+    public Dictionary<Define.MeteorType, MeteorStatDataSO> MeteorStatDataDict {  get; private set; }
     public void Init()
     {
         // [사용 예시]
@@ -46,6 +50,9 @@ public class DataManager
         {
             Debug.LogError("poolingData Null");
         }
+
+        ItemDataList = LoadDataToDict<Define.ItemType, ItemDataSO>("Items",data => data.type);
+        MeteorStatDataDict = LoadDataToDict<Define.MeteorType, MeteorStatDataSO>("Meteors", data => data.Type);
     }
 
     /// <summary>
@@ -80,15 +87,21 @@ public class DataManager
         return dict;
     }
 
-    public BulletStatDataSO GetBulletData(Define.BulletType type)
+    private List<T> LoadDataToList<T>(string folderName) where T : ScriptableObject
     {
-        if(BulletDataDict.TryGetValue(type, out var data))
-        {
-            return data;
-        }
-        return null;
-    }
+        List<T> list = new List<T>();
+        T[] datas = Managers.Resource.LoadAll<T>($"Datas/{folderName}");
 
+        if (datas == null || datas.Length == 0)
+        {
+            Debug.LogWarning($"DataManager: Datas/{folderName} 경로에 데이터가 없습니다.");
+            return null;
+        }
+
+        list = datas.ToList<T>();
+        return list;
+    }
+    
     // T로 들어온 스크립터블 오브젝트로 만든 모든 데이터들중에 이름으로 찾아주는 함수
     //public T GetData<T>(string name) where T : ScriptableObject
     //{
