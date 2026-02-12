@@ -60,6 +60,20 @@ public class MeteorController : MonoBehaviour
         _currentHp = _maxHp;
         UpdateHPBar();
     }
+
+    public void OnCollisionEnter2D(Collision2D collision)
+    {
+        Debug.Log("메테오 피격");
+        // 플레이어 피격 설정
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            PlayerController player = collision.gameObject.GetComponent<PlayerController>();
+            if (player == null) return;
+
+            Debug.Log("플레이어 피격");
+            player.OnDamage(Stat.Damage.TotalValue);
+        }
+    }
     private void UpdateHPBar()
     {
         if (_hpBar == null)

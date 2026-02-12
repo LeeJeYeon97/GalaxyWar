@@ -23,6 +23,7 @@ public class PlayerController : MonoBehaviour
 
     [Header("Stat")]    
     public float maxLineLength = 7f;    // 조준선 길이
+    
     public PlayerStat stat;
 
     [Header("Bullet")]
@@ -56,14 +57,14 @@ public class PlayerController : MonoBehaviour
         // 게임 시작 시 첫 장전
         Reload();
     }
-    public void OnEnable()
+    private void OnEnable()
     {
         Managers.Input.OnDragStarted += OnDragStart;
         Managers.Input.OnDragging += OnDragUpdate;
         Managers.Input.OnDragEnded += OnDragRelease;
     }
 
-    public void OnDisable()
+    private void OnDisable()
     {
         if (Managers.Input != null)
         {
@@ -309,6 +310,7 @@ public class PlayerController : MonoBehaviour
 
         if(stat.currentHp <= 0)
         {
+            Debug.Log("죽었습니다.");
             // 죽는 처리
             Die();
         }
