@@ -1,4 +1,5 @@
 using DG.Tweening;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.AppUI.UI;
@@ -37,7 +38,8 @@ public class PlayerController : MonoBehaviour
     private Vector2 dragPos;
     private Vector2 dragDir;
 
-
+    public Action<float, float> OnHpChanged; // 현재 체력, 최대체력
+    public Action<float, float> OnBurstChanged; // 현재 버스트 게이지, 최대 버스트 게이지
     public void Init()
     {
         _rb = GetComponent<Rigidbody2D>();
@@ -308,7 +310,9 @@ public class PlayerController : MonoBehaviour
 
         stat.currentHp -= damage;
 
-        if(stat.currentHp <= 0)
+        OnHpChanged.Invoke(stat.currentHp, stat.maxHp.TotalValue);
+
+        if (stat.currentHp <= 0)
         {
             Debug.Log("죽었습니다.");
             // 죽는 처리
@@ -319,7 +323,6 @@ public class PlayerController : MonoBehaviour
             // 피격후에 짧은 무적시간
             //StartCoroutine(CoInvincible());
         }
-
     }
     private void Die()
     {

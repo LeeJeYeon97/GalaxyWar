@@ -7,7 +7,7 @@ public class Managers : MonoBehaviour
     static bool _isQuitting = false;
 
     private static Managers _instance;
-    public static Managers Instance { get { Init(); return _instance; } }
+    public static Managers Instance { get { if (_instance == null) Init(); return _instance; } }
 
     // ========================================================== //
     // 각 관리자들 (필요한 매니저들을 여기에 추가)
@@ -83,16 +83,18 @@ public class Managers : MonoBehaviour
 
             // 매니저들 초기화 함수
             Data.Init();
-            UI.Init();
             Input.Init();
             Sound.Init();
-            //Pool.Init();
+
+            Pool.Init();
 
             Level.Init();
             Scene.Init();
 
             Stat.Init();
             Ability.Init();
+
+            UI.Init();
         }
     }
     public void Clear()

@@ -9,11 +9,11 @@ public class GameScene : BaseScene
         base.Init();
 
         SceneType = Define.Scene.GameScene;
-        Managers.UI.ShowSceneUI<UI_GameScene>();
-
+        
+        
         Managers.Map.Init();
-        Managers.Pool.Init();
         Managers.Game.Init();
+        Managers.UI.Init();
 	}
 
     public override void Clear()
