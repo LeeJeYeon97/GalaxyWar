@@ -22,6 +22,7 @@ public class UI_GameScene : UI_Scene
     {
         RestartButton,
         PauseButton,
+        BurstModeButton,
     }
     enum Images
     {
@@ -40,15 +41,17 @@ public class UI_GameScene : UI_Scene
 
         Managers.Game._player.OnHpChanged += UpdateHpBar;
         Managers.Game._player.OnBurstChanged += UpdateBurstBar;
-        
+        Managers.Game._player.OnDefenceChanged += UpdateShieldBar;
     }
     private void OnDisable()
     {
         Managers.Level.OnExpChanged -= UpdateExpBar;
         Managers.Level.OnLevelUp -= UpdateLevelText;
         Managers.Game.OnUpdateScore -= UpdateScoreText;
+
         Managers.Game._player.OnHpChanged -= UpdateHpBar;
         Managers.Game._player.OnBurstChanged -= UpdateBurstBar;
+        Managers.Game._player.OnDefenceChanged -= UpdateShieldBar;
     }
     public override void Init()
     {
@@ -63,16 +66,23 @@ public class UI_GameScene : UI_Scene
         canvas.renderMode = RenderMode.ScreenSpaceCamera;
         canvas.worldCamera = Camera.main;
 
-        UpdateExpBar(Managers.Level.CurrentExp, Managers.Level.MaxExp);
-        UpdateLevelText(Managers.Level.CurrentLevel);
-        UpdateScoreText(Managers.Game.Score);
-        // 버스트 모드 체력바 쉴드바 연동하기
-        
-
+        UpdateSlider();
 
         Button restartButton = GetButton((int)Buttons.RestartButton);
         restartButton.onClick.AddListener(OnClickGameTestButton);
         Button PauseButton = GetButton((int)Buttons.PauseButton);
+
+        Button BurstButton = GetButton((int)Buttons.BurstModeButton);
+        BurstButton.onClick.AddListener(Managers.Game._player.ActivateBurst);
+    }
+    private void UpdateSlider()
+    {
+        UpdateExpBar(Managers.Level.CurrentExp, Managers.Level.MaxExp);
+        UpdateLevelText(Managers.Level.CurrentLevel);
+        UpdateScoreText(Managers.Game.Score);
+        UpdateHpBar(Managers.Game._player.currentHp, Managers.Game._player.stat.maxHp.TotalValue);
+        UpdateShieldBar(Managers.Game._player.currentDefence, Managers.Game._player.stat.maxDefence.TotalValue);
+        //UpdateBurstBar(Managers.Game._player., Managers.Game._player.maxBurst);
     }
     public void UpdateExpBar(float curExp, float maxExp)
     {
@@ -87,6 +97,9 @@ public class UI_GameScene : UI_Scene
     public void UpdateBurstBar(float curBurst, float maxBurst)
     {
         Image image = GetImage((int)Images.BurstModeBar);
+
+        string text = Mathf.FloorToInt(curBurst).ToString();
+        GetTMP((int)Texts.BurstModeText).text = text;
 
         if (image == null)
             return;

@@ -7,7 +7,8 @@ public class PlayerStatDataSO : ScriptableObject
     public float speed;
 
     public float maxHp;
-    public float defence;
+    public float maxDefence;
+    public float burstPower;
 
     public float reloadCount;
     public float reloadTime;

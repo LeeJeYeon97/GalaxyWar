@@ -5,7 +5,7 @@ public class PlayerStat
     public Stat speed = new Stat();
 
     public Stat maxHp = new Stat();
-    public Stat defence = new Stat();
+    public Stat maxDefence = new Stat();
 
     public Stat reloadCount = new Stat();
     public Stat reloadTime = new Stat();
@@ -13,7 +13,7 @@ public class PlayerStat
     public Stat shotRange = new Stat();
     public Stat shotTime = new Stat();
 
-    public float currentHp;
+    
     public void SetStat(PlayerStatDataSO data)
     {
         if(data == null)
@@ -23,8 +23,7 @@ public class PlayerStat
 
         speed.Init(data.speed);
         maxHp.Init(data.maxHp);
-        currentHp = maxHp.TotalValue;
-        defence.Init(data.defence);
+        maxDefence.Init(data.maxDefence);
         reloadCount.Init(data.reloadCount);
         reloadTime.Init(data.reloadTime);
         shotRange.Init(data.shotRange);

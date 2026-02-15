@@ -23,17 +23,7 @@ public class UIManager
 
     public void Init()
     {
-        switch(Managers.Scene.CurrentScene.SceneType)
-        {
-            case Define.Scene.GameScene:
-                ShowSceneUI<UI_GameScene>();
-                break;
-            case Define.Scene.LobbyScene:
-                ShowSceneUI<UI_LobbyScene>();
-                break;
-            default:
-                break;
-        }
+
     }
     public void Clear()
     {

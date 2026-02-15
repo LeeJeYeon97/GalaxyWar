@@ -19,7 +19,13 @@ public class GameManager : MonoBehaviour
     public PlayerController _player;
     public void Init()
     {
+     
+    }
+    public void SetGame()
+    {
+        Managers.Map.Init();
 
+        Score = 0;
         ChangeGameState(GameState.Playing);
 
         // 플레이어 세팅
@@ -29,8 +35,8 @@ public class GameManager : MonoBehaviour
 
         GameObject spawner = Managers.Resource.Instantiate(Path.Spawner);
         spawner.GetComponent<Spawner>()?.Init();
-        
-        Score = 0;
+
+        Managers.UI.ShowSceneUI<UI_GameScene>();
     }
     public void AddActiveObject<T>(T item)
     {

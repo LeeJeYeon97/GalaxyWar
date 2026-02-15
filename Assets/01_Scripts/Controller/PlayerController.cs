@@ -24,7 +24,12 @@ public class PlayerController : MonoBehaviour
 
     [Header("Stat")]    
     public float maxLineLength = 7f;    // 조준선 길이
-    
+    public float currentHp;
+    public float currentDefence;
+    public bool isBurst;
+    public float currentBurst;
+    public float maxBurst = 100.0f;
+    public float burstFullChargeTime = 120f;    // 2분
     public PlayerStat stat;
 
     [Header("Bullet")]
@@ -39,6 +44,7 @@ public class PlayerController : MonoBehaviour
     private Vector2 dragDir;
 
     public Action<float, float> OnHpChanged; // 현재 체력, 최대체력
+    public Action<float, float> OnDefenceChanged; // 현재 방어막, 최대방어막
     public Action<float, float> OnBurstChanged; // 현재 버스트 게이지, 최대 버스트 게이지
     public void Init()
     {
@@ -50,10 +56,14 @@ public class PlayerController : MonoBehaviour
         lr = GetComponent<LineRenderer>();
         lr.enabled = false;
 
-
         // 스탯 데이터 세팅
         stat = new PlayerStat();
         stat.SetStat(Managers.Data.playerStatData);
+
+        currentHp = stat.maxHp.TotalValue;
+        currentDefence = stat.maxDefence.TotalValue;
+        isBurst = false;
+        currentBurst = 0f;
 
         if (Managers.Game.currentGameState != GameState.Playing) return;
         // 게임 시작 시 첫 장전
@@ -81,6 +91,17 @@ public class PlayerController : MonoBehaviour
         // 적 탐색
         //FindTarget();
         Shoot();
+
+        // 버스트 모드가 아니면 버스트 게이지 자동충전
+        if(isBurst == false)
+        {
+            float recoveryAmount = (maxBurst / burstFullChargeTime) * Time.deltaTime;
+            AddBurstGauge(recoveryAmount);
+        }
+        else
+        {   // 버스트 모드면 게이지 다운
+            ConsumeBurst();
+        }
     }
     private void FixedUpdate()
     {
@@ -305,23 +326,30 @@ public class PlayerController : MonoBehaviour
 
     public void OnDamage(float damage)
     {
-        // 무적 상태
-        // if (_isInvincible) return;
+        // 버스트모드면 무적 상태
+        if (isBurst) return;
 
-        stat.currentHp -= damage;
-
-        OnHpChanged.Invoke(stat.currentHp, stat.maxHp.TotalValue);
-
-        if (stat.currentHp <= 0)
+        // 방어막이 있으면
+        if (currentDefence > 0)
+        {
+            currentDefence -= damage;
+            OnDefenceChanged.Invoke(currentDefence, stat.maxDefence.TotalValue);
+            // 피격후에 짧은 무적시간
+            //StartCoroutine(CoInvincible());
+        }
+        // 방어막 없으면
+        else
+        {
+            currentHp -= damage;
+            OnHpChanged.Invoke(currentHp, stat.maxHp.TotalValue);
+            // 피격후에 짧은 무적시간
+            //StartCoroutine(CoInvincible());
+        }
+        if (currentHp <= 0)
         {
             Debug.Log("죽었습니다.");
             // 죽는 처리
             Die();
-        }
-        else
-        {
-            // 피격후에 짧은 무적시간
-            //StartCoroutine(CoInvincible());
         }
     }
     private void Die()
@@ -333,4 +361,42 @@ public class PlayerController : MonoBehaviour
     {
         return null;
     }
+
+    #region 버스트 모드 관련
+    // 게이지 증가 함수 (운석 파괴 시에도 호출)
+    public void AddBurstGauge(float amount)
+    {
+        if (isBurst) return;
+
+        currentBurst = Mathf.Clamp(currentBurst + amount, 0, maxBurst);
+        OnBurstChanged?.Invoke(currentBurst, maxBurst);
+    }
+
+    // 버스트 모드 발동
+    public void ActivateBurst()
+    {
+        if (currentBurst >= maxBurst)
+        {
+            isBurst = true;
+            Debug.Log("BURST MODE ACTIVATED!");
+            // 여기서 연출이나 능력치 강화 로직 실행
+        }
+        else
+        {
+            Debug.Log("BURST MODE 게이지 부족");
+        }
+    }
+
+    private void ConsumeBurst()
+    {
+        currentBurst -= 10f * Time.deltaTime; // 초당 10씩 감소 (10초 유지)
+        if (currentBurst <= 0)
+        {
+            currentBurst = 0;
+            isBurst = false;
+            Debug.Log("BURST MODE ENDED");
+        }
+        OnBurstChanged?.Invoke(currentBurst, maxBurst);
+    }
+    #endregion
 }

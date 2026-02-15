@@ -11,7 +11,7 @@ public class Spawner : MonoBehaviour
     [SerializeField] private float meteorSpawnInterval = 1.5f; // 积己 埃拜
 
     [Header("Item Spwan Settings")]
-    [SerializeField] private float itemSpawnInterval = 1.5f; // 积己 埃拜
+    [SerializeField] private float itemSpawnInterval = 60f; // 积己 埃拜
 
     private Coroutine _meteorSpawnCoroutine;
     private Coroutine _itemSpawnCoroutine;

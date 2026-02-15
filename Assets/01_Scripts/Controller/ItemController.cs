@@ -10,9 +10,14 @@ public class ItemController : MonoBehaviour
     private float minSpeed = 0.5f;
     private float maxSpeed = 1f;
 
+
+    public bool _hasEnteredView;
+    private float _checkOffset = 2.0f; // 경계 밖 여유 공간
+
     private void Awake()
     {
         _rb = GetComponent<Rigidbody2D>();
+        _hasEnteredView = false;
     }
 
     public void Init(Vector2 pos)
@@ -39,20 +44,38 @@ public class ItemController : MonoBehaviour
         _rb.angularVelocity = randomTorque;
 
     }
+    private void Update()
+    {
+        CheckBoundaries();
+    }
     private void OnTriggerEnter2D(Collider2D collision)
     {
         Debug.Log("Item 트리거");
         PlayerController player = collision.GetComponent<PlayerController>();
         if (player == null) return;
+    }
+    void CheckBoundaries()
+    {
+        Vector3 pos = transform.position;
+        var min = Managers.Map.PlayZoneMin;
+        var max = Managers.Map.PlayZoneMax;
 
-        
-        //switch(type)
-        //{
-        //    case Define.ItemType.RecoveryHp:
-        //        
-        //        break;
-        //    default:
-        //        break;
-        //}
+        // 1. 현재 화면 안인지 체크
+        bool isInView = pos.x > min.x && pos.x < max.x && pos.y > min.y && pos.y < max.y;
+
+        if (isInView)
+        {
+            _hasEnteredView = true;
+        }
+
+        // 2. 한 번 들어왔었는데, 다시 완전히 나갔다면 삭제
+        if (_hasEnteredView)
+        {
+            if (pos.x < min.x - _checkOffset || pos.x > max.x + _checkOffset ||
+                pos.y < min.y - _checkOffset || pos.y > max.y + _checkOffset)
+            {
+                Managers.Pool.Release(gameObject);
+            }
+        }
     }
 }

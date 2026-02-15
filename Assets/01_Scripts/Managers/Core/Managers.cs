@@ -82,19 +82,19 @@ public class Managers : MonoBehaviour
             _instance._input = Util.GetOrAddComponent<InputManager>(go);
 
             // 매니저들 초기화 함수
+            // Core
             Data.Init();
             Input.Init();
             Sound.Init();
-
-            Pool.Init();
-
-            Level.Init();
             Scene.Init();
-
-            Stat.Init();
-            Ability.Init();
-
+            Pool.Init();
             UI.Init();
+
+            // Content
+            Stat.Init();
+            Level.Init();
+            Ability.Init();
+            Game.Init();
         }
     }
     public void Clear()
