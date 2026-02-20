@@ -59,21 +59,25 @@ public class BulletStat
 
     private IBulletAbility CreateAbility(BulletStatDataSO data)
     {
+        if (data == null) return null;
+        
         // 1. Enum 이름을 문자열로 변환 (예: "BulletData")
         string className = data.type.ToString() + "Ability";
 
         // 2. 현재 어셈블리(내 프로젝트 코드)에서 해당 이름의 클래스 타입을 찾음
         Type t = Type.GetType(className);
-
         if (t != null)
         {
             // 3. 찾은 타입으로 인스턴스 생성 (new 하는 것과 동일)
             IBulletAbility ability = Activator.CreateInstance(t) as IBulletAbility;
             return ability;
         }
-
         Debug.LogError($"[BulletStat] {className} ability를 찾을 수 없습니다!");
         return null;
+        
+
+
+        
     }
 
 }

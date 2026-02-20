@@ -46,3 +46,6 @@ MonoBehaviour:
   - type: 50
     original: {fileID: 3631116037356875380, guid: 189a08e76de87424ab733d2918193270, type: 3}
     defaultCount: 100
+  - type: 8
+    original: {fileID: 7431507651775079818, guid: 57097764ba284c7468de58cb5cdbe02f, type: 3}
+    defaultCount: 100

@@ -1,5 +1,6 @@
 using DG.Tweening;
 using GLTFast.Schema;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using static UnityEngine.RuleTile.TilingRuleOutput;
@@ -27,19 +28,14 @@ public class NormalBulletAbility : IBulletAbility
 {
     public void Execute(AbilityExecuteParams param)
     {
-        param.bullet.DecreaseBounceCount();
-        param.meteor?.OnDamage(param.stat.damage.TotalValue);
+        
     }
 }
 // 폭발탄
 public class ExplosionBulletAbility : IBulletAbility
 {
-    public void Execute(AbilityExecuteParams param)
+    private void ShowRange(AbilityExecuteParams param)
     {
-        Debug.Log("폭발탄 실행!");
-        if (param.stat.type != Define.BulletType.ExplosionBullet ||
-            param.stat.isActivated == false) return;
-
         float finalRadius = param.stat.explosionRadius.TotalValue;
         float finalExplosionDmg = param.stat.damage.TotalValue;
 
@@ -57,19 +53,32 @@ public class ExplosionBulletAbility : IBulletAbility
         {
             Managers.Pool.Release(indicator);
         });
+    }
+    public void Execute(AbilityExecuteParams param)
+    {
+        Debug.Log("폭발탄 실행!");
+        if (param.stat.type != Define.BulletType.ExplosionBullet ||
+            param.stat.isActivated == false) return;
+
+        float finalRadius = param.stat.explosionRadius.TotalValue;
+        float finalExplosionDmg = param.stat.damage.TotalValue;
+
+        ShowRange(param);
 
         // --- 실제 범위 데미지 로직 ---
         int layerMask = 1 << LayerMask.NameToLayer("Meteor");
         Collider2D[] colliders = Physics2D.OverlapCircleAll(param.collision.transform.position, finalRadius, layerMask);
         foreach (var col in colliders)
         {
+            // 이미 맞은놈 제외
+            if (col.gameObject == param.collision.gameObject) continue;
+
             MeteorController meteor = col.GetComponent<MeteorController>();
             if(meteor)
             {
                 meteor.OnDamage(finalExplosionDmg);
             }
         }
-        param.bullet.DecreaseBounceCount();
     }
 }
 
@@ -82,9 +91,6 @@ public class SplitBulletAbility : IBulletAbility
         // 분열탄 활성화 안되어있으면 리턴
         if (param.stat.type != Define.BulletType.SplitBullet ||
             param.stat.isActivated == false) return;
-
-        param.bullet.DecreaseBounceCount();
-        param.meteor?.OnDamage(param.stat.damage.TotalValue);
 
         // 이미 분열된 애면
         if (param.bullet.canSplit == false)
@@ -151,14 +157,6 @@ public class LightningBulletAbility : IBulletAbility
         if (param.stat.type != Define.BulletType.LightningBullet||
             param.stat.isActivated == false) return;
 
-        
-        if(param.meteor == null)
-        {
-            param.bullet.DecreaseBounceCount();
-            return;
-        }
-        // 맨 처음 맞은놈 데미지 주기
-        param.meteor.OnDamage(param.stat.damage.TotalValue);
         Vector3 hitPos = param.meteor.transform.position;
 
         // 이미 번개에 맞은 적들을 저장 (중복 타격 방지)
@@ -198,7 +196,7 @@ public class LightningBulletAbility : IBulletAbility
                 MeteorController nextTarget = closestEnemy.GetComponent<MeteorController>();
                 if (nextTarget != null)
                 {
-                    // 원본 데미지의 70%만 적용
+                    // 예시 : 원본 데미지의 70%만 적용
                     // 전이될수록 데미지를 줄이고 싶다면 i를 활용 (예: 원본 * 0.8^i)
                     float chainDamage = param.stat.damage.TotalValue;
                     nextTarget.OnDamage(chainDamage);
@@ -221,7 +219,6 @@ public class LightningBulletAbility : IBulletAbility
                 break;
             }
         }
-        param.bullet.DecreaseBounceCount();
     }
 }
 
@@ -232,17 +229,64 @@ public class PierceBulletAbility : IBulletAbility
     {
         Debug.Log("관통탄 실행!");
         // 분열탄 활성화 안되어있으면 리턴
-        if (param.stat.type != Define.BulletType.PierceBullet ||
-            param.stat.isActivated == false) return;
+    }
+}
 
-        if(param.meteor)
+public class BurstBulletAbility : IBulletAbility
+{
+    private List<IBulletAbility> _allAbilities = new List<IBulletAbility>();
+
+    public BurstBulletAbility()
+    {
+        // 1. 모든 BulletType을 순회
+        foreach (Define.BulletType type in Enum.GetValues(typeof(Define.BulletType)))
         {
-            // 메테오에 맞았으면
-            // 1. 관통횟수 감소
-            param.meteor.OnDamage(param.stat.damage.TotalValue);
-            param.bullet.DecreasePierceCount();
+            // 2. 무한 루프 방지를 위해 자기 자신(Burst)과 None은 제외
+            if (type == Define.BulletType.BurstBullet)
+                continue;
 
+            // 3. 리플렉션으로 해당 타입의 Ability 인스턴스 생성
+            string className = type.ToString() + "Ability";
+            Type t = Type.GetType(className);
+
+            if (t != null)
+            {
+                IBulletAbility ability = Activator.CreateInstance(t) as IBulletAbility;
+                if (ability != null)
+                    _allAbilities.Add(ability);
+            }
         }
-        // 벽에 튕겼을 떄는 Bullet의 FixedUpdate에서 진행
+    }
+
+    public void Execute(AbilityExecuteParams param)
+    {
+        Debug.Log("BurstBullet Execute");
+        
+        foreach (var ability in _allAbilities)
+        {
+            // 2. 어빌리티 이름에서 타입을 역추적 (예: ExplosionBulletAbility -> ExplosionBullet)
+            Define.BulletType type = GetTypeFromAbility(ability);
+
+            // 3. 매니저에서 해당 탄종의 '최신 스탯'을 가져옴
+            BulletStat stat = Managers.Stat.GetBulletStat(type);
+
+            if (stat != null && stat.isActivated)
+            {
+                // 4. 파라미터 복사본을 만들어 스탯을 '마스터 스탯'으로 교체
+                AbilityExecuteParams burstParam = param;
+                burstParam.stat = stat;
+                //burstParam.isBurst = true;
+
+                // 5. 실행! 이제 각 능력은 자신에게 맞는 최강의 수치로 작동함
+                ability.Execute(burstParam);
+            }
+        }
+    }
+
+    private Define.BulletType GetTypeFromAbility(IBulletAbility ability)
+    {
+        string typeName = ability.GetType().Name.Replace("Ability", "");
+        if (Enum.TryParse(typeName, out Define.BulletType type)) return type;
+        return Define.BulletType.NormalBullet;
     }
 }

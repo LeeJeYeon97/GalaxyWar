@@ -15,7 +15,7 @@ public class BulletController : MonoBehaviour
     private Rigidbody2D _rb;
     [SerializeField]
     private BulletStat _stat;
-
+    
     private Vector2 _shotDir;
     private Collider2D _collider;
     // 바뀌는 값은 여기서 선언
@@ -104,7 +104,7 @@ public class BulletController : MonoBehaviour
         currentBounceCount = Mathf.FloorToInt(stat.bounceCount.TotalValue);
         currentPierceCount = Mathf.FloorToInt(stat.pierceCount.TotalValue);
         canSplit = true;
-
+        
         // ★ 관통탄이면 Trigger를 켭니다. (적을 뚫기 위해)
         if (_stat.type == Define.BulletType.PierceBullet)
         {
@@ -125,38 +125,59 @@ public class BulletController : MonoBehaviour
     // 충돌
     private void OnCollisionEnter2D(Collision2D collision)
     {
-
         PlayHitEffect(collision.contacts[0].point, collision.contacts[0].normal);
+
+        MeteorController meteor = collision.gameObject.GetComponent<MeteorController>();
+
+        if (meteor != null)
+        {
+            // 데미지 주기
+            meteor.OnDamage(_stat.damage.TotalValue);
+
+            // 바운스 횟수 까기
+            DecreaseBounceCount();
+        }
         // 파라미터 팩 만들기
         AbilityExecuteParams param = new AbilityExecuteParams
         {
             stat = _stat,
             bullet = this,
-            meteor = collision.gameObject.GetComponent<MeteorController>(),
+            meteor = meteor,
             collision = collision, // 충돌 정보 통째로 전달
+            trigger = null,
             incomingDirection = _rb.linearVelocity.normalized, // 들어온 방향
             shotDir = _shotDir
         };
-
         // 가지고 있는 능력 실행
         _stat.ability.Execute(param);
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        // 관통탄
+        // 관통탄 or 관통 열려있을때 버스트탄
         PlayHitEffect(gameObject.transform.position,Vector2.zero);
+
+        MeteorController meteor = collision.gameObject.GetComponent<MeteorController>();
+
+        if (meteor != null)
+        {
+            // 데미지 주고 관통횟수 감소
+            meteor.OnDamage(_stat.damage.TotalValue);
+            DecreasePierceCount();
+        }
+
+        // 바운스 횟수는 WallBounce에서 까줌
+
         // 파라미터 팩 만들기
         AbilityExecuteParams param = new AbilityExecuteParams
         {
             stat = _stat,
             bullet = this,
-            meteor = collision.gameObject.GetComponent<MeteorController>(),
+            meteor = meteor,
+            collision = null,
             trigger = collision, // 충돌 정보 통째로 전달
             incomingDirection = _rb.linearVelocity.normalized, // 들어온 방향
             shotDir = _shotDir
-            
         };
-
         // 가지고 있는 능력 실행
         _stat.ability.Execute(param);
     }

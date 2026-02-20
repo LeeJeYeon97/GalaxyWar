@@ -82,6 +82,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BallLauncher
   maxLineLength: 7
+  currentHp: 0
+  currentDefence: 0
+  isBurst: 0
+  currentBurst: 0
+  maxBurst: 100
+  burstFullChargeTime: 10
   _bulletPos: {fileID: 7994210264769737220}
   bullets: []
 --- !u!120 &1048203270788291924

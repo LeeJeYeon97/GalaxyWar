@@ -24,12 +24,11 @@ public class PlayerController : MonoBehaviour
 
     [Header("Stat")]    
     public float maxLineLength = 7f;    // 조준선 길이
+    private float _lastShotTime;
     public float currentHp;
     public float currentDefence;
     public bool isBurst;
     public float currentBurst;
-    public float maxBurst = 100.0f;
-    public float burstFullChargeTime = 120f;    // 2분
     public PlayerStat stat;
 
     [Header("Bullet")]
@@ -37,8 +36,6 @@ public class PlayerController : MonoBehaviour
     public List<BulletController> bullets = new List<BulletController>();
     private Vector2 _currentAimDir;
     
-    private float _lastShotTime;
-
     private Vector2 dragStartPos;
     private Vector2 dragPos;
     private Vector2 dragDir;
@@ -46,6 +43,8 @@ public class PlayerController : MonoBehaviour
     public Action<float, float> OnHpChanged; // 현재 체력, 최대체력
     public Action<float, float> OnDefenceChanged; // 현재 방어막, 최대방어막
     public Action<float, float> OnBurstChanged; // 현재 버스트 게이지, 최대 버스트 게이지
+
+    private Coroutine _reloadCoroutine; // 코루틴 제어를 위한 변수
     public void Init()
     {
         _rb = GetComponent<Rigidbody2D>();
@@ -92,15 +91,11 @@ public class PlayerController : MonoBehaviour
         //FindTarget();
         Shoot();
 
-        // 버스트 모드가 아니면 버스트 게이지 자동충전
-        if(isBurst == false)
+        // 버스트 모드가 아니고 버스트 능력 먹었으면 버스트 게이지 자동충전
+        if(isBurst == false && stat.enableBurst)
         {
-            float recoveryAmount = (maxBurst / burstFullChargeTime) * Time.deltaTime;
+            float recoveryAmount = (stat.maxBurstGuage.TotalValue / stat.maxBurstFullChargeTime.TotalValue) * Time.deltaTime;
             AddBurstGauge(recoveryAmount);
-        }
-        else
-        {   // 버스트 모드면 게이지 다운
-            ConsumeBurst();
         }
     }
     private void FixedUpdate()
@@ -244,12 +239,12 @@ public class PlayerController : MonoBehaviour
         
 
         // 탄창이 비었으면 자동 리로드
-        if (bullets.Count <= 0 && !_isReloading)
+        if (bullets.Count <= 0)
         {
-            StartCoroutine(CoReload());
+            if (_reloadCoroutine == null)
+                _reloadCoroutine = StartCoroutine(CoReload());
             return;
         }
-
 
         // 3. 재장전 중이 아닐 때 연사 속도에 맞춰 사격
         if (Time.time - _lastShotTime >= stat.shotTime.TotalValue)
@@ -287,14 +282,11 @@ public class PlayerController : MonoBehaviour
         lr.enabled = false;
 
         Debug.Log("재장전 시작...");
-
         // 여기에 리로드 UI 게이즈 연출 추가 가능
         yield return new WaitForSeconds(stat.reloadTime.TotalValue);
-
         Reload();
 
-        _isReloading = false;
-        Debug.Log("재장전 완료!");
+        _reloadCoroutine = null; // 완료 후 비워줌
     }
 
     public void Reload()
@@ -312,15 +304,32 @@ public class PlayerController : MonoBehaviour
         for (int i = 0; i < reloadCount; i++)
         {
 
-            BulletStat stat = Managers.Game.GetRandomBullet();
-            BulletController bullet = Managers.Pool.Get<BulletController>(stat.poolType);
+            BulletStat stat;
+            BulletController bullet;
 
-            if (bullet != null)
+            if (isBurst)
             {
-                bullet.SetBullet(stat);
-                bullets.Add(bullet);
+                // 버스트모드면 버스트 총알만 충전하기
+                stat = Managers.Stat.GetBulletStat(Define.BulletType.BurstBullet);
             }
+            else
+            {
+                // 버스트모드 아니면 랜덤으로 뽑기
+                stat = Managers.Stat.GetRandomBulletStat();
+            }
+
+            if (stat == null) return;
+
+            bullet = Managers.Pool.Get<BulletController>(stat.poolType);
+
+            if (bullet == null) return;
+
+            bullet.SetBullet(stat);
+            bullets.Add(bullet);
+
         }
+        _isReloading = false;
+        Debug.Log("재장전 완료!");
     }
     #endregion
 
@@ -367,36 +376,78 @@ public class PlayerController : MonoBehaviour
     public void AddBurstGauge(float amount)
     {
         if (isBurst) return;
+        if (currentBurst >= stat.maxBurstGuage.TotalValue) return;
 
-        currentBurst = Mathf.Clamp(currentBurst + amount, 0, maxBurst);
-        OnBurstChanged?.Invoke(currentBurst, maxBurst);
+        currentBurst = Mathf.Clamp(currentBurst + amount, 0, stat.maxBurstGuage.TotalValue);
+        OnBurstChanged?.Invoke(currentBurst, stat.maxBurstGuage.TotalValue);
     }
 
     // 버스트 모드 발동
     public void ActivateBurst()
     {
-        if (currentBurst >= maxBurst)
+        // 이미 버스트 모드거나 버스트 능력 활성화 못했으면
+        if (isBurst || stat.enableBurst == false) return;
+
+        if (currentBurst >= stat.maxBurstGuage.TotalValue)
         {
             isBurst = true;
             Debug.Log("BURST MODE ACTIVATED!");
-            // 여기서 연출이나 능력치 강화 로직 실행
+
+            StartCoroutine(BurstRoutine());
         }
         else
         {
             Debug.Log("BURST MODE 게이지 부족");
         }
     }
-
-    private void ConsumeBurst()
+    private IEnumerator BurstRoutine()
     {
-        currentBurst -= 10f * Time.deltaTime; // 초당 10씩 감소 (10초 유지)
-        if (currentBurst <= 0)
+        Debug.Log("버스트 모드 시작");
+
+        // 1. 스탯 강화
+        stat.speed.AddMultiplier(1.0f);             // 이속 2배 증가
+        stat.reloadTime.SetForceZero(true);         // 재장전 시간 0초로 고정
+        stat.shotTime.AddMultiplier(-0.5f);         // 발사 속도 2배 감소
+
+        // ★ 핵심: 진행 중인 리로드가 있다면 강제로 멈춤
+        if (_reloadCoroutine != null)
         {
-            currentBurst = 0;
-            isBurst = false;
-            Debug.Log("BURST MODE ENDED");
+            StopCoroutine(_reloadCoroutine);
+            _reloadCoroutine = null;
         }
-        OnBurstChanged?.Invoke(currentBurst, maxBurst);
+        _isReloading = true;
+        // 현재 장전(bullets 리스트)되어 있는 탄들을 모두 버스트 탄으로 변경
+        Reload();
+
+        // TODO : 여기서 연출이나 사운드 실행하기
+
+        // 버스트 게이지 감소
+        while (currentBurst > 0)
+        {
+            // 초당 10씩 감소 총 10초유지
+            currentBurst -= 10.0f * Time.deltaTime;
+            OnBurstChanged?.Invoke(currentBurst, stat.maxBurstGuage.TotalValue);
+            yield return null;
+        }
+
+        // 3. 스탯 복구
+        stat.speed.SubMultiplier(1.0f);
+        stat.shotTime.SubMultiplier(-0.5f);
+        stat.reloadTime.SetForceZero(false);
+
+        currentBurst = 0;
+        isBurst = false;
+
+        if (_reloadCoroutine != null)
+        {
+            StopCoroutine(_reloadCoroutine);
+            _reloadCoroutine = null;
+        }
+        _isReloading = true;
+        // 현재 장전(bullets 리스트)되어 있는 탄들을 모두 버스트 탄으로 변경
+        Reload();
+
+        Debug.Log("버스트 모드 해체");
     }
     #endregion
 }

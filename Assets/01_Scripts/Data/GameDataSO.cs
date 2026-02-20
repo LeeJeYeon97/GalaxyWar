@@ -12,4 +12,8 @@ public class GameDataSO : ScriptableObject
     public float maxExpMultiplier = 1.2f;    // 레벨업 시 필요 경험치 상승률 (예: 1.2배씩 증가)
 
     public float MaxStuckTime = 5f;
+
+    [Header("Object Spawn Settings")]
+    public float meteorSpawnInterval = 5f; // 생성 간격
+    public float itemSpawnInterval = 60f; // 생성 간격
 }

@@ -15,8 +15,9 @@ MonoBehaviour:
   speed: 1
   maxHp: 10
   maxDefence: 10
-  burstPower: 0
+  maxBurstGuage: 100
+  maxBurstFullChargeTime: 10
   reloadCount: 5
-  reloadTime: 1.5
+  reloadTime: 3
   shotRange: 2
-  shotTime: 1.5
+  shotTime: 2

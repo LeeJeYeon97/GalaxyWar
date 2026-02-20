@@ -7,12 +7,6 @@ using static Define;
 
 public class Spawner : MonoBehaviour
 {
-    [Header("Meteor Spawn Settings")]
-    [SerializeField] private float meteorSpawnInterval = 1.5f; // 생성 간격
-
-    [Header("Item Spwan Settings")]
-    [SerializeField] private float itemSpawnInterval = 60f; // 생성 간격
-
     private Coroutine _meteorSpawnCoroutine;
     private Coroutine _itemSpawnCoroutine;
 
@@ -38,6 +32,7 @@ public class Spawner : MonoBehaviour
 
     IEnumerator CoSpawnMeteor()
     {
+        float meteorSpawnInterval = Managers.Data.GameData.meteorSpawnInterval;
         // 게임 상태가 Playing인 동안에만 무한 반복
         while (Managers.Game.currentGameState == GameState.Playing)
         {
@@ -84,6 +79,7 @@ public class Spawner : MonoBehaviour
 
     IEnumerator CoSpawnItem()
     {
+        float itemSpawnInterval = Managers.Data.GameData.itemSpawnInterval;
         // 게임 상태가 Playing인 동안에만 무한 반복
         while (Managers.Game.currentGameState == GameState.Playing)
         {

@@ -135,46 +135,7 @@ public class GameManager : MonoBehaviour
         Score += score;
         OnUpdateScore?.Invoke(Score);
     }
-    public BulletStat GetRandomBullet()
-    {
-        // 1. 활성화된(Unlocked) 스탯들만 따로 모을 리스트를 직접 만듭니다.
-        List<BulletStat> activeStats = new List<BulletStat>();
-        int totalWeight = 0;
-
-        // 2. 전체 딕셔너리를 돌면서 체크합니다. (LINQ의 Where + Sum 역할)
-        foreach (var stat in Managers.Stat.bulletStatDict.Values)
-        {
-            if (stat.isActivated)
-            {
-                activeStats.Add(stat);
-                totalWeight += (int)stat.chance.TotalValue; // 합계도 동시에 구합니다.
-            }
-        }
-
-        // 예외 처리: 활성화된 탄환이 없으면 기본탄 반환
-        if (activeStats.Count == 0 || totalWeight == 0)
-        {
-            return Managers.Stat.GetBulletStat(BulletType.NormalBullet);
-        }
-
-        // 3. 당첨 번호 뽑기
-        int pivot = UnityEngine.Random.Range(0, totalWeight);
-        int currentWeight = 0;
-
-        // 4. 어떤 구간에 당첨됐는지 순회하며 확인
-        for (int i = 0; i < activeStats.Count; i++)
-        {
-            currentWeight += (int)activeStats[i].chance.TotalValue;
-
-            if (pivot < currentWeight)
-            {
-                // 당첨! 해당 타입에 맞는 데이터를 가져옵니다.
-                return activeStats[i];
-            }
-        }
-
-        return Managers.Stat.GetBulletStat(BulletType.NormalBullet);
-    }
+    
 
     // 테스트용
     public void TestAbility()

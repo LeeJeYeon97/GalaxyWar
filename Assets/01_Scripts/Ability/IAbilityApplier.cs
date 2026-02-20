@@ -35,6 +35,14 @@ public class UpgradeReloadCount : IAbilityApplier
         // TODO : 플레이어 스탯 만들기
     }
 }
+
+public class ActivateBurstMode : IAbilityApplier
+{
+    public void Apply(AbilityDataSO data, int level)
+    {
+        Managers.Game._player.stat.enableBurst = true;
+    }
+}
 #endregion
 
 #region 기본탄
@@ -191,3 +199,4 @@ public class ActivatePierceBullet : PierceBulletApplier
 }
 
 #endregion
+

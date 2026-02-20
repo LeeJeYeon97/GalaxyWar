@@ -28,6 +28,7 @@ public class Define
         LightningEffect = 5,
         Meteor = 6,
         PierceBullet = 7,
+        BurstModBullet = 8,
 
         Item = 50,
 
@@ -95,6 +96,8 @@ public class Define
         UpgradePierceDamage = 52,            // 관통 데미지 증가
         UpgradePierceSpeed = 53,             // 관통탄 속도 증가
 
+        ActivateBurstMode = 60,              // 버스트 모드 활성화
+
     }
     public enum BulletType
     {
@@ -103,12 +106,11 @@ public class Define
         ExplosionBullet = 2,    // 폭발탄
         LightningBullet = 3,     // 번개탄
         PierceBullet = 4,       // 관통탄
-        
+        BurstBullet = 5,        // 버스트모드 불릿
     }
     public enum MeteorType
     {
         NormalMeteor = 0,
-
     }
     public enum ItemType
     {
