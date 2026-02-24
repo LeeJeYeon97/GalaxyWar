@@ -17,5 +17,5 @@ MonoBehaviour:
   baseMaxExp: 50
   maxExpMultiplier: 1.2
   MaxStuckTime: 5
-  meteorSpawnInterval: 10
+  meteorSpawnInterval: 5
   itemSpawnInterval: 60

@@ -19,6 +19,7 @@ public class Managers : MonoBehaviour
     private UIManager _ui;
     private AbilityManager _ability;
     private DataManager _data;
+    private EventManager _event;
     [SerializeReference] private StatManager _stat;
     private SceneManagerEx _scene;
     private SoundManager _sound;
@@ -37,6 +38,7 @@ public class Managers : MonoBehaviour
     public static SceneManagerEx Scene => Instance._scene;
     public static SoundManager Sound => Instance._sound;
     public static MapManager Map => Instance._map;
+    public static EventManager Event => Instance._event;    
     // ========================================================== //
     
     
@@ -76,7 +78,7 @@ public class Managers : MonoBehaviour
             _instance._stat = new StatManager();
             _instance._sound = new SoundManager();
             _instance._map = new MapManager();
-
+            _instance._event = new EventManager();
             // 컴포넌트 형태의 매니저들은 여기서 초기화하거나 자식으로 붙임
             _instance._game = Util.GetOrAddComponent<GameManager>(go);
             _instance._input = Util.GetOrAddComponent<InputManager>(go);
@@ -90,11 +92,6 @@ public class Managers : MonoBehaviour
             Pool.Init();
             UI.Init();
 
-            // Content
-            Stat.Init();
-            Level.Init();
-            Ability.Init();
-            Game.Init();
         }
     }
     public void Clear()

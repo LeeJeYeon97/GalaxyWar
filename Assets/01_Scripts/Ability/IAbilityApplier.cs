@@ -41,6 +41,7 @@ public class ActivateBurstMode : IAbilityApplier
     public void Apply(AbilityDataSO data, int level)
     {
         Managers.Game._player.stat.enableBurst = true;
+        Managers.Event.PostEvent(ActionEvent.EnableBurstMode);
     }
 }
 #endregion

@@ -116,5 +116,27 @@ public class Define
     {
         RecoveryHp,             // HP 회복
     }
+
+    #region 이벤트(Action) 관련
+    // 이벤트 발신용 데이터
+    public enum ActionEvent
+    {
+        PlayerStatusChanged,        // 
+        EnableBurstMode,            // 플레이어 버스트 활성화
+        ExpChanged,                 // 경험치
+        ScoreChanged,               // 점수
+        LevelUp,                    // 레벨업
+    }
+    public struct PlayerStatusEvent
+    {
+        public float hp;
+        public float maxHp;
+        public float shield;
+        public float maxShield;
+        public float burst;
+        public float maxBurst;
+    }
+    
+    #endregion
 }
 

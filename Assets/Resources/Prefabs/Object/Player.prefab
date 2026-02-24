@@ -86,10 +86,9 @@ MonoBehaviour:
   currentDefence: 0
   isBurst: 0
   currentBurst: 0
-  maxBurst: 100
-  burstFullChargeTime: 10
   _bulletPos: {fileID: 7994210264769737220}
   bullets: []
+  canAttack: 1
 --- !u!120 &1048203270788291924
 LineRenderer:
   serializedVersion: 3

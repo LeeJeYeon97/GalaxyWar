@@ -14,29 +14,40 @@ public class GameManager : MonoBehaviour
 
     public int Score { get; private set; } = 0;
 
-    public Action<float> OnUpdateScore;
+    
 
     public PlayerController _player;
     public void Init()
     {
-     
-    }
-    public void SetGame()
-    {
-        Managers.Map.Init();
+        // UI 생성
+        UI_GameScene sceneUI = Managers.UI.ShowSceneUI<UI_GameScene>();
+        sceneUI.Init();
 
-        Score = 0;
-        ChangeGameState(GameState.Playing);
+        // 맵 생성
+        Managers.Map.Init();
+        // 레벨
+        Managers.Level.Init();
+
+        // 어빌리티
+        Managers.Ability.Init();
+
+        // 스탯 매니저
+        Managers.Stat.Init();
 
         // 플레이어 세팅
-        GameObject go = Managers.Resource.Instantiate("Prefabs/Object/Player");
+        GameObject go = Managers.Resource.Instantiate(Path.Player);
         _player = go.GetComponent<PlayerController>();
         _player?.Init();
 
         GameObject spawner = Managers.Resource.Instantiate(Path.Spawner);
         spawner.GetComponent<Spawner>()?.Init();
 
-        Managers.UI.ShowSceneUI<UI_GameScene>();
+        // Score 0점 세팅
+        Score = 0;
+        Managers.Event.PostEvent<float>(ActionEvent.ScoreChanged, Score);
+
+        // 게임 상태 변경
+        ChangeGameState(GameState.Playing);
     }
     public void AddActiveObject<T>(T item)
     {
@@ -133,10 +144,9 @@ public class GameManager : MonoBehaviour
             return;
         }
         Score += score;
-        OnUpdateScore?.Invoke(Score);
+        Managers.Event.PostEvent<float>(ActionEvent.ScoreChanged, Score);
     }
     
-
     // 테스트용
     public void TestAbility()
     {

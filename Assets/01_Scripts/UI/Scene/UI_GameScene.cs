@@ -3,6 +3,7 @@ using TMPro;
 
 using UnityEngine;
 using UnityEngine.UI;
+using static Define;
 
 public class UI_GameScene : UI_Scene
 {
@@ -27,31 +28,25 @@ public class UI_GameScene : UI_Scene
     enum Images
     {
         BurstModeBar,
-    }
-    
-    public void Start()
-    {
-        Init();
+        BurstModeLock,
     }
     private void OnEnable()
     {
-        Managers.Level.OnExpChanged += UpdateExpBar;
-        Managers.Level.OnLevelUp += UpdateLevelText;
-        Managers.Game.OnUpdateScore += UpdateScoreText;
-
-        Managers.Game._player.OnHpChanged += UpdateHpBar;
-        Managers.Game._player.OnBurstChanged += UpdateBurstBar;
-        Managers.Game._player.OnDefenceChanged += UpdateShieldBar;
+        Managers.Event.Subscribe<(float curExp, float maxExp)>(ActionEvent.ExpChanged, UpdateExpBar);
+        Managers.Event.Subscribe<int>(ActionEvent.LevelUp, UpdateLevelText);
+        Managers.Event.Subscribe<float>(ActionEvent.ScoreChanged, UpdateScoreText);
+        
+        Managers.Event.Subscribe<PlayerStatusEvent>(ActionEvent.PlayerStatusChanged, UpdateHUD);
+        Managers.Event.Subscribe(ActionEvent.EnableBurstMode, EnableBurstButton);
     }
     private void OnDisable()
     {
-        Managers.Level.OnExpChanged -= UpdateExpBar;
-        Managers.Level.OnLevelUp -= UpdateLevelText;
-        Managers.Game.OnUpdateScore -= UpdateScoreText;
+        Managers.Event.UnSubscribe<int>(ActionEvent.LevelUp, UpdateLevelText);
+        Managers.Event.UnSubscribe<(float curExp, float maxExp)>(ActionEvent.ExpChanged, UpdateExpBar);
+        Managers.Event.UnSubscribe<float>(ActionEvent.ScoreChanged, UpdateScoreText);
 
-        Managers.Game._player.OnHpChanged -= UpdateHpBar;
-        Managers.Game._player.OnBurstChanged -= UpdateBurstBar;
-        Managers.Game._player.OnDefenceChanged -= UpdateShieldBar;
+        Managers.Event.UnSubscribe<PlayerStatusEvent>(ActionEvent.PlayerStatusChanged, UpdateHUD);
+        Managers.Event.UnSubscribe(ActionEvent.EnableBurstMode, EnableBurstButton);
     }
     public override void Init()
     {
@@ -62,73 +57,68 @@ public class UI_GameScene : UI_Scene
         Bind<Button>(typeof(Buttons));
         Bind<Image>(typeof(Images));
 
+        Get<TextMeshProUGUI>((int)Texts.BurstModeText).gameObject.SetActive(false);
+        Get<Image>((int)Images.BurstModeLock).gameObject.SetActive(true);
+
         Canvas canvas = Util.GetOrAddComponent<Canvas>(this.gameObject);
         canvas.renderMode = RenderMode.ScreenSpaceCamera;
         canvas.worldCamera = Camera.main;
 
-        UpdateSlider();
+        BindingButtonClickListener();
 
+    }
+    private void BindingButtonClickListener()
+    {
         Button restartButton = GetButton((int)Buttons.RestartButton);
         restartButton.onClick.AddListener(OnClickGameTestButton);
-        Button PauseButton = GetButton((int)Buttons.PauseButton);
 
         Button BurstButton = GetButton((int)Buttons.BurstModeButton);
-        BurstButton.onClick.AddListener(Managers.Game._player.ActivateBurst);
-    }
-    private void UpdateSlider()
-    {
-        UpdateExpBar(Managers.Level.CurrentExp, Managers.Level.MaxExp);
-        UpdateLevelText(Managers.Level.CurrentLevel);
-        UpdateScoreText(Managers.Game.Score);
-        UpdateHpBar(Managers.Game._player.currentHp, Managers.Game._player.stat.maxHp.TotalValue);
-        UpdateShieldBar(Managers.Game._player.currentDefence, Managers.Game._player.stat.maxDefence.TotalValue);
-        //UpdateBurstBar(Managers.Game._player., Managers.Game._player.maxBurst);
-    }
-    public void UpdateExpBar(float curExp, float maxExp)
-    {
-        Slider slider = GetSlider((int)Sliders.ExpBar);
+        BurstButton.onClick.AddListener(OnBurstButton);
 
-        if (slider == null)
+        Button PauseButton = GetButton((int)Buttons.PauseButton);
+    }
+    public void UpdateHUD(Define.PlayerStatusEvent data)
+    {
+        Slider hpSlider = GetSlider((int)Sliders.HpBar);
+        Slider shieldSlider = GetSlider((int)Sliders.ShieldBar);
+        Image burstBar = GetImage((int)Images.BurstModeBar);
+        Slider expSlider = GetSlider((int)Sliders.ExpBar);
+
+        if (hpSlider == null || shieldSlider == null || burstBar == null || expSlider == null)
             return;
 
-        slider.DOValue(curExp / maxExp, 0.5f).SetEase(Ease.OutCubic);
+        // ㅅ체력바
+        hpSlider.DOValue(data.hp / data.maxHp, 0.2f).SetEase(Ease.OutCubic);
+
+        // 쉴드바
+        shieldSlider.DOValue(data.shield / data.maxShield, 0.2f).SetEase(Ease.OutCubic);
+
+        // 버스트바
+        if (burstBar != null)
+        {
+            burstBar.DOKill();
+            burstBar.DOFillAmount(data.burst / data.maxBurst, 0.2f).SetEase(Ease.OutCubic);
+        }
+
+        // 4. 버스트 텍스트 업데이트
+        TextMeshProUGUI burstText = GetTMP((int)Texts.BurstModeText);
+        if (burstText != null)
+        {
+            burstText.text = Mathf.FloorToInt(data.burst).ToString();
+        }
+
     }
-    
-    public void UpdateBurstBar(float curBurst, float maxBurst)
+    public void EnableBurstButton()
     {
-        Image image = GetImage((int)Images.BurstModeBar);
-
-        string text = Mathf.FloorToInt(curBurst).ToString();
-        GetTMP((int)Texts.BurstModeText).text = text;
-
-        if (image == null)
-            return;
-
-        float ratio = curBurst / maxBurst;
-
-        // DOFillAmount(목표값, 시간) 사용
-        image.DOKill(); // 이전 애니메이션이 실행 중이면 중지
-        image.DOFillAmount(ratio, 0.5f).SetEase(Ease.OutCubic);
+        // 버스트 모드 활성화 되었을 때 한번 실행됨
+        Get<Image>((int)Images.BurstModeLock).gameObject.SetActive(false);
+        Get<TextMeshProUGUI>((int)Texts.BurstModeText).gameObject.SetActive(true);
     }
-    public void UpdateHpBar(float curHp, float maxHp)
+    public void OnBurstButton()
     {
-        Slider slider = GetSlider((int)Sliders.HpBar);
-
-        if (slider == null)
-            return;
-
-        slider.DOValue(curHp / maxHp, 0.5f).SetEase(Ease.OutCubic);
+        // 버스트 모드 실행
+        Managers.Game._player?.ActivateBurst();
     }
-    public void UpdateShieldBar(float curShield, float maxShield)
-    {
-        Slider slider = GetSlider((int)Sliders.ShieldBar);
-
-        if (slider == null)
-            return;
-
-        slider.DOValue(curShield / maxShield, 0.5f).SetEase(Ease.OutCubic);
-    }
-
     public void UpdateLevelText(int level)
     {
         // 레벨 텍스트 갱신
@@ -141,6 +131,15 @@ public class UI_GameScene : UI_Scene
     {
         string text = $"{Score}";
         GetTMP((int)Texts.ScoreText).text = text;
+    }
+    public void UpdateExpBar((float curExp, float maxExp) data)
+    {
+        Slider expSlider = GetSlider((int)Sliders.ExpBar);
+        if (expSlider == null)
+            return;
+
+        // exp바
+        expSlider.DOValue(data.curExp / data.maxExp, 0.2f).SetEase(Ease.OutCubic);
     }
     public void OnClickGameTestButton()
     {

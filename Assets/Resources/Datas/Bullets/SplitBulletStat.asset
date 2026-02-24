@@ -21,7 +21,7 @@ MonoBehaviour:
   bounceCount: 0
   isActivated: 0
   baseExplosionRange: 0
-  baseSplitCount: 5
+  baseSplitCount: 2
   lightningRange: 0
   lightningCount: 0
   pierceCount: 0

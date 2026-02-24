@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SocialPlatforms.Impl;
 
 public class GameScene : BaseScene
 {
@@ -10,8 +11,8 @@ public class GameScene : BaseScene
 
         SceneType = Define.Scene.GameScene;
         
-        Managers.Game.SetGame();
-	}
+        Managers.Game.Init();
+    }
 
     public override void Clear()
     {

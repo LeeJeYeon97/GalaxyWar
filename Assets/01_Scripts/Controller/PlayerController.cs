@@ -40,13 +40,14 @@ public class PlayerController : MonoBehaviour
     private Vector2 dragPos;
     private Vector2 dragDir;
 
-    public Action<float, float> OnHpChanged; // 현재 체력, 최대체력
-    public Action<float, float> OnDefenceChanged; // 현재 방어막, 최대방어막
-    public Action<float, float> OnBurstChanged; // 현재 버스트 게이지, 최대 버스트 게이지
-
     private Coroutine _reloadCoroutine; // 코루틴 제어를 위한 변수
+    
+    // 이벤트 발생용
+    private PlayerStatusEvent _curStatus = new PlayerStatusEvent();
+
     public void Init()
     {
+        
         _rb = GetComponent<Rigidbody2D>();
         _rb.gravityScale = 0f;  // 우주니까 중력은 0
         //_rb.linearDamping = 2.5f;
@@ -64,6 +65,9 @@ public class PlayerController : MonoBehaviour
         isBurst = false;
         currentBurst = 0f;
 
+        // HUD업데이트 이벤트 발생
+        OnStatusEvent();
+   
         if (Managers.Game.currentGameState != GameState.Playing) return;
         // 게임 시작 시 첫 장전
         Reload();
@@ -73,6 +77,8 @@ public class PlayerController : MonoBehaviour
         Managers.Input.OnDragStarted += OnDragStart;
         Managers.Input.OnDragging += OnDragUpdate;
         Managers.Input.OnDragEnded += OnDragRelease;
+
+        Managers.Event.Subscribe(ActionEvent.EnableBurstMode, OnEnableBurstMode);
     }
 
     private void OnDisable()
@@ -83,6 +89,7 @@ public class PlayerController : MonoBehaviour
             Managers.Input.OnDragging -= OnDragUpdate;
             Managers.Input.OnDragEnded -= OnDragRelease;
         }
+        Managers.Event.UnSubscribe(ActionEvent.EnableBurstMode, OnEnableBurstMode);
     }
     void Update()
     {
@@ -342,18 +349,19 @@ public class PlayerController : MonoBehaviour
         if (currentDefence > 0)
         {
             currentDefence -= damage;
-            OnDefenceChanged.Invoke(currentDefence, stat.maxDefence.TotalValue);
-            // 피격후에 짧은 무적시간
-            //StartCoroutine(CoInvincible());
         }
         // 방어막 없으면
         else
         {
             currentHp -= damage;
-            OnHpChanged.Invoke(currentHp, stat.maxHp.TotalValue);
-            // 피격후에 짧은 무적시간
-            //StartCoroutine(CoInvincible());
         }
+
+        // hud업데이트 이벤트 발생
+        OnStatusEvent();
+
+        // 피격후에 짧은 무적시간
+        //StartCoroutine(CoInvincible());
+
         if (currentHp <= 0)
         {
             Debug.Log("죽었습니다.");
@@ -372,6 +380,10 @@ public class PlayerController : MonoBehaviour
     }
 
     #region 버스트 모드 관련
+    private void OnEnableBurstMode()
+    {
+        stat.enableBurst = true;
+    }
     // 게이지 증가 함수 (운석 파괴 시에도 호출)
     public void AddBurstGauge(float amount)
     {
@@ -379,9 +391,11 @@ public class PlayerController : MonoBehaviour
         if (currentBurst >= stat.maxBurstGuage.TotalValue) return;
 
         currentBurst = Mathf.Clamp(currentBurst + amount, 0, stat.maxBurstGuage.TotalValue);
-        OnBurstChanged?.Invoke(currentBurst, stat.maxBurstGuage.TotalValue);
+        // hud업데이트 이벤트 발생
+        OnStatusEvent();
     }
 
+    
     // 버스트 모드 발동
     public void ActivateBurst()
     {
@@ -404,6 +418,8 @@ public class PlayerController : MonoBehaviour
     {
         Debug.Log("버스트 모드 시작");
 
+        mainCam.DOOrthoSize(12.0f, 0.3f).SetEase(Ease.OutCubic).SetUpdate(true);
+
         // 1. 스탯 강화
         stat.speed.AddMultiplier(1.0f);             // 이속 2배 증가
         stat.reloadTime.SetForceZero(true);         // 재장전 시간 0초로 고정
@@ -425,8 +441,8 @@ public class PlayerController : MonoBehaviour
         while (currentBurst > 0)
         {
             // 초당 10씩 감소 총 10초유지
-            currentBurst -= 10.0f * Time.deltaTime;
-            OnBurstChanged?.Invoke(currentBurst, stat.maxBurstGuage.TotalValue);
+            currentBurst -= 10.0f * Time.unscaledDeltaTime;
+            OnStatusEvent(); 
             yield return null;
         }
 
@@ -437,6 +453,9 @@ public class PlayerController : MonoBehaviour
 
         currentBurst = 0;
         isBurst = false;
+
+        // 2. 카메라 시야 복구 (12.0 -> 9.6)
+        mainCam.DOOrthoSize(9.6f, 0.3f).SetEase(Ease.InCubic).SetUpdate(true);
 
         if (_reloadCoroutine != null)
         {
@@ -450,4 +469,17 @@ public class PlayerController : MonoBehaviour
         Debug.Log("버스트 모드 해체");
     }
     #endregion
+
+    private void OnStatusEvent()
+    {
+        _curStatus.hp = currentHp;
+        _curStatus.maxHp = stat.maxHp.TotalValue;
+        _curStatus.shield = currentDefence;
+        _curStatus.maxShield = stat.maxDefence.TotalValue;
+        _curStatus.burst = currentBurst;
+        _curStatus.maxBurst = stat.maxBurstGuage.TotalValue;
+        // 3. 갱신된 방 통째로 신호를 보냅니다.
+        Managers.Event.PostEvent<PlayerStatusEvent>(Define.ActionEvent.PlayerStatusChanged, _curStatus);
+    }
+
 }

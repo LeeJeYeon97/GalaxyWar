@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using static Define;
 
 public class LevelManager
 {
@@ -8,14 +9,14 @@ public class LevelManager
     public float CurrentExp { get; private set; } = 0;
     
     
-    public Action<int> OnLevelUp;
-    public Action<float, float> OnExpChanged; // 현재 경험치, 필요경험치
-
     public float MaxExp => GetMaxExp();
     public void Init()
     {
         CurrentLevel = 1;
         CurrentExp = 0;
+
+        Managers.Event.PostEvent<(float, float)>(ActionEvent.ExpChanged, (CurrentExp, MaxExp));
+        Managers.Event.PostEvent<int>(ActionEvent.LevelUp, CurrentLevel);
     }
 
     public float GetMaxExp()
@@ -24,12 +25,12 @@ public class LevelManager
     }
     public void AddExp(float blockLevel)
     {
-
         float exp = Managers.Data.GameData.baseExpGain + ((blockLevel - 1) * Managers.Data.GameData.expGainIncreasePerLevel);
         CurrentExp += exp;
 
         // UI 업데이트를 위해 이벤트 호출
-        OnExpChanged?.Invoke(CurrentExp, MaxExp);
+        Managers.Event.PostEvent<(float, float)>(ActionEvent.ExpChanged, (CurrentExp, MaxExp));
+
         // 레벨업 판단
         if (CurrentExp >= MaxExp)
         {
@@ -47,13 +48,12 @@ public class LevelManager
         Managers.Game.ChangeGameState(Define.GameState.Pause);
 
         // 2. 레벨업 이벤트 알림 (UI 매니저 등에서 듣고 팝업을 띄움)
-        OnLevelUp?.Invoke(CurrentLevel);
+        Managers.Event.PostEvent<int>(ActionEvent.LevelUp, CurrentLevel);
 
         Managers.UI.ShowPopupUI<UI_LevelUpPopup>();
 
         // 3. UI 갱신 (경험치가 바로 다음 레벨로 넘어갈 수도 있으므로 재귀 체크)
-        OnExpChanged?.Invoke(CurrentExp, MaxExp);
-
+        Managers.Event.PostEvent<(float,float)>(ActionEvent.ExpChanged, (CurrentExp, MaxExp));
 
         if (CurrentExp >= MaxExp) LevelUp();
     }

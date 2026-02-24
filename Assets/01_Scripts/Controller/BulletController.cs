@@ -129,27 +129,28 @@ public class BulletController : MonoBehaviour
 
         MeteorController meteor = collision.gameObject.GetComponent<MeteorController>();
 
+        // 바운스 횟수 까기
+        // 벽에 닿아도 깔건지 운석에만 맞았을 때 깔건지 고민좀 해볼것
+        DecreaseBounceCount();
+
         if (meteor != null)
         {
+            // 파라미터 팩 만들기
+            AbilityExecuteParams param = new AbilityExecuteParams
+            {
+                stat = _stat,
+                bullet = this,
+                meteor = meteor,
+                collision = collision, // 충돌 정보 통째로 전달
+                trigger = null,
+                incomingDirection = _rb.linearVelocity.normalized, // 들어온 방향
+                shotDir = _shotDir
+            };
             // 데미지 주기
             meteor.OnDamage(_stat.damage.TotalValue);
-
-            // 바운스 횟수 까기
-            DecreaseBounceCount();
+            // 가지고 있는 능력 실행
+            _stat.ability.Execute(param);
         }
-        // 파라미터 팩 만들기
-        AbilityExecuteParams param = new AbilityExecuteParams
-        {
-            stat = _stat,
-            bullet = this,
-            meteor = meteor,
-            collision = collision, // 충돌 정보 통째로 전달
-            trigger = null,
-            incomingDirection = _rb.linearVelocity.normalized, // 들어온 방향
-            shotDir = _shotDir
-        };
-        // 가지고 있는 능력 실행
-        _stat.ability.Execute(param);
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -163,23 +164,22 @@ public class BulletController : MonoBehaviour
             // 데미지 주고 관통횟수 감소
             meteor.OnDamage(_stat.damage.TotalValue);
             DecreasePierceCount();
+            // 바운스 횟수는 WallBounce에서 까줌
+
+            // 파라미터 팩 만들기
+            AbilityExecuteParams param = new AbilityExecuteParams
+            {
+                stat = _stat,
+                bullet = this,
+                meteor = meteor,
+                collision = null,
+                trigger = collision, // 충돌 정보 통째로 전달
+                incomingDirection = _rb.linearVelocity.normalized, // 들어온 방향
+                shotDir = _shotDir
+            };
+            // 가지고 있는 능력 실행
+            _stat.ability.Execute(param);
         }
-
-        // 바운스 횟수는 WallBounce에서 까줌
-
-        // 파라미터 팩 만들기
-        AbilityExecuteParams param = new AbilityExecuteParams
-        {
-            stat = _stat,
-            bullet = this,
-            meteor = meteor,
-            collision = null,
-            trigger = collision, // 충돌 정보 통째로 전달
-            incomingDirection = _rb.linearVelocity.normalized, // 들어온 방향
-            shotDir = _shotDir
-        };
-        // 가지고 있는 능력 실행
-        _stat.ability.Execute(param);
     }
     // 발사
     public void Shot(Vector2 dragVector)
