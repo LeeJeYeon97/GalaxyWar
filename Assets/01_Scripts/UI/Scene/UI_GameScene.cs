@@ -88,9 +88,11 @@ public class UI_GameScene : UI_Scene
             return;
 
         // ㅅ체력바
+        hpSlider.DOKill();
         hpSlider.DOValue(data.hp / data.maxHp, 0.2f).SetEase(Ease.OutCubic);
 
         // 쉴드바
+        shieldSlider.DOKill();
         shieldSlider.DOValue(data.shield / data.maxShield, 0.2f).SetEase(Ease.OutCubic);
 
         // 버스트바

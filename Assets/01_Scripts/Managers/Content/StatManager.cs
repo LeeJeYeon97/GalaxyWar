@@ -6,9 +6,10 @@ using static Define;
 [Serializable]
 public class StatManager
 {
-    // ∫“∏¥µÈ Ω∫≈»
+    // Ω∫≈»µÈ
     [SerializeField]
     public Dictionary<BulletType, BulletStat> bulletStatDict = new Dictionary<BulletType, BulletStat>();
+    [SerializeField]
     public Dictionary<MeteorType, MeteorStat> meteorStatDict = new Dictionary<MeteorType, MeteorStat>();
 
     public void Init()

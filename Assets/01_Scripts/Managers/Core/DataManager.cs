@@ -102,6 +102,8 @@ public class DataManager
         return list;
     }
     
+
+
     // T로 들어온 스크립터블 오브젝트로 만든 모든 데이터들중에 이름으로 찾아주는 함수
     //public T GetData<T>(string name) where T : ScriptableObject
     //{

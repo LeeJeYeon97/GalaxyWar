@@ -441,7 +441,7 @@ public class PlayerController : MonoBehaviour
         while (currentBurst > 0)
         {
             // 초당 10씩 감소 총 10초유지
-            currentBurst -= 10.0f * Time.unscaledDeltaTime;
+            currentBurst -= 10.0f * Time.deltaTime;
             OnStatusEvent(); 
             yield return null;
         }

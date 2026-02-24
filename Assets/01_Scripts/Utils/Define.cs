@@ -68,14 +68,14 @@ public class Define
     {
         Unknown = 0,
 
-        UpgradePlayerHp = 1,                // 플레이어 체력 증가
-        UpgradePlayerSpeed = 2,             // 플레이어 이동속도 증가
-        UpgradeReloadCount = 3,             // 재장전 개수 증가
+        UpgradePlayerHp = 1,                 // 플레이어 체력 증가
+        UpgradePlayerSpeed = 2,              // 플레이어 이동속도 증가
+        UpgradeReloadCount = 3,              // 재장전 개수 증가
+        UpgradeBulletBounceCount = 4,        // 모든탄 튕기는 횟수 증가
+        UpgradeBulletSpeed = 5,              // 모든 탄 스피드 증가
 
         UpgradeBaseBulletDamage = 10,        // 기본탄 데미지 증가
-        UpgradeBaseBulletSpeed = 11,         // 기본탄 속도 증가
-        UpgradeBaseBulletBounceCount = 12,   // 기본탄 튕기는 횟수 증가
-
+        
         ActivateSplitBullet = 20,            // 분열탄 활성화
         UpgradeSplitBulletDamage = 21,       // 분열탄 데미지 강화
         UpgradeSplitBulletCount = 22,        // 분열탄 갯수 강화
@@ -94,7 +94,6 @@ public class Define
         ActivatePierceBullet = 50,           // 관통탄 활성화
         UpgradePierceCount = 51,             // 관통횟수 증가
         UpgradePierceDamage = 52,            // 관통 데미지 증가
-        UpgradePierceSpeed = 53,             // 관통탄 속도 증가
 
         ActivateBurstMode = 60,              // 버스트 모드 활성화
 
@@ -115,6 +114,7 @@ public class Define
     public enum ItemType
     {
         RecoveryHp,             // HP 회복
+        RecoveryBurst,          // 버스트 게이지 회복
     }
 
     #region 이벤트(Action) 관련

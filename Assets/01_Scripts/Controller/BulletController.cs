@@ -49,7 +49,7 @@ public class BulletController : MonoBehaviour
     private void WallBounce()
     {
         // 관통탄(Trigger)일 때만 수동 튕기기 체크
-        if (_stat.type == BulletType.PierceBullet && _collider.isTrigger)
+        if (_collider.isTrigger)
         {
             // 1. 다음 프레임에 이동할 거리 계산 (속도 * 시간)
             float moveDistance = _stat.speed.TotalValue * Time.fixedDeltaTime;
@@ -105,8 +105,9 @@ public class BulletController : MonoBehaviour
         currentPierceCount = Mathf.FloorToInt(stat.pierceCount.TotalValue);
         canSplit = true;
         
-        // ★ 관통탄이면 Trigger를 켭니다. (적을 뚫기 위해)
-        if (_stat.type == Define.BulletType.PierceBullet)
+        // ★ 관통탄이면 Trigger를 켬 / 버스트탄인데 관통 기능이 있으면 이것도 켬
+        if (_stat.type == Define.BulletType.PierceBullet ||
+            (_stat.type == Define.BulletType.BurstBullet && Managers.Ability.GetCurrentLevel(AbilityType.ActivatePierceBullet) > 0))
         {
             _collider.isTrigger = true;
         }

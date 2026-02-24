@@ -41,7 +41,8 @@ public class ExplosionBulletAbility : IBulletAbility
 
         // --- 시각적 연출 (기존 로직 그대로 활용) ---
         GameObject indicator = Managers.Pool.Get<GameObject>(Define.Pool.ExplosionRangeIndicator);
-        indicator.transform.position = param.collision.transform.position;
+
+        indicator.transform.position = param.meteor.transform.position;
         indicator.transform.localScale = Vector3.zero;
 
         SpriteRenderer sr = indicator.GetComponent<SpriteRenderer>();
@@ -67,11 +68,11 @@ public class ExplosionBulletAbility : IBulletAbility
 
         // --- 실제 범위 데미지 로직 ---
         int layerMask = 1 << LayerMask.NameToLayer("Meteor");
-        Collider2D[] colliders = Physics2D.OverlapCircleAll(param.collision.transform.position, finalRadius, layerMask);
+        Collider2D[] colliders = Physics2D.OverlapCircleAll(param.meteor.transform.position, finalRadius, layerMask);
         foreach (var col in colliders)
         {
             // 이미 맞은놈 제외
-            if (col.gameObject == param.collision.gameObject) continue;
+            if (col.gameObject == param.meteor.gameObject) continue;
 
             MeteorController meteor = col.GetComponent<MeteorController>();
             if(meteor)
@@ -99,8 +100,22 @@ public class SplitBulletAbility : IBulletAbility
         }
         // 3. 반사 방향 계산 (튕겨나가는 기준 방향)
         // 충돌 지점의 Normal(법선)을 기준으로 들어온 방향을 반사시킵니다.
-        Vector2 normal = param.collision.contacts[0].normal;
-        Vector2 reflectDir = normal.normalized;
+        Vector2 normal = Vector2.zero;
+        Vector2 reflectDir = Vector2.zero;
+        if (param.collision != null)
+        {
+            normal = param.collision.contacts[0].normal;
+            reflectDir = normal.normalized;
+        }
+        else if(param.trigger != null)
+        {
+            // 1. 상대방 콜라이더 위에서 내 위치와 가장 가까운 점을 찾음
+            Vector2 closestPoint = param.trigger.ClosestPoint(param.bullet.transform.position);
+            // 2. 내 위치에서 그 점을 빼면 노멀 방향이 나옴
+            normal = ((Vector2)param.bullet.transform.position - closestPoint).normalized;
+            Rigidbody2D rb = param.bullet.gameObject.GetComponent<Rigidbody2D>();
+            reflectDir = Vector2.Reflect(rb.linearVelocity.normalized, normal);
+        }
 
         // 4. 메테오 반지름 계산 (생성 위치 오프셋용)
         float meteorRadius = 0.5f;
@@ -227,8 +242,7 @@ public class PierceBulletAbility : IBulletAbility
 {
     public void Execute(AbilityExecuteParams param)
     {
-        Debug.Log("관통탄 실행!");
-        // 분열탄 활성화 안되어있으면 리턴
+        
     }
 }
 

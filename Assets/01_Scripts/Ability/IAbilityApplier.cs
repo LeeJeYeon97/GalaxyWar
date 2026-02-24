@@ -17,7 +17,7 @@ public abstract class BulletAbilityApplier : IAbilityApplier
 {
     // 이 클래스를 상속받는 자식들은 어떤 탄환인지 알려줘야 함
     protected abstract BulletType TargetBulletType { get; }
-
+    
     // 자식들이 공통으로 사용할 스탯 가져오기 프로퍼티
     protected BulletStat Stat => Managers.Stat.GetBulletStat(TargetBulletType);
 
@@ -36,12 +36,21 @@ public class UpgradeReloadCount : IAbilityApplier
     }
 }
 
+// 버스트 모드 활성화
 public class ActivateBurstMode : IAbilityApplier
 {
     public void Apply(AbilityDataSO data, int level)
     {
         Managers.Game._player.stat.enableBurst = true;
         Managers.Event.PostEvent(ActionEvent.EnableBurstMode);
+    }
+}
+// 모든 탄 튕기는 횟수 증가
+public class UpgradeBulletBounceCount : IAbilityApplier
+{
+    public void Apply(AbilityDataSO data, int level)
+    {
+        throw new System.NotImplementedException();
     }
 }
 #endregion
@@ -70,14 +79,8 @@ public class UpgradeBaseBulletSpeed : NormalBulletApplier
         Stat.speed.AddValue(data.GetValue(level));
     }
 }
-// 기본탄 튕기는 횟수 증가
-public class UpgradeBaseBulletBounceCount : NormalBulletApplier
-{
-    public override void Apply(AbilityDataSO data, int level)
-    {
-        Stat.bounceCount.AddValue(data.GetValue(level));
-    }
-}
+
+
 #endregion
 
 #region 분열탄
