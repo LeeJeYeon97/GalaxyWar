@@ -17,6 +17,7 @@ public class PlayerStat
     public Stat maxBurstGuage = new Stat();
     public Stat maxBurstFullChargeTime = new Stat();
 
+    public float hitCooldown;       // ««∞› µÙ∑π¿Ã
     public void SetStat(PlayerStatDataSO data)
     {
         if(data == null)
@@ -35,7 +36,7 @@ public class PlayerStat
         enableBurst = false;
         maxBurstGuage.Init(data.maxBurstGuage);
         maxBurstFullChargeTime.Init(data.maxBurstFullChargeTime);
-
+        hitCooldown = data.hitCooldown;
     }
 
 }

@@ -1,14 +1,10 @@
 using DG.Tweening;
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.AppUI.UI;
 using UnityEngine;
-using UnityEngine.Experimental.AI;
-using UnityEngine.UIElements;
 using static Define;
-using static UnityEditor.PlayerSettings;
-using static UnityEngine.GraphicsBuffer;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
 
 public class PlayerController : MonoBehaviour
 {
@@ -20,14 +16,16 @@ public class PlayerController : MonoBehaviour
 
     [Header("State")]
     private bool _isReloading = false;
-    private bool _isMoving;
+    private bool _isMoving = false;
+    public bool _isBurst = false;
+    public bool _isInvincible = false;
+    
 
     [Header("Stat")]    
     public float maxLineLength = 7f;    // 조준선 길이
     private float _lastShotTime;
     public float currentHp;
     public float currentDefence;
-    public bool isBurst;
     public float currentBurst;
     public PlayerStat stat;
 
@@ -44,7 +42,8 @@ public class PlayerController : MonoBehaviour
     
     // 이벤트 발생용
     private PlayerStatusEvent _curStatus = new PlayerStatusEvent();
-
+    private Volume _volume;
+    private ChromaticAberration _chromatic;
     public void Init()
     {
         
@@ -62,7 +61,7 @@ public class PlayerController : MonoBehaviour
 
         currentHp = stat.maxHp.TotalValue;
         currentDefence = stat.maxDefence.TotalValue;
-        isBurst = false;
+        _isBurst = false;
         currentBurst = 0f;
 
         // HUD업데이트 이벤트 발생
@@ -71,6 +70,14 @@ public class PlayerController : MonoBehaviour
         if (Managers.Game.currentGameState != GameState.Playing) return;
         // 게임 시작 시 첫 장전
         Reload();
+
+        // 씬에 있는 Global Volume을 찾아 효과 가져오기
+        _volume = GameObject.FindFirstObjectByType<Volume>();
+        if (_volume.profile.TryGet<ChromaticAberration>(out var ca))
+        {
+            _chromatic = ca;
+        }
+
     }
     private void OnEnable()
     {
@@ -99,7 +106,7 @@ public class PlayerController : MonoBehaviour
         Shoot();
 
         // 버스트 모드가 아니고 버스트 능력 먹었으면 버스트 게이지 자동충전
-        if(isBurst == false && stat.enableBurst)
+        if(_isBurst == false && stat.enableBurst)
         {
             float recoveryAmount = (stat.maxBurstGuage.TotalValue / stat.maxBurstFullChargeTime.TotalValue) * Time.deltaTime;
             AddBurstGauge(recoveryAmount);
@@ -314,7 +321,7 @@ public class PlayerController : MonoBehaviour
             BulletStat stat;
             BulletController bullet;
 
-            if (isBurst)
+            if (_isBurst)
             {
                 // 버스트모드면 버스트 총알만 충전하기
                 stat = Managers.Stat.GetBulletStat(Define.BulletType.BurstBullet);
@@ -342,8 +349,11 @@ public class PlayerController : MonoBehaviour
 
     public void OnDamage(float damage)
     {
+        
+        if (_isInvincible) return;
         // 버스트모드면 무적 상태
-        if (isBurst) return;
+        if (_isBurst) return;
+
 
         // 방어막이 있으면
         if (currentDefence > 0)
@@ -359,8 +369,9 @@ public class PlayerController : MonoBehaviour
         // hud업데이트 이벤트 발생
         OnStatusEvent();
 
+        PlayGlitch();
         // 피격후에 짧은 무적시간
-        //StartCoroutine(CoInvincible());
+        StartCoroutine(CoInvincible());
 
         if (currentHp <= 0)
         {
@@ -374,9 +385,46 @@ public class PlayerController : MonoBehaviour
         // 죽음 처리
     }
 
+    //public void PlayHitGlitch()
+    //{
+    //    // DOTween으로 PostProcess 수치를 조절하는 예시
+    //    DOTween.To(() => chromaticAberration.intensity.value,
+    //               x => chromaticAberration.intensity.value = x,
+    //               1f, 0.1f).OnComplete(() => {
+    //                   chromaticAberration.intensity.value = 0f;
+    //               });
+    //}
+    public void PlayGlitch()
+    {
+        // 0.2초 동안 강도를 올렸다가 내리는 연출 (DOTween 활용)
+        DOTween.To(() => _chromatic.intensity.value,
+                   x => _chromatic.intensity.value = x,
+                   1f, 0.1f).SetLoops(2, LoopType.Yoyo);
+    }
+
     IEnumerator CoInvincible()
     {
-        return null;
+        _isInvincible = true;
+
+        // 무적 시간 동안 스프라이트 깜빡이기 (예: 1초 동안 0.1초 간격)
+        float elapsed = 0;
+        SpriteRenderer sr = GetComponent<SpriteRenderer>();
+
+        // 카메라가 0.2초 동안 0.5의 강도로 흔들림
+        mainCam.transform.DOShakePosition(0.2f, 0.5f, 20, 90f).SetUpdate(true);
+
+        while (elapsed < stat.hitCooldown)
+        {
+            // 투명도를 0.5와 1.0 사이로 교체
+            sr.color = new Color(1, 1, 1, sr.color.a == 1f ? 0.5f : 1f);
+
+            // 아주 짧은 대기도 캐싱해서 쓰면 더 좋습니다!
+            yield return new WaitForSeconds(0.1f);
+            elapsed += 0.1f;
+        }
+
+        sr.color = Color.white; // 원래대로 복구
+        _isInvincible = false;
     }
 
     #region 버스트 모드 관련
@@ -387,7 +435,7 @@ public class PlayerController : MonoBehaviour
     // 게이지 증가 함수 (운석 파괴 시에도 호출)
     public void AddBurstGauge(float amount)
     {
-        if (isBurst) return;
+        if (_isBurst) return;
         if (currentBurst >= stat.maxBurstGuage.TotalValue) return;
 
         currentBurst = Mathf.Clamp(currentBurst + amount, 0, stat.maxBurstGuage.TotalValue);
@@ -400,11 +448,11 @@ public class PlayerController : MonoBehaviour
     public void ActivateBurst()
     {
         // 이미 버스트 모드거나 버스트 능력 활성화 못했으면
-        if (isBurst || stat.enableBurst == false) return;
+        if (_isBurst || stat.enableBurst == false) return;
 
         if (currentBurst >= stat.maxBurstGuage.TotalValue)
         {
-            isBurst = true;
+            _isBurst = true;
             Debug.Log("BURST MODE ACTIVATED!");
 
             StartCoroutine(BurstRoutine());
@@ -418,7 +466,7 @@ public class PlayerController : MonoBehaviour
     {
         Debug.Log("버스트 모드 시작");
 
-        mainCam.DOOrthoSize(12.0f, 0.3f).SetEase(Ease.OutCubic).SetUpdate(true);
+        mainCam.DOOrthoSize(12.0f, 0.3f).SetEase(Ease.OutCubic).SetUpdate(true).OnUpdate(() => Managers.Map.UpdateMap());
 
         // 1. 스탯 강화
         stat.speed.AddMultiplier(1.0f);             // 이속 2배 증가
@@ -452,10 +500,10 @@ public class PlayerController : MonoBehaviour
         stat.reloadTime.SetForceZero(false);
 
         currentBurst = 0;
-        isBurst = false;
+        _isBurst = false;
 
         // 2. 카메라 시야 복구 (12.0 -> 9.6)
-        mainCam.DOOrthoSize(9.6f, 0.3f).SetEase(Ease.InCubic).SetUpdate(true);
+        mainCam.DOOrthoSize(9.6f, 0.3f).SetEase(Ease.OutCubic).SetUpdate(true).OnUpdate(() => Managers.Map.UpdateMap());
 
         if (_reloadCoroutine != null)
         {

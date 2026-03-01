@@ -74,10 +74,6 @@ public class BulletStat
         }
         Debug.LogError($"[BulletStat] {className} ability를 찾을 수 없습니다!");
         return null;
-        
-
-
-        
     }
 
 }

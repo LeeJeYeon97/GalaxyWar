@@ -13,56 +13,58 @@ public class InputManager : MonoBehaviour
     private Camera mainCam;
 
     private InputSystem_Actions control;
+    private bool _isPressed = false; // 드래그 중인지 판별용
     public void Init()
     {
-        // 1. 이미 존재한다면 중복 생성 방지
         if (control != null) return;
 
         control = new InputSystem_Actions();
 
-        control.Player.Attack.started += ctx => OnAttackStarted();
-        control.Player.Attack.canceled += ctx => OnAttackCanceled();
+        // 람다 대신 직접 메서드 연결 (메모리 누수 방지)
+        control.Player.Attack.started += OnTouchStartedInternal;
+        control.Player.Attack.canceled += OnTouchCanceledInternal;
 
-        // 3. 여기서 직접 활성화 (OnEnable 대신)
         control.Enable();
     }
+
     private void OnDisable()
     {
-        control.Player.Attack.started -= ctx => OnAttackStarted();
-        control.Player.Attack.canceled -= ctx => OnAttackCanceled();
+        if (control == null) return;
+
+        control.Player.Attack.started -= OnTouchStartedInternal;
+        control.Player.Attack.canceled -= OnTouchCanceledInternal;
         control.Disable();
     }
-    public void Clear()
-    {
-        mainCam = null;
-    }
+
     private void Update()
     {
-        if (control == null) return;
-        // 카메라가 null이라면 현재 씬의 메인 카메라를 새로 찾습니다.
+        if (control == null || !_isPressed) return;
+
         if (mainCam == null) mainCam = Camera.main;
         if (mainCam == null) return;
 
-        // 마우스/터치 좌표는 매 프레임 읽어와서 이벤트를 쏴줍니다.
+        // Point는 이제 마우스와 터치 위치를 모두 포함하는 'Pointer' 값을 읽어옵니다.
         Vector2 screenPos = control.Player.Point.ReadValue<Vector2>();
         Vector2 worldPos = mainCam.ScreenToWorldPoint(screenPos);
         OnDragging?.Invoke(worldPos);
     }
 
-    private void OnAttackStarted()
+    private void OnTouchStartedInternal(InputAction.CallbackContext ctx)
     {
+        _isPressed = true;
+        Debug.Log("터치 들어옴");
         if (mainCam == null) mainCam = Camera.main;
-        // 좌표를 읽어와서 반드시 월드 좌표로 변환해서 쏴줍니다.
+
         Vector2 screenPos = control.Player.Point.ReadValue<Vector2>();
         Vector2 worldPos = mainCam.ScreenToWorldPoint(screenPos);
         OnDragStarted?.Invoke(worldPos);
     }
 
-    private void OnAttackCanceled()
+    private void OnTouchCanceledInternal(InputAction.CallbackContext ctx)
     {
-        if (mainCam == null) mainCam = Camera.main;
-        if (mainCam == null) return;
-        Vector2 screenPos = control.Player.Point.ReadValue<Vector2>();
+        Debug.Log("터치 나감");
+        _isPressed = false;
         OnDragEnded?.Invoke();
     }
+
 }

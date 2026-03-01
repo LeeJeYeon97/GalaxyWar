@@ -25,7 +25,6 @@ public class ItemController : MonoBehaviour
         // 랜덤 데이터 설정
         ItemDataSO data = Managers.Data.ItemDataList[0];
 
-
         // 1.위치 설정
         transform.position = pos;
 

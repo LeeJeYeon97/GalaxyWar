@@ -17,106 +17,118 @@ public class MapManager
     Vector3 fullzoneMin;
     Vector3 fullzoneMax;
 
+    private Transform topWall, bottomWall, leftWall, rightWall;
+
     public Transform root;
     public void Init()
     {
         mainCam = Camera.main;
-        // 벽 스프라이트
         wallSprite = Managers.Resource.Load<Sprite>("Sprites/Wall");
-
         root = new GameObject("@Map").transform;
-        CalculatePlayZone();
-        GenerateWalls();
+
+        // 1. 처음 한 번만 벽을 생성하여 변수에 할당
+        GenerateInitialWalls();
+
+        // 2. 현재 카메라 사이즈에 맞춰 초기 배치
+        UpdateMap();
+    }
+
+    // 벽을 처음에 생성하는 로직
+    void GenerateInitialWalls()
+    {
+        topWall = CreateWall("TopWall");
+        bottomWall = CreateWall("BottomWall");
+        leftWall = CreateWall("LeftWall");
+        rightWall = CreateWall("RightWall");
+    }
+
+    // ★ 핵심: 카메라 사이즈가 변할 때마다 호출될 함수
+    public void UpdateMap()
+    {
+        CalculatePlayZone(); // 1. 좌표 재계산 (mainCam 사이즈 반영)
+        RepositionWalls();   // 2. 벽 위치 및 크기 재설정
     }
 
     void CalculatePlayZone()
     {
-        // Viewport 좌표를 월드로 변환하여 실제 플레이 영역의 경계를 구함
-        fullzoneMin = mainCam.ViewportToWorldPoint(new Vector3(0, bottomMargin, mainCam.nearClipPlane));
-        fullzoneMax = mainCam.ViewportToWorldPoint(new Vector3(1, 1 - topMargin, mainCam.nearClipPlane));
+        // mainCam의 현재 orthographicSize를 기준으로 월드 좌표 계산
+        fullzoneMin = mainCam.ViewportToWorldPoint(new Vector3(0, bottomMargin, 10));
+        fullzoneMax = mainCam.ViewportToWorldPoint(new Vector3(1, 1 - topMargin, 10));
 
         PlayZoneMin = new Vector2(fullzoneMin.x + wallThickness, fullzoneMin.y + wallThickness);
         PlayZoneMax = new Vector2(fullzoneMax.x - wallThickness, fullzoneMax.y - wallThickness);
     }
 
-    void GenerateWalls()
+    void RepositionWalls()
     {
-
         float screenWidth = fullzoneMax.x - fullzoneMin.x;
         float screenHeight = fullzoneMax.y - fullzoneMin.y;
         Vector2 center = (PlayZoneMin + PlayZoneMax) / 2f;
         float half = wallThickness / 2f;
-        // TopWall: PlayZone 상단 끝에서 두께 절반만큼 위에 배치
-        CreateWall("TopWall", new Vector2(center.x, PlayZoneMax.y + half), new Vector2(screenWidth, wallThickness));
 
-        // BottomWall: PlayZone 하단 끝에서 두께 절반만큼 아래에 배치
-        CreateWall("BottomWall", new Vector2(center.x, PlayZoneMin.y - half), new Vector2(screenWidth, wallThickness));
+        // 위치 및 스케일 업데이트
+        topWall.position = new Vector2(center.x, PlayZoneMax.y + half);
+        topWall.localScale = new Vector3(screenWidth, wallThickness, 1f);
 
-        // LeftWall: PlayZone 왼쪽 끝에서 두께 절반만큼 왼쪽에 배치
-        CreateWall("LeftWall", new Vector2(PlayZoneMin.x - wallThickness, center.y), new Vector2(wallThickness, screenHeight));
+        bottomWall.position = new Vector2(center.x, PlayZoneMin.y - half);
+        bottomWall.localScale = new Vector3(screenWidth, wallThickness, 1f);
 
-        // RightWall: PlayZone 오른쪽 끝에서 두께 절반만큼 오른쪽에 배치
-        CreateWall("RightWall", new Vector2(PlayZoneMax.x + wallThickness, center.y), new Vector2(wallThickness, screenHeight));
+        leftWall.position = new Vector2(PlayZoneMin.x - half, center.y);
+        leftWall.localScale = new Vector3(wallThickness, screenHeight, 1f);
 
+        rightWall.position = new Vector2(PlayZoneMax.x + half, center.y);
+        rightWall.localScale = new Vector3(wallThickness, screenHeight, 1f);
     }
 
-    void CreateWall(string name, Vector2 position, Vector2 size)
+    Transform CreateWall(string name)
     {
         GameObject wall = new GameObject(name);
-        wall.transform.position = position;
-        wall.transform.parent = root; // 정리를 위해 현재 오브젝트의 자식으로 등록
-
-        // 1. 스프라이트 렌더러 추가 및 설정
-        SpriteRenderer sr = wall.AddComponent<SpriteRenderer>();
-        sr.sprite = wallSprite; // 인스펙터에서 넣은 이미지 적용
-        sr.color = wallColor;   // 색상 적용
-
-        // 2. 이미지를 벽 크기에 맞게 늘리기 (중요!)
-        // 기본 1x1 크기의 스프라이트를 전달받은 size만큼 스케일 조정
-        wall.transform.localScale = new Vector3(size.x, size.y, 1f);
+        wall.transform.parent = root;
+        wall.AddComponent<SpriteRenderer>().sprite = wallSprite;
+        wall.GetComponent<SpriteRenderer>().color = wallColor;
+        wall.AddComponent<BoxCollider2D>();
         wall.tag = "Wall";
-        // 3. 콜라이더 추가 (스케일이 반영되므로 size를 (1,1)로 두면 오브젝트 크기에 맞게 생성됨)
-        BoxCollider2D collider = wall.AddComponent<BoxCollider2D>();
-
-        // 4. 라인 렌더러를 위한 Layer설정
         wall.layer = LayerMask.NameToLayer("Wall");
-
+        return wall.transform;
     }
 
-    void OnDrawGizmos()
-    {
-        if (mainCam == null) mainCam = Camera.main;
-        if (mainCam == null) return;
 
-        // 1. 계산용 기본 좌표 구하기 (에디터 실시간 반영용)
-        Vector3 fMin = mainCam.ViewportToWorldPoint(new Vector3(0, bottomMargin, 10));
-        Vector3 fMax = mainCam.ViewportToWorldPoint(new Vector3(1, 1 - topMargin, 10));
+    //void OnDrawGizmos()
+    //{
+    //    if (mainCam == null) mainCam = Camera.main;
+    //    if (mainCam == null) return;
 
-        // 2. FullZone 그리기 (화면 마진만 적용된 전체 틀)
-        // 빨간색 점선 스타일로 그려서 PlayZone과 구분합니다.
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireCube((fMin + fMax) / 2f, fMax - fMin);
+    //    // 1. 계산용 기본 좌표 구하기 (에디터 실시간 반영용)
+    //    Vector3 fMin = mainCam.ViewportToWorldPoint(new Vector3(0, bottomMargin, 10));
+    //    Vector3 fMax = mainCam.ViewportToWorldPoint(new Vector3(1, 1 - topMargin, 10));
 
-        // 3. PlayZone 좌표 계산 (벽 두께 반영)
-        // 현재 코드 로직상 벽 두께만큼 안으로 들어온 위치
-        Vector3 pMin = new Vector3(fMin.x + wallThickness, fMin.y + wallThickness, 0);
-        Vector3 pMax = new Vector3(fMax.x - wallThickness, fMax.y - wallThickness, 0);
+    //    // 2. FullZone 그리기 (화면 마진만 적용된 전체 틀)
+    //    // 빨간색 점선 스타일로 그려서 PlayZone과 구분합니다.
+    //    Gizmos.color = Color.red;
+    //    Gizmos.DrawWireCube((fMin + fMax) / 2f, fMax - fMin);
 
-        // 4. PlayZone 그리기 (실제 공과 벽돌이 노는 영역)
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawWireCube((pMin + pMax) / 2f, pMax - pMin);
+    //    // 3. PlayZone 좌표 계산 (벽 두께 반영)
+    //    // 현재 코드 로직상 벽 두께만큼 안으로 들어온 위치
+    //    Vector3 pMin = new Vector3(fMin.x + wallThickness, fMin.y + wallThickness, 0);
+    //    Vector3 pMax = new Vector3(fMax.x - wallThickness, fMax.y - wallThickness, 0);
 
-        //// 5. 파란색 격자 (PlayZone 내부에만 그리기)
-        //Gizmos.color = new Color(0, 1, 1, 0.5f); // 약간 투명한 하늘색
-        //for (int i = 0; i <= 10; i++)
-        //{
-        //    float t = i / 10f;
-        //    // 가로선
-        //    float y = Mathf.Lerp(pMin.y, pMax.y, t);
-        //    Gizmos.DrawLine(new Vector3(pMin.x, y, 0), new Vector3(pMax.x, y, 0));
-        //    // 세로선
-        //    float x = Mathf.Lerp(pMin.x, pMax.x, t);
-        //    Gizmos.DrawLine(new Vector3(x, pMin.y, 0), new Vector3(x, pMax.y, 0));
-        //}
-    }
+    //    // 4. PlayZone 그리기 (실제 공과 벽돌이 노는 영역)
+    //    Gizmos.color = Color.yellow;
+    //    Gizmos.DrawWireCube((pMin + pMax) / 2f, pMax - pMin);
+
+    //    //// 5. 파란색 격자 (PlayZone 내부에만 그리기)
+    //    //Gizmos.color = new Color(0, 1, 1, 0.5f); // 약간 투명한 하늘색
+    //    //for (int i = 0; i <= 10; i++)
+    //    //{
+    //    //    float t = i / 10f;
+    //    //    // 가로선
+    //    //    float y = Mathf.Lerp(pMin.y, pMax.y, t);
+    //    //    Gizmos.DrawLine(new Vector3(pMin.x, y, 0), new Vector3(pMax.x, y, 0));
+    //    //    // 세로선
+    //    //    float x = Mathf.Lerp(pMin.x, pMax.x, t);
+    //    //    Gizmos.DrawLine(new Vector3(x, pMin.y, 0), new Vector3(x, pMax.y, 0));
+    //    //}
+    //}
+
 }
+

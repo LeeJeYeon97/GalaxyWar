@@ -99,7 +99,6 @@ public class Managers : MonoBehaviour
         _scene.Clear();
         _sound.Clear();
         _ui.Clear();
-        _input.Clear();
     }
     
 }

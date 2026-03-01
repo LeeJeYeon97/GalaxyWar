@@ -73,6 +73,8 @@ public class Define
         UpgradeReloadCount = 3,              // 재장전 개수 증가
         UpgradeBulletBounceCount = 4,        // 모든탄 튕기는 횟수 증가
         UpgradeBulletSpeed = 5,              // 모든 탄 스피드 증가
+        UpgradeReloadTime = 6,               // 리로드 시간 감소
+        UpgradeShotTime = 7,                 // 발사 시간 감소
 
         UpgradeBaseBulletDamage = 10,        // 기본탄 데미지 증가
         
@@ -90,13 +92,26 @@ public class Define
         UpgradeLigthningCount = 41,          // 번개탄 전이 횟수 증가
         UpgradeLigthningDamage = 42,         // 번개탄 번개 데미지 증가
         UpgradeLightningRange = 43,          // 번개탄 전이 범위 증가
+        UpgradeLightningChance = 44,         // 번개탄 리로드 확률 증가
 
         ActivatePierceBullet = 50,           // 관통탄 활성화
         UpgradePierceCount = 51,             // 관통횟수 증가
         UpgradePierceDamage = 52,            // 관통 데미지 증가
 
         ActivateBurstMode = 60,              // 버스트 모드 활성화
-
+    }
+    public enum AbilityTargetType
+    {
+        Unknown = 0,
+        Player = 1,
+        Meteor = 2,
+        Bullet = 3,
+    }
+    public enum StatType
+    {
+        Damage,
+        Speed,
+        Hp,
     }
     public enum BulletType
     {

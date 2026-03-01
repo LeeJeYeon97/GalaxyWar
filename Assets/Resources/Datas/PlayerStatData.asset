@@ -21,3 +21,4 @@ MonoBehaviour:
   reloadTime: 3
   shotRange: 2
   shotTime: 2
+  hitCooldown: 1

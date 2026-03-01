@@ -8,20 +8,26 @@ public class StatManager
 {
     // 스탯들
     [SerializeField]
+    public PlayerStat playerStat = new PlayerStat();
+    [SerializeField]
     public Dictionary<BulletType, BulletStat> bulletStatDict = new Dictionary<BulletType, BulletStat>();
     [SerializeField]
     public Dictionary<MeteorType, MeteorStat> meteorStatDict = new Dictionary<MeteorType, MeteorStat>();
 
     public void Init()
     {
+        // 플레이어 스탯
+        playerStat.SetStat(Managers.Data.playerStatData);
+
         // 불릿들 스탯
-        foreach(var data in Managers.Data.BulletDataDict)
+        foreach (var data in Managers.Data.BulletDataDict)
         {
             BulletStat stat = new BulletStat();
             stat.SettingStat(data.Value);
             bulletStatDict.Add(data.Value.type, stat);
         }
 
+        // 메테오 스탯
         foreach (var data in Managers.Data.MeteorStatDataDict)
         {
             MeteorStat stat = new MeteorStat();
@@ -88,4 +94,110 @@ public class StatManager
         return meteorStatDict[(MeteorType)randIdx];
         
     }
+
+    public void ApplyAbility(AbilityDataSO data, float value)
+    {
+        if (data == null) return;
+
+        switch (data.type)
+        {
+            case AbilityType.Unknown:
+                break;
+            // --- 플레이어 및 공통 유틸리티 (1~7) ---
+            case AbilityType.UpgradePlayerHp:
+                playerStat.maxHp.AddValue(value);
+                break;
+            case AbilityType.UpgradePlayerSpeed:
+                playerStat.speed.AddValue(value);
+                break;
+            case AbilityType.UpgradeReloadCount:
+                playerStat.reloadCount.AddValue(value);
+                break;
+            case AbilityType.UpgradeBulletBounceCount:
+                foreach (var bulletStat in bulletStatDict.Values)
+                {
+                    bulletStat.bounceCount.AddValue(value);
+                }
+                break;
+            case AbilityType.UpgradeBulletSpeed:
+                foreach (var bulletStat in bulletStatDict.Values)
+                {
+                    bulletStat.speed.AddValue(value);
+                }
+                break;
+            case AbilityType.UpgradeReloadTime:
+                playerStat.reloadTime.AddMultiplier(value);
+                break;
+            case AbilityType.UpgradeShotTime:
+                playerStat.shotTime.AddMultiplier(value);
+                break;
+
+            // --- 기본탄 (10) ---
+            case AbilityType.UpgradeBaseBulletDamage:
+                break;
+
+            // --- 분열탄 (20~23) ---
+            case AbilityType.ActivateSplitBullet:
+                GetBulletStat(BulletType.SplitBullet).isActivated = true;
+                break;
+            case AbilityType.UpgradeSplitBulletDamage:
+                GetBulletStat(BulletType.SplitBullet).damage.AddValue(value);
+                break;
+            case AbilityType.UpgradeSplitBulletCount:
+                GetBulletStat(BulletType.SplitBullet).splitCount.AddValue(value);
+                break;
+            case AbilityType.UpgradeSplitBulletChance:
+                GetBulletStat(BulletType.SplitBullet).chance.AddValue(value);
+                break;
+
+            // --- 폭발탄 (30~33) ---
+            case AbilityType.ActivateExplosionBullet:
+                GetBulletStat(BulletType.ExplosionBullet).isActivated = true;
+                break;
+            case AbilityType.UpgradeExplosionDamage:
+                GetBulletStat(BulletType.ExplosionBullet).damage.AddValue(value);
+                break;
+            case AbilityType.UpgradeExplosionRange:
+                GetBulletStat(BulletType.ExplosionBullet).explosionRadius.AddValue(value);
+                break;
+            case AbilityType.UpgradeExplosionChance:
+                GetBulletStat(BulletType.ExplosionBullet).chance.AddValue(value);
+                break;
+
+            // --- 번개탄 (40~43) ---
+            case AbilityType.ActivateLightningBullet:
+                GetBulletStat(BulletType.LightningBullet).isActivated = true;
+                break;
+            case AbilityType.UpgradeLigthningCount:
+                GetBulletStat(BulletType.LightningBullet).lightningCount.AddValue(value);
+                break;
+            case AbilityType.UpgradeLigthningDamage:
+                GetBulletStat(BulletType.LightningBullet).damage.AddValue(value);
+                break;
+            case AbilityType.UpgradeLightningRange:
+                GetBulletStat(BulletType.LightningBullet).lightningRange.AddValue(value);
+                break;
+            case AbilityType.UpgradeLightningChance:
+                GetBulletStat(BulletType.LightningBullet).chance.AddValue(value);
+                break;
+
+            // --- 관통탄 (50~52) ---
+            case AbilityType.ActivatePierceBullet:
+                break;
+            case AbilityType.UpgradePierceCount:
+                break;
+            case AbilityType.UpgradePierceDamage:
+                break;
+
+            // --- 특수 모드 (60) ---
+            case AbilityType.ActivateBurstMode:
+                Managers.Event.PostEvent(ActionEvent.EnableBurstMode);
+                break;
+
+            default:
+                Debug.LogWarning($"정의되지 않은 AbilityType입니다: {data.type}");
+                break;
+        }
+    }
+    
 }

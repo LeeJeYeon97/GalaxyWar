@@ -11,11 +11,11 @@ public class PlayerStatDataSO : ScriptableObject
     public float maxBurstGuage;
     public float maxBurstFullChargeTime;
 
-
     public float reloadCount;
     public float reloadTime;
 
     public float shotRange;
     public float shotTime;
 
+    public float hitCooldown;       // ««∞› µÙ∑π¿Ã
 }

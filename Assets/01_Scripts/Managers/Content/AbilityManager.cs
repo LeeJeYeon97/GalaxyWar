@@ -4,28 +4,14 @@ using Unity.VisualScripting;
 using UnityEngine;
 using static Define;
 
-public struct AbilityInfo
-{
-    public AbilityType _type; // 능력 종류
-
-    public int maxLevel;
-    public int curLevel;
-
-    [Header("선행 조건 설정")]
-    // 이 값이 Unknown이면 선행 조건이 없는 것임
-    public AbilityType _requiredAbility;
-    public IAbilityApplier _applier;        // 능력치 얻었을 때 실행할 함수
-    public float values;
-}
 public class AbilityManager 
 {
-    // 현재 플레이어가 보유한 능력
-    private Dictionary<AbilityType, AbilityInfo> _abilities = new Dictionary<AbilityType, AbilityInfo>();
-
+    // 이제 플레이어가 현재 보유한 능력에 대한 관리합니다. (나머지 정보는 SO에 다 있음)
+    private Dictionary<AbilityType, int> _abilityLevels = new Dictionary<AbilityType, int>();
     public void Init()
     {
         // 적용중인 능력치 초기화
-        _abilities.Clear();
+        _abilityLevels.Clear();
     }
 
     public List<AbilityDataSO> GetRandomAbility(int count = 3)
@@ -72,70 +58,26 @@ public class AbilityManager
     }
     public void ApplyAbility(AbilityDataSO data)
     {
-        if (data == null) return;
+        int nextLevel = GetCurrentLevel(data.type) + 1;
+        _abilityLevels[data.type] = nextLevel;
+        float value = data.GetValue(nextLevel);
 
-        if (_abilities.TryGetValue(data.type, out AbilityInfo info))
-        {
-            // --- [이미 보유한 경우: 레벨업 및 수치 추가] ---
-            info.curLevel++;
+        // 데이터 수정 권한을 가진 StatManager에게 요청 (본인이 직접 안 함)
+        Managers.Stat.ApplyAbility(data, value);
 
-            Debug.Log($"[{data.abilityname}] 강화! Lv.{info.curLevel}, 총합: {info.values}");
-            // 능력 실행
-            info._applier.Apply(data, info.curLevel);
-
-            // ★ 중요: 구조체는 값 타입이므로 수정한 뒤 다시 딕셔너리에 넣어줘야 합니다.
-            _abilities[data.type] = info;
-        }
-        else
-        {
-            // --- [신규 획득인 경우: 초기화] ---
-            AbilityInfo newInfo = new AbilityInfo
-            {
-                _type = data.type,
-                maxLevel = data.maxLevel,
-                curLevel = 1,
-                _requiredAbility = data._requiredAbility,
-                values = data.values[0],
-                // ★ 자동으로 이름 찾아서 new 해줌!
-                _applier = CreateApplier(data)
-                
-            };
-            
-            _abilities.Add(data.type, newInfo);
-            
-            Debug.Log($"[{data.abilityname}] 최초 습득!");
-        }
-
-        // 2. ★ StatManager의 BulletStat에 수치 반영 ★
-        float increaseValue = data.values[GetCurrentLevel(data.type) - 1];
+        // 특수 기능(함수 실행)이 필요한 경우에만 예외적으로 처리
+        //if (data.targetType == AbilityTargetType.Special)
+        //{
+        //    HandleSpecialLogic(data.type, value);
+        //}
     }
     // 특정 능력의 현재 레벨 반환
     public int GetCurrentLevel(AbilityType type)
     {
-        if (_abilities.TryGetValue(type, out AbilityInfo info))
-            return info.curLevel;
+        if (_abilityLevels.TryGetValue(type, out int level))
+            return level;
         return 0;
     }
-
-    private IAbilityApplier CreateApplier(AbilityDataSO data)
-    {
-        // 1. Enum 이름을 문자열로 변환 (예: "ActivateExplosionBullet")
-        string className = data.type.ToString();
-
-        // 2. 현재 어셈블리(내 프로젝트 코드)에서 해당 이름의 클래스 타입을 찾음
-        System.Type t = System.Type.GetType(className);
-
-        if (t != null)
-        {
-            // 3. 찾은 타입으로 인스턴스 생성 (new 하는 것과 동일)
-            IAbilityApplier applier = System.Activator.CreateInstance(t) as IAbilityApplier;
-            applier.Apply(data, 1);
-            return applier;
-        }
-
-        Debug.LogError($"[AbilityManager] {className} 클래스를 찾을 수 없습니다!");
-        return null;
-    }
-
+    
 }
 

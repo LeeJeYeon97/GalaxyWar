@@ -1,4 +1,5 @@
 using DG.Tweening; // DOTween
+using System.Runtime.Serialization;
 using TMPro;
 
 using UnityEngine;
@@ -23,13 +24,14 @@ public class UI_GameScene : UI_Scene
     {
         RestartButton,
         PauseButton,
-        BurstModeButton,
+        BurstModeBar,
     }
     enum Images
     {
         BurstModeBar,
         BurstModeLock,
     }
+    
     private void OnEnable()
     {
         Managers.Event.Subscribe<(float curExp, float maxExp)>(ActionEvent.ExpChanged, UpdateExpBar);
@@ -38,6 +40,8 @@ public class UI_GameScene : UI_Scene
         
         Managers.Event.Subscribe<PlayerStatusEvent>(ActionEvent.PlayerStatusChanged, UpdateHUD);
         Managers.Event.Subscribe(ActionEvent.EnableBurstMode, EnableBurstButton);
+
+
     }
     private void OnDisable()
     {
@@ -60,11 +64,13 @@ public class UI_GameScene : UI_Scene
         Get<TextMeshProUGUI>((int)Texts.BurstModeText).gameObject.SetActive(false);
         Get<Image>((int)Images.BurstModeLock).gameObject.SetActive(true);
 
+
         Canvas canvas = Util.GetOrAddComponent<Canvas>(this.gameObject);
         canvas.renderMode = RenderMode.ScreenSpaceCamera;
         canvas.worldCamera = Camera.main;
 
         BindingButtonClickListener();
+
 
     }
     private void BindingButtonClickListener()
@@ -72,7 +78,7 @@ public class UI_GameScene : UI_Scene
         Button restartButton = GetButton((int)Buttons.RestartButton);
         restartButton.onClick.AddListener(OnClickGameTestButton);
 
-        Button BurstButton = GetButton((int)Buttons.BurstModeButton);
+        Button BurstButton = GetButton((int)Buttons.BurstModeBar);
         BurstButton.onClick.AddListener(OnBurstButton);
 
         Button PauseButton = GetButton((int)Buttons.PauseButton);
@@ -87,7 +93,7 @@ public class UI_GameScene : UI_Scene
         if (hpSlider == null || shieldSlider == null || burstBar == null || expSlider == null)
             return;
 
-        // ㅅ체력바
+        // 체력바
         hpSlider.DOKill();
         hpSlider.DOValue(data.hp / data.maxHp, 0.2f).SetEase(Ease.OutCubic);
 
@@ -147,4 +153,6 @@ public class UI_GameScene : UI_Scene
     {
         Managers.Game.TestAbility();
     }
+
+    
 }
