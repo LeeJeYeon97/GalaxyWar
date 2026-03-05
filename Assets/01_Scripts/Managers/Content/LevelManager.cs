@@ -7,16 +7,19 @@ public class LevelManager
 
     public int CurrentLevel { get; private set; } = 1;
     public float CurrentExp { get; private set; } = 0;
-    
-    
+
+    public int Score { get; private set; } = 0;
+
     public float MaxExp => GetMaxExp();
     public void Init()
     {
         CurrentLevel = 1;
         CurrentExp = 0;
+        Score = 0;
 
         Managers.Event.PostEvent<(float, float)>(ActionEvent.ExpChanged, (CurrentExp, MaxExp));
         Managers.Event.PostEvent<int>(ActionEvent.LevelUp, CurrentLevel);
+        Managers.Event.PostEvent<float>(ActionEvent.ScoreChanged, Score);
     }
 
     public float GetMaxExp()
@@ -38,6 +41,17 @@ public class LevelManager
         }
 
     }
+
+    public void AddScore(int score)
+    {
+        if (score <= 0)
+        {
+            return;
+        }
+        Score += score;
+        Managers.Event.PostEvent<float>(ActionEvent.ScoreChanged, Score);
+    }
+
 
     private void LevelUp()
     {

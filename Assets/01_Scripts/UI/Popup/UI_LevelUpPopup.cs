@@ -1,6 +1,8 @@
 using DG.Tweening;
 using NUnit.Framework;
 using System.Collections.Generic;
+using Unity.AppUI.UI;
+using UnityEditor.Animations;
 using UnityEngine;
 using UnityEngine.UI;
 using static UnityEngine.GraphicsBuffer;
@@ -11,6 +13,13 @@ public class UI_LevelUpPopup : UI_Popup
     {
         Panel
     }
+    enum Cards
+    {
+        UI_AbilityCardButton,
+        UI_AbilityCardButton_1,
+        UI_AbilityCardButton_2
+    }
+    public GameObject panel;
     private void Start()
     {
         Init();
@@ -20,21 +29,33 @@ public class UI_LevelUpPopup : UI_Popup
     public override void Init()
     {
         base.Init();
-        Bind<GameObject>(typeof(Panels));
+        
+        Bind<GameObject>(typeof(Cards));
 
-        // 부모 패널 하나만 가져옵니다.
-        GameObject cardPanel = GetObject((int)Panels.Panel);
-        if (cardPanel == null) return;
+        //// 패널 가져오기
+        //GameObject cardPanel = GetObject((int)Panels.Panel);
+        if (panel == null) return;
 
+        // 3개의 카드를 담을 배열 생성
+        GameObject[] cards = new GameObject[3];
+        for (int i = 0; i < 3; i++)
+        {
+            // enum 값을 정수로 캐스팅한 뒤 i를 더해서 다음 카드를 가져옴
+            cards[i] = GetObject((int)Cards.UI_AbilityCardButton + i);
+            // 패널 부모로 붙이기
+            cards[i].transform.SetParent(panel.transform);
+        }
+
+        // 능력치 가져오기
         List<AbilityDataSO> abilities = Managers.Ability.GetRandomAbility();
         if (abilities == null) return;
 
+        // 능력치랑 카드 갯수 안맞으면 리턴
+        if (abilities.Count != cards.Length) return;
+
         for (int i = 0; i < abilities.Count; i++)
         {
-            GameObject go = Managers.Resource.Instantiate("UI/Popup/UI_AbilityCardButton");
-            go.transform.SetParent(cardPanel.transform);
-            
-            UI_AbilityCard card = Util.GetOrAddComponent<UI_AbilityCard>(go);
+            UI_AbilityCard card = Util.GetOrAddComponent<UI_AbilityCard>(cards[i]);
             card.SetAbilityCard(abilities[i]);
 
             //RectTransform rect = go.GetComponent<RectTransform>();

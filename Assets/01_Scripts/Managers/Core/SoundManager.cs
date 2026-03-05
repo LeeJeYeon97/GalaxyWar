@@ -63,7 +63,10 @@ public class SoundManager
     // 오디오 클립을 리소스 매니저에서 가져오거나 캐시에서 반환
     private AudioClip GetOrAddAudioClip(string path)
     {
-        if (path.Contains("Sounds/") == false) path = $"Sounds/{path}";
+        if (path.Contains("Sounds/") == false)
+        {
+            path = $"Sounds/{path}";
+        }
 
         AudioClip audioClip = null;
         if (_audioClips.TryGetValue(path, out audioClip) == false)

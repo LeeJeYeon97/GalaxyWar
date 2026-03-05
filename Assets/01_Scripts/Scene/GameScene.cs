@@ -10,12 +10,14 @@ public class GameScene : BaseScene
         base.Init();
 
         SceneType = Define.Scene.GameScene;
-        
+
+
         Managers.Game.Init();
     }
 
     public override void Clear()
     {
+        Managers.Game.Clear();
         
     }
 }

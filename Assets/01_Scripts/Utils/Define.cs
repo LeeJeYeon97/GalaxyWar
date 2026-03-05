@@ -29,6 +29,7 @@ public class Define
         Meteor = 6,
         PierceBullet = 7,
         BurstModBullet = 8,
+        DamageText = 9,
 
         Item = 50,
 
@@ -58,11 +59,17 @@ public class Define
 
     public enum GameState
     {
+        Ready,
         Playing,
-        Reload,
         Pause,
         Resume,
         GameOver,
+    }
+    public enum PlayerState
+    {
+        Idle,
+        Playing,
+        Die,
     }
     public enum AbilityType
     {

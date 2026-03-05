@@ -81,7 +81,18 @@ public class PoolingManager
         if (parent != null) go.transform.SetParent(parent);
 
         if (typeof(T) == typeof(GameObject)) return go as T;
-        return go.GetComponent<T>();
+        T component = go.GetComponent<T>();
+        // 3. T가 컴포넌트라면 GetComponent로 찾아보기
+        
+        // 4. 컴포넌트가 없다면? 코드로 직접 붙여주기!
+        if (component == null)
+        {
+            // AddComponent<T>() 대신 AddComponent(typeof(T))를 사용하여 제네릭 제약 조건 우회
+            component = go.AddComponent(typeof(T)) as T;
+        }
+
+        return component;
+
     }
 
     // 핵심 함수: 반납하기

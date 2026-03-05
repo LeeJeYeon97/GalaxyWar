@@ -8,7 +8,7 @@ public class StatManager
 {
     // Ω∫≈»µÈ
     [SerializeField]
-    public PlayerStat playerStat = new PlayerStat();
+    public PlayerStat playerStat;
     [SerializeField]
     public Dictionary<BulletType, BulletStat> bulletStatDict = new Dictionary<BulletType, BulletStat>();
     [SerializeField]
@@ -17,6 +17,7 @@ public class StatManager
     public void Init()
     {
         // «√∑π¿ÃæÓ Ω∫≈»
+        playerStat = new PlayerStat();
         playerStat.SetStat(Managers.Data.playerStatData);
 
         // ∫“∏¥µÈ Ω∫≈»
@@ -34,6 +35,11 @@ public class StatManager
             stat.Init(data.Value);
             meteorStatDict.Add(data.Value.Type, stat);
         }
+    }
+    public void Clear()
+    {
+        bulletStatDict.Clear();
+        meteorStatDict.Clear();
     }
     public BulletStat GetRandomBulletStat()
     {

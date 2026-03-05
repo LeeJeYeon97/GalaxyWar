@@ -24,9 +24,21 @@ public class UI_Joystick : MonoBehaviour
         gameObject.SetActive(false);
     }
 
+    private void OnDestroy()
+    {
+       
+        Managers.Input.OnDragStarted -= ShowJoystick;
+        Managers.Input.OnDragging -= OnDragging;
+        Managers.Input.OnDragEnded -= HideJoystick;
+    }
     private void ShowJoystick(Vector2 screenPos)
     {
         // 1. 조이스틱을 터치한 위치로 이동
+
+        if(Managers.Game.currentGameState != Define.GameState.Playing)
+        {
+            return;
+        }
         container.position = screenPos;
         handle.anchoredPosition = Vector2.zero; // 핸들 위치 초기화
         gameObject.SetActive(true);
@@ -34,6 +46,11 @@ public class UI_Joystick : MonoBehaviour
 
     private void OnDragging(Vector2 screenPos)
     {
+        if (Managers.Game.currentGameState != Define.GameState.Playing)
+        {
+            return;
+        }
+
         // 2. 터치 위치와 조이스틱 중심점 사이의 거리 계산
         Vector2 localPoint;
         // 스크린 좌표를 RectTransform의 로컬 좌표로 변환
@@ -61,6 +78,7 @@ public class UI_Joystick : MonoBehaviour
 
     private void HideJoystick()
     {
+
         handle.anchoredPosition = Vector2.zero; // 핸들 위치 초기화
         gameObject.SetActive(false);
     }
@@ -68,6 +86,10 @@ public class UI_Joystick : MonoBehaviour
 
     private void UpdateIndicatorRotation(Vector2 direction)
     {
+        if (Managers.Game.currentGameState != Define.GameState.Playing)
+        {
+            return;
+        }
         if (direction == Vector2.zero) return;
 
         // 1. 벡터를 라디안 각도로 변환 후 도(Degree) 단위로 변경

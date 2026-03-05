@@ -1,6 +1,7 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using static Define;
 
 public class UI_LobbyScene : UI_Scene
 {
@@ -26,9 +27,14 @@ public class UI_LobbyScene : UI_Scene
     public void ButtonSetting()
     {
         Button startButton = GetButton((int)Buttons.StartButton);
-        startButton.onClick.AddListener(() => Managers.Scene.LoadScene(Define.Scene.GameScene));
+        startButton.onClick.AddListener(OnClickStartButton);
 
         GetButton((int)Buttons.ExitButton);
         GetButton((int)Buttons.SettingButton);
+    }
+    private void OnClickStartButton()
+    {
+        Managers.Sound.Play("SFX/ButtonClick", Sound.Sfx);
+        Managers.Scene.LoadScene(Define.Scene.GameScene);
     }
 }

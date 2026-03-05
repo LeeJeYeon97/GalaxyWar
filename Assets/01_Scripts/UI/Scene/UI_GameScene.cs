@@ -82,6 +82,7 @@ public class UI_GameScene : UI_Scene
         BurstButton.onClick.AddListener(OnBurstButton);
 
         Button PauseButton = GetButton((int)Buttons.PauseButton);
+        PauseButton.onClick.AddListener(OnClickPauseButton);
     }
     public void UpdateHUD(Define.PlayerStatusEvent data)
     {
@@ -151,8 +152,14 @@ public class UI_GameScene : UI_Scene
     }
     public void OnClickGameTestButton()
     {
+        Managers.Sound.Play("SFX/ButtonClick", Sound.Sfx);
         Managers.Game.TestAbility();
     }
 
+    private void OnClickPauseButton()
+    {
+        Managers.Game.ChangeGameState(GameState.Pause);
+        Managers.UI.ShowPopupUI<UI_PausePopup>();
+    }
     
 }

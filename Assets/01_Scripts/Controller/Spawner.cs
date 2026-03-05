@@ -10,11 +10,6 @@ public class Spawner : MonoBehaviour
     private Coroutine _meteorSpawnCoroutine;
     private Coroutine _itemSpawnCoroutine;
 
-    public void Init()
-    {
-        StartSpawn();
-    }
-    
     public void StartSpawn()
     {
         if (_meteorSpawnCoroutine != null) StopCoroutine(_meteorSpawnCoroutine);

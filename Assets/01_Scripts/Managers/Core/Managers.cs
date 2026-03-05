@@ -7,8 +7,17 @@ public class Managers : MonoBehaviour
     static bool _isQuitting = false;
 
     private static Managers _instance;
-    public static Managers Instance { get { if (_instance == null) Init(); return _instance; } }
-
+    public static Managers Instance
+    {
+        get
+        {
+            if (_instance == null)
+            {
+                Init();
+            }
+            return _instance;
+        }
+    }
     // ========================================================== //
     // 각 관리자들 (필요한 매니저들을 여기에 추가)
     private InputManager _input;
@@ -38,15 +47,14 @@ public class Managers : MonoBehaviour
     public static SceneManagerEx Scene => Instance._scene;
     public static SoundManager Sound => Instance._sound;
     public static MapManager Map => Instance._map;
-    public static EventManager Event => Instance._event;    
+    public static EventManager Event => Instance._event;
     // ========================================================== //
-    
-    
-    void Awake()
-    {
-        Init();
-    }
 
+
+    //void Awake()
+    //{
+    //    Init();
+    //}
     private void OnApplicationQuit()
     {
         _isQuitting = true;
@@ -89,7 +97,6 @@ public class Managers : MonoBehaviour
             Input.Init();
             Sound.Init();
             Scene.Init();
-            Pool.Init();
             UI.Init();
 
         }

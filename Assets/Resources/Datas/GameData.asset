@@ -16,6 +16,6 @@ MonoBehaviour:
   expGainIncreasePerLevel: 2
   baseMaxExp: 50
   maxExpMultiplier: 1.2
-  MaxStuckTime: 5
+  GameStartTime: 10
   meteorSpawnInterval: 1
   itemSpawnInterval: 60

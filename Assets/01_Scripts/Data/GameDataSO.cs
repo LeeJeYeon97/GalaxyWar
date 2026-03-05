@@ -11,7 +11,8 @@ public class GameDataSO : ScriptableObject
     public float baseMaxExp = 50f;          // 1레벨에서 필요한 최대 경험치
     public float maxExpMultiplier = 1.2f;    // 레벨업 시 필요 경험치 상승률 (예: 1.2배씩 증가)
 
-    public float MaxStuckTime = 5f;
+    [Tooltip("게임 시작 전 카운트 다운 시간")]
+    public float GameStartTime = 3.0f;
 
     [Header("Object Spawn Settings")]
     public float meteorSpawnInterval = 5f; // 생성 간격

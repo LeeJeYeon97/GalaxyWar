@@ -105,7 +105,19 @@ public class MeteorController : MonoBehaviour
             _currentHp -= damage;
 
             // 때릴때마다 점수 1점
-            Managers.Game.AddScore(Mathf.FloorToInt(Stat.Score.TotalValue));
+            Managers.Level.AddScore(Mathf.FloorToInt(Stat.Score.TotalValue));
+
+            Vector3 textPos = transform.position + new Vector3(Random.Range(-0.5f, 0.5f), 0.5f, 0);
+
+            DamageText damageText = Managers.Pool.Get<DamageText>(Define.Pool.DamageText);
+            if (damageText != null)
+            {
+                damageText.Init(textPos, Mathf.FloorToInt(damage));
+            }
+            if(damageText == null)
+            {
+                Debug.Log("데미지 텍스트 없음");
+            }
 
             if (_currentHp <= 0)
             {

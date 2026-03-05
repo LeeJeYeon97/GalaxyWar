@@ -15,8 +15,9 @@ public class PlayerController : MonoBehaviour
     private Camera mainCam;
 
     [Header("State")]
+    private PlayerState currentState = PlayerState.Idle;
+
     private bool _isReloading = false;
-    private bool _isMoving = false;
     public bool _isBurst = false;
     public bool _isInvincible = false;
     
@@ -46,10 +47,9 @@ public class PlayerController : MonoBehaviour
     private ChromaticAberration _chromatic;
     public void Init()
     {
-        
         _rb = GetComponent<Rigidbody2D>();
         _rb.gravityScale = 0f;  // 우주니까 중력은 0
-        //_rb.linearDamping = 2.5f;
+
 
         mainCam = Camera.main;
         lr = GetComponent<LineRenderer>();
@@ -58,16 +58,14 @@ public class PlayerController : MonoBehaviour
         // 스탯 데이터 세팅
         stat = new PlayerStat();
         stat.SetStat(Managers.Data.playerStatData);
-
         currentHp = stat.maxHp.TotalValue;
         currentDefence = stat.maxDefence.TotalValue;
-        _isBurst = false;
         currentBurst = 0f;
+
 
         // HUD업데이트 이벤트 발생
         OnStatusEvent();
    
-        if (Managers.Game.currentGameState != GameState.Playing) return;
         // 게임 시작 시 첫 장전
         Reload();
 
@@ -100,28 +98,31 @@ public class PlayerController : MonoBehaviour
     }
     void Update()
     {
-        if (Managers.Game.currentGameState != GameState.Playing) return;
-        // 적 탐색
-        //FindTarget();
+        
+        if (currentState != PlayerState.Playing) return;
+        
+        // 발사 로직
         Shoot();
-
-        // 버스트 모드가 아니고 버스트 능력 먹었으면 버스트 게이지 자동충전
-        if(_isBurst == false && stat.enableBurst)
-        {
-            float recoveryAmount = (stat.maxBurstGuage.TotalValue / stat.maxBurstFullChargeTime.TotalValue) * Time.deltaTime;
-            AddBurstGauge(recoveryAmount);
-        }
+        AddBurstGauge();
     }
     private void FixedUpdate()
     {
-        if (Managers.Game.currentGameState != GameState.Playing) return;
+        if (currentState != PlayerState.Playing) return;
+        
         Move();
         Rotate();
+    }
+
+    public void SetState(PlayerState state)
+    {
+        currentState = state;
     }
 
     #region DrawLine
     void DrawReflectionLine(Vector2 startPos, Vector2 dir)
     {
+        if (currentState != PlayerState.Playing) return;
+
         lr.positionCount = 1;
         lr.SetPosition(0, startPos);
 
@@ -141,12 +142,11 @@ public class PlayerController : MonoBehaviour
     }
     #endregion
 
-    #region Move/Rotate
+    #region 이동관련
     void OnDragStart(Vector2 pos)
     {
         if (Managers.Game.currentGameState != GameState.Playing) return;
         dragStartPos = pos;
-        _isMoving = true;
         lr.enabled = true;
     }
     void OnDragUpdate(Vector2 pos)
@@ -158,24 +158,18 @@ public class PlayerController : MonoBehaviour
         // (만약 반대 방향으로 움직이고 싶다면 순서를 바꾸세요)
         dragDir = (dragPos - dragStartPos).normalized;
 
-        // 조준선(LineRenderer) 업데이트: 움직이는 방향으로 선을 그려줌
-        if (_isMoving)
-        {
-            lr.enabled = true;
-            DrawReflectionLine(transform.position, dragDir);
-        }
+        DrawReflectionLine(transform.position, dragDir);
     }
 
     void OnDragRelease()
     {
-        _isMoving = false;
         lr.enabled = false; // 드래그 떼면 조준선 끄기
-        //dragDir = Vector2.zero;
     }
     private void Move()
     {
         // 이동 입력이 없을 때는 리턴
-        if (!_isMoving || dragDir == Vector2.zero) return;
+        if (dragDir == Vector2.zero) 
+            return;
 
         // 2. 가속 힘 계산
         // moveForce를 고정값으로 두면 속도가 빠를수록 최고 속도 도달이 답답하게 느껴집니다.
@@ -249,9 +243,9 @@ public class PlayerController : MonoBehaviour
     // 발사
     void Shoot()
     {
+        // 리로딩 중이면 리턴
         if (_isReloading) return;
         
-
         // 탄창이 비었으면 자동 리로드
         if (bullets.Count <= 0)
         {
@@ -292,7 +286,7 @@ public class PlayerController : MonoBehaviour
     IEnumerator CoReload()
     {
         _isReloading = true;
-        //_isTouching = false; // 리로드 중엔 사격 중단
+        
         lr.enabled = false;
 
         Debug.Log("재장전 시작...");
@@ -347,13 +341,15 @@ public class PlayerController : MonoBehaviour
     }
     #endregion
 
+    #region 피격 및 사망
     public void OnDamage(float damage)
     {
-        
+        // 피격 무적
         if (_isInvincible) return;
         // 버스트모드면 무적 상태
         if (_isBurst) return;
 
+        if (currentState != PlayerState.Playing) return;
 
         // 방어막이 있으면
         if (currentDefence > 0)
@@ -383,17 +379,10 @@ public class PlayerController : MonoBehaviour
     private void Die()
     {
         // 죽음 처리
+        
+        Managers.Game.ChangeGameState(Define.GameState.GameOver);
     }
 
-    //public void PlayHitGlitch()
-    //{
-    //    // DOTween으로 PostProcess 수치를 조절하는 예시
-    //    DOTween.To(() => chromaticAberration.intensity.value,
-    //               x => chromaticAberration.intensity.value = x,
-    //               1f, 0.1f).OnComplete(() => {
-    //                   chromaticAberration.intensity.value = 0f;
-    //               });
-    //}
     public void PlayGlitch()
     {
         // 0.2초 동안 강도를 올렸다가 내리는 연출 (DOTween 활용)
@@ -427,17 +416,31 @@ public class PlayerController : MonoBehaviour
         _isInvincible = false;
     }
 
+    #endregion
+
     #region 버스트 모드 관련
     private void OnEnableBurstMode()
     {
         stat.enableBurst = true;
     }
-    // 게이지 증가 함수 (운석 파괴 시에도 호출)
-    public void AddBurstGauge(float amount)
-    {
-        if (_isBurst) return;
-        if (currentBurst >= stat.maxBurstGuage.TotalValue) return;
 
+    // 게이지 증가 함수, 아이템 같은거로 회복시키면 isAuto를 false로 두고 amount로 값 넘겨주기
+    public void AddBurstGauge(float amount = 0f, bool isAuto = true)
+    {
+        // 버스트 모드고 버스트모드 활성화 안되어있고 게이지가 꽉 안채워져있으면 채우기
+        if (_isBurst == true 
+            && stat.enableBurst == false
+            && currentBurst >= stat.maxBurstGuage.TotalValue)
+        {
+            return;
+        }
+
+        float recoveryAmount = amount;
+        // 자동으로 채울 때
+        if (isAuto == true)
+        {
+            recoveryAmount = (stat.maxBurstGuage.TotalValue / stat.maxBurstFullChargeTime.TotalValue) * Time.deltaTime;
+        }
         currentBurst = Mathf.Clamp(currentBurst + amount, 0, stat.maxBurstGuage.TotalValue);
         // hud업데이트 이벤트 발생
         OnStatusEvent();
@@ -447,6 +450,7 @@ public class PlayerController : MonoBehaviour
     // 버스트 모드 발동
     public void ActivateBurst()
     {
+        if (currentState != PlayerState.Playing) return;
         // 이미 버스트 모드거나 버스트 능력 활성화 못했으면
         if (_isBurst || stat.enableBurst == false) return;
 
@@ -517,7 +521,7 @@ public class PlayerController : MonoBehaviour
         Debug.Log("버스트 모드 해체");
     }
     #endregion
-
+    
     private void OnStatusEvent()
     {
         _curStatus.hp = currentHp;
@@ -529,5 +533,12 @@ public class PlayerController : MonoBehaviour
         // 3. 갱신된 방 통째로 신호를 보냅니다.
         Managers.Event.PostEvent<PlayerStatusEvent>(Define.ActionEvent.PlayerStatusChanged, _curStatus);
     }
-
+    public void Revive()
+    {
+        if(currentState != PlayerState.Die)
+        {
+            return;
+        }
+        currentHp = stat.maxHp.TotalValue;
+    }
 }

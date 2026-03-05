@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SocialPlatforms.Impl;
 using static Define;
@@ -12,17 +13,17 @@ public class GameManager : MonoBehaviour
     public List<MeteorController> activeMeteors = new List<MeteorController>();
     public List<BulletController> activeBullets = new List<BulletController>();
 
-    public int Score { get; private set; } = 0;
-
-    
-
     public PlayerController _player;
+    public Spawner spawner;
     public void Init()
     {
+        ChangeGameState(GameState.Ready);
         // UI 생성
         UI_GameScene sceneUI = Managers.UI.ShowSceneUI<UI_GameScene>();
         sceneUI.Init();
 
+        // 풀링 매니저 초기화
+        Managers.Pool.Init();
         // 맵 생성
         Managers.Map.Init();
         // 레벨
@@ -35,19 +36,18 @@ public class GameManager : MonoBehaviour
         Managers.Stat.Init();
 
         // 플레이어 세팅
-        GameObject go = Managers.Resource.Instantiate(Path.Player);
-        _player = go.GetComponent<PlayerController>();
-        _player?.Init();
+        _player = Managers.Resource.Instantiate(Path.Player)?.GetComponent<PlayerController>();
+        if (_player == null)
+            return;
+        _player.Init();
 
-        GameObject spawner = Managers.Resource.Instantiate(Path.Spawner);
-        spawner.GetComponent<Spawner>()?.Init();
+        spawner = Managers.Resource.Instantiate(Path.Spawner)?.GetComponent<Spawner>();
+        if (spawner == null)
+            return;
 
-        // Score 0점 세팅
-        Score = 0;
-        Managers.Event.PostEvent<float>(ActionEvent.ScoreChanged, Score);
 
-        // 게임 상태 변경
-        ChangeGameState(GameState.Playing);
+        Managers.UI.ShowPopupUI<UI_StartCountDownPopup>();
+        
     }
     public void AddActiveObject<T>(T item)
     {
@@ -100,7 +100,7 @@ public class GameManager : MonoBehaviour
         if (state == GameState.Pause)
         {
             previousGameState = currentGameState;
-            Time.timeScale = 0f;
+            
         }
 
         // 실제 상태 변경
@@ -108,14 +108,24 @@ public class GameManager : MonoBehaviour
 
         switch (currentGameState)
         {
+            case GameState.Ready:
+
+                break;
             case GameState.Playing:
+                Time.timeScale = 1f;
                 // 게임 시작 이벤트
-                // 플레이어 소환
+                spawner.StartSpawn();
+                _player?.SetState(PlayerState.Playing);
                 break;
             case GameState.Pause:
+                Time.timeScale = 0f;
                 // 일시정지 시 추가 로직 (UI 띄우기 등)
                 break;
             case GameState.GameOver:
+                Time.timeScale = 0f;
+                spawner.StopSpawn();
+                _player?.SetState(PlayerState.Die);
+                Managers.UI.ShowPopupUI<UI_GameOverPopup>();
                 // 게임 오버 이벤트
                 break;
             default:
@@ -123,7 +133,25 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void ClearAllBullets()
+    public void Clear()
+    {
+        ClearAllBullets();
+        ClearAllMeteors();
+        Managers.Pool.Clear();
+        Managers.Stat.Clear();
+    }
+    public void RevivePlayer()
+    {
+        ClearAllBullets();
+        ClearAllMeteors();
+
+        // 2. 플레이어 체력 회복 (PlayerController에 회복 함수가 있다고 가정)
+        _player.Revive(); 
+
+        // 3. 게임 상태를 다시 Playing으로 변경
+        ChangeGameState(GameState.Playing);
+    }
+    private void ClearAllBullets()
     {
         if (activeBullets.Count == 0) return;
 
@@ -137,16 +165,16 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void AddScore(int score)
+    public void ClearAllMeteors()
     {
-        if(score <= 0)
+        if (activeMeteors.Count == 0) return;
+
+        for (int i = activeMeteors.Count - 1; i >= 0; i--)
         {
-            return;
+            Managers.Pool.Release(activeMeteors[i].gameObject);
         }
-        Score += score;
-        Managers.Event.PostEvent<float>(ActionEvent.ScoreChanged, Score);
+        activeMeteors.Clear(); // 리스트 비우기
     }
-    
     // 테스트용
     public void TestAbility()
     {
@@ -154,8 +182,6 @@ public class GameManager : MonoBehaviour
         Managers.Game.ChangeGameState(Define.GameState.Pause);
 
         Managers.UI.ShowPopupUI<UI_GameTestPopup>();
-        
     }
-    
     
 }

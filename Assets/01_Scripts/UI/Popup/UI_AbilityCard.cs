@@ -31,7 +31,6 @@ public class UI_AbilityCard : UI_Base
     public override void Init()
     {
         //base.Init();
-
     }
     public void SetAbilityCard(AbilityDataSO data)
     {

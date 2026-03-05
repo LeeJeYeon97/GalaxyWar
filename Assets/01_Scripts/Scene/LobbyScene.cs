@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using static Define;
 
 public class LobbyScene : BaseScene
 {
@@ -11,6 +12,9 @@ public class LobbyScene : BaseScene
 
         SceneType = Define.Scene.LobbyScene;
 
+        Time.timeScale = 1f;
+        // 2. BGM 재생 (확장자인 .mp3 등은 빼고 파일 이름만 적습니다)
+        Managers.Sound.Play("BGM/LobbyBgm", Sound.Bgm);
         Managers.UI.ShowSceneUI<UI_LobbyScene>();
     }
     public override void Clear()
