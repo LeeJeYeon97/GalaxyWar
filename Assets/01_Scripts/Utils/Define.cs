@@ -17,6 +17,24 @@ public class Define
         Sfx,
         MaxCount,
     }
+    public enum SoundID
+    {
+        None,
+        Bgm_Lobby,
+        Bgm_Game,
+        Sfx_UIButtonClick,
+        Sfx_PlayerShot,
+        Sfx_NormalBulletHit,
+        Sfx_Explosion,
+        Sfx_Lightning,
+        Sfx_Reloading,
+        Sfx_Levelup,
+        Sfx_AbilityCardPick,
+        Sfx_PlayerHit,
+        Sfx_PlayerDie,
+        Sfx_PlayerShieldHit,
+        
+    }
     public enum Pool
     {
         // 프리팹
@@ -148,6 +166,9 @@ public class Define
         ExpChanged,                 // 경험치
         ScoreChanged,               // 점수
         LevelUp,                    // 레벨업
+        ReloadStart,                // 리로딩 시작
+        ReloadEnd,                  // 리로딩 끝
+        
     }
     public struct PlayerStatusEvent
     {

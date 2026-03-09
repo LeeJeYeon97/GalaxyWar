@@ -14,7 +14,7 @@ public class LobbyScene : BaseScene
 
         Time.timeScale = 1f;
         // 2. BGM 재생 (확장자인 .mp3 등은 빼고 파일 이름만 적습니다)
-        Managers.Sound.Play("BGM/LobbyBgm", Sound.Bgm);
+        Managers.Sound.Play(SoundID.Bgm_Lobby,Sound.Bgm);
         Managers.UI.ShowSceneUI<UI_LobbyScene>();
     }
     public override void Clear()

@@ -60,6 +60,7 @@ public class UI_StartCountDownPopup : UI_Popup
 
         // (선택) GO 버튼을 1초간 보여준 뒤 팝업 자체를 닫고 싶다면:
         //await Task.Delay(1000);
+        Managers.Sound.Play(SoundID.Bgm_Game,Sound.Bgm);
         Managers.Game.ChangeGameState(GameState.Playing);
 
         Managers.UI.ClosePopupUI(this);

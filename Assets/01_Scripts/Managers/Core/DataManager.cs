@@ -24,6 +24,8 @@ public class DataManager
     public Dictionary<Define.ItemType,ItemDataSO> ItemDataList { get; private set; }
 
     public Dictionary<Define.MeteorType, MeteorStatDataSO> MeteorStatDataDict {  get; private set; }
+    public SoundDataSO SoundData { get; private set; }
+
     public void Init()
     {
         // [사용 예시]
@@ -49,6 +51,11 @@ public class DataManager
         if (poolingData == null)
         {
             Debug.LogError("poolingData Null");
+        }
+        SoundData = Managers.Resource.Load<SoundDataSO>(Path.SoundData);
+        if (SoundData == null)
+        {
+            Debug.LogError("SoundData Null");
         }
 
         ItemDataList = LoadDataToDict<Define.ItemType, ItemDataSO>("Items",data => data.type);

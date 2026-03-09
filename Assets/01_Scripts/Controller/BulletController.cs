@@ -206,14 +206,14 @@ public class BulletController : MonoBehaviour
     private void PlayHitEffect(Vector2 hitPos, Vector2 hitNormal)
     {
         // 1. 풀에서 이펙트 오브젝트를 꺼냅니다. (Enum 사용)
-        GameObject hitGo = Managers.Pool.Get<GameObject>(Define.Pool.NormalBullet_Hit);
-
-        if (hitGo != null)
-        {
-            hitGo.transform.position = hitPos;
-            float angle = Mathf.Atan2(hitNormal.y, hitNormal.x) * Mathf.Rad2Deg;
-            hitGo.transform.rotation = Quaternion.Euler(0, 0, angle);
-        }
+        //GameObject hitGo = Managers.Pool.Get<GameObject>(Define.Pool.NormalBullet_Hit);
+        //
+        //if (hitGo != null)
+        //{
+        //    hitGo.transform.position = hitPos;
+        //    float angle = Mathf.Atan2(hitNormal.y, hitNormal.x) * Mathf.Rad2Deg;
+        //    hitGo.transform.rotation = Quaternion.Euler(0, 0, angle);
+        //}
     }
     public void DecreasePierceCount()
     {

@@ -34,7 +34,7 @@ public class UI_LobbyScene : UI_Scene
     }
     private void OnClickStartButton()
     {
-        Managers.Sound.Play("SFX/ButtonClick", Sound.Sfx);
+        Managers.Sound.Play(SoundID.Sfx_UIButtonClick);
         Managers.Scene.LoadScene(Define.Scene.GameScene);
     }
 }

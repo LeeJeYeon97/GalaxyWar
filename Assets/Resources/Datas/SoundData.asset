@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c8d208e805697f247af06b5c956b6b0d, type: 3}
+  m_Name: SoundData
+  m_EditorClassIdentifier: Assembly-CSharp::SoundData
+  soundList:
+  - id: 1
+    clip: {fileID: 8300000, guid: e8499c32cacfb7146bf90b9274040174, type: 3}
+    volume: 0.3
+  - id: 2
+    clip: {fileID: 8300000, guid: 485a5d80a620ce04586400126840e0c9, type: 3}
+    volume: 0.1
+  - id: 3
+    clip: {fileID: 8300000, guid: 99671277042422c4a8db020a0403feca, type: 3}
+    volume: 1
+  - id: 4
+    clip: {fileID: 8300000, guid: 16c25250151e04a37b489a3f056c8314, type: 3}
+    volume: 0.565
+  - id: 8
+    clip: {fileID: 8300000, guid: ace79a9e0d4a65547af6715539b6e0c0, type: 3}
+    volume: 0.5
+  - id: 11
+    clip: {fileID: 8300000, guid: 1f67896fb265c43ed83235bd98cc469a, type: 3}
+    volume: 1
+  - id: 5
+    clip: {fileID: 8300000, guid: 4310474905e266640852f43bd609a1a4, type: 3}
+    volume: 1

@@ -114,10 +114,6 @@ public class MeteorController : MonoBehaviour
             {
                 damageText.Init(textPos, Mathf.FloorToInt(damage));
             }
-            if(damageText == null)
-            {
-                Debug.Log("데미지 텍스트 없음");
-            }
 
             if (_currentHp <= 0)
             {

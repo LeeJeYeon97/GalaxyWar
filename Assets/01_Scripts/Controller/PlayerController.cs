@@ -266,15 +266,14 @@ public class PlayerController : MonoBehaviour
                 
 
                 _currentAimDir = dragDir.normalized;
+                Managers.Sound.Play(SoundID.Sfx_PlayerShot, Sound.Sfx);
                 bullet.Shot(transform.up);          // 발사
-
-
                 // 파티클
-                GameObject flash = Managers.Pool.Get<GameObject>(Define.Pool.NormalBullet_Flash);
-                if(flash != null)
-                {
-                    flash.transform.position = _bulletPos.position;
-                }
+                //GameObject flash = Managers.Pool.Get<GameObject>(Define.Pool.NormalBullet_Flash);
+                //if(flash != null)
+                //{
+                //    flash.transform.position = _bulletPos.position;
+                //}
 
                 // 발사 시간 설정
                 _lastShotTime = Time.time;
@@ -290,10 +289,15 @@ public class PlayerController : MonoBehaviour
         lr.enabled = false;
 
         Debug.Log("재장전 시작...");
-        // 여기에 리로드 UI 게이즈 연출 추가 가능
+
+        Managers.Event.PostEvent<float>(ActionEvent.ReloadStart, stat.reloadTime.TotalValue);
+        Managers.Sound.Play(Define.SoundID.Sfx_Reloading);
+
         yield return new WaitForSeconds(stat.reloadTime.TotalValue);
         Reload();
 
+        // 리로딩 끝
+        Managers.Event.PostEvent(ActionEvent.ReloadEnd);
         _reloadCoroutine = null; // 완료 후 비워줌
     }
 
@@ -337,6 +341,7 @@ public class PlayerController : MonoBehaviour
 
         }
         _isReloading = false;
+
         Debug.Log("재장전 완료!");
     }
     #endregion
@@ -368,7 +373,7 @@ public class PlayerController : MonoBehaviour
         PlayGlitch();
         // 피격후에 짧은 무적시간
         StartCoroutine(CoInvincible());
-
+        Managers.Sound.Play(SoundID.Sfx_PlayerHit);
         if (currentHp <= 0)
         {
             Debug.Log("죽었습니다.");
@@ -379,7 +384,6 @@ public class PlayerController : MonoBehaviour
     private void Die()
     {
         // 죽음 처리
-        
         Managers.Game.ChangeGameState(Define.GameState.GameOver);
     }
 

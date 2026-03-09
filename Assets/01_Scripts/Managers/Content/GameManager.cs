@@ -19,7 +19,7 @@ public class GameManager : MonoBehaviour
     {
         ChangeGameState(GameState.Ready);
         // UI 생성
-        UI_GameScene sceneUI = Managers.UI.ShowSceneUI<UI_GameScene>();
+        UI_GameScene sceneUI = Managers.UI.ShowSceneUI<UI_GameScene>("GameScene/UI_GameScene");
         sceneUI.Init();
 
         // 풀링 매니저 초기화

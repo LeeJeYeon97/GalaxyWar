@@ -102,12 +102,10 @@ public class UI_GameScene : UI_Scene
         shieldSlider.DOKill();
         shieldSlider.DOValue(data.shield / data.maxShield, 0.2f).SetEase(Ease.OutCubic);
 
-        // 버스트바
-        if (burstBar != null)
-        {
-            burstBar.DOKill();
-            burstBar.DOFillAmount(data.burst / data.maxBurst, 0.2f).SetEase(Ease.OutCubic);
-        }
+        
+        burstBar.DOKill();
+        burstBar.DOFillAmount(data.burst / data.maxBurst, 0.2f).SetEase(Ease.OutCubic);
+        
 
         // 4. 버스트 텍스트 업데이트
         TextMeshProUGUI burstText = GetTMP((int)Texts.BurstModeText);
@@ -147,12 +145,13 @@ public class UI_GameScene : UI_Scene
         if (expSlider == null)
             return;
 
+        expSlider.DOKill();
         // exp바
         expSlider.DOValue(data.curExp / data.maxExp, 0.2f).SetEase(Ease.OutCubic);
     }
     public void OnClickGameTestButton()
     {
-        Managers.Sound.Play("SFX/ButtonClick", Sound.Sfx);
+        Managers.Sound.Play(SoundID.Sfx_UIButtonClick, Sound.Sfx);
         Managers.Game.TestAbility();
     }
 
