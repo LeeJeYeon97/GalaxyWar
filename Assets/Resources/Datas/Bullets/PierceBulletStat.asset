@@ -15,6 +15,7 @@ MonoBehaviour:
   type: 4
   poolType: 7
   bulletName: 
+  color: {r: 0, g: 0, b: 0, a: 1}
   chance: 300
   damage: 1
   speed: 5

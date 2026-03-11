@@ -98,7 +98,7 @@ public class PlayerController : MonoBehaviour
     }
     void Update()
     {
-        
+
         if (currentState != PlayerState.Playing) return;
         
         // 발사 로직
@@ -107,8 +107,18 @@ public class PlayerController : MonoBehaviour
     }
     private void FixedUpdate()
     {
-        if (currentState != PlayerState.Playing) return;
-        
+        if (currentState != PlayerState.Playing)
+        {
+            _rb.linearVelocity = Vector2.zero;
+            _rb.angularVelocity = 0f;
+            _rb.simulated = false;
+            return;
+        }
+        else
+        {
+            _rb.simulated = true;
+        }
+
         Move();
         Rotate();
     }
@@ -167,7 +177,7 @@ public class PlayerController : MonoBehaviour
     }
     private void Move()
     {
-        // 이동 입력이 없을 때는 리턴
+            // 이동 입력이 없을 때는 리턴
         if (dragDir == Vector2.zero) 
             return;
 

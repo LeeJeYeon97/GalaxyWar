@@ -8,7 +8,7 @@ public class UI_LobbyScene : UI_Scene
     enum Buttons
     {
         StartButton,
-        ExitButton,
+        ShopButton,
         SettingButton,
     }
 
@@ -29,8 +29,18 @@ public class UI_LobbyScene : UI_Scene
         Button startButton = GetButton((int)Buttons.StartButton);
         startButton.onClick.AddListener(OnClickStartButton);
 
-        GetButton((int)Buttons.ExitButton);
-        GetButton((int)Buttons.SettingButton);
+        GetButton((int)Buttons.SettingButton).onClick.AddListener(OnClickSettingButton);
+
+        GetButton((int)Buttons.ShopButton).onClick.AddListener(OnClickShopButton);
+    }
+    private void OnClickShopButton()
+    {
+        Debug.Log("TODO : 상점 페이지 만들기");
+    }
+    private void OnClickSettingButton()
+    {
+
+        Debug.Log("TODO : 세팅 페이지 만들기");
     }
     private void OnClickStartButton()
     {

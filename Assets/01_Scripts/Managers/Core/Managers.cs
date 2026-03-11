@@ -1,3 +1,4 @@
+using System;
 using TMPro;
 using UnityEngine;
 
@@ -29,10 +30,11 @@ public class Managers : MonoBehaviour
     private AbilityManager _ability;
     private DataManager _data;
     private EventManager _event;
-    [SerializeReference] private StatManager _stat;
+    private StatManager _stat;
     private SceneManagerEx _scene;
     private SoundManager _sound;
     private MapManager _map;
+    [SerializeField] private LevelPlayAdsManager _ad = new LevelPlayAdsManager();
     // ========================================================== //
     // 프로퍼티를 통해 외부에서 접근하도록 설정
     public static InputManager Input => Instance._input;
@@ -48,13 +50,9 @@ public class Managers : MonoBehaviour
     public static SoundManager Sound => Instance._sound;
     public static MapManager Map => Instance._map;
     public static EventManager Event => Instance._event;
+    public static LevelPlayAdsManager AD => Instance._ad;
     // ========================================================== //
 
-
-    //void Awake()
-    //{
-    //    Init();
-    //}
     private void OnApplicationQuit()
     {
         _isQuitting = true;
@@ -87,12 +85,15 @@ public class Managers : MonoBehaviour
             _instance._sound = new SoundManager();
             _instance._map = new MapManager();
             _instance._event = new EventManager();
+            //_instance._ad = new LevelPlayAdsManager();
+
             // 컴포넌트 형태의 매니저들은 여기서 초기화하거나 자식으로 붙임
             _instance._game = Util.GetOrAddComponent<GameManager>(go);
             _instance._input = Util.GetOrAddComponent<InputManager>(go);
 
             // 매니저들 초기화 함수
             // Core
+            AD.Init();
             Data.Init();
             Input.Init();
             Sound.Init();

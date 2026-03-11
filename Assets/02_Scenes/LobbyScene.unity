@@ -457,13 +457,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fea311b99592fab42bd41f9a52dea486, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Managers
-  _stat:
-    rid: -2
-  references:
-    version: 2
-    RefIds:
-    - rid: -2
-      type: {class: , ns: , asm: }
+  _ad:
+    androidAppKey: 257e5279d
+    iosAppKey: 
+    androidBannerAdUnitId: hq871f6jphj2tmtu
+    iosBannerAdUnitId: 
+    androidInterstitialAdUnitId: r7hx8d6lrtdp0m1h
+    iosInterstitialAdUnitId: 
+    androidRewardedAdUnitId: zqhm9b6kdyoaoosw
+    iosRewardedAdUnitId: 
 --- !u!4 &2053641339
 Transform:
   m_ObjectHideFlags: 0

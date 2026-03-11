@@ -15,8 +15,12 @@ public class GameManager : MonoBehaviour
 
     public PlayerController _player;
     public Spawner spawner;
+
+    public int reviveCount { get; private set; } // 광고 봤을 때 사용가능한 살아나기 횟수
+
     public void Init()
     {
+        
         ChangeGameState(GameState.Ready);
         // UI 생성
         UI_GameScene sceneUI = Managers.UI.ShowSceneUI<UI_GameScene>("GameScene/UI_GameScene");
@@ -45,6 +49,7 @@ public class GameManager : MonoBehaviour
         if (spawner == null)
             return;
 
+        reviveCount = 1;
 
         Managers.UI.ShowPopupUI<UI_StartCountDownPopup>();
         
@@ -146,8 +151,11 @@ public class GameManager : MonoBehaviour
         ClearAllMeteors();
 
         // 2. 플레이어 체력 회복 (PlayerController에 회복 함수가 있다고 가정)
-        _player.Revive(); 
-
+        _player.Revive();
+        if(reviveCount >= 1)
+        {
+            reviveCount--;
+        }
         // 3. 게임 상태를 다시 Playing으로 변경
         ChangeGameState(GameState.Playing);
     }

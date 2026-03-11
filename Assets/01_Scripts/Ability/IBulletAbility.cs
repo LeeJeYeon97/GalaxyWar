@@ -141,7 +141,7 @@ public class SplitBulletAbility : IBulletAbility
             Vector2 spawnDir = Quaternion.Euler(0, 0, angleOffset) * reflectDir;
 
             // 7. 풀에서 생성 및 설정
-            BulletController splitBullet = Managers.Pool.Get<BulletController>(Define.Pool.SplitBullet);
+            BulletController splitBullet = Managers.Pool.Get<BulletController>(Define.Pool.Bullet);
 
             // 생성 위치: 메테오 중심 + (날아갈 방향 * 반지름 * 1.1f)
             // 이렇게 하면 메테오 표면 바로 밖에서 튀어나오는 연출이 됩니다.

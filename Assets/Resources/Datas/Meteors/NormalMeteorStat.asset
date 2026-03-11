@@ -18,6 +18,6 @@ MonoBehaviour:
   MaxHp: 1
   MaxSpeed: 1
   MinSpeed: 0.5
-  Damage: 5
+  Damage: 100
   Score: 1
   Exp: 0

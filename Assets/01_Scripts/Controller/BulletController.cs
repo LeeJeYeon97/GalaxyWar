@@ -3,9 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using TMPro;
-using Unity.AppUI.Core;
 using UnityEngine;
 using UnityEngine.Rendering;
+using VolumetricLines;
 using static Define;
 
 
@@ -18,6 +18,8 @@ public class BulletController : MonoBehaviour
     
     private Vector2 _shotDir;
     private Collider2D _collider;
+    private TrailRenderer _trailRenderer;
+    private VolumetricLineBehavior _volumetricLineBehavior;
     // 바뀌는 값은 여기서 선언
     public bool canSplit { get; private set; }
     public int currentBounceCount { get; private set; }
@@ -28,8 +30,10 @@ public class BulletController : MonoBehaviour
 
     public void Awake()
     {
-        if(_rb == null) _rb = Util.GetOrAddComponent<Rigidbody2D>(gameObject);
+        _rb = Util.GetOrAddComponent<Rigidbody2D>(gameObject);
         _collider = Util.GetOrAddComponent<Collider2D>(gameObject);
+        _trailRenderer = Util.GetOrAddComponent<TrailRenderer>(gameObject);
+        _volumetricLineBehavior = Util.GetOrAddComponent<VolumetricLineBehavior>(gameObject);
     }
     private void OnEnable()
     {
@@ -118,6 +122,40 @@ public class BulletController : MonoBehaviour
 
         SetPhysicsState(true); // 대기 중엔 물리 끄기
         _rb.angularVelocity = 0f;
+
+        // 색 설정
+        
+        // 2. 트레일 렌더러(꼬리) 색상 변경
+        if (_trailRenderer != null)
+        {
+            // 방법 A: 가장 간단한 방법 (시작과 끝 색상 지정)
+            _trailRenderer.startColor = _stat.color;
+            
+            // 꼬리 끝부분은 투명(Alpha = 0)하게 만들어서 자연스럽게 사라지게 연출
+            Color endColor = _stat.color;
+            endColor.a = 0f;
+            _trailRenderer.endColor = _stat.color;
+            
+            // ---------------------------------------------------------
+            // 방법 B: 더 디테일한 그라데이션(Gradient)을 쓰고 싶을 때
+            /*
+            Gradient gradient = new Gradient();
+            gradient.SetKeys(
+                // 색상은 처음부터 끝까지 bulletColor 유지
+                new GradientColorKey[] { 
+                    new GradientColorKey(bulletColor, 0.0f), 
+                    new GradientColorKey(bulletColor, 1.0f) 
+                },
+                // 투명도는 100%(1.0)에서 시작해서 꼬리 끝에서 0%(0.0)으로 스르륵 사라짐
+                new GradientAlphaKey[] { 
+                    new GradientAlphaKey(1.0f, 0.0f), 
+                    new GradientAlphaKey(0.0f, 1.0f) 
+                }
+            );
+            _trailRenderer.colorGradient = gradient;
+            */
+        }
+        _volumetricLineBehavior.LineColor = _stat.color;
     }
     public void SetSplit()
     {

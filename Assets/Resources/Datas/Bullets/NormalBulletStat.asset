@@ -15,6 +15,7 @@ MonoBehaviour:
   type: 0
   poolType: 1
   bulletName: "\uAE30\uBCF8\uD0C4"
+  color: {r: 0, g: 1, b: 1, a: 1}
   chance: 100
   damage: 1
   speed: 5

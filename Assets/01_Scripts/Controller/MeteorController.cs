@@ -1,6 +1,5 @@
 using DG.Tweening;
 using TMPro;
-using TMPro.EditorUtilities;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -21,6 +20,11 @@ public class MeteorController : MonoBehaviour
     public bool _hasEnteredView;
     private float _checkOffset = 2.0f; // 경계 밖 여유 공간
 
+    //추가: 일시정지 상태일 때 속도와 회전력을 기억해둘 변수
+    private Vector2 _savedVelocity;
+    private float _savedAngularVelocity;
+    private bool _isPaused = false;
+
     private void Awake()
     {
         _hpBar = Util.FindChild<Image>(gameObject, "HpBar", true);
@@ -39,13 +43,14 @@ public class MeteorController : MonoBehaviour
         // 1.위치 설정
         transform.position = pos;
         _hasEnteredView = false;
+        // 초기화할 때는 당연히 정지 상태가 아님
+        _isPaused = false;
 
         // 2. 랜덤 스케일 설정
         //float rawRandom = Random.Range(minScale.x, maxScale.x);
         //float snappedScale = Mathf.Round(rawRandom * 100f) / 100f;
         //transform.localScale = new Vector3(snappedScale, snappedScale, 1f);
 
-       
         // 플레이어 방향으로 방향 계산
         Vector2 dir = ((Vector2)Managers.Game._player.transform.position - pos).normalized;
         float speed = Random.Range(Stat.MinSpeed.TotalValue, Stat.MaxSpeed.TotalValue);
@@ -55,6 +60,7 @@ public class MeteorController : MonoBehaviour
         // -100 ~ 100 사이의 값을 주면 왼쪽 혹은 오른쪽으로 랜덤하게 돕니다.
         float randomTorque = Random.Range(-100f, 100f);
         _rb.angularVelocity = randomTorque;
+        _rb.simulated = true; // 충돌 및 물리 연산 완전 정지
 
         _maxHp = Stat.MaxHp.TotalValue;
         _currentHp = _maxHp;
@@ -96,7 +102,48 @@ public class MeteorController : MonoBehaviour
     }
     private void Update()
     {
+        //게임 상태가 'Playing'이 아닐 때 (일시정지, 게임오버 등)
+        if (Managers.Game.currentGameState != Define.GameState.Playing)
+        {
+            if (!_isPaused)
+            {
+                PausePhysics(); // 멈춰!
+            }
+            return; // 멈춰있는 동안에는 아래의 CheckBoundaries() 등도 실행 안 함
+        }
+
+        //게임 상태가 'Playing'으로 돌아왔을 때
+        if (_isPaused)
+        {
+            ResumePhysics();
+        }
+
         CheckBoundaries();
+    }
+    // 물리 엔진 일시정지 로직
+    private void PausePhysics()
+    {
+        _isPaused = true;
+
+        // 현재 날아가던 속도와 팽이처럼 돌던 회전값을 변수에 저장
+        _savedVelocity = _rb.linearVelocity;
+        _savedAngularVelocity = _rb.angularVelocity;
+
+        // 속도 0으로 강제 고정하고, 다른 물체랑 부딪혀서 밀려나지 않게 물리 시뮬레이션을 끕니다.
+        _rb.linearVelocity = Vector2.zero;
+        _rb.angularVelocity = 0f;
+        _rb.simulated = false; // 충돌 및 물리 연산 완전 정지
+    }
+
+    //=물리 엔진 복구 로직
+    private void ResumePhysics()
+    {
+        _isPaused = false;
+
+        // 물리 연산을 다시 켜고, 아까 저장해뒀던 속도를 그대로 다시 주입
+        _rb.simulated = true;
+        _rb.linearVelocity = _savedVelocity;
+        _rb.angularVelocity = _savedAngularVelocity;
     }
     public void OnDamage(float damage)
     {

@@ -9,7 +9,7 @@ public class BulletStat
     public IBulletAbility ability;
     public string name;
     public int level;
-
+    public Color color;
     // 기본 공통 스탯
     public Stat speed = new Stat();
     public Stat damage = new Stat();
@@ -30,7 +30,7 @@ public class BulletStat
     {
         level = 0;
         type = data.type;
-        
+        color = data.color;
         name = data.bulletName;
         poolType = data.poolType;
         speed.Init(data.speed);

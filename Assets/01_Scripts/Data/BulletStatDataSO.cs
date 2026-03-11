@@ -7,7 +7,8 @@ public class BulletStatDataSO : ScriptableObject
     public Define.BulletType type;
     public Define.Pool poolType;
     public string bulletName;
-    
+    public Color color;
+
     [Header("Base Stat")]
     public float chance;                // 해당 불릿이 장전될 확률
     public float damage;                // 기본 데미지

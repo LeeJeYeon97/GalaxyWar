@@ -39,23 +39,15 @@ public class Define
     {
         // 프리팹
         None = 0,
-        NormalBullet = 1,
-        ExplosionBullet = 2,
-        SplitBullet = 3,
-        LightningBullet = 4,
-        LightningEffect = 5,
-        Meteor = 6,
-        PierceBullet = 7,
-        BurstModBullet = 8,
-        DamageText = 9,
-
-        Item = 50,
+        Bullet = 1,
+        LightningEffect = 2,
+        Meteor = 3,
+        DamageText = 4,
+        Item = 5,
 
         
         // 파티클
         ExplosionRangeIndicator = 100,
-        NormalBullet_Hit = 101,
-        NormalBullet_Flash = 102,
 
     }
     public enum UIEvent

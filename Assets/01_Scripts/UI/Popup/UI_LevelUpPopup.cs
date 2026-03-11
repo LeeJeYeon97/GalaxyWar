@@ -1,8 +1,6 @@
 using DG.Tweening;
 using NUnit.Framework;
 using System.Collections.Generic;
-using Unity.AppUI.UI;
-using UnityEditor.Animations;
 using UnityEngine;
 using UnityEngine.UI;
 using static UnityEngine.GraphicsBuffer;

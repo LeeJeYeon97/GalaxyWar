@@ -14,41 +14,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PoolingDataSO
   poolList:
   - type: 1
-    original: {fileID: 7431507651775079818, guid: 1b2312d1f04c91e4ba820a4a2f60f44b, type: 3}
-    defaultCount: 100
-  - type: 2
-    original: {fileID: 7431507651775079818, guid: 2c14ce09832f3484ba6a3f677a4b0ba3, type: 3}
+    original: {fileID: 7118890341573305653, guid: b9724c4c5e6c3714a8bba0763136d5ee, type: 3}
     defaultCount: 100
   - type: 3
-    original: {fileID: 7431507651775079818, guid: 8e50c80ce1f42e348a4202493bba907b, type: 3}
-    defaultCount: 100
-  - type: 4
-    original: {fileID: 7431507651775079818, guid: 6eb6150bc779d0b42856992444f1c258, type: 3}
-    defaultCount: 100
-  - type: 5
-    original: {fileID: 2196387896707462882, guid: 88280ecadcb25d141aeea5859589818a, type: 3}
-    defaultCount: 100
-  - type: 6
     original: {fileID: 7634854350376040158, guid: 1e5eb75550d976748ae4687059bad26c, type: 3}
     defaultCount: 100
   - type: 100
     original: {fileID: 6670196346081357493, guid: 75abf6320fac5ee42894858c711c1acb, type: 3}
     defaultCount: 100
-  - type: 101
-    original: {fileID: 1974592250055434, guid: 8c44ea3fd0c2dde4691f531e4b6158ba, type: 3}
+  - type: 4
+    original: {fileID: 4023388544795253414, guid: 37a3877aca70de44ca5d20428d6c893d, type: 3}
     defaultCount: 100
-  - type: 102
-    original: {fileID: 1434253245967370, guid: f0c1f20d0cfbf994db67097cd31deb4d, type: 3}
-    defaultCount: 100
-  - type: 7
-    original: {fileID: 7431507651775079818, guid: ca7277024f0a8cf4185b6d126fe4107e, type: 3}
-    defaultCount: 100
-  - type: 50
+  - type: 5
     original: {fileID: 3631116037356875380, guid: 189a08e76de87424ab733d2918193270, type: 3}
     defaultCount: 100
-  - type: 8
-    original: {fileID: 7431507651775079818, guid: 57097764ba284c7468de58cb5cdbe02f, type: 3}
-    defaultCount: 100
-  - type: 9
-    original: {fileID: 4023388544795253414, guid: 37a3877aca70de44ca5d20428d6c893d, type: 3}
+  - type: 2
+    original: {fileID: 2196387896707462882, guid: 88280ecadcb25d141aeea5859589818a, type: 3}
     defaultCount: 100

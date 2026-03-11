@@ -11,7 +11,7 @@ public class GameScene : BaseScene
 
         SceneType = Define.Scene.GameScene;
 
-
+        Managers.AD.HideBanner();
         Managers.Game.Init();
     }
 
