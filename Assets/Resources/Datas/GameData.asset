@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f068b0e3c40678a4d90ddc0a917ba214, type: 3}
   m_Name: GameData
   m_EditorClassIdentifier: Assembly-CSharp::GameData
-  baseExpGain: 10
+  baseExpGain: 100
   expGainIncreasePerLevel: 2
   baseMaxExp: 50
   maxExpMultiplier: 1.2

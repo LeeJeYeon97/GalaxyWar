@@ -1,3 +1,4 @@
+using DG.Tweening;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -20,14 +21,13 @@ public class UI_AbilityCard : UI_Base
     }
     private Button myButton;
 
-    [SerializeField]
-    private AbilityDataSO _data;
+    
+    public AbilityDataSO _data;
 
     public void Start()
     {
         Init();
     }
-
     public override void Init()
     {
         //base.Init();
@@ -42,11 +42,6 @@ public class UI_AbilityCard : UI_Base
         // UI 세팅
         Bind<Image>(typeof(Images));
         Bind<TextMeshProUGUI>(typeof(Texts));
-
-        // 버튼 연결
-        myButton = GetComponent<Button>();
-        myButton.onClick.RemoveAllListeners();
-        myButton.onClick.AddListener(OnButtonClicked);
 
         // 데이터에 따른 이미지 및 스킬 설명 세팅
         GetTMP((int)Texts.AbilityNameText).text = _data.abilityname;
@@ -71,18 +66,6 @@ public class UI_AbilityCard : UI_Base
 
         GetImage((int)Images.AbilityImage).sprite = _data.icon;
 
-
     }
-    public void OnButtonClicked()
-    {   
-        if(Managers.Game.currentGameState == GameState.Pause)
-        {
-            // 능력 부여
-            Managers.Ability.ApplyAbility(_data);
 
-            // 2. UI 닫기 및 게임 재개
-            Managers.UI.ClosePopupUI();
-            Managers.Game.ChangeGameState(GameState.Resume);
-        }
-    }
 }
