@@ -13,11 +13,30 @@ MonoBehaviour:
   m_Name: ActivatePierceBullet
   m_EditorClassIdentifier: Assembly-CSharp::AbilityDataSO
   type: 50
-  abilityname: "\uAD00\uD1B5\uD0C4 \uD65C\uC131\uD654"
-  description: 
+  localizedName:
+    m_TableReference:
+      m_TableCollectionName: GUID:82c20406597040c4f8b1423cea141506
+    m_TableEntryReference:
+      m_KeyId: 25970724720657
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  localizedDescription:
+    m_TableReference:
+      m_TableCollectionName: GUID:82c20406597040c4f8b1423cea141506
+    m_TableEntryReference:
+      m_KeyId: 25970724720658
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
   icon: {fileID: 0}
   maxLevel: 1
   curLevel: 0
   _requiredAbility: 0
   values:
   - 1
+  references:
+    version: 2
+    RefIds: []

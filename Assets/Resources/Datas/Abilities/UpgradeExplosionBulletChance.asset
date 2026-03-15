@@ -13,9 +13,24 @@ MonoBehaviour:
   m_Name: UpgradeExplosionBulletChance
   m_EditorClassIdentifier: Assembly-CSharp::AbilityDataSO
   type: 33
-  abilityname: "\uD3ED\uBC1C\uD0C4 \uD655\uB960 \uC99D\uAC00"
-  description: "\uD3ED\uBC1C\uD0C4\uC758 \uBC1C\uB3D9 \uD655\uB960 {0}%\uB9CC\uD07C
-    \uC99D\uAC00\uD569\uB2C8\uB2E4."
+  localizedName:
+    m_TableReference:
+      m_TableCollectionName: GUID:82c20406597040c4f8b1423cea141506
+    m_TableEntryReference:
+      m_KeyId: 25970724720645
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  localizedDescription:
+    m_TableReference:
+      m_TableCollectionName: GUID:82c20406597040c4f8b1423cea141506
+    m_TableEntryReference:
+      m_KeyId: 25970724720646
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
   icon: {fileID: 0}
   maxLevel: 5
   curLevel: 0
@@ -26,3 +41,6 @@ MonoBehaviour:
   - 10
   - 10
   - 10
+  references:
+    version: 2
+    RefIds: []

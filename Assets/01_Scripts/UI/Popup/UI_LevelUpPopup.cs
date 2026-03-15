@@ -37,21 +37,30 @@ public class UI_LevelUpPopup : UI_Popup
         
         Bind<GameObject>(typeof(Cards));
 
+        RefreshCards();
+    }
+    private void RefreshCards()
+    {
+        // ★ 1. 안전장치: 카드가 세팅되고 날아오는 동안에는 절대 클릭 못하게 잠급니다!
+        _isSelecting = true;
+
         // 능력치 가져오기
         List<AbilityDataSO> abilities = Managers.Ability.GetRandomAbility();
-        if (abilities == null) return;
 
-        // 능력치랑 카드 갯수 안맞으면 리턴
-        if (abilities.Count != cards.Length) return;
+        if (abilities == null || abilities.Count != cards.Length)
+        {
+            return;
+        }
 
         for (int i = 0; i < abilities.Count; i++)
         {
-
             if (cards[i] == null)
+            {
                 cards[i] = Get<GameObject>(i);
-
+            }
             // 카드 UI 세팅
             UI_AbilityCard card = Util.GetOrAddComponent<UI_AbilityCard>(cards[i]);
+            
             card.SetAbilityCard(abilities[i]);
 
             int capturedIndex = i;
@@ -77,11 +86,21 @@ public class UI_LevelUpPopup : UI_Popup
             CanvasGroup cardCanvas = Util.GetOrAddComponent<CanvasGroup>(cards[i]);
             cardCanvas.alpha = 1f; // 투명도 100%로 복구
 
-            // 2. DOTween 애니메이션: 오른쪽 밖에서 원래 자리(0,0)로 날아오기!
-            cardRect.DOAnchorPos(Vector2.zero, 0.5f)
-                .SetEase(Ease.OutBack)
-                .SetUpdate(true)        // 약간 튕기면서 멈추는 찰진 효과
-                .SetDelay(i * 0.15f);    // 0번 카드 -> 0.15초 뒤 1번 -> 타다닥 연출!   
+            // 2. DOTween 애니메이션: 오른쪽 밖에서 원래 자리(0,0)로 날아오기!                      
+            var moveTween = cardRect.DOAnchorPos(Vector2.zero, 0.5f)
+            .SetEase(Ease.OutBack)
+            .SetUpdate(true)        // 약간 튕기면서 멈추는 찰진 효과
+            .SetDelay(i * 0.15f);   // 0번 카드 -> 0.15초 뒤 1번 -> 타다닥 연출!
+
+            // ★ 3. 핵심 방어 로직: 마지막 카드(3번째)가 도착했을 때 비로소 잠금을 풉니다!
+            if (i == abilities.Count - 1)
+            {
+                moveTween.OnComplete(() =>
+                {
+                    _isSelecting = false; // 이제 마음껏 고르세요!
+                    Debug.Log("모든 카드 도착 완료! 선택 가능 상태로 전환.");
+                });
+            }
         }
     }
     // 2. 카드 클릭 시 실행될 함수 (버튼 OnClick 이벤트에 연결!)
@@ -92,8 +111,6 @@ public class UI_LevelUpPopup : UI_Popup
         if (_isSelecting) return;
         _isSelecting = true;
 
-        Debug.Log($"[{selectedIndex}]번 카드 선택됨! 연출 시작!");
-
         for (int i = 0; i < cards.Length; i++)
         {
             // UI 객체들의 위치와 투명도를 제어하기 위해 컴포넌트 가져오기
@@ -101,7 +118,8 @@ public class UI_LevelUpPopup : UI_Popup
             CanvasGroup cardCanvas = cards[i].GetComponent<CanvasGroup>();
 
             //필수 확인: 카드 최상위에 'CanvasGroup' 컴포넌트가 붙어 있어야 스르륵(Fade) 사라집니다!
-            if (cardCanvas == null) cardCanvas = cards[i].AddComponent<CanvasGroup>();
+            if (cardCanvas == null) 
+                cardCanvas = cards[i].AddComponent<CanvasGroup>();
 
             //  3. 선택받지 못한 다른 카드들 연출
             if (i != selectedIndex)
@@ -138,15 +156,29 @@ public class UI_LevelUpPopup : UI_Popup
                 // 콤보 4: 애니메이션이 모두 끝난 뒤에 할 일 (부활, 팝업 끄기 등)
                 seq.OnComplete(() =>
                 {
-                    Debug.Log("연출 끝! 실제 로직 실행!");
                     // 능력 부여
                     AbilityDataSO data = cards[selectedIndex].GetComponent<UI_AbilityCard>()._data;
+                    if(data == null)
+                    {
+                        Debug.LogError("Data null");
+                    }
                     Managers.Ability.ApplyAbility(data);
-                    
-                    // 2. UI 닫기 및 게임 재개
-                    Managers.Game.ChangeGameState(GameState.Resume);
-                    Managers.UI.ClosePopupUI(); // 팝업 끄기
-                    
+
+                    // ★ 2. 레벨업 횟수 차감 및 재확인 로직
+                    // (Managers.Game.PendingLevelUpCount에 접근한다고 가정)
+                    Managers.Level.PendingLevelUpCount--;
+
+                    if (Managers.Level.PendingLevelUpCount > 0)
+                    {
+                        // 횟수가 남았다면 팝업을 끄지 않고 카드만 리필!
+                        RefreshCards();
+                    }
+                    else
+                    {
+                        // 모두 끝났다면 게임 재개 및 팝업 닫기
+                        Managers.Game.ChangeGameState(GameState.Resume);
+                        Managers.UI.ClosePopupUI();
+                    }
                 });
             }
         }

@@ -13,8 +13,24 @@ MonoBehaviour:
   m_Name: UpgradeBulletBounceCount
   m_EditorClassIdentifier: Assembly-CSharp::AbilityDataSO
   type: 4
-  abilityname: "\uCD1D\uC54C \uD295\uAE30\uB294 \uD69F\uC218 \uC99D\uAC00"
-  description: "\uBAA8\uB4E0 \uCD1D\uC54C\uC758 \uD295\uAE30\uB294 \uD69F\uC218 \uC99D\uAC00"
+  localizedName:
+    m_TableReference:
+      m_TableCollectionName: GUID:82c20406597040c4f8b1423cea141506
+    m_TableEntryReference:
+      m_KeyId: 25970720526338
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  localizedDescription:
+    m_TableReference:
+      m_TableCollectionName: GUID:82c20406597040c4f8b1423cea141506
+    m_TableEntryReference:
+      m_KeyId: 25970720526339
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
   icon: {fileID: 0}
   maxLevel: 5
   curLevel: 0
@@ -25,3 +41,6 @@ MonoBehaviour:
   - 1
   - 1
   - 1
+  references:
+    version: 2
+    RefIds: []

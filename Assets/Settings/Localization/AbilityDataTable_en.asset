@@ -1,0 +1,279 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: AbilityDataTable_en
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Tables.StringTable
+  m_LocaleId:
+    m_Code: en
+  m_SharedData: {fileID: 11400000, guid: 82c20406597040c4f8b1423cea141506, type: 2}
+  m_Metadata:
+    m_Items:
+    - rid: 3705858085927256739
+  m_TableData:
+  - m_Id: 25970720526340
+    m_Localized: Bullet Speed Up
+    m_Metadata:
+      m_Items: []
+  - m_Id: 25970716332032
+    m_Localized: HP Up
+    m_Metadata:
+      m_Items: []
+  - m_Id: 25970720526339
+    m_Localized: Bullet bounce count increases by {0}.
+    m_Metadata:
+      m_Items:
+      - rid: 3705858085927256739
+  - m_Id: 25970720526338
+    m_Localized: Bounce Up
+    m_Metadata:
+      m_Items: []
+  - m_Id: 25970720526337
+    m_Localized: Max ammo increases by {0}.
+    m_Metadata:
+      m_Items:
+      - rid: 3705858085927256739
+  - m_Id: 25970720526336
+    m_Localized: Max Ammo Up
+    m_Metadata:
+      m_Items: []
+  - m_Id: 25970716332035
+    m_Localized: Movement speed increases by {0}.
+    m_Metadata:
+      m_Items:
+      - rid: 3705858085927256739
+  - m_Id: 25970716332034
+    m_Localized: Speed Up
+    m_Metadata:
+      m_Items: []
+  - m_Id: 25970716332033
+    m_Localized: Max HP increases by {0}.
+    m_Metadata:
+      m_Items:
+      - rid: 3705858085927256739
+  - m_Id: 25970720526341
+    m_Localized: Bullet flight speed increases by {0}.
+    m_Metadata:
+      m_Items:
+      - rid: 3705858085927256739
+  - m_Id: 25970720526342
+    m_Localized: Reload Speed Up
+    m_Metadata:
+      m_Items: []
+  - m_Id: 25970720526343
+    m_Localized: Reload time decreases by {0}.
+    m_Metadata:
+      m_Items:
+      - rid: 3705858085927256739
+  - m_Id: 25970720526344
+    m_Localized: Fire Rate Up
+    m_Metadata:
+      m_Items: []
+  - m_Id: 25970720526345
+    m_Localized: Fire rate interval decreases by {0}.
+    m_Metadata:
+      m_Items:
+      - rid: 3705858085927256739
+  - m_Id: 25970720526346
+    m_Localized: Base Damage Up
+    m_Metadata:
+      m_Items: []
+  - m_Id: 25970720526347
+    m_Localized: Base bullet damage increases by {0}.
+    m_Metadata:
+      m_Items:
+      - rid: 3705858085927256739
+  - m_Id: 25970720526348
+    m_Localized: Split Bullet
+    m_Metadata:
+      m_Items: []
+  - m_Id: 25970720526349
+    m_Localized: Bullet splits into {0} upon hit.
+    m_Metadata:
+      m_Items:
+      - rid: 3705858085927256739
+  - m_Id: 25970720526350
+    m_Localized: Split Damage Up
+    m_Metadata:
+      m_Items: []
+  - m_Id: 25970720526351
+    m_Localized: Split bullet damage increases by {0}.
+    m_Metadata:
+      m_Items:
+      - rid: 3705858085927256739
+  - m_Id: 25970720526352
+    m_Localized: Split Count Up
+    m_Metadata:
+      m_Items: []
+  - m_Id: 25970720526353
+    m_Localized: Number of split bullets increases by {0}.
+    m_Metadata:
+      m_Items:
+      - rid: 3705858085927256739
+  - m_Id: 25970720526354
+    m_Localized: Split Chance Up
+    m_Metadata:
+      m_Items: []
+  - m_Id: 25970720526355
+    m_Localized: Split activation chance increases by {0}%.
+    m_Metadata:
+      m_Items:
+      - rid: 3705858085927256739
+  - m_Id: 25970720526356
+    m_Localized: Explosive Bullet
+    m_Metadata:
+      m_Items: []
+  - m_Id: 25970724720640
+    m_Localized: Creates an explosion dealing {0} damage on hit.
+    m_Metadata:
+      m_Items:
+      - rid: 3705858085927256739
+  - m_Id: 25970724720641
+    m_Localized: Explosion Damage Up
+    m_Metadata:
+      m_Items: []
+  - m_Id: 25970724720642
+    m_Localized: Explosion damage increases by {0}.
+    m_Metadata:
+      m_Items:
+      - rid: 3705858085927256739
+  - m_Id: 25970724720643
+    m_Localized: Explosion Range Up
+    m_Metadata:
+      m_Items: []
+  - m_Id: 25970724720644
+    m_Localized: Explosion radius increases by {0}.
+    m_Metadata:
+      m_Items:
+      - rid: 3705858085927256739
+  - m_Id: 25970724720645
+    m_Localized: Explosion Chance Up
+    m_Metadata:
+      m_Items: []
+  - m_Id: 25970724720646
+    m_Localized: Explosion activation chance increases by {0}%.
+    m_Metadata:
+      m_Items:
+      - rid: 3705858085927256739
+  - m_Id: 25970724720647
+    m_Localized: Lightning Bullet
+    m_Metadata:
+      m_Items: []
+  - m_Id: 25970724720648
+    m_Localized: Triggers chain lightning dealing {0} damage on hit.
+    m_Metadata:
+      m_Items:
+      - rid: 3705858085927256739
+  - m_Id: 25970724720649
+    m_Localized: Lightning Chain Up
+    m_Metadata:
+      m_Items: []
+  - m_Id: 25970724720650
+    m_Localized: Lightning chain count increases by {0}.
+    m_Metadata:
+      m_Items:
+      - rid: 3705858085927256739
+  - m_Id: 25970724720651
+    m_Localized: Lightning Damage Up
+    m_Metadata:
+      m_Items: []
+  - m_Id: 25970724720652
+    m_Localized: Lightning damage increases by {0}.
+    m_Metadata:
+      m_Items:
+      - rid: 3705858085927256739
+  - m_Id: 25970724720653
+    m_Localized: Lightning Range Up
+    m_Metadata:
+      m_Items: []
+  - m_Id: 25970724720654
+    m_Localized: Lightning chain range increases by {0}.
+    m_Metadata:
+      m_Items:
+      - rid: 3705858085927256739
+  - m_Id: 25970724720655
+    m_Localized: Lightning Chance Up
+    m_Metadata:
+      m_Items: []
+  - m_Id: 25970724720656
+    m_Localized: Chance to reload a lightning bullet increases by {0}%.
+    m_Metadata:
+      m_Items:
+      - rid: 3705858085927256739
+  - m_Id: 25970724720657
+    m_Localized: Piercing Bullet
+    m_Metadata:
+      m_Items: []
+  - m_Id: 25970724720658
+    m_Localized: Bullet pierces enemies {0} times.
+    m_Metadata:
+      m_Items:
+      - rid: 3705858085927256739
+  - m_Id: 25970724720659
+    m_Localized: Pierce Count Up
+    m_Metadata:
+      m_Items: []
+  - m_Id: 25970724720660
+    m_Localized: Pierce count increases by {0}.
+    m_Metadata:
+      m_Items:
+      - rid: 3705858085927256739
+  - m_Id: 25970724720661
+    m_Localized: Pierce Damage Up
+    m_Metadata:
+      m_Items: []
+  - m_Id: 25970724720662
+    m_Localized: Piercing bullet damage increases by {0}.
+    m_Metadata:
+      m_Items:
+      - rid: 3705858085927256739
+  - m_Id: 25970724720663
+    m_Localized: Burst Mode
+    m_Metadata:
+      m_Items: []
+  - m_Id: 25970724720664
+    m_Localized: Fires {0} bullets in a quick burst.
+    m_Metadata:
+      m_Items:
+      - rid: 3705858085927256739
+  references:
+    version: 2
+    RefIds:
+    - rid: 3705858085927256739
+      type: {class: SmartFormatTag, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_Entries: 
+        m_SharedEntries:
+        - id: 25970716332033
+        - id: 25970716332035
+        - id: 25970720526337
+        - id: 25970720526339
+        - id: 25970720526341
+        - id: 25970720526343
+        - id: 25970720526345
+        - id: 25970720526347
+        - id: 25970720526349
+        - id: 25970720526351
+        - id: 25970720526353
+        - id: 25970720526355
+        - id: 25970724720640
+        - id: 25970724720642
+        - id: 25970724720644
+        - id: 25970724720646
+        - id: 25970724720648
+        - id: 25970724720650
+        - id: 25970724720652
+        - id: 25970724720654
+        - id: 25970724720656
+        - id: 25970724720658
+        - id: 25970724720660
+        - id: 25970724720662
+        - id: 25970724720664

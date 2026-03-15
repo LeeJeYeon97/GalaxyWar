@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: LightningBulletStat
   m_EditorClassIdentifier: Assembly-CSharp::BulletStatDataSO
   type: 3
-  poolType: 4
+  poolType: 1
   bulletName: 
   color: {r: 1, g: 1, b: 0, a: 1}
   chance: 100

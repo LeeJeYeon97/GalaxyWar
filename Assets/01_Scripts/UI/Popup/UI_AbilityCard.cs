@@ -2,6 +2,7 @@ using DG.Tweening;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Localization;
 using UnityEngine.UI;
 using static Define;
 
@@ -13,59 +14,87 @@ public class UI_AbilityCard : UI_Base
     {
         AbilityImage,
     }
-
     enum Texts
     {
         AbilityNameText,
         AbilityDescription,
     }
-    private Button myButton;
-
-    
     public AbilityDataSO _data;
 
-    public void Start()
-    {
-        Init();
-    }
+    private bool _isInit = false;
+
+    private LocalizedString _currentNameLoc;
+    private LocalizedString _currentDescLoc;
+
+    public UI_MarqueeText descMarquee;
     public override void Init()
     {
+        if (_isInit == true)
+        {
+            return;
+        }
         //base.Init();
+        // UI 세팅
+        Bind<Image>(typeof(Images));
+        Bind<TextMeshProUGUI>(typeof(Texts));
+
+        _isInit = true;
     }
     public void SetAbilityCard(AbilityDataSO data)
     {
         if (data == null)
             return;
 
+        Init();
+
         _data = data;
+        // 1. 아이콘 세팅
+        GetImage((int)Images.AbilityImage).sprite = data.icon;
 
-        // UI 세팅
-        Bind<Image>(typeof(Images));
-        Bind<TextMeshProUGUI>(typeof(Texts));
+        ClearLocalization();
+        _currentNameLoc = data.localizedName;
+        _currentDescLoc = data.localizedDescription;
 
-        // 데이터에 따른 이미지 및 스킬 설명 세팅
-        GetTMP((int)Texts.AbilityNameText).text = _data.abilityname;
+        int nextLevel = data.curLevel + 1;
+        float nextValue = data.GetValue(nextLevel);
+        _currentDescLoc.Arguments = new object[] { nextValue };
 
-        int currentLevel = Managers.Ability.GetCurrentLevel(data.type);
-        int targetLevel = Mathf.Clamp(currentLevel, 0, data.maxLevel - 1);
+        _currentNameLoc.StringChanged += UpdateNameText;
+        _currentDescLoc.StringChanged += UpdateDescText;
+    }
 
-        float value = data.values[targetLevel];
+    // 번역이 완료되거나 언어가 바뀔 때마다 실행될 콜백 함수들
+    private void UpdateNameText(string translatedText)
+    {
+        GetTMP((int)Texts.AbilityNameText).text = translatedText;
 
-        string displayValue = "";
-        // 1.0보다 작으면 확률(0.1, 0.2...)로 판단하여 %로 변환
-        if (value > 0 && value < 1.0f)
+        descMarquee.PlayMarquee(translatedText);
+    }
+
+    private void UpdateDescText(string translatedText)
+    {
+        GetTMP((int)Texts.AbilityDescription).text = translatedText;
+    }
+
+    private void ClearLocalization()
+    {
+        if (_currentNameLoc != null)
         {
-            // 0.1 -> "10"
-            displayValue = (value * 100f).ToString("N0");
+            _currentNameLoc.StringChanged -= UpdateNameText;
+            _currentNameLoc = null;
         }
-        else
+
+        if (_currentDescLoc != null)
         {
-            displayValue = value.ToString("N0");
+            _currentDescLoc.StringChanged -= UpdateDescText;
+            _currentDescLoc = null;
         }
-        GetTMP((int)Texts.AbilityDescription).text = string.Format(data.description, displayValue);
+    }
 
-        GetImage((int)Images.AbilityImage).sprite = _data.icon;
-
+    // UI가 화면에서 사라질 때 (팝업이 닫힐 때) 안전하게 메모리 정리
+    private void OnDisable()
+    {
+        ClearLocalization();
     }
 
 }

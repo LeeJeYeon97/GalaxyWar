@@ -8,13 +8,13 @@ public class GameDataSO : ScriptableObject
     public float expGainIncreasePerLevel = 2f; // 레벨당 추가 경험치 획득량
 
     [Header("Level Up Settings (Required Exp)")]
-    public float baseMaxExp = 50f;          // 1레벨에서 필요한 최대 경험치
-    public float maxExpMultiplier = 1.2f;    // 레벨업 시 필요 경험치 상승률 (예: 1.2배씩 증가)
-
+    public float baseMaxExp;          // 1레벨에서 필요한 최대 경험치
+    
     [Tooltip("게임 시작 전 카운트 다운 시간")]
     public float GameStartTime = 3.0f;
 
     [Header("Object Spawn Settings")]
     public float meteorSpawnInterval = 5f; // 생성 간격
     public float itemSpawnInterval = 60f; // 생성 간격
+    public float bossSpawnInterval = 180f;  // 3분
 }

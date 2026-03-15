@@ -10,6 +10,8 @@ public class LevelManager
 
     public int Score { get; private set; } = 0;
 
+    public int PendingLevelUpCount = 0;
+
     public float MaxExp => GetMaxExp();
     public void Init()
     {
@@ -24,11 +26,36 @@ public class LevelManager
 
     public float GetMaxExp()
     {
-        return Managers.Data.GameData.baseMaxExp * Mathf.Pow(Managers.Data.GameData.maxExpMultiplier, CurrentLevel - 1);
+        // 1단계: 초반 폭풍 성장 구간 (1 ~ 5레벨)
+        // 5 -> 10 -> 15 -> 20 -> 25 (경험치 1짜리 메테오 기준)
+        // 의도: 무기가 1개뿐인 초반에 지루할 틈 없이 연속으로 스킬을 고르게 만듭니다.
+        if (CurrentLevel <= 5)
+        {
+            return CurrentLevel * 5;
+        }
+
+        //  2단계: 중반 텐션 유지 구간 (6 ~ 20레벨)
+        // 40 -> 55 -> 70 ... -> 250
+        // 의도: 이쯤 되면 스폰량이 늘어나고, 메테오 경험치도 3으로 오릅니다. 
+        // 유저가 한창 몹을 쓸어 담는 재미를 느낄 때라 요구량을 살짝 가파르게 올립니다.
+        else if (CurrentLevel <= 20)
+        {
+            int midStep = CurrentLevel - 5;
+            return 25 + (midStep * 15);
+        }
+
+        //  3단계: 후반 하드코어 구간 (21레벨 이상)
+        // 300 -> 360 -> 430 -> 510 ... (2차 함수로 폭발적 증가)
+        // 의도: 최종 스킬 진화(궁극기)를 앞두고 요구량이 기하급수적으로 늘어납니다.
+        // 메테오가 경험치를 10~50씩 주지만, 잡기 힘들어지므로 레벨업이 아주 간절해집니다.
+        else
+        {
+            int lateStep = CurrentLevel - 20;
+            return 250 + (lateStep * 50) + (lateStep * lateStep * 5);
+        }
     }
-    public void AddExp(float blockLevel)
+    public void AddExp(float exp)
     {
-        float exp = Managers.Data.GameData.baseExpGain + ((blockLevel - 1) * Managers.Data.GameData.expGainIncreasePerLevel);
         CurrentExp += exp;
 
         // UI 업데이트를 위해 이벤트 호출
@@ -39,7 +66,6 @@ public class LevelManager
         {
             LevelUp();
         }
-
     }
 
     public void AddScore(int score)
@@ -55,20 +81,30 @@ public class LevelManager
 
     private void LevelUp()
     {
-        CurrentExp -= MaxExp; // 남은 경험치 이월
-        CurrentLevel++;
+        // 1. 재귀(Recursion) 제거! while문으로 남은 경험치를 모두 정산합니다.
+        while (CurrentExp >= MaxExp)
+        {
+            CurrentExp -= MaxExp;
+            CurrentLevel++;
+            PendingLevelUpCount++; // 팝업을 띄워야 할 횟수 1 증가
 
-        // 1. 게임 일시정지 (시간 배율 0)
-        Managers.Game.ChangeGameState(Define.GameState.Pause);
+            // 레벨업 이벤트 알림 (단순 UI 숫자 갱신용)
+            Managers.Event.PostEvent<int>(ActionEvent.LevelUp, CurrentLevel);
+        }
 
-        // 2. 레벨업 이벤트 알림 (UI 매니저 등에서 듣고 팝업을 띄움)
-        Managers.Event.PostEvent<int>(ActionEvent.LevelUp, CurrentLevel);
+        // 2. 팝업 띄우기 및 게임 정지 처리
+        if (PendingLevelUpCount > 0)
+        {
+            // 이미 Pause 상태가 아닐 때만 정지시킴 (이전 상태 덮어쓰기 방지)
+            if (Managers.Game.currentGameState != Define.GameState.Pause)
+            {
+                Managers.Game.ChangeGameState(Define.GameState.Pause);
+            }
 
-        Managers.UI.ShowPopupUI<UI_LevelUpPopup>();
-
-        // 3. UI 갱신 (경험치가 바로 다음 레벨로 넘어갈 수도 있으므로 재귀 체크)
-        Managers.Event.PostEvent<(float,float)>(ActionEvent.ExpChanged, (CurrentExp, MaxExp));
-
-        if (CurrentExp >= MaxExp) LevelUp();
+            // 팝업 띄우기 (이미 떠있다면 알아서 무시되거나 최상단으로 올라옴)
+            Managers.UI.ShowPopupUI<UI_LevelUpPopup>();
+        }
+        // UI 갱신
+        Managers.Event.PostEvent<(float, float)>(ActionEvent.ExpChanged, (CurrentExp, MaxExp));
     }
 }

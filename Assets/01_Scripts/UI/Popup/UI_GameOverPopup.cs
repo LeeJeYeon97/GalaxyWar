@@ -1,5 +1,6 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.Localization;
 using UnityEngine.UI;
 using static Define;
 
@@ -15,12 +16,18 @@ public class UI_GameOverPopup : UI_Popup
     {
         RewardCountText,
     }
+    [SerializeField]
+    private LocalizedString _localizedRewardCountText;
+
+    private bool _isInit = false; // 중복 초기화 방지용 자물쇠
+
     private void Start()
     {
         Init();
     }
     public override void Init()
     {
+        if (_isInit) return; // 이미 바인딩이 끝났다면 패스
         base.Init();
 
         Bind<Button>(typeof(Buttons));
@@ -38,9 +45,25 @@ public class UI_GameOverPopup : UI_Popup
             rewardButton.gameObject.SetActive(false);
         }
 
-        GetTMP((int)Texts.RewardCountText).text = $"남은 횟수 : {Managers.Game.reviveCount}";
-
+        _isInit = true; // 바인딩 완료 도장 쾅!
+        RefreshRewardCountText();
     }
+    // ★ 유니티 눈치 안 보고 내가 원할 때 직접 번역본을 가져오는 마법의 함수!
+    private void RefreshRewardCountText()
+    {
+        // 1. {0} 에 들어갈 숫자를 확실하게 상자에 넣어줍니다.
+        _localizedRewardCountText.Arguments = new object[] { Managers.Game.reviveCount };
+
+        // 2. "지금 당장 저 숫자 넣어서 완벽하게 번역된 문장 내놔!" 라고 요청합니다.
+        var op = _localizedRewardCountText.GetLocalizedStringAsync();
+
+        // 3. 번역이 완료되면 바로 UI에 꽂아 넣습니다.
+        op.Completed += (handle) =>
+        {
+            GetTMP((int)Texts.RewardCountText).text = handle.Result;
+        };
+    }
+
     private void OnClickRestartButton()
     {
         // 현재 씬(GameScene)을 다시 로드! (가장 깔끔한 초기화)

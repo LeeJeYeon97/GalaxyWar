@@ -5,6 +5,7 @@ using UnityEngine;
 using static Define;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
+using JetBrains.Annotations;
 
 public class PlayerController : MonoBehaviour
 {
@@ -441,10 +442,18 @@ public class PlayerController : MonoBehaviour
     // 게이지 증가 함수, 아이템 같은거로 회복시키면 isAuto를 false로 두고 amount로 값 넘겨주기
     public void AddBurstGauge(float amount = 0f, bool isAuto = true)
     {
-        // 버스트 모드고 버스트모드 활성화 안되어있고 게이지가 꽉 안채워져있으면 채우기
-        if (_isBurst == true 
-            && stat.enableBurst == false
-            && currentBurst >= stat.maxBurstGuage.TotalValue)
+        // 버스트 모드 활성화 안되어 있으면 리턴
+        if(stat.enableBurst == false)
+        {
+            return;
+        }
+        // 현재 버스트 모드면 리턴
+        if(_isBurst == true)
+        {
+            return;
+        }
+        // 현재 버스트 게이지가 꽉채워져있으면 리턴
+        if (currentBurst >= stat.maxBurstGuage.TotalValue)
         {
             return;
         }
@@ -455,7 +464,7 @@ public class PlayerController : MonoBehaviour
         {
             recoveryAmount = (stat.maxBurstGuage.TotalValue / stat.maxBurstFullChargeTime.TotalValue) * Time.deltaTime;
         }
-        currentBurst = Mathf.Clamp(currentBurst + amount, 0, stat.maxBurstGuage.TotalValue);
+        currentBurst = Mathf.Clamp(currentBurst + recoveryAmount, 0, stat.maxBurstGuage.TotalValue);
         // hud업데이트 이벤트 발생
         OnStatusEvent();
     }
@@ -554,5 +563,6 @@ public class PlayerController : MonoBehaviour
             return;
         }
         currentHp = stat.maxHp.TotalValue;
+        OnStatusEvent();
     }
 }

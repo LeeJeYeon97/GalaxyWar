@@ -15,9 +15,9 @@ MonoBehaviour:
   Type: 0
   Sprite: {fileID: 0}
   Name: "\uAE30\uBCF8\uC6B4\uC11D"
-  MaxHp: 1
-  MaxSpeed: 1
-  MinSpeed: 0.5
-  Damage: 1
+  MaxHp: 10
+  MaxSpeed: 0.5
+  MinSpeed: 0.2
+  Damage: 10
   Score: 1
-  Exp: 0
+  Exp: 1

@@ -13,8 +13,24 @@ MonoBehaviour:
   m_Name: UpgradeLightningRange
   m_EditorClassIdentifier: Assembly-CSharp::AbilityDataSO
   type: 43
-  abilityname: "\uBC88\uAC1C \uBC94\uC704\uC99D\uAC00"
-  description: 
+  localizedName:
+    m_TableReference:
+      m_TableCollectionName: GUID:82c20406597040c4f8b1423cea141506
+    m_TableEntryReference:
+      m_KeyId: 25970724720653
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  localizedDescription:
+    m_TableReference:
+      m_TableCollectionName: GUID:82c20406597040c4f8b1423cea141506
+    m_TableEntryReference:
+      m_KeyId: 25970724720654
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
   icon: {fileID: 0}
   maxLevel: 5
   curLevel: 0
@@ -25,3 +41,6 @@ MonoBehaviour:
   - 10
   - 10
   - 10
+  references:
+    version: 2
+    RefIds: []

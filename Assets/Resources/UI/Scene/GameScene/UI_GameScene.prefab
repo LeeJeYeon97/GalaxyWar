@@ -3237,6 +3237,7 @@ GameObject:
   - component: {fileID: 662258164049209335}
   - component: {fileID: 913423170570958786}
   - component: {fileID: 3765873949790909895}
+  - component: {fileID: 5077832344166881531}
   m_Layer: 5
   m_Name: UI_GameScene
   m_TagString: Untagged
@@ -3328,6 +3329,18 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &5077832344166881531
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6773699000930121548}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0fd6bd8dcb3d3f642a9a957c21427acd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UI_GameScene
 --- !u!1 &8002214216500461759
 GameObject:
   m_ObjectHideFlags: 0

@@ -99,6 +99,10 @@ public class BulletController : MonoBehaviour
     }
     public void SetBullet(BulletStat stat)
     {
+        if(stat == null)
+        {
+            Debug.Log("∫“∏¥ Ω∫≈»¿Ã null¿‘¥œ¥Ÿ SetBullet()");
+        }
         if (gameObject.activeSelf == true)
         {
             gameObject.SetActive(false);

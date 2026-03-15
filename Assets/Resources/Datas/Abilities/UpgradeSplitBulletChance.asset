@@ -13,9 +13,24 @@ MonoBehaviour:
   m_Name: UpgradeSplitBulletChance
   m_EditorClassIdentifier: Assembly-CSharp::AbilityDataSO
   type: 23
-  abilityname: "\uBD84\uC5F4\uD0C4 \uC0DD\uC131 \uD655\uB960 \uAC15\uD654"
-  description: "\uBD84\uC5F4\uD0C4\uC774 \uBC1C\uC0DD\uD560 \uD655\uB960\uC774 {0}%
-    \uC99D\uAC00\uD569\uB2C8\uB2E4."
+  localizedName:
+    m_TableReference:
+      m_TableCollectionName: GUID:82c20406597040c4f8b1423cea141506
+    m_TableEntryReference:
+      m_KeyId: 25970720526354
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  localizedDescription:
+    m_TableReference:
+      m_TableCollectionName: GUID:82c20406597040c4f8b1423cea141506
+    m_TableEntryReference:
+      m_KeyId: 25970720526355
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
   icon: {fileID: 0}
   maxLevel: 5
   curLevel: 0
@@ -26,3 +41,6 @@ MonoBehaviour:
   - 10
   - 10
   - 10
+  references:
+    version: 2
+    RefIds: []

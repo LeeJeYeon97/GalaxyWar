@@ -13,8 +13,9 @@ MonoBehaviour:
   m_Name: SplitBulletStat
   m_EditorClassIdentifier: Assembly-CSharp::BulletStatDataSO
   type: 1
-  poolType: 3
+  poolType: 1
   bulletName: "\uBD84\uC5F4\uD0C4"
+  color: {r: 0, g: 0, b: 0, a: 0}
   chance: 10
   damage: 1
   speed: 5

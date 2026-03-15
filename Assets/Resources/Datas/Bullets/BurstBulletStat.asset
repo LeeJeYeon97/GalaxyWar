@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: BurstBulletStat
   m_EditorClassIdentifier: Assembly-CSharp::BulletStatDataSO
   type: 5
-  poolType: 8
+  poolType: 1
   bulletName: "\uBC84\uC2A4\uD2B8"
   color: {r: 0, g: 0, b: 0, a: 1}
   chance: 100
