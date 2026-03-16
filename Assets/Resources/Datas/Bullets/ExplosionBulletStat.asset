@@ -17,7 +17,7 @@ MonoBehaviour:
   bulletName: "\uD3ED\uBC1C\uD0C4"
   color: {r: 1, g: 0.53333336, b: 0, a: 1}
   chance: 10
-  damage: 1
+  damage: 10
   speed: 3
   bounceCount: 0
   isActivated: 0

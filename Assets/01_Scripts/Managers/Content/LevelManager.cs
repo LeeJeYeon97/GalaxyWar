@@ -26,32 +26,27 @@ public class LevelManager
 
     public float GetMaxExp()
     {
-        // 1단계: 초반 폭풍 성장 구간 (1 ~ 5레벨)
-        // 5 -> 10 -> 15 -> 20 -> 25 (경험치 1짜리 메테오 기준)
-        // 의도: 무기가 1개뿐인 초반에 지루할 틈 없이 연속으로 스킬을 고르게 만듭니다.
-        if (CurrentLevel <= 5)
-        {
-            return CurrentLevel * 5;
-        }
+        // 1. 유저님이 제안하신 완벽한 기본 공식 (1, 2, 3, 4... 씩 늘어나는 수학 공식)
+        // n(n+1)/2 공식을 쓰면 반복문 없이 깔끔하게 계산됩니다!
+        int n = CurrentLevel - 1;
+        float baseRequired = 5 + (n * (n + 1)) / 2;
 
-        //  2단계: 중반 텐션 유지 구간 (6 ~ 20레벨)
-        // 40 -> 55 -> 70 ... -> 250
-        // 의도: 이쯤 되면 스폰량이 늘어나고, 메테오 경험치도 3으로 오릅니다. 
-        // 유저가 한창 몹을 쓸어 담는 재미를 느낄 때라 요구량을 살짝 가파르게 올립니다.
+        // 2. 초반 (1~10레벨): 운석이 경험치 1을 주므로 공식을 그대로 씁니다.
+        if (CurrentLevel <= 10)
+        {
+            return baseRequired;
+        }
+        // 3. 중반 (11~20레벨): 운석이 경험치를 3~10씩 주므로 요구량도 가파르게 올립니다.
         else if (CurrentLevel <= 20)
         {
-            int midStep = CurrentLevel - 5;
-            return 25 + (midStep * 15);
+            float midStep = CurrentLevel - 10;
+            return baseRequired + (midStep * 20); // 레벨당 20씩 추가 페널티
         }
-
-        //  3단계: 후반 하드코어 구간 (21레벨 이상)
-        // 300 -> 360 -> 430 -> 510 ... (2차 함수로 폭발적 증가)
-        // 의도: 최종 스킬 진화(궁극기)를 앞두고 요구량이 기하급수적으로 늘어납니다.
-        // 메테오가 경험치를 10~50씩 주지만, 잡기 힘들어지므로 레벨업이 아주 간절해집니다.
+        // 4. 후반 (21레벨 이상): 운석이 경험치를 50씩 주므로 요구량을 확 늘립니다!
         else
         {
-            int lateStep = CurrentLevel - 20;
-            return 250 + (lateStep * 50) + (lateStep * lateStep * 5);
+            float lateStep = CurrentLevel - 20;
+            return baseRequired + 200 + (lateStep * 80); // 후반용 폭발적 증가
         }
     }
     public void AddExp(float exp)

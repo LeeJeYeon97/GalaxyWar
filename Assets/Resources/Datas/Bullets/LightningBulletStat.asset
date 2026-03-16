@@ -16,9 +16,9 @@ MonoBehaviour:
   poolType: 1
   bulletName: 
   color: {r: 1, g: 1, b: 0, a: 1}
-  chance: 100
-  damage: 1
-  speed: 5
+  chance: 10
+  damage: 5
+  speed: 6
   bounceCount: 0
   isActivated: 0
   baseExplosionRange: 0

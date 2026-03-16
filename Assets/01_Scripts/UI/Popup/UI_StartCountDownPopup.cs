@@ -39,8 +39,9 @@ public class UI_StartCountDownPopup : UI_Popup
         // 텍스트를 움직이려면 RectTransform이 필요
         RectTransform textRect = _text.GetComponent<RectTransform>();
 
+        int startCount = Managers.Data.GameData.GameStartTime;
         // 1초마다 다음 이미지를 켭니다 (총 5번 반복)
-        for (int i = 5; i > 0; i--)
+        for (int i = startCount; i > 0; i--)
         {
             // 1. 텍스트를 현재 숫자(5, 4, 3, 2, 1)로 변경
             _text.text = i.ToString();

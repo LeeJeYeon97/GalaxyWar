@@ -66,8 +66,10 @@ public class Spawner : MonoBehaviour
 
             if (meteor != null)
             {
+                MeteorStat stat = Managers.Stat.GetRandomMeteorStat();
+
                 // 3. 운석 초기화 (위치 설정 및 이동 시작)
-                meteor.Init(spawnPos);
+                meteor.Init(spawnPos, stat);
             }
         }
     }

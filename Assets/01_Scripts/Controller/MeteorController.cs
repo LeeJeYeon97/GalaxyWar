@@ -1,7 +1,10 @@
 using DG.Tweening;
+using System.Collections;
 using TMPro;
+using Unity.AppUI.Core;
 using UnityEngine;
 using UnityEngine.UI;
+using static Define;
 
 public class MeteorController : MonoBehaviour
 {
@@ -25,6 +28,9 @@ public class MeteorController : MonoBehaviour
     private float _savedAngularVelocity;
     private bool _isPaused = false;
 
+
+    private Coroutine _magmaCoroutine;
+
     private void Awake()
     {
         _hpBar = Util.FindChild<Image>(gameObject, "HpBar", true);
@@ -34,22 +40,23 @@ public class MeteorController : MonoBehaviour
         _rb.gravityScale = 0;
         _hasEnteredView = false;
     }
-    public void Init(Vector2 pos)
+    public void Init(Vector2 pos, MeteorStat stat)
     {
-        // 랜덤으로 스탯뽑기
-        Stat = Managers.Stat.GetRandomMeteorStat();
-        if (Stat == null) return;
+        if (stat == null)
+        {
+            return;
+        }
+        
+        Stat = stat;
+        _maxHp = Stat.MaxHp.TotalValue;
+        _currentHp = _maxHp;
 
         // 1.위치 설정
         transform.position = pos;
         _hasEnteredView = false;
+
         // 초기화할 때는 당연히 정지 상태가 아님
         _isPaused = false;
-
-        // 2. 랜덤 스케일 설정
-        //float rawRandom = Random.Range(minScale.x, maxScale.x);
-        //float snappedScale = Mathf.Round(rawRandom * 100f) / 100f;
-        //transform.localScale = new Vector3(snappedScale, snappedScale, 1f);
 
         // 플레이어 방향으로 방향 계산
         Vector2 dir = ((Vector2)Managers.Game._player.transform.position - pos).normalized;
@@ -60,13 +67,37 @@ public class MeteorController : MonoBehaviour
         // -100 ~ 100 사이의 값을 주면 왼쪽 혹은 오른쪽으로 랜덤하게 돕니다.
         float randomTorque = Random.Range(-100f, 100f);
         _rb.angularVelocity = randomTorque;
-        _rb.simulated = true; // 충돌 및 물리 연산 완전 정지
+        _rb.simulated = true;
 
-        _maxHp = Stat.MaxHp.TotalValue;
-        _currentHp = _maxHp;
         UpdateHPBar();
+        InitType();
     }
-
+    // 메테오 타입에 따라서 추가로 해줘야 하는 로직
+    private void InitType()
+    {
+        switch(Stat.Type)
+        {
+            case MeteorType.NormalMeteor:
+                break;
+            case MeteorType.CometMeteor:
+                break;
+            case MeteorType.IronMeteor:
+                break;
+            case MeteorType.FractureMeteor:
+                break;
+            case MeteorType.Fragment:
+                Debug.Log("파편이 뽑혔어요");
+                Vector2 scatterDir = Random.insideUnitCircle.normalized;
+                float speed = Random.Range(Stat.MinSpeed.TotalValue, Stat.MaxSpeed.TotalValue);
+                _rb.linearVelocity = scatterDir * speed;
+                break;
+            case MeteorType.MagmaMeteor:
+                Debug.Log("마그마가 뽑혔어요");
+                if (_magmaCoroutine != null) StopCoroutine(_magmaCoroutine);
+                _magmaCoroutine = StartCoroutine(CoDropMagma());
+                break;
+        }
+    }
     public void OnCollisionEnter2D(Collision2D collision)
     {
         Debug.Log("메테오 피격");
@@ -98,6 +129,13 @@ public class MeteorController : MonoBehaviour
     }
     private void OnDisable()
     {
+
+        // 추가: 운석이 파괴되어 풀로 돌아갈 때 코루틴 확실히 끄기!
+        if (_magmaCoroutine != null)
+        {
+            StopCoroutine(_magmaCoroutine);
+            _magmaCoroutine = null;
+        }
         Managers.Game.RemoveActiveObject(this);
     }
     private void Update()
@@ -164,14 +202,27 @@ public class MeteorController : MonoBehaviour
 
             if (_currentHp <= 0)
             {
-                Managers.Level.AddExp(Stat.Exp.TotalValue);
-                Managers.Pool.Release(gameObject);
+                Die();
             }
             else
             {
                 UpdateHPBar();
             }
         }
+    }
+    private void Die()
+    {
+        switch(Stat.Type)
+        {
+            case MeteorType.FractureMeteor:
+                SpawnFragment();
+                break;
+            case MeteorType.SludgeMeteor:
+                SpawnSludgePuddle();
+                break;
+        }
+        Managers.Level.AddExp(Stat.Exp.TotalValue);
+        Managers.Pool.Release(gameObject);
     }
     void CheckBoundaries()
     {
@@ -195,6 +246,53 @@ public class MeteorController : MonoBehaviour
             {
                 Managers.Pool.Release(gameObject);
             }
+        }
+    }
+
+    private void SpawnFragment()
+    {
+        // 2개 ~ 4개의 파편을 흩뿌림
+        int fragmentCount = Random.Range(2, 5);
+
+        for (int i = 0; i < fragmentCount; i++)
+        {
+            MeteorController fragment = Managers.Pool.Get<MeteorController>(Define.Pool.Meteor);
+            if (fragment != null)
+            {
+                // 현재 죽은 위치에서, Fragment 타입으로, 사방으로 튀게 Init!
+                fragment.Init(transform.position,Managers.Stat.GetMeteorStat(MeteorType.Fragment));
+            }
+        }
+    }
+    // 추가: 0.5초마다 현재 위치에 마그마 장판을 생성하는 코루틴
+    private IEnumerator CoDropMagma()
+    {
+        while (true)
+        {
+            // 0.5초 대기 (이 간격을 조절하면 장판이 더 촘촘하거나 듬성듬성 깔립니다)
+            yield return new WaitForSeconds(0.5f);
+
+            // 게임 플레이 중일 때만 장판 생성
+            if (Managers.Game.currentGameState == GameState.Playing)
+            {
+                // 풀링 매니저에서 마그마 장판 꺼내기 (Pool enum에 MagmaPuddle 추가 필요)
+                MagmaPuddle puddle = Managers.Pool.Get<MagmaPuddle>(Define.Pool.MagmaPuddle);
+                if (puddle != null)
+                {
+                    // 장판의 데미지는 운석 데미지의 절반(예시)으로 세팅
+                    float puddleDamage = Stat.Damage.TotalValue * 0.5f;
+                    puddle.Init(transform.position, puddleDamage);
+                }
+            }
+        }
+    }
+
+    private void SpawnSludgePuddle()
+    {
+        SludgePuddle puddle = Managers.Pool.Get<SludgePuddle>(Define.Pool.SludgePuddle);
+        if (puddle != null)
+        {
+            puddle.Init(transform.position);
         }
     }
 }

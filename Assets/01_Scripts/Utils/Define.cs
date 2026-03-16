@@ -48,6 +48,8 @@ public class Define
         
         // 파티클
         ExplosionRangeIndicator = 100,
+        MagmaPuddle = 101,      // 화염장판
+        SludgePuddle = 102,     // 진흙장판
 
     }
     public enum UIEvent
@@ -135,20 +137,36 @@ public class Define
         NormalBullet = 0,       // 기본탄
         SplitBullet = 1,        // 분열탄
         ExplosionBullet = 2,    // 폭발탄
-        LightningBullet = 3,     // 번개탄
+        LightningBullet = 3,    // 번개탄
         PierceBullet = 4,       // 관통탄
         BurstBullet = 5,        // 버스트모드 불릿
+        FireBullet = 6,
+        PoisonBullet = 7,
+        HommingBullet = 8,
+
     }
     public enum MeteorType
     {
-        NormalMeteor = 0,
+        NormalMeteor = 0,       // 기본 메테오
+        CometMeteor = 1,        // 속도빠른 메테오
+        IronMeteor = 2,         // 몸빵 메테오
+        FractureMeteor = 3,     // 분열하는 메테오
+        MagmaMeteor = 4,        // 마그마 메테오(지나간 자리 화염장판 생성)
+        GoldenMeteor = 5,       // 아이템 주는 보너스 메테오
+        SludgeMeteor = 6,       // 이속 저하 장판까는 메테오(파괴 됐을 때)
+        ClusterMeteor = 7,      // 가시 폭발 메테오 -> 파괴 시 가시나 돌 발사
+        GravityMeteor = 8 ,     // 블랙홀 메테오
+        Fragment = 9,
     }
     public enum ItemType
     {
         RecoveryHp,             // HP 회복
         RecoveryBurst,          // 버스트 게이지 회복
     }
-
+    public enum DebuffType
+    {
+        Slow,
+    }
     #region 이벤트(Action) 관련
     // 이벤트 발신용 데이터
     public enum ActionEvent

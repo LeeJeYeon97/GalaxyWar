@@ -31,3 +31,9 @@ MonoBehaviour:
   - type: 2
     original: {fileID: 2196387896707462882, guid: 88280ecadcb25d141aeea5859589818a, type: 3}
     defaultCount: 100
+  - type: 101
+    original: {fileID: 3933623234490032603, guid: f808f3dc3442e714f8f8f949f9c43eb3, type: 3}
+    defaultCount: 100
+  - type: 102
+    original: {fileID: 3314101403936789404, guid: 60f3f3566f382f5498b519e013808f1d, type: 3}
+    defaultCount: 100

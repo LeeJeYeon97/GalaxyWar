@@ -99,7 +99,7 @@ public class Managers : MonoBehaviour
             Sound.Init();
             Scene.Init();
             UI.Init();
-
+             
             Application.targetFrameRate = 60; // 60프레임 고정 (부드러운 화면)
 
         }

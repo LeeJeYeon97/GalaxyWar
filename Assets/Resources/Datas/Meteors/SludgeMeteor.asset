@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ec4c77ead32a9764d887461a155fbfb8, type: 3}
+  m_Name: SludgeMeteor
+  m_EditorClassIdentifier: Assembly-CSharp::MeteorStatDataSO
+  Type: 6
+  Sprite: {fileID: 0}
+  Name: 
+  isExclude: 0
+  MaxHp: 20
+  MaxSpeed: 0.3
+  MinSpeed: 0.3
+  Damage: 5
+  Score: 3
+  Exp: 3
