@@ -27,11 +27,11 @@ public class Spawner : MonoBehaviour
 
     IEnumerator CoSpawnMeteor()
     {
-        float meteorSpawnInterval = Managers.Data.GameData.meteorSpawnInterval;
         // 게임 상태가 Playing인 동안에만 무한 반복
         while (Managers.Game.currentGameState == GameState.Playing)
         {
-            yield return new WaitForSeconds(meteorSpawnInterval);
+            float currentInterval = GetSpawnIntervalByTime(Managers.Game.gamePlayTime);
+            yield return new WaitForSeconds(currentInterval);
 
             // 1. 어느 방향(상, 하, 좌, 우)에서 생성할지 결정
             int side = Random.Range(0, 4); // 0: 위, 1: 아래, 2: 왼쪽, 3: 오른쪽
@@ -73,6 +73,14 @@ public class Spawner : MonoBehaviour
             }
         }
     }
+    private float GetSpawnIntervalByTime(float time)
+    {
+        float baseInterval = Managers.Data.GameData.meteorSpawnInterval;
+        if (time > 480f) return baseInterval * 0.3f; // 8분 이후: 3배 빨리 나옴
+        if (time > 240f) return baseInterval * 0.6f; // 4분 이후
+        return baseInterval;
+    }
+
 
     IEnumerator CoSpawnItem()
     {

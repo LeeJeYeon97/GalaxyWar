@@ -7,6 +7,7 @@ public class BulletStat
     public Define.BulletType type;
     public Define.Pool poolType;
     public IBulletAbility ability;
+
     public string name;
     public int level;
     public Color color;

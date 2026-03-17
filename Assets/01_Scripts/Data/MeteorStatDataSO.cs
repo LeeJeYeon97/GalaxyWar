@@ -18,4 +18,13 @@ public class MeteorStatDataSO : ScriptableObject
 
     public float Score;
     public float Exp;
+
+    public Define.PhaseType spawnPhase;
+
+    [Header("Magma Meteor Setting")]
+    public float magmaTick;
+
+    [Header("Aura Meteor Setting")]
+    // 오라버프
+    public float auraRadius;
 }

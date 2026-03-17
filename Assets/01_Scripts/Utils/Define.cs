@@ -94,6 +94,8 @@ public class Define
         UpgradeBulletSpeed = 5,              // 모든 탄 스피드 증가
         UpgradeReloadTime = 6,               // 리로드 시간 감소
         UpgradeShotTime = 7,                 // 발사 시간 감소
+        ActivatePlayerShield = 8,            // 쉴드 활성화
+        UpgradeShieldCount = 9,              // 쉴드 갯수 증가
 
         UpgradeBaseBulletDamage = 10,        // 기본탄 데미지 증가
         
@@ -118,6 +120,7 @@ public class Define
         UpgradePierceDamage = 52,            // 관통 데미지 증가
 
         ActivateBurstMode = 60,              // 버스트 모드 활성화
+        UpgradeBurstModeTime = 61,           // 버스트 모드 시간 감소
     }
     public enum AbilityTargetType
     {
@@ -156,7 +159,8 @@ public class Define
         SludgeMeteor = 6,       // 이속 저하 장판까는 메테오(파괴 됐을 때)
         ClusterMeteor = 7,      // 가시 폭발 메테오 -> 파괴 시 가시나 돌 발사
         GravityMeteor = 8 ,     // 블랙홀 메테오
-        Fragment = 9,
+        FragmentMeteor = 9,     // 분열하는 메테오에서 나오는 파편
+        AuraBuffMeteor = 10,    // 메테오들한테 장판 버프 주는 메테오
     }
     public enum ItemType
     {
@@ -166,6 +170,14 @@ public class Define
     public enum DebuffType
     {
         Slow,
+    }
+    public enum PhaseType
+    {
+        Phase1, 
+        Phase2, 
+        Phase3, 
+        Phase4, 
+        Phase5
     }
     #region 이벤트(Action) 관련
     // 이벤트 발신용 데이터

@@ -57,8 +57,7 @@ public class PlayerController : MonoBehaviour
         lr.enabled = false;
 
         // 스탯 데이터 세팅
-        stat = new PlayerStat();
-        stat.SetStat(Managers.Data.playerStatData);
+        stat = Managers.Stat.playerStat;
         currentHp = stat.maxHp.TotalValue;
         currentDefence = stat.maxDefence.TotalValue;
         currentBurst = 0f;

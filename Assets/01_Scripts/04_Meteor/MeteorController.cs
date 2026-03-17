@@ -18,26 +18,29 @@ public class MeteorController : MonoBehaviour
     private float _maxHp;
     public MeteorStat Stat;
 
-    private Rigidbody2D _rb;
+    public Rigidbody2D _rb;
 
     public bool _hasEnteredView;
     private float _checkOffset = 2.0f; // 경계 밖 여유 공간
+    private SpriteRenderer _spriteRenderer; // 색상을 바꾸기 위해 렌더러 캐싱
 
     //추가: 일시정지 상태일 때 속도와 회전력을 기억해둘 변수
     private Vector2 _savedVelocity;
     private float _savedAngularVelocity;
     private bool _isPaused = false;
 
+    private bool _hasAuraBuff = false;      // 내가 지금 오라 버프를 받고 있는가?
+    private Color _originalColor;           // 내 원래 색상을 기억할 변수
+    
 
-    private Coroutine _magmaCoroutine;
-
+    public Coroutine ActionCoroutine;
+    private float _auraBuffEndTime = 0f; // ★ 코루틴 대신 종료 시간을 기억할 변수!
     private void Awake()
     {
         _hpBar = Util.FindChild<Image>(gameObject, "HpBar", true);
         _rb = Util.GetOrAddComponent<Rigidbody2D>(gameObject);
-        
-        // 우주이므로 중력은 0이어야 함
-        _rb.gravityScale = 0;
+        _spriteRenderer = GetComponent<SpriteRenderer>();
+
         _hasEnteredView = false;
     }
     public void Init(Vector2 pos, MeteorStat stat)
@@ -53,10 +56,17 @@ public class MeteorController : MonoBehaviour
 
         // 1.위치 설정
         transform.position = pos;
-        _hasEnteredView = false;
 
-        // 초기화할 때는 당연히 정지 상태가 아님
+        // 상태 초기화
+        _hasEnteredView = false;
+        _hasAuraBuff = false;
         _isPaused = false;
+
+        if (_spriteRenderer != null)
+        {
+            _spriteRenderer.color = Color.white;
+            _originalColor = _spriteRenderer.color; // 내 원래 색상 기억
+        }
 
         // 플레이어 방향으로 방향 계산
         Vector2 dir = ((Vector2)Managers.Game._player.transform.position - pos).normalized;
@@ -69,45 +79,19 @@ public class MeteorController : MonoBehaviour
         _rb.angularVelocity = randomTorque;
         _rb.simulated = true;
 
+
+        Stat.Behavior?.OnInit(this);
+
         UpdateHPBar();
-        InitType();
     }
-    // 메테오 타입에 따라서 추가로 해줘야 하는 로직
-    private void InitType()
-    {
-        switch(Stat.Type)
-        {
-            case MeteorType.NormalMeteor:
-                break;
-            case MeteorType.CometMeteor:
-                break;
-            case MeteorType.IronMeteor:
-                break;
-            case MeteorType.FractureMeteor:
-                break;
-            case MeteorType.Fragment:
-                Debug.Log("파편이 뽑혔어요");
-                Vector2 scatterDir = Random.insideUnitCircle.normalized;
-                float speed = Random.Range(Stat.MinSpeed.TotalValue, Stat.MaxSpeed.TotalValue);
-                _rb.linearVelocity = scatterDir * speed;
-                break;
-            case MeteorType.MagmaMeteor:
-                Debug.Log("마그마가 뽑혔어요");
-                if (_magmaCoroutine != null) StopCoroutine(_magmaCoroutine);
-                _magmaCoroutine = StartCoroutine(CoDropMagma());
-                break;
-        }
-    }
+
     public void OnCollisionEnter2D(Collision2D collision)
     {
-        Debug.Log("메테오 피격");
-        // 플레이어 피격 설정
         if (collision.gameObject.CompareTag("Player"))
         {
             PlayerController player = collision.gameObject.GetComponent<PlayerController>();
             if (player == null) return;
 
-            Debug.Log("플레이어 피격");
             player.OnDamage(Stat.Damage.TotalValue);
         }
     }
@@ -129,13 +113,7 @@ public class MeteorController : MonoBehaviour
     }
     private void OnDisable()
     {
-
-        // 추가: 운석이 파괴되어 풀로 돌아갈 때 코루틴 확실히 끄기!
-        if (_magmaCoroutine != null)
-        {
-            StopCoroutine(_magmaCoroutine);
-            _magmaCoroutine = null;
-        }
+        Stat.Behavior?.OnRelease(this);
         Managers.Game.RemoveActiveObject(this);
     }
     private void Update()
@@ -156,9 +134,58 @@ public class MeteorController : MonoBehaviour
             ResumePhysics();
         }
 
+        // ★ 버프 만료 체크 (Update에서 가볍게 시간만 비교!)
+        if (_hasAuraBuff && Time.time > _auraBuffEndTime)
+        {
+            LoseAuraBuff();
+        }
+
+        Stat.Behavior?.OnUpdate(this);
         CheckBoundaries();
     }
-    // 물리 엔진 일시정지 로직
+   
+
+    public void OnDamage(float damage)
+    {
+        if(damage > 0)
+        {
+            _currentHp -= damage;
+
+            // 때릴때마다 점수 1점
+            Managers.Level.AddScore(Mathf.FloorToInt(Stat.Score.TotalValue));
+
+            Vector3 textPos = transform.position + new Vector3(Random.Range(-0.5f, 0.5f), 0.5f, 0);
+
+            // 핵심: Stat 원본을 수정하지 않고, 들어온 damage 변수값만 즉석에서 반토막 냅니다!
+            if (_hasAuraBuff)
+            {
+                damage *= 0.5f; // 오라를 받고 있다면 데미지 50% 감소
+            }
+
+            DamageText damageText = Managers.Pool.Get<DamageText>(Define.Pool.DamageText);
+            if (damageText != null)
+            {
+                damageText.Init(textPos, Mathf.FloorToInt(damage));
+            }
+            
+            if (_currentHp <= 0)
+            {
+                Die();
+            }
+            else
+            {
+                UpdateHPBar();
+            }
+        }
+    }
+    private void Die()
+    {
+        Stat.Behavior?.OnDie(this);
+        Managers.Level.AddExp(Stat.Exp.TotalValue);
+        Managers.Pool.Release(gameObject);
+    }
+
+    #region 물리 연산
     private void PausePhysics()
     {
         _isPaused = true;
@@ -172,7 +199,6 @@ public class MeteorController : MonoBehaviour
         _rb.angularVelocity = 0f;
         _rb.simulated = false; // 충돌 및 물리 연산 완전 정지
     }
-
     //=물리 엔진 복구 로직
     private void ResumePhysics()
     {
@@ -182,47 +208,6 @@ public class MeteorController : MonoBehaviour
         _rb.simulated = true;
         _rb.linearVelocity = _savedVelocity;
         _rb.angularVelocity = _savedAngularVelocity;
-    }
-    public void OnDamage(float damage)
-    {
-        if(damage > 0)
-        {
-            _currentHp -= damage;
-
-            // 때릴때마다 점수 1점
-            Managers.Level.AddScore(Mathf.FloorToInt(Stat.Score.TotalValue));
-
-            Vector3 textPos = transform.position + new Vector3(Random.Range(-0.5f, 0.5f), 0.5f, 0);
-
-            DamageText damageText = Managers.Pool.Get<DamageText>(Define.Pool.DamageText);
-            if (damageText != null)
-            {
-                damageText.Init(textPos, Mathf.FloorToInt(damage));
-            }
-
-            if (_currentHp <= 0)
-            {
-                Die();
-            }
-            else
-            {
-                UpdateHPBar();
-            }
-        }
-    }
-    private void Die()
-    {
-        switch(Stat.Type)
-        {
-            case MeteorType.FractureMeteor:
-                SpawnFragment();
-                break;
-            case MeteorType.SludgeMeteor:
-                SpawnSludgePuddle();
-                break;
-        }
-        Managers.Level.AddExp(Stat.Exp.TotalValue);
-        Managers.Pool.Release(gameObject);
     }
     void CheckBoundaries()
     {
@@ -248,51 +233,40 @@ public class MeteorController : MonoBehaviour
             }
         }
     }
+    #endregion
 
-    private void SpawnFragment()
+
+    // ★ 다른 일반 운석들이 오라 버프를 받을 때 실행되는 함수
+    public void ReceiveAuraBuff(float duration)
     {
-        // 2개 ~ 4개의 파편을 흩뿌림
-        int fragmentCount = Random.Range(2, 5);
+        // 1. 버프 종료 시간을 "현재 시간 + 0.3초"로 연장(리필)합니다.
+        _auraBuffEndTime = Time.time + duration;
 
-        for (int i = 0; i < fragmentCount; i++)
+        // 2. 처음 버프를 받은 거라면 색깔을 노랗게 바꿔줍니다.
+        if (!_hasAuraBuff)
         {
-            MeteorController fragment = Managers.Pool.Get<MeteorController>(Define.Pool.Meteor);
-            if (fragment != null)
+            _hasAuraBuff = true;
+            if (_spriteRenderer != null)
             {
-                // 현재 죽은 위치에서, Fragment 타입으로, 사방으로 튀게 Init!
-                fragment.Init(transform.position,Managers.Stat.GetMeteorStat(MeteorType.Fragment));
+                _spriteRenderer.color = Color.yellow;
             }
         }
     }
-    // 추가: 0.5초마다 현재 위치에 마그마 장판을 생성하는 코루틴
-    private IEnumerator CoDropMagma()
+    private void LoseAuraBuff()
     {
-        while (true)
+        _hasAuraBuff = false;
+        if (_spriteRenderer != null)
         {
-            // 0.5초 대기 (이 간격을 조절하면 장판이 더 촘촘하거나 듬성듬성 깔립니다)
-            yield return new WaitForSeconds(0.5f);
-
-            // 게임 플레이 중일 때만 장판 생성
-            if (Managers.Game.currentGameState == GameState.Playing)
-            {
-                // 풀링 매니저에서 마그마 장판 꺼내기 (Pool enum에 MagmaPuddle 추가 필요)
-                MagmaPuddle puddle = Managers.Pool.Get<MagmaPuddle>(Define.Pool.MagmaPuddle);
-                if (puddle != null)
-                {
-                    // 장판의 데미지는 운석 데미지의 절반(예시)으로 세팅
-                    float puddleDamage = Stat.Damage.TotalValue * 0.5f;
-                    puddle.Init(transform.position, puddleDamage);
-                }
-            }
+            _spriteRenderer.color = _originalColor;
         }
     }
-
-    private void SpawnSludgePuddle()
+    private void OnDrawGizmos()
     {
-        SludgePuddle puddle = Managers.Pool.Get<SludgePuddle>(Define.Pool.SludgePuddle);
-        if (puddle != null)
-        {
-            puddle.Init(transform.position);
-        }
+        // 아직 런타임이 아니라 Stat이 없거나, 오라 운석이 아닐 때는 그리지 않음
+        if (Stat == null || Stat.type != MeteorType.AuraBuffMeteor) return;
+
+        // 노란색의 반투명한 선으로 반경(auraRadius)을 그립니다.
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position, Stat.auraRadius.TotalValue);
     }
 }

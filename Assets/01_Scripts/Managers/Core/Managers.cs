@@ -35,6 +35,7 @@ public class Managers : MonoBehaviour
     private SoundManager _sound;
     private MapManager _map;
     [SerializeField] private LevelPlayAdsManager _ad = new LevelPlayAdsManager();
+    private CoroutineHelper _coroutine;
     // ========================================================== //
     // 프로퍼티를 통해 외부에서 접근하도록 설정
     public static InputManager Input => Instance._input;
@@ -52,6 +53,9 @@ public class Managers : MonoBehaviour
     public static EventManager Event => Instance._event;
     public static LevelPlayAdsManager AD => Instance._ad;
     // ========================================================== //
+
+    // 추가: 외부에서 Managers.Coroutine.StartCoroutine() 으로 접근할 수 있게 열어줍니다!
+    public static CoroutineHelper Coroutine => Instance._coroutine;
 
     private void OnApplicationQuit()
     {
@@ -85,11 +89,11 @@ public class Managers : MonoBehaviour
             _instance._sound = new SoundManager();
             _instance._map = new MapManager();
             _instance._event = new EventManager();
-            //_instance._ad = new LevelPlayAdsManager();
 
             // 컴포넌트 형태의 매니저들은 여기서 초기화하거나 자식으로 붙임
             _instance._game = Util.GetOrAddComponent<GameManager>(go);
             _instance._input = Util.GetOrAddComponent<InputManager>(go);
+            _instance._coroutine = Util.GetOrAddComponent<CoroutineHelper>(go);
 
             // 매니저들 초기화 함수
             // Core
@@ -99,7 +103,7 @@ public class Managers : MonoBehaviour
             Sound.Init();
             Scene.Init();
             UI.Init();
-             
+            
             Application.targetFrameRate = 60; // 60프레임 고정 (부드러운 화면)
 
         }
@@ -109,6 +113,11 @@ public class Managers : MonoBehaviour
         _scene.Clear();
         _sound.Clear();
         _ui.Clear();
+
+        if (_coroutine != null)
+        {
+            _coroutine.StopAllCoroutines();
+        }
     }
     
 }

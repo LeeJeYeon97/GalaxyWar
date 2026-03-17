@@ -16,11 +16,15 @@ public class GameManager : MonoBehaviour
     public PlayerController _player;
     public Spawner spawner;
 
+    public float gamePlayTime;
+    public PhaseType currentPhase;
+
     public int reviveCount { get; private set; } // 광고 봤을 때 사용가능한 살아나기 횟수
 
     public void Init()
     {
-        
+        currentPhase = PhaseType.Phase1;
+        gamePlayTime = 0f;
         ChangeGameState(GameState.Ready);
         // UI 생성
         UI_GameScene sceneUI = Managers.UI.ShowSceneUI<UI_GameScene>("GameScene/UI_GameScene");
@@ -53,6 +57,23 @@ public class GameManager : MonoBehaviour
 
         Managers.UI.ShowPopupUI<UI_StartCountDownPopup>();
         
+    }
+    private void Update()
+    {
+        if (Managers.Game.currentGameState == GameState.Playing)
+        {
+            gamePlayTime += Time.deltaTime;
+            UpdatePhase();
+        }
+    }
+    private void UpdatePhase()
+    {
+        // 시간에 따라 현재 페이즈를 갱신합니다.
+        if (gamePlayTime >= 480f) currentPhase = Define.PhaseType.Phase5; // 8분
+        else if (gamePlayTime >= 360f) currentPhase = Define.PhaseType.Phase4; // 6분
+        else if (gamePlayTime >= 240f) currentPhase = Define.PhaseType.Phase3; // 4분
+        else if (gamePlayTime >= 120f) currentPhase = Define.PhaseType.Phase2; // 2분
+        else currentPhase = Define.PhaseType.Phase1;
     }
     public void AddActiveObject<T>(T item)
     {

@@ -15,9 +15,13 @@ MonoBehaviour:
   Type: 3
   Sprite: {fileID: 0}
   Name: "\uBD84\uC5F4\uC6B4\uC11D"
+  isExclude: 0
   MaxHp: 20
   MaxSpeed: 0.6
   MinSpeed: 0.3
   Damage: 10
   Score: 3
   Exp: 3
+  spawnPhase: 2
+  magmaTick: 0
+  auraRadius: 0

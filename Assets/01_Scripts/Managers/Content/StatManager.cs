@@ -103,6 +103,8 @@ public class StatManager
         // 1. 뽑을 수 있는(유효한) 스탯들만 모아둘 '빈 바구니(List)'를 준비합니다.
         List<MeteorStat> validStats = new List<MeteorStat>();
 
+        Define.PhaseType currentPhase = Managers.Game.currentPhase;
+
         // 2. 딕셔너리에 있는 모든 항목(Key-Value)을 하나씩 꺼내서 살펴봅니다.
         foreach (var stat in meteorStatDict.Values)
         {
@@ -110,7 +112,9 @@ public class StatManager
             {
                 continue;
             }
-           
+
+            if ((int)currentPhase < (int)stat.spawnPhase) continue;
+
             validStats.Add(stat);
         }
         // 만약 다 걸러져서 바구니에 남은 게 하나도 없다면 null 반환
@@ -143,6 +147,7 @@ public class StatManager
             // --- 플레이어 및 공통 유틸리티 (1~7) ---
             case AbilityType.UpgradePlayerHp:
                 playerStat.maxHp.AddValue(value);
+                
                 break;
             case AbilityType.UpgradePlayerSpeed:
                 playerStat.speed.AddValue(value);
@@ -163,16 +168,18 @@ public class StatManager
                 }
                 break;
             case AbilityType.UpgradeReloadTime:
-                playerStat.reloadTime.AddMultiplier(value);
+                playerStat.reloadTime.SubMultiplier(value);
                 break;
             case AbilityType.UpgradeShotTime:
-                playerStat.shotTime.AddMultiplier(value);
+                playerStat.shotTime.SubMultiplier(value);
+                break;
+            case AbilityType.ActivatePlayerShield:
                 break;
 
             // --- 기본탄 (10) ---
             case AbilityType.UpgradeBaseBulletDamage:
+                GetBulletStat(BulletType.NormalBullet).damage.AddValue(value);
                 break;
-
             // --- 분열탄 (20~23) ---
             case AbilityType.ActivateSplitBullet:
                 GetBulletStat(BulletType.SplitBullet).isActivated = true;
@@ -245,11 +252,11 @@ public class StatManager
                 // 이미 둔화 타이머가 돌아가고 있다면 취소 (시간 갱신용)
                 if (_playerSlowCoroutine != null)
                 {
-                    CoroutineHelper.Instance.StopCoroutine(_playerSlowCoroutine);
+                    Managers.Coroutine.StopCoroutine(_playerSlowCoroutine);
                 }
 
                 // 코루틴 헬퍼에게 타이머를 대신 돌려달라고 명령!
-                _playerSlowCoroutine = CoroutineHelper.Instance.StartCoroutine(CoSlowDown(value, time));
+                _playerSlowCoroutine = Managers.Coroutine.StartCoroutine(CoSlowDown(value, time));
                 break;
         }
     }

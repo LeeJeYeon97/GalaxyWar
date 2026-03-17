@@ -22,3 +22,6 @@ MonoBehaviour:
   Damage: 5
   Score: 3
   Exp: 3
+  spawnPhase: 1
+  magmaTick: 0
+  auraRadius: 0

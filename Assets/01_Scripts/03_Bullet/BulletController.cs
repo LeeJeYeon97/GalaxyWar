@@ -65,7 +65,7 @@ public class BulletController : MonoBehaviour
 
             if (hit.collider != null)
             {
-                // ★ 벽을 만났다!
+                // 벽을 만났다!
                 // 3. 반사각 계산
                 _shotDir = Vector2.Reflect(_shotDir, hit.normal).normalized;
 
@@ -244,19 +244,7 @@ public class BulletController : MonoBehaviour
         _rb.bodyType = isKinematic ? RigidbodyType2D.Kinematic : RigidbodyType2D.Dynamic;
         if (isKinematic) _rb.linearVelocity = Vector2.zero;
     }
-    // 히트 이펙트를 재생하는 별도 함수
-    private void PlayHitEffect(Vector2 hitPos, Vector2 hitNormal)
-    {
-        // 1. 풀에서 이펙트 오브젝트를 꺼냅니다. (Enum 사용)
-        //GameObject hitGo = Managers.Pool.Get<GameObject>(Define.Pool.NormalBullet_Hit);
-        //
-        //if (hitGo != null)
-        //{
-        //    hitGo.transform.position = hitPos;
-        //    float angle = Mathf.Atan2(hitNormal.y, hitNormal.x) * Mathf.Rad2Deg;
-        //    hitGo.transform.rotation = Quaternion.Euler(0, 0, angle);
-        //}
-    }
+    
     public void DecreasePierceCount()
     {
         currentPierceCount--;
@@ -268,7 +256,7 @@ public class BulletController : MonoBehaviour
         // 필요하다면 여기서 0 이하가 됐을 때의 로직을 추가할 수도 있음
     }
 
-    // ★ [추가] 튕김 처리를 요청할 때 사용하는 함수
+    // [추가] 튕김 처리를 요청할 때 사용하는 함수
     public void DecreaseBounceCount()
     {
         currentBounceCount--;
@@ -286,6 +274,18 @@ public class BulletController : MonoBehaviour
     }
 
     #region ParticleSystem
-
+    // 히트 이펙트를 재생하는 별도 함수
+    private void PlayHitEffect(Vector2 hitPos, Vector2 hitNormal)
+    {
+        // 1. 풀에서 이펙트 오브젝트를 꺼냅니다. (Enum 사용)
+        //GameObject hitGo = Managers.Pool.Get<GameObject>(Define.Pool.NormalBullet_Hit);
+        //
+        //if (hitGo != null)
+        //{
+        //    hitGo.transform.position = hitPos;
+        //    float angle = Mathf.Atan2(hitNormal.y, hitNormal.x) * Mathf.Rad2Deg;
+        //    hitGo.transform.rotation = Quaternion.Euler(0, 0, angle);
+        //}
+    }
     #endregion
 }
