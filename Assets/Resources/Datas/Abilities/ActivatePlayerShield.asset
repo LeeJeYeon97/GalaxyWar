@@ -15,18 +15,18 @@ MonoBehaviour:
   type: 8
   localizedName:
     m_TableReference:
-      m_TableCollectionName: 
+      m_TableCollectionName: GUID:82c20406597040c4f8b1423cea141506
     m_TableEntryReference:
-      m_KeyId: 0
+      m_KeyId: 718306077200384
       m_Key: 
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
   localizedDescription:
     m_TableReference:
-      m_TableCollectionName: 
+      m_TableCollectionName: GUID:82c20406597040c4f8b1423cea141506
     m_TableEntryReference:
-      m_KeyId: 0
+      m_KeyId: 1074121757839360
       m_Key: 
     m_FallbackState: 0
     m_WaitForCompletion: 0
@@ -36,7 +36,7 @@ MonoBehaviour:
   curLevel: 0
   _requiredAbility: 0
   values:
-  - 0
+  - 1
   references:
     version: 2
     RefIds: []

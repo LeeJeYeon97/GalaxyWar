@@ -31,6 +31,36 @@ public class NormalBulletAbility : IBulletAbility
         
     }
 }
+public class IceBulletAbility : IBulletAbility
+{
+    public void Execute(AbilityExecuteParams param)
+    {
+        // 1. 타입 검사 (얼음탄이 아니거나 비활성화면 리턴)
+        if (param.stat.type != Define.BulletType.IceBullet || param.stat.isActivated == false)
+            return;
+
+        MeteorController target = param.meteor;
+        if (target == null) return;
+
+        // 2. 얼음탄 스탯 가져오기 (임시로 수치를 넣었지만, 나중에 Stat 데이터로 빼시면 됩니다!)
+        float slowPercent = 0.5f;   // 50% 느려짐
+        float duration = 2.0f;      // 2초 동안 지속
+        float freezeChance = 20f;   // 완전히 얼어붙을 빙결 확률 (20%)
+
+        // 3. 빙결 확률 주사위 굴리기!
+        bool isFreeze = UnityEngine.Random.Range(0f, 100f) <= freezeChance;
+
+        if (isFreeze)
+        {
+            Debug.Log("빙결 성공! 꽁꽁 얼어라!");
+            // TODO: 여기서 쨍그랑! 하고 얼어붙는 파티클을 띄워주면 타격감이 엄청납니다.
+            // Managers.Pool.Get("FreezeHitEffect").transform.position = target.transform.position;
+        }
+
+        // 4. 운석에게 묻지도 따지지도 않고 효과 적용
+        //target.ApplyIceEffect(slowPercent, duration, isFreeze);
+    }
+}
 // 폭발탄
 public class ExplosionBulletAbility : IBulletAbility
 {
@@ -40,7 +70,7 @@ public class ExplosionBulletAbility : IBulletAbility
         float finalExplosionDmg = param.stat.damage.TotalValue;
 
         // --- 시각적 연출 (기존 로직 그대로 활용) ---
-        GameObject indicator = Managers.Pool.Get<GameObject>(Define.Pool.ExplosionRangeIndicator);
+        GameObject indicator = Managers.Resource.Instantiate("Particle/ExplosionIndicator");
 
         indicator.transform.position = param.meteor.transform.position;
         indicator.transform.localScale = Vector3.zero;
@@ -84,155 +114,108 @@ public class ExplosionBulletAbility : IBulletAbility
 }
 
 // 분열탄
-public class SplitBulletAbility : IBulletAbility
-{
-    public void Execute(AbilityExecuteParams param)
-    {
-        Debug.Log("분열탄 실행!");
-        // 분열탄 활성화 안되어있으면 리턴
-        if (param.stat.type != Define.BulletType.SplitBullet ||
-            param.stat.isActivated == false) return;
+//public class SplitBulletAbility : IBulletAbility
+//{
+//    public void Execute(AbilityExecuteParams param)
+//    {
+//        Debug.Log("분열탄 실행!");
+//         분열탄 활성화 안되어있으면 리턴
+//        if (param.stat.type != Define.BulletType.SplitBullet ||
+//            param.stat.isActivated == false) return;
 
-        // 이미 분열된 애면
-        if (param.bullet.canSplit == false)
-        {
-            return;
-        }
-        // 3. 반사 방향 계산 (튕겨나가는 기준 방향)
-        // 충돌 지점의 Normal(법선)을 기준으로 들어온 방향을 반사시킵니다.
-        Vector2 normal = Vector2.zero;
-        Vector2 reflectDir = Vector2.zero;
-        if (param.collision != null)
-        {
-            normal = param.collision.contacts[0].normal;
-            reflectDir = normal.normalized;
-        }
-        else if(param.trigger != null)
-        {
-            // 1. 상대방 콜라이더 위에서 내 위치와 가장 가까운 점을 찾음
-            Vector2 closestPoint = param.trigger.ClosestPoint(param.bullet.transform.position);
-            // 2. 내 위치에서 그 점을 빼면 노멀 방향이 나옴
-            normal = ((Vector2)param.bullet.transform.position - closestPoint).normalized;
-            Rigidbody2D rb = param.bullet.gameObject.GetComponent<Rigidbody2D>();
-            reflectDir = Vector2.Reflect(rb.linearVelocity.normalized, normal);
-        }
+//         이미 분열된 애면
+//        if (param.bullet.canSplit == false)
+//        {
+//            return;
+//        }
+//         3. 반사 방향 계산 (튕겨나가는 기준 방향)
+//         충돌 지점의 Normal(법선)을 기준으로 들어온 방향을 반사시킵니다.
+//        Vector2 normal = Vector2.zero;
+//        Vector2 reflectDir = Vector2.zero;
+//        if (param.collision != null)
+//        {
+//            normal = param.collision.contacts[0].normal;
+//            reflectDir = normal.normalized;
+//        }
+//        else if(param.trigger != null)
+//        {
+//             1. 상대방 콜라이더 위에서 내 위치와 가장 가까운 점을 찾음
+//            Vector2 closestPoint = param.trigger.ClosestPoint(param.bullet.transform.position);
+//             2. 내 위치에서 그 점을 빼면 노멀 방향이 나옴
+//            normal = ((Vector2)param.bullet.transform.position - closestPoint).normalized;
+//            Rigidbody2D rb = param.bullet.gameObject.GetComponent<Rigidbody2D>();
+//            reflectDir = Vector2.Reflect(rb.linearVelocity.normalized, normal);
+//        }
 
-        // 4. 메테오 반지름 계산 (생성 위치 오프셋용)
-        float meteorRadius = 0.5f;
-        CircleCollider2D col = param.meteor.GetComponent<CircleCollider2D>();
-        if (col != null)
-        {
-            meteorRadius = col.radius * param.meteor.transform.localScale.x;
-        }
+//         4. 메테오 반지름 계산 (생성 위치 오프셋용)
+//        float meteorRadius = 0.5f;
+//        CircleCollider2D col = param.meteor.GetComponent<CircleCollider2D>();
+//        if (col != null)
+//        {
+//            meteorRadius = col.radius * param.meteor.transform.localScale.x;
+//        }
 
-        // 5. 분열탄 생성 루프
-        int totalCount = Mathf.RoundToInt(param.stat.splitCount.TotalValue);
-        float spreadRange = 70f; // 부채꼴 퍼짐 각도
+//         5. 분열탄 생성 루프
+//        int totalCount = Mathf.RoundToInt(param.stat.splitCount.TotalValue);
+//        float spreadRange = 70f; // 부채꼴 퍼짐 각도
 
-        for (int i = 0; i < totalCount; i++)
-        {
-            float angleOffset = 0;
-            if (totalCount > 1)
-            {
-                angleOffset = (i - (totalCount - 1) * 0.5f) * (spreadRange / (totalCount - 1));
-            }
+//        for (int i = 0; i < totalCount; i++)
+//        {
+//            float angleOffset = 0;
+//            if (totalCount > 1)
+//            {
+//                angleOffset = (i - (totalCount - 1) * 0.5f) * (spreadRange / (totalCount - 1));
+//            }
 
-            // 6. 기준 반사 방향(reflectDir)에서 angleOffset만큼 회전
-            Vector2 spawnDir = Quaternion.Euler(0, 0, angleOffset) * reflectDir;
+//             6. 기준 반사 방향(reflectDir)에서 angleOffset만큼 회전
+//            Vector2 spawnDir = Quaternion.Euler(0, 0, angleOffset) * reflectDir;
 
-            // 7. 풀에서 생성 및 설정
-            BulletController splitBullet = Managers.Pool.Get<BulletController>(Define.Pool.Bullet);
+//             7. 풀에서 생성 및 설정
+//            BulletController splitBullet = Managers.Pool.Get(param.stat.originalPrefabs).GetComponent<BulletController>();
 
-            // 생성 위치: 메테오 중심 + (날아갈 방향 * 반지름 * 1.1f)
-            // 이렇게 하면 메테오 표면 바로 밖에서 튀어나오는 연출이 됩니다.
-            Vector3 spawnPos = param.meteor.transform.position + (Vector3)(spawnDir * (meteorRadius * 1.1f));
-            splitBullet.transform.position = spawnPos;
+//             생성 위치: 메테오 중심 + (날아갈 방향 * 반지름 * 1.1f)
+//             이렇게 하면 메테오 표면 바로 밖에서 튀어나오는 연출이 됩니다.
+//            Vector3 spawnPos = param.meteor.transform.position + (Vector3)(spawnDir * (meteorRadius * 1.1f));
+//            splitBullet.transform.position = spawnPos;
 
-            // 스탯 설정 및 분열탄 플래그 세팅
-            splitBullet.SetBullet(Managers.Stat.GetBulletStat(Define.BulletType.SplitBullet));
-            splitBullet.SetSplit();
+//             스탯 설정 및 분열탄 플래그 세팅
+//            splitBullet.SetBullet(Managers.Stat.GetBulletStat(Define.BulletType.SplitBullet));
+//            splitBullet.SetSplit();
 
-            // 8. 발사!
-            splitBullet.Shot(spawnDir);
+//             8. 발사!
+//            splitBullet.Shot(spawnDir,spawnPos);
 
-            // (선택 사항) 생성된 분열탄이 방금 맞은 메테오와는 즉시 다시 부딪히지 않게 설정
-            //Physics2D.IgnoreCollision(splitBullet.GetComponent<Collider2D>(), param.collision.collider, true);
-        }
-    }
-}
+//             (선택 사항) 생성된 분열탄이 방금 맞은 메테오와는 즉시 다시 부딪히지 않게 설정
+//            Physics2D.IgnoreCollision(splitBullet.GetComponent<Collider2D>(), param.collision.collider, true);
+//        }
+//    }
+//}
 
 // 번개탄
 public class LightningBulletAbility : IBulletAbility
 {
     public void Execute(AbilityExecuteParams param)
     {
-        // 번개탄
-        Debug.Log("번개탄 실행!");
-        // 분열탄 활성화 안되어있으면 리턴
-        if (param.stat.type != Define.BulletType.LightningBullet||
-            param.stat.isActivated == false) return;
+        // 조건 검사
+        if (param.stat.type != Define.BulletType.LightningBullet || param.stat.isActivated == false)
+            return;
 
         Vector3 hitPos = param.meteor.transform.position;
 
-        // 이미 번개에 맞은 적들을 저장 (중복 타격 방지)
-        HashSet<GameObject> visitedTargets = new HashSet<GameObject>();
-        visitedTargets.Add(param.meteor.gameObject);
+        // 1. 번개 전담 객체(LightningChain)를 풀에서 꺼냅니다.
+        // (리소스 경로는 유저님 프로젝트에 맞게 수정해주세요! 또는 param.stat 안에 프리팹을 넣어두면 가장 좋습니다.)
+        GameObject chainGo = Managers.Resource.Instantiate("Bullets/LightningChain");
 
-        // 2. 주변 적들 탐색 (OverlapCircle)
-        LayerMask targetLayer = LayerMask.GetMask("Meteor");
-        int count = Mathf.FloorToInt(param.stat.lightningCount.TotalValue);
-
-        for(int i = 0; i < count; i++)
+        if (chainGo != null && chainGo.TryGetComponent<LightningChain>(out var chain))
         {
-            Collider2D[] colliders = Physics2D.OverlapCircleAll(hitPos, param.stat.lightningRange.TotalValue, targetLayer);
-            Collider2D closestEnemy = null;
-            float minDistance = float.MaxValue;
-
-            // 3. 가장 가까운 *다른* 적 찾기
-            foreach (var col in colliders)
-            {
-                if (visitedTargets.Contains(col.gameObject)) continue;
-
-                // 방금 맞은 놈은 제외
-                if (col.gameObject == param.meteor.gameObject) continue;
-
-                float dist = Vector2.Distance(hitPos, col.transform.position);
-                if (dist < minDistance)
-                {
-                    minDistance = dist;
-                    closestEnemy = col;
-                }
-            }
-
-            // 4. 튕길 적이 있다면? 전기 지지기!
-            if (closestEnemy != null)
-            {
-                // (1) 데미지 주기
-                MeteorController nextTarget = closestEnemy.GetComponent<MeteorController>();
-                if (nextTarget != null)
-                {
-                    // 예시 : 원본 데미지의 70%만 적용
-                    // 전이될수록 데미지를 줄이고 싶다면 i를 활용 (예: 원본 * 0.8^i)
-                    float chainDamage = param.stat.damage.TotalValue;
-                    nextTarget.OnDamage(chainDamage);
-                }
-
-                // (2) 시각 효과 (번개 줄기 생성)
-                GameObject effectGo = Managers.Pool.Get<GameObject>(Define.Pool.LightningEffect);
-                LightningEffect effect = Util.GetOrAddComponent<LightningEffect>(effectGo);
-
-                if (effect != null)
-                {
-                    effect.PlayEffect(hitPos, closestEnemy.transform.position);
-                }
-                hitPos = closestEnemy.transform.position;
-                visitedTargets.Add(closestEnemy.gameObject);
-            }
-            else
-            {
-                // 주변에 더 이상 튈 적이 없으면 조기 종료
-                break;
-            }
+            // 2. 알아서 전이하면서 데미지 주라고 파라미터를 꽉꽉 채워줍니다.
+            chain.Init(
+                startPos: hitPos,
+                firstTarget: param.meteor.gameObject,
+                damage: param.stat.damage.TotalValue,
+                range: param.stat.lightningRange.TotalValue,
+                count: Mathf.FloorToInt(param.stat.lightningCount.TotalValue)
+            );
         }
     }
 }

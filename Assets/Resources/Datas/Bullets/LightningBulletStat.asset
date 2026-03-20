@@ -13,14 +13,12 @@ MonoBehaviour:
   m_Name: LightningBulletStat
   m_EditorClassIdentifier: Assembly-CSharp::BulletStatDataSO
   type: 3
-  poolType: 1
-  bulletName: 
-  color: {r: 1, g: 1, b: 0, a: 1}
-  chance: 10
+  chance: 30
   damage: 5
   speed: 6
   bounceCount: 0
   isActivated: 0
+  originalPrefab: {fileID: 8103278171357427903, guid: a136c2fb288a206429d851fa388ab16f, type: 3}
   baseExplosionRange: 0
   baseSplitCount: 0
   lightningRange: 5

@@ -11,6 +11,8 @@ GameObject:
   - component: {fileID: 5729417313131444425}
   - component: {fileID: 6914454582649455164}
   - component: {fileID: 2804528958281297502}
+  - component: {fileID: -907351532146470604}
+  - component: {fileID: 270010067730792074}
   m_Layer: 0
   m_Name: DamageText
   m_TagString: Untagged
@@ -181,3 +183,28 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_renderer: {fileID: 6914454582649455164}
   m_maskType: 0
+--- !u!114 &-907351532146470604
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4023388544795253414}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9dfc2a9e58f7044d9d3bdd8b456ca92, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Poolable
+  IsUsing: 0
+--- !u!114 &270010067730792074
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4023388544795253414}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6539438e1f2a5e14f983dff48a908de5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DamageText

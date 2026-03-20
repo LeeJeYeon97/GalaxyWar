@@ -13,14 +13,16 @@ MonoBehaviour:
   m_Name: NormalBulletStat
   m_EditorClassIdentifier: Assembly-CSharp::BulletStatDataSO
   type: 0
-  poolType: 1
   bulletName: "\uAE30\uBCF8\uD0C4"
-  color: {r: 0, g: 1, b: 1, a: 1}
   chance: 100
   damage: 10
-  speed: 5
+  speed: 4
   bounceCount: 0
   isActivated: 1
+  originalPrefab: {fileID: 7551283248292453691, guid: c1b265a41367a8648b6683ee4164953e, type: 3}
+  projectilePS: {fileID: 0}
+  hitPS: {fileID: 198149439886552118, guid: b5853af8f8286b646ba65e51ab2efb8d, type: 3}
+  flash: {fileID: 1192211784737388, guid: f1e952d83be8ad84298dae992567c3a4, type: 3}
   baseExplosionRange: 0
   baseSplitCount: 0
   lightningRange: 0

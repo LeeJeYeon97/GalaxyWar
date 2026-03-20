@@ -4,8 +4,8 @@ using UnityEngine;
 public class GameDataSO : ScriptableObject
 {
     [Header("Exp Gain Settings")]
-    public float baseExpGain = 10f;          // 몬스터 한 마리당 기본 경험치
-    public float expGainIncreasePerLevel = 2f; // 레벨당 추가 경험치 획득량
+    public float baseExpGain;          // 몬스터 한 마리당 기본 경험치
+    public float expGainIncreasePerLevel; // 레벨당 추가 경험치 획득량
 
     [Header("Level Up Settings (Required Exp)")]
     public float baseMaxExp;          // 1레벨에서 필요한 최대 경험치
@@ -14,7 +14,11 @@ public class GameDataSO : ScriptableObject
     public int GameStartTime;
 
     [Header("Object Spawn Settings")]
-    public float meteorSpawnInterval = 5f; // 생성 간격
-    public float itemSpawnInterval = 60f; // 생성 간격
-    public float bossSpawnInterval = 180f;  // 3분
+    public float meteorSpawnInterval; // 생성 간격
+    public float itemSpawnInterval; // 생성 간격
+    public float bossSpawnInterval;  // 3분
+
+    [Header("Pick Reload Count")]
+    public int cardReloadCount;
+    public int reviveCount;
 }

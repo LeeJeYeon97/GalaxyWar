@@ -2,6 +2,7 @@ using DG.Tweening;
 using System.Collections;
 using TMPro;
 using Unity.AppUI.Core;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 using static Define;
@@ -32,9 +33,8 @@ public class MeteorController : MonoBehaviour
     private bool _hasAuraBuff = false;      // 내가 지금 오라 버프를 받고 있는가?
     private Color _originalColor;           // 내 원래 색상을 기억할 변수
     
-
     public Coroutine ActionCoroutine;
-    private float _auraBuffEndTime = 0f; // ★ 코루틴 대신 종료 시간을 기억할 변수!
+    private float _auraBuffEndTime = 0f; // 코루틴 대신 종료 시간을 기억할 변수!
     private void Awake()
     {
         _hpBar = Util.FindChild<Image>(gameObject, "HpBar", true);
@@ -113,7 +113,10 @@ public class MeteorController : MonoBehaviour
     }
     private void OnDisable()
     {
-        Stat.Behavior?.OnRelease(this);
+        if (Stat != null)
+        {
+            Stat.Behavior?.OnRelease(this);
+        }
         Managers.Game.RemoveActiveObject(this);
     }
     private void Update()
@@ -134,7 +137,7 @@ public class MeteorController : MonoBehaviour
             ResumePhysics();
         }
 
-        // ★ 버프 만료 체크 (Update에서 가볍게 시간만 비교!)
+        // 버프 만료 체크 (Update에서 가볍게 시간만 비교!)
         if (_hasAuraBuff && Time.time > _auraBuffEndTime)
         {
             LoseAuraBuff();
@@ -143,7 +146,6 @@ public class MeteorController : MonoBehaviour
         Stat.Behavior?.OnUpdate(this);
         CheckBoundaries();
     }
-   
 
     public void OnDamage(float damage)
     {
@@ -161,8 +163,8 @@ public class MeteorController : MonoBehaviour
             {
                 damage *= 0.5f; // 오라를 받고 있다면 데미지 50% 감소
             }
-
-            DamageText damageText = Managers.Pool.Get<DamageText>(Define.Pool.DamageText);
+            GameObject go = Managers.Resource.Instantiate("DamageText");
+            DamageText damageText = go.GetOrAddComponent<DamageText>();
             if (damageText != null)
             {
                 damageText.Init(textPos, Mathf.FloorToInt(damage));
@@ -236,7 +238,7 @@ public class MeteorController : MonoBehaviour
     #endregion
 
 
-    // ★ 다른 일반 운석들이 오라 버프를 받을 때 실행되는 함수
+    // 다른 일반 운석들이 오라 버프를 받을 때 실행되는 함수
     public void ReceiveAuraBuff(float duration)
     {
         // 1. 버프 종료 시간을 "현재 시간 + 0.3초"로 연장(리필)합니다.

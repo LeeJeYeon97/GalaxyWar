@@ -19,7 +19,10 @@ public class UI_LevelUpPopup : UI_Popup
         UI_AbilityCardButton_1,
         UI_AbilityCardButton_2
     }
-
+    enum Buttons
+    {
+        ReloadButton_AD
+    }
     private bool _isSelecting = false;
     // 3개의 카드를 담을 배열 생성
     public GameObject[] cards = new GameObject[3];
@@ -36,8 +39,23 @@ public class UI_LevelUpPopup : UI_Popup
         _isSelecting = false;
         
         Bind<GameObject>(typeof(Cards));
+        Bind<Button>(typeof(Buttons));
+
+        GetButton((int)Buttons.ReloadButton_AD).onClick.AddListener(OnCardReloadButton);
 
         RefreshCards();
+    }
+    private void OnCardReloadButton()
+    {
+        if(Managers.Game.cardReloadCount > 0)
+        {
+            RefreshCards();
+        }
+        else
+        {
+            // 광고 보게 하기
+            Debug.Log("광고봅시다");
+        }
     }
     private void RefreshCards()
     {

@@ -147,7 +147,7 @@ public class StatManager
             // --- 플레이어 및 공통 유틸리티 (1~7) ---
             case AbilityType.UpgradePlayerHp:
                 playerStat.maxHp.AddValue(value);
-                
+                Managers.Game._player.UpdateMaxHp(value);
                 break;
             case AbilityType.UpgradePlayerSpeed:
                 playerStat.speed.AddValue(value);
@@ -182,16 +182,13 @@ public class StatManager
                 break;
             // --- 분열탄 (20~23) ---
             case AbilityType.ActivateSplitBullet:
-                GetBulletStat(BulletType.SplitBullet).isActivated = true;
-                break;
-            case AbilityType.UpgradeSplitBulletDamage:
-                GetBulletStat(BulletType.SplitBullet).damage.AddValue(value);
+                playerStat.isMultiShotEnabled = true;
                 break;
             case AbilityType.UpgradeSplitBulletCount:
-                GetBulletStat(BulletType.SplitBullet).splitCount.AddValue(value);
+                playerStat.multiShotCount.AddValue(value);
                 break;
             case AbilityType.UpgradeSplitBulletChance:
-                GetBulletStat(BulletType.SplitBullet).chance.AddValue(value);
+                playerStat.multiShotChance.AddValue(value);
                 break;
 
             // --- 폭발탄 (30~33) ---
@@ -237,7 +234,6 @@ public class StatManager
             case AbilityType.ActivateBurstMode:
                 Managers.Event.PostEvent(ActionEvent.EnableBurstMode);
                 break;
-
             default:
                 Debug.LogWarning($"정의되지 않은 AbilityType입니다: {data.type}");
                 break;

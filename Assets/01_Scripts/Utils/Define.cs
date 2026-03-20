@@ -35,23 +35,6 @@ public class Define
         Sfx_PlayerShieldHit,
         
     }
-    public enum Pool
-    {
-        // 프리팹
-        None = 0,
-        Bullet = 1,
-        LightningEffect = 2,
-        Meteor = 3,
-        DamageText = 4,
-        Item = 5,
-
-        
-        // 파티클
-        ExplosionRangeIndicator = 100,
-        MagmaPuddle = 101,      // 화염장판
-        SludgePuddle = 102,     // 진흙장판
-
-    }
     public enum UIEvent
     {
         Click,
@@ -100,7 +83,6 @@ public class Define
         UpgradeBaseBulletDamage = 10,        // 기본탄 데미지 증가
         
         ActivateSplitBullet = 20,            // 분열탄 활성화
-        UpgradeSplitBulletDamage = 21,       // 분열탄 데미지 강화
         UpgradeSplitBulletCount = 22,        // 분열탄 갯수 강화
         UpgradeSplitBulletChance = 23,       // 분열탄 확률 강화
 
@@ -138,7 +120,7 @@ public class Define
     public enum BulletType
     {
         NormalBullet = 0,       // 기본탄
-        SplitBullet = 1,        // 분열탄
+        IceBullet = 1,          // 이속저하 얼음탄
         ExplosionBullet = 2,    // 폭발탄
         LightningBullet = 3,    // 번개탄
         PierceBullet = 4,       // 관통탄
@@ -146,7 +128,6 @@ public class Define
         FireBullet = 6,
         PoisonBullet = 7,
         HommingBullet = 8,
-
     }
     public enum MeteorType
     {

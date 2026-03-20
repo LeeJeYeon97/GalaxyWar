@@ -5,16 +5,17 @@ public class BulletStatDataSO : ScriptableObject
 {
     [Header("Common Settings")]
     public Define.BulletType type;
-    public Define.Pool poolType;
-    public string bulletName;
-    public Color color;
-
+    
     [Header("Base Stat")]
     public float chance;                // 해당 불릿이 장전될 확률
     public float damage;                // 기본 데미지
     public float speed;                 // 기본 속도
     public float bounceCount;           // 튕기는 횟수
     public bool isActivated;            // 활성화 여부
+
+    [Header("Prefabs")]
+    public GameObject originalPrefab;
+
 
     [Header("Explosion Stat Settings")]
     public float baseExplosionRange;    // 기본 폭발 범위

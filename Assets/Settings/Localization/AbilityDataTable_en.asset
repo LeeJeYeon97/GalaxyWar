@@ -248,6 +248,10 @@ MonoBehaviour:
     m_Localized: Activate Shield
     m_Metadata:
       m_Items: []
+  - m_Id: 1074121757839360
+    m_Localized: Activated Shield
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds:

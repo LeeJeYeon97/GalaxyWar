@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 5246559959643465735}
   - component: {fileID: 1055392407925468929}
   - component: {fileID: 1243593534145701253}
+  - component: {fileID: -8822666469445337555}
   m_Layer: 11
   m_Name: MagmaPuddle
   m_TagString: Untagged
@@ -144,3 +145,16 @@ CircleCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
   m_Radius: 0.73
+--- !u!114 &-8822666469445337555
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3933623234490032603}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9dfc2a9e58f7044d9d3bdd8b456ca92, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Poolable
+  IsUsing: 0

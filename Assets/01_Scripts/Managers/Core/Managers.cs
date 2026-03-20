@@ -98,12 +98,13 @@ public class Managers : MonoBehaviour
             // 매니저들 초기화 함수
             // Core
             AD.Init();
+            Pool.Init();
             Data.Init();
             Input.Init();
             Sound.Init();
             Scene.Init();
             UI.Init();
-            
+
             Application.targetFrameRate = 60; // 60프레임 고정 (부드러운 화면)
 
         }

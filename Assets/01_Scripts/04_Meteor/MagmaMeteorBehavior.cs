@@ -20,7 +20,8 @@ public class MagmaMeteorBehavior : IMeteorBehavior
 
             if (Managers.Game.currentGameState == Define.GameState.Playing)
             {
-                MagmaPuddle puddle = Managers.Pool.Get<MagmaPuddle>(Define.Pool.MagmaPuddle);
+                GameObject go = Managers.Resource.Instantiate("Object/MagmaPuddle");
+                MagmaPuddle puddle = go.GetComponent<MagmaPuddle>();
                 if (puddle != null)
                 {
                     float puddleDamage = meteor.Stat.Damage.TotalValue * 0.5f;

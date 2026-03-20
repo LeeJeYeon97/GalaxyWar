@@ -15,13 +15,27 @@ public class BulletController : MonoBehaviour
     private Rigidbody2D _rb;
     [SerializeField]
     private BulletStat _stat;
-    
+    [SerializeField]
     private Vector2 _shotDir;
+    [SerializeField]
     private Collider2D _collider;
-    private TrailRenderer _trailRenderer;
-    private VolumetricLineBehavior _volumetricLineBehavior;
+
+    private BulletParticle _particle;
+    public GameObject _originalPrefab;
+
     // 바뀌는 값은 여기서 선언
     public bool canSplit { get; private set; }
+    public Define.BulletType Type
+    {
+        get
+        {
+            if (_stat != null)
+            {
+                return _stat.type;
+            }
+            return BulletType.NormalBullet;
+        }
+    }
     public int currentBounceCount { get; private set; }
     public int currentPierceCount { get; private set; }
     #region Particle변수
@@ -32,9 +46,11 @@ public class BulletController : MonoBehaviour
     {
         _rb = Util.GetOrAddComponent<Rigidbody2D>(gameObject);
         _collider = Util.GetOrAddComponent<Collider2D>(gameObject);
-        _trailRenderer = Util.GetOrAddComponent<TrailRenderer>(gameObject);
-        _volumetricLineBehavior = Util.GetOrAddComponent<VolumetricLineBehavior>(gameObject);
+        //_trailRenderer = Util.GetOrAddComponent<TrailRenderer>(gameObject);
+        //_volumetricLineBehavior = Util.GetOrAddComponent<VolumetricLineBehavior>(gameObject);
+        _particle = Util.GetOrAddComponent<BulletParticle>(gameObject);
     }
+
     private void OnEnable()
     {
         Managers.Game.AddActiveObject(this);
@@ -112,6 +128,7 @@ public class BulletController : MonoBehaviour
         currentBounceCount = Mathf.FloorToInt(stat.bounceCount.TotalValue);
         currentPierceCount = Mathf.FloorToInt(stat.pierceCount.TotalValue);
         canSplit = true;
+        _originalPrefab = _stat.originalPrefabs;
         
         // ★ 관통탄이면 Trigger를 켬 / 버스트탄인데 관통 기능이 있으면 이것도 켬
         if (_stat.type == Define.BulletType.PierceBullet ||
@@ -126,40 +143,6 @@ public class BulletController : MonoBehaviour
 
         SetPhysicsState(true); // 대기 중엔 물리 끄기
         _rb.angularVelocity = 0f;
-
-        // 색 설정
-        
-        // 2. 트레일 렌더러(꼬리) 색상 변경
-        if (_trailRenderer != null)
-        {
-            // 방법 A: 가장 간단한 방법 (시작과 끝 색상 지정)
-            _trailRenderer.startColor = _stat.color;
-            
-            // 꼬리 끝부분은 투명(Alpha = 0)하게 만들어서 자연스럽게 사라지게 연출
-            Color endColor = _stat.color;
-            endColor.a = 0f;
-            _trailRenderer.endColor = _stat.color;
-            
-            // ---------------------------------------------------------
-            // 방법 B: 더 디테일한 그라데이션(Gradient)을 쓰고 싶을 때
-            /*
-            Gradient gradient = new Gradient();
-            gradient.SetKeys(
-                // 색상은 처음부터 끝까지 bulletColor 유지
-                new GradientColorKey[] { 
-                    new GradientColorKey(bulletColor, 0.0f), 
-                    new GradientColorKey(bulletColor, 1.0f) 
-                },
-                // 투명도는 100%(1.0)에서 시작해서 꼬리 끝에서 0%(0.0)으로 스르륵 사라짐
-                new GradientAlphaKey[] { 
-                    new GradientAlphaKey(1.0f, 0.0f), 
-                    new GradientAlphaKey(0.0f, 1.0f) 
-                }
-            );
-            _trailRenderer.colorGradient = gradient;
-            */
-        }
-        _volumetricLineBehavior.LineColor = _stat.color;
     }
     public void SetSplit()
     {
@@ -168,13 +151,16 @@ public class BulletController : MonoBehaviour
     // 충돌
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        PlayHitEffect(collision.contacts[0].point, collision.contacts[0].normal);
+        //PlayHitEffect(collision.contacts[0].point, collision.contacts[0].normal);
+
+        _particle?.SpawnHit(collision.contacts[0].point, collision.contacts[0].normal,_stat);
 
         MeteorController meteor = collision.gameObject.GetComponent<MeteorController>();
 
         // 바운스 횟수 까기
         // 벽에 닿아도 깔건지 운석에만 맞았을 때 깔건지 고민좀 해볼것
         DecreaseBounceCount();
+
 
         if (meteor != null)
         {
@@ -198,8 +184,7 @@ public class BulletController : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         // 관통탄 or 관통 열려있을때 버스트탄
-        PlayHitEffect(gameObject.transform.position,Vector2.zero);
-
+        _particle?.SpawnHit(collision.transform.position,Vector2.zero,_stat);
         MeteorController meteor = collision.gameObject.GetComponent<MeteorController>();
 
         if (meteor != null)
@@ -225,17 +210,20 @@ public class BulletController : MonoBehaviour
         }
     }
     // 발사
-    public void Shot(Vector2 dragVector)
+    public void Shot(Vector2 dragVector, Vector2 shotPos)
     {
         if (gameObject.activeSelf == false)
         {
             gameObject.SetActive(true);
         }
-        _shotDir = dragVector * _stat.speed.TotalValue;
+        _shotDir = dragVector.normalized * _stat.speed.TotalValue;
 
         SetPhysicsState(false);
         _rb.AddForce(_shotDir, ForceMode2D.Impulse);
 
+        _particle.SpawnShot(dragVector,shotPos);
+        // 파티클
+        
     }
     
     // 발사대에 있을 때 드래그중이면 Kinematic으로

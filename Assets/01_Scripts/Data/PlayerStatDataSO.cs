@@ -18,4 +18,10 @@ public class PlayerStatDataSO : ScriptableObject
     public float shotTime;
 
     public float hitCooldown;       // ÇÇ°Ý µô·¹ÀÌ
+
+    [Header("¸ÖÆ¼¼¦°ü·Ã")]
+    public bool isMultiShotEnabled; // ¸ÖÆ¼¼¦(ºÐ¿­) ´É·Â È¹µæ ¿©ºÎ
+    public float multiShotCount;
+    public float multiShotChance;
+    public float multiShotAngle;
 }

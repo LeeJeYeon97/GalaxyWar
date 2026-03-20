@@ -5,7 +5,6 @@ using UnityEngine;
 using static Define;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
-using JetBrains.Annotations;
 
 public class PlayerController : MonoBehaviour
 {
@@ -277,16 +276,79 @@ public class PlayerController : MonoBehaviour
 
                 _currentAimDir = dragDir.normalized;
                 Managers.Sound.Play(SoundID.Sfx_PlayerShot, Sound.Sfx);
-                bullet.Shot(transform.up);          // 발사
-                // 파티클
-                //GameObject flash = Managers.Pool.Get<GameObject>(Define.Pool.NormalBullet_Flash);
-                //if(flash != null)
-                //{
-                //    flash.transform.position = _bulletPos.position;
-                //}
+
+                
+                // ★ 분열 능력을 먹었다면 부채꼴 발사!
+                if (stat.isMultiShotEnabled && stat.multiShotCount.TotalValue > 1)
+                {
+                    float multiShotChance = Random.Range(0f, 100f);
+                    if(multiShotChance <= stat.multiShotChance.TotalValue)
+                    {
+
+                        FireMultiShot(bullet);
+                    }
+                    else
+                    {
+                        bullet.Shot(transform.up, _bulletPos.position);          // 발사
+                    }
+                    
+                }
+                else
+                {
+                    bullet.Shot(transform.up, _bulletPos.position);          // 발사
+                }
 
                 // 발사 시간 설정
                 _lastShotTime = Time.time;
+            }
+        }
+    }
+
+    // ★ 새로 추가된 부채꼴 발사 핵심 로직!
+    private void FireMultiShot(BulletController mainBullet)
+    {
+        // 1. 기준이 되는 중심 각도 구하기 (플레이어가 바라보는 방향 = transform.up)
+        float baseAngle = Mathf.Atan2(transform.up.y, transform.up.x) * Mathf.Rad2Deg;
+
+        // 2. 부채꼴의 시작 각도와, 총알 사이의 간격(각도) 계산
+        // 예) 각도가 45도고 3발이면 -> -22.5도, 0도, +22.5도
+        float startAngle = baseAngle - (stat.multiShotAngle / 2f);
+        float angleStep = stat.multiShotAngle / (stat.multiShotCount.TotalValue - 1);
+
+        for (int i = 0; i < stat.multiShotCount.TotalValue; i++)
+        {
+            BulletController bulletToFire;
+
+            if (i == 0)
+            {
+                // 첫 번째 발사체는 탄창에서 꺼낸 그 총알을 그대로 씁니다.
+                bulletToFire = mainBullet;
+            }
+            else
+            {
+                // 나머지 발사체들은 기준 총알(mainBullet)과 똑같은 놈으로 풀에서 공짜로 복사해옵니다!
+                // (주의: mainBullet 스크립트 안에 자신의 Stat을 반환하는 변수나 함수가 있어야 합니다!)
+                Poolable go = Managers.Pool.Get(mainBullet._originalPrefab);
+                bulletToFire = go?.GetComponent<BulletController>();
+
+                if (bulletToFire != null)
+                {
+                    bulletToFire.SetBullet(Managers.Stat.GetBulletStat(mainBullet.Type)); // 스탯 복사
+                }
+            }
+
+            if (bulletToFire != null)
+            {
+                // 3. 현재 쏠 총알의 각도 계산
+                float currentAngle = startAngle + (angleStep * i);
+
+                // 4. 각도를 다시 방향 벡터(Vector2)로 변환
+                Vector2 shotDir = new Vector2(Mathf.Cos(currentAngle * Mathf.Deg2Rad), Mathf.Sin(currentAngle * Mathf.Deg2Rad)).normalized;
+
+                bulletToFire.transform.position = _bulletPos.position;
+
+                // 5. 총알 쏘기! (shotDir를 진행 방향으로 넘겨줌)
+                bulletToFire.Shot(shotDir, _bulletPos.position);
             }
         }
     }
@@ -316,8 +378,7 @@ public class PlayerController : MonoBehaviour
         // 남은 총알 청소
         foreach (var bullet in bullets)
         {
-            if (bullet != null) 
-                Managers.Pool.Release(bullet.gameObject);
+            Managers.Pool.Release(bullet.gameObject);
         }
         bullets.Clear();
 
@@ -327,8 +388,6 @@ public class PlayerController : MonoBehaviour
         {
 
             BulletStat stat;
-            BulletController bullet;
-
             if (_isBurst)
             {
                 // 버스트모드면 버스트 총알만 충전하기
@@ -342,7 +401,8 @@ public class PlayerController : MonoBehaviour
 
             if (stat == null) return;
 
-            bullet = Managers.Pool.Get<BulletController>(stat.poolType);
+            Poolable go = Managers.Pool.Get(stat.originalPrefabs);
+            BulletController bullet = go?.GetComponent<BulletController>();
 
             if (bullet == null) return;
 
@@ -563,5 +623,13 @@ public class PlayerController : MonoBehaviour
         }
         currentHp = stat.maxHp.TotalValue;
         OnStatusEvent();
+    }
+    public void UpdateMaxHp(float value)
+    {
+        currentHp += value;
+        if(currentHp >= stat.maxHp.TotalValue)
+        {
+            currentHp = stat.maxHp.TotalValue;
+        }
     }
 }

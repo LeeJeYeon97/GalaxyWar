@@ -1,15 +1,10 @@
 using JetBrains.Annotations;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
-
-
-//public interface ILoader<Key, Value>
-//{
-//    Dictionary<Key, Value> MakeDict();
-//}
 
 public class DataManager 
 {
@@ -19,7 +14,6 @@ public class DataManager
 
     public GameDataSO GameData { get; private set; }
     public PlayerStatDataSO playerStatData { get; private set; }
-    public PoolingDataSO poolingData { get; private set; }
     public Dictionary<Define.ItemType,ItemDataSO> ItemDataList { get; private set; }
 
     public Dictionary<Define.MeteorType, MeteorStatDataSO> MeteorStatDataDict {  get; private set; }
@@ -35,23 +29,18 @@ public class DataManager
         // AbilityDataDict = LoadDataToDict<string, AbilityDataSO>("Abilities", data => data.abilityID);
         AbilityDataDict = LoadDataToDict<Define.AbilityType, AbilityDataSO>("Abilities", data => data.type);
 
-        GameData = Managers.Resource.Load<GameDataSO>(Path.GameData);
+        GameData = Managers.Resource.Load<GameDataSO>("Datas/GameData");
         if(GameData == null)
         {
             Debug.LogError("GameData Null");
         }
-        playerStatData = Managers.Resource.Load<PlayerStatDataSO>(Path.PlayerStatData);
+        playerStatData = Managers.Resource.Load<PlayerStatDataSO>("Datas/PlayerStatData");
         if (playerStatData == null)
         {
             Debug.LogError("playerStatData Null");
         }
 
-        poolingData = Managers.Resource.Load<PoolingDataSO>(Path.PoolingData);
-        if (poolingData == null)
-        {
-            Debug.LogError("poolingData Null");
-        }
-        SoundData = Managers.Resource.Load<SoundDataSO>(Path.SoundData);
+        SoundData = Managers.Resource.Load<SoundDataSO>("Datas/SoundData");
         if (SoundData == null)
         {
             Debug.LogError("SoundData Null");

@@ -20,7 +20,7 @@ public class GameManager : MonoBehaviour
     public PhaseType currentPhase;
 
     public int reviveCount { get; private set; } // 광고 봤을 때 사용가능한 살아나기 횟수
-
+    public int cardReloadCount { get; private set; }
     public void Init()
     {
         currentPhase = PhaseType.Phase1;
@@ -31,7 +31,7 @@ public class GameManager : MonoBehaviour
         sceneUI.Init();
 
         // 풀링 매니저 초기화
-        Managers.Pool.Init();
+        
         // 맵 생성
         Managers.Map.Init();
         // 레벨
@@ -44,16 +44,17 @@ public class GameManager : MonoBehaviour
         Managers.Stat.Init();
 
         // 플레이어 세팅
-        _player = Managers.Resource.Instantiate(Path.Player)?.GetComponent<PlayerController>();
+        _player = Managers.Resource.Instantiate("Object/Player")?.GetComponent<PlayerController>();
         if (_player == null)
             return;
         _player.Init();
 
-        spawner = Managers.Resource.Instantiate(Path.Spawner)?.GetComponent<Spawner>();
+        spawner = Managers.Resource.Instantiate("Object/Spawner")?.GetComponent<Spawner>();
         if (spawner == null)
             return;
 
-        reviveCount = 1;
+        reviveCount = Managers.Data.GameData.reviveCount;
+        cardReloadCount = Managers.Data.GameData.cardReloadCount;
 
         Managers.UI.ShowPopupUI<UI_StartCountDownPopup>();
         

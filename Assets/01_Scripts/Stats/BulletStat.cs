@@ -2,15 +2,13 @@ using System;
 using UnityEngine;
 
 [Serializable]
-public class BulletStat
+public class BulletStat 
 {
     public Define.BulletType type;
-    public Define.Pool poolType;
     public IBulletAbility ability;
 
-    public string name;
-    public int level;
-    public Color color;
+    public GameObject originalPrefabs;
+    
     // 기본 공통 스탯
     public Stat speed = new Stat();
     public Stat damage = new Stat();
@@ -29,11 +27,10 @@ public class BulletStat
     public Stat pierceCount = new Stat();
     public void SettingStat(BulletStatDataSO data)
     {
-        level = 0;
         type = data.type;
-        color = data.color;
-        name = data.bulletName;
-        poolType = data.poolType;
+
+        originalPrefabs = data.originalPrefab;
+        
         speed.Init(data.speed);
         damage.Init(data.damage);
         bounceCount.Init(data.bounceCount);

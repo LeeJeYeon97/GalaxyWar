@@ -30,6 +30,6 @@ public class ParticleAutoRelease : MonoBehaviour
         }
 
         // 재생이 끝났으므로 풀로 반납
-        Managers.Pool.Release(this.gameObject);
+        Managers.Resource.Destroy(gameObject);
     }
 }

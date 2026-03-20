@@ -48,7 +48,7 @@ public class UI_GameOverPopup : UI_Popup
         _isInit = true; // 바인딩 완료 도장 쾅!
         RefreshRewardCountText();
     }
-    // ★ 유니티 눈치 안 보고 내가 원할 때 직접 번역본을 가져오는 마법의 함수!
+    //유니티 눈치 안 보고 내가 원할 때 직접 번역본을 가져오는 마법의 함수!
     private void RefreshRewardCountText()
     {
         // 1. {0} 에 들어갈 숫자를 확실하게 상자에 넣어줍니다.

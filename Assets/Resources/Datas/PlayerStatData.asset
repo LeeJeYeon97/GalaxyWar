@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerStatDataSO
   speed: 1
   maxHp: 100
-  maxDefence: 0
+  maxDefence: 10
   maxBurstGuage: 100
   maxBurstFullChargeTime: 10
   reloadCount: 5
@@ -22,3 +22,7 @@ MonoBehaviour:
   shotRange: 2
   shotTime: 1.5
   hitCooldown: 1
+  isMultiShotEnabled: 0
+  multiShotCount: 2
+  multiShotChance: 30
+  multiShotAngle: 45
