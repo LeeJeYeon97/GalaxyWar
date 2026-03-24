@@ -28,7 +28,7 @@ public class PlayerController : MonoBehaviour
     public float currentHp;
     public float currentDefence;
     public float currentBurst;
-    public PlayerStat stat;
+    public PlayerStat Stat;
 
     [Header("Bullet")]
     public Transform _bulletPos;        // 총알이 나갈 발사구 위치
@@ -56,9 +56,9 @@ public class PlayerController : MonoBehaviour
         lr.enabled = false;
 
         // 스탯 데이터 세팅
-        stat = Managers.Stat.playerStat;
-        currentHp = stat.maxHp.TotalValue;
-        currentDefence = stat.maxDefence.TotalValue;
+        Stat = Managers.Stat.playerStat;
+        currentHp = Stat.maxHp.TotalValue;
+        currentDefence = Stat.maxDefence.TotalValue;
         currentBurst = 0f;
 
 
@@ -183,15 +183,15 @@ public class PlayerController : MonoBehaviour
         // 2. 가속 힘 계산
         // moveForce를 고정값으로 두면 속도가 빠를수록 최고 속도 도달이 답답하게 느껴집니다.
         // 그래서 보통 maxSpeed의 일정 비율(예: 2~3배)을 힘으로 주면 체감이 좋습니다.
-        float finalForce = stat.speed.TotalValue * 5f;
+        float finalForce = Stat.speed.TotalValue * 5f;
 
         // 1. 힘 가하기 (가속)
         _rb.AddForce(dragDir * finalForce, ForceMode2D.Force);
 
         // 2. 속도 제한
-        if (_rb.linearVelocity.magnitude > stat.speed.TotalValue)
+        if (_rb.linearVelocity.magnitude > Stat.speed.TotalValue)
         {
-            _rb.linearVelocity = _rb.linearVelocity.normalized * stat.speed.TotalValue;
+            _rb.linearVelocity = _rb.linearVelocity.normalized * Stat.speed.TotalValue;
         }
     }
     private void Rotate()
@@ -264,7 +264,7 @@ public class PlayerController : MonoBehaviour
         }
 
         // 3. 재장전 중이 아닐 때 연사 속도에 맞춰 사격
-        if (Time.time - _lastShotTime >= stat.shotTime.TotalValue)
+        if (Time.time - _lastShotTime >= Stat.shotTime.TotalValue)
         {
             BulletController bullet = bullets[0];
             bullets.RemoveAt(0);
@@ -279,10 +279,10 @@ public class PlayerController : MonoBehaviour
 
                 
                 // ★ 분열 능력을 먹었다면 부채꼴 발사!
-                if (stat.isMultiShotEnabled && stat.multiShotCount.TotalValue > 1)
+                if (Stat.isMultiShotEnabled && Stat.multiShotCount.TotalValue > 1)
                 {
                     float multiShotChance = Random.Range(0f, 100f);
-                    if(multiShotChance <= stat.multiShotChance.TotalValue)
+                    if(multiShotChance <= Stat.multiShotChance.TotalValue)
                     {
 
                         FireMultiShot(bullet);
@@ -304,7 +304,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    // ★ 새로 추가된 부채꼴 발사 핵심 로직!
+    // 새로 추가된 부채꼴 발사 핵심 로직!
     private void FireMultiShot(BulletController mainBullet)
     {
         // 1. 기준이 되는 중심 각도 구하기 (플레이어가 바라보는 방향 = transform.up)
@@ -312,10 +312,10 @@ public class PlayerController : MonoBehaviour
 
         // 2. 부채꼴의 시작 각도와, 총알 사이의 간격(각도) 계산
         // 예) 각도가 45도고 3발이면 -> -22.5도, 0도, +22.5도
-        float startAngle = baseAngle - (stat.multiShotAngle / 2f);
-        float angleStep = stat.multiShotAngle / (stat.multiShotCount.TotalValue - 1);
+        float startAngle = baseAngle - (Stat.multiShotAngle / 2f);
+        float angleStep = Stat.multiShotAngle / (Stat.multiShotCount.TotalValue - 1);
 
-        for (int i = 0; i < stat.multiShotCount.TotalValue; i++)
+        for (int i = 0; i < Stat.multiShotCount.TotalValue; i++)
         {
             BulletController bulletToFire;
 
@@ -328,12 +328,12 @@ public class PlayerController : MonoBehaviour
             {
                 // 나머지 발사체들은 기준 총알(mainBullet)과 똑같은 놈으로 풀에서 공짜로 복사해옵니다!
                 // (주의: mainBullet 스크립트 안에 자신의 Stat을 반환하는 변수나 함수가 있어야 합니다!)
-                Poolable go = Managers.Pool.Get(mainBullet._originalPrefab);
+                Poolable go = Managers.Pool.Get(mainBullet.Stat.originalPrefabs);
                 bulletToFire = go?.GetComponent<BulletController>();
 
                 if (bulletToFire != null)
                 {
-                    bulletToFire.SetBullet(Managers.Stat.GetBulletStat(mainBullet.Type)); // 스탯 복사
+                    bulletToFire.SetBullet(Managers.Stat.GetBulletStat(mainBullet.Stat.type)); // 스탯 복사
                 }
             }
 
@@ -362,10 +362,10 @@ public class PlayerController : MonoBehaviour
 
         Debug.Log("재장전 시작...");
 
-        Managers.Event.PostEvent<float>(ActionEvent.ReloadStart, stat.reloadTime.TotalValue);
+        Managers.Event.PostEvent<float>(ActionEvent.ReloadStart, Stat.reloadTime.TotalValue);
         Managers.Sound.Play(Define.SoundID.Sfx_Reloading);
 
-        yield return new WaitForSeconds(stat.reloadTime.TotalValue);
+        yield return new WaitForSeconds(Stat.reloadTime.TotalValue);
         Reload();
 
         // 리로딩 끝
@@ -383,11 +383,11 @@ public class PlayerController : MonoBehaviour
         bullets.Clear();
 
         // 탄창 가득 채우기
-        int reloadCount = Mathf.FloorToInt(stat.reloadCount.TotalValue);
+        int reloadCount = Mathf.FloorToInt(Stat.reloadCount.TotalValue);
         for (int i = 0; i < reloadCount; i++)
         {
 
-            BulletStat stat;
+            BaseBulletStat stat;
             if (_isBurst)
             {
                 // 버스트모드면 버스트 총알만 충전하기
@@ -419,6 +419,10 @@ public class PlayerController : MonoBehaviour
     #region 피격 및 사망
     public void OnDamage(float damage)
     {
+        if(Managers.Data.GameData.playerGod)
+        {
+            return;
+        }
         // 피격 무적
         if (_isInvincible) return;
         // 버스트모드면 무적 상태
@@ -476,7 +480,7 @@ public class PlayerController : MonoBehaviour
         // 카메라가 0.2초 동안 0.5의 강도로 흔들림
         mainCam.transform.DOShakePosition(0.2f, 0.5f, 20, 90f).SetUpdate(true);
 
-        while (elapsed < stat.hitCooldown)
+        while (elapsed < Stat.hitCooldown)
         {
             // 투명도를 0.5와 1.0 사이로 교체
             sr.color = new Color(1, 1, 1, sr.color.a == 1f ? 0.5f : 1f);
@@ -495,14 +499,14 @@ public class PlayerController : MonoBehaviour
     #region 버스트 모드 관련
     private void OnEnableBurstMode()
     {
-        stat.enableBurst = true;
+        Stat.enableBurst = true;
     }
 
     // 게이지 증가 함수, 아이템 같은거로 회복시키면 isAuto를 false로 두고 amount로 값 넘겨주기
     public void AddBurstGauge(float amount = 0f, bool isAuto = true)
     {
         // 버스트 모드 활성화 안되어 있으면 리턴
-        if(stat.enableBurst == false)
+        if(Stat.enableBurst == false)
         {
             return;
         }
@@ -512,7 +516,7 @@ public class PlayerController : MonoBehaviour
             return;
         }
         // 현재 버스트 게이지가 꽉채워져있으면 리턴
-        if (currentBurst >= stat.maxBurstGuage.TotalValue)
+        if (currentBurst >= Stat.maxBurstGuage.TotalValue)
         {
             return;
         }
@@ -521,9 +525,9 @@ public class PlayerController : MonoBehaviour
         // 자동으로 채울 때
         if (isAuto == true)
         {
-            recoveryAmount = (stat.maxBurstGuage.TotalValue / stat.maxBurstFullChargeTime.TotalValue) * Time.deltaTime;
+            recoveryAmount = (Stat.maxBurstGuage.TotalValue / Stat.maxBurstFullChargeTime.TotalValue) * Time.deltaTime;
         }
-        currentBurst = Mathf.Clamp(currentBurst + recoveryAmount, 0, stat.maxBurstGuage.TotalValue);
+        currentBurst = Mathf.Clamp(currentBurst + recoveryAmount, 0, Stat.maxBurstGuage.TotalValue);
         // hud업데이트 이벤트 발생
         OnStatusEvent();
     }
@@ -534,9 +538,9 @@ public class PlayerController : MonoBehaviour
     {
         if (currentState != PlayerState.Playing) return;
         // 이미 버스트 모드거나 버스트 능력 활성화 못했으면
-        if (_isBurst || stat.enableBurst == false) return;
+        if (_isBurst || Stat.enableBurst == false) return;
 
-        if (currentBurst >= stat.maxBurstGuage.TotalValue)
+        if (currentBurst >= Stat.maxBurstGuage.TotalValue)
         {
             _isBurst = true;
             Debug.Log("BURST MODE ACTIVATED!");
@@ -555,9 +559,9 @@ public class PlayerController : MonoBehaviour
         mainCam.DOOrthoSize(12.0f, 0.3f).SetEase(Ease.OutCubic).SetUpdate(true).OnUpdate(() => Managers.Map.UpdateMap());
 
         // 1. 스탯 강화
-        stat.speed.AddMultiplier(1.0f);             // 이속 2배 증가
-        stat.reloadTime.SetForceZero(true);         // 재장전 시간 0초로 고정
-        stat.shotTime.AddMultiplier(-0.5f);         // 발사 속도 2배 감소
+        Stat.speed.AddMultiplier(1.0f);             // 이속 2배 증가
+        Stat.reloadTime.SetForceZero(true);         // 재장전 시간 0초로 고정
+        Stat.shotTime.AddMultiplier(-0.5f);         // 발사 속도 2배 감소
 
         // ★ 핵심: 진행 중인 리로드가 있다면 강제로 멈춤
         if (_reloadCoroutine != null)
@@ -581,9 +585,9 @@ public class PlayerController : MonoBehaviour
         }
 
         // 3. 스탯 복구
-        stat.speed.SubMultiplier(1.0f);
-        stat.shotTime.SubMultiplier(-0.5f);
-        stat.reloadTime.SetForceZero(false);
+        Stat.speed.SubMultiplier(1.0f);
+        Stat.shotTime.SubMultiplier(-0.5f);
+        Stat.reloadTime.SetForceZero(false);
 
         currentBurst = 0;
         _isBurst = false;
@@ -607,11 +611,11 @@ public class PlayerController : MonoBehaviour
     private void OnStatusEvent()
     {
         _curStatus.hp = currentHp;
-        _curStatus.maxHp = stat.maxHp.TotalValue;
+        _curStatus.maxHp = Stat.maxHp.TotalValue;
         _curStatus.shield = currentDefence;
-        _curStatus.maxShield = stat.maxDefence.TotalValue;
+        _curStatus.maxShield = Stat.maxDefence.TotalValue;
         _curStatus.burst = currentBurst;
-        _curStatus.maxBurst = stat.maxBurstGuage.TotalValue;
+        _curStatus.maxBurst = Stat.maxBurstGuage.TotalValue;
         // 3. 갱신된 방 통째로 신호를 보냅니다.
         Managers.Event.PostEvent<PlayerStatusEvent>(Define.ActionEvent.PlayerStatusChanged, _curStatus);
     }
@@ -621,15 +625,18 @@ public class PlayerController : MonoBehaviour
         {
             return;
         }
-        currentHp = stat.maxHp.TotalValue;
+        currentHp = Stat.maxHp.TotalValue;
         OnStatusEvent();
     }
     public void UpdateMaxHp(float value)
     {
         currentHp += value;
-        if(currentHp >= stat.maxHp.TotalValue)
+        if(currentHp >= Stat.maxHp.TotalValue)
         {
-            currentHp = stat.maxHp.TotalValue;
+            currentHp = Stat.maxHp.TotalValue;
         }
     }
+
+    
+
 }

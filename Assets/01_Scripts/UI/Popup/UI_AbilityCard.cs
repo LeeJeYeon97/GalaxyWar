@@ -53,11 +53,11 @@ public class UI_AbilityCard : UI_Base
 
         ClearLocalization();
         _currentNameLoc = data.localizedName;
-        _currentDescLoc = data.localizedDescription;
+        //_currentDescLoc = data.localizedDescription;
 
-        int nextLevel = data.curLevel + 1;
-        float nextValue = data.GetValue(nextLevel);
-        _currentDescLoc.Arguments = new object[] { nextValue };
+        //int nextLevel = data + 1;
+        //float nextValue = data.GetValue(nextLevel);
+        //_currentDescLoc.Arguments = new object[] { nextValue };
 
         _currentNameLoc.StringChanged += UpdateNameText;
         _currentDescLoc.StringChanged += UpdateDescText;

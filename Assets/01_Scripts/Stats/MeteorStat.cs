@@ -38,6 +38,7 @@ public class MeteorStat
 
         spawnPhase = data.spawnPhase;
         auraRadius.Init(data.auraRadius);
+
         // ... Ω∫≈» √ ±‚»≠ ...
         Behavior = CreateBehavior(data);
     }

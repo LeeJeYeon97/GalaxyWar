@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e830a406152d3af42b2ec0608323ddf9, type: 3}
+  m_Name: ExplosionBulletData
+  m_EditorClassIdentifier: Assembly-CSharp::ExplosionBulletStatDataSO
+  type: 2
+  stats:
+    chance: 30
+    damage: 15
+    speed: 3
+    bounceCount: 0
+  originalPrefab: {fileID: 7507157687402869154, guid: 5fd1171952241dd4abda2444d286596a, type: 3}
+  explosionStat:
+    explosionRange: 1
+    explosionDamageValue: 0.7

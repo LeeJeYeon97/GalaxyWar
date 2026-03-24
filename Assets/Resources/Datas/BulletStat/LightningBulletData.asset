@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 08d68b2b0c1f56346b9bb59a5e8dcd4e, type: 3}
+  m_Name: LightningBulletData
+  m_EditorClassIdentifier: Assembly-CSharp::LightningBulletStatDataSO
+  type: 3
+  stats:
+    chance: 30
+    damage: 8
+    speed: 6
+    bounceCount: 0
+  originalPrefab: {fileID: 8103278171357427903, guid: a136c2fb288a206429d851fa388ab16f, type: 3}
+  lightningStat:
+    lightningDamageValue: 0.5
+    lightningRange: 1.5
+    lightningCount: 2
+    ligthningChainObject: {fileID: 1758810356495374573, guid: 907563ff35d3ef141b2e6ab1117e146b, type: 3}

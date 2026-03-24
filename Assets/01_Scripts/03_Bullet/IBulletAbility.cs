@@ -8,11 +8,11 @@ using static UnityEngine.RuleTile.TilingRuleOutput;
 
 public struct AbilityExecuteParams
 {
-    public BulletStat stat;
+    public BaseBulletStat stat;
     public BulletController bullet;
     public MeteorController meteor;
     public Collision2D collision; // 여기에 쿨리전 정보를 담습니다
-    public Collider2D trigger;                   // .
+    public Collider2D trigger;                   
     // 필요하다면 들어오는 방향 등도 미리 계산해서 넣을 수 있습니다.
     public Vector2 incomingDirection;
     public Vector2 shotDir;
@@ -35,84 +35,10 @@ public class IceBulletAbility : IBulletAbility
 {
     public void Execute(AbilityExecuteParams param)
     {
-        // 1. 타입 검사 (얼음탄이 아니거나 비활성화면 리턴)
-        if (param.stat.type != Define.BulletType.IceBullet || param.stat.isActivated == false)
-            return;
 
-        MeteorController target = param.meteor;
-        if (target == null) return;
-
-        // 2. 얼음탄 스탯 가져오기 (임시로 수치를 넣었지만, 나중에 Stat 데이터로 빼시면 됩니다!)
-        float slowPercent = 0.5f;   // 50% 느려짐
-        float duration = 2.0f;      // 2초 동안 지속
-        float freezeChance = 20f;   // 완전히 얼어붙을 빙결 확률 (20%)
-
-        // 3. 빙결 확률 주사위 굴리기!
-        bool isFreeze = UnityEngine.Random.Range(0f, 100f) <= freezeChance;
-
-        if (isFreeze)
-        {
-            Debug.Log("빙결 성공! 꽁꽁 얼어라!");
-            // TODO: 여기서 쨍그랑! 하고 얼어붙는 파티클을 띄워주면 타격감이 엄청납니다.
-            // Managers.Pool.Get("FreezeHitEffect").transform.position = target.transform.position;
-        }
-
-        // 4. 운석에게 묻지도 따지지도 않고 효과 적용
-        //target.ApplyIceEffect(slowPercent, duration, isFreeze);
+        
     }
 }
-// 폭발탄
-public class ExplosionBulletAbility : IBulletAbility
-{
-    private void ShowRange(AbilityExecuteParams param)
-    {
-        float finalRadius = param.stat.explosionRadius.TotalValue;
-        float finalExplosionDmg = param.stat.damage.TotalValue;
-
-        // --- 시각적 연출 (기존 로직 그대로 활용) ---
-        GameObject indicator = Managers.Resource.Instantiate("Particle/ExplosionIndicator");
-
-        indicator.transform.position = param.meteor.transform.position;
-        indicator.transform.localScale = Vector3.zero;
-
-        SpriteRenderer sr = indicator.GetComponent<SpriteRenderer>();
-        Sequence seq = DOTween.Sequence();
-        seq.Append(indicator.transform.DOScale(Vector3.one * finalRadius * 2f, 0.2f).SetEase(Ease.OutQuad));
-        seq.Join(sr.DOFade(0.5f, 0.1f));
-        seq.Append(sr.DOFade(0f, 0.2f));
-        seq.OnComplete(() =>
-        {
-            Managers.Pool.Release(indicator);
-        });
-    }
-    public void Execute(AbilityExecuteParams param)
-    {
-        Debug.Log("폭발탄 실행!");
-        if (param.stat.type != Define.BulletType.ExplosionBullet ||
-            param.stat.isActivated == false) return;
-
-        float finalRadius = param.stat.explosionRadius.TotalValue;
-        float finalExplosionDmg = param.stat.damage.TotalValue;
-
-        ShowRange(param);
-
-        // --- 실제 범위 데미지 로직 ---
-        int layerMask = 1 << LayerMask.NameToLayer("Meteor");
-        Collider2D[] colliders = Physics2D.OverlapCircleAll(param.meteor.transform.position, finalRadius, layerMask);
-        foreach (var col in colliders)
-        {
-            // 이미 맞은놈 제외
-            if (col.gameObject == param.meteor.gameObject) continue;
-
-            MeteorController meteor = col.GetComponent<MeteorController>();
-            if(meteor)
-            {
-                meteor.OnDamage(finalExplosionDmg);
-            }
-        }
-    }
-}
-
 // 분열탄
 //public class SplitBulletAbility : IBulletAbility
 //{
@@ -191,43 +117,6 @@ public class ExplosionBulletAbility : IBulletAbility
 //    }
 //}
 
-// 번개탄
-public class LightningBulletAbility : IBulletAbility
-{
-    public void Execute(AbilityExecuteParams param)
-    {
-        // 조건 검사
-        if (param.stat.type != Define.BulletType.LightningBullet || param.stat.isActivated == false)
-            return;
-
-        Vector3 hitPos = param.meteor.transform.position;
-
-        // 1. 번개 전담 객체(LightningChain)를 풀에서 꺼냅니다.
-        // (리소스 경로는 유저님 프로젝트에 맞게 수정해주세요! 또는 param.stat 안에 프리팹을 넣어두면 가장 좋습니다.)
-        GameObject chainGo = Managers.Resource.Instantiate("Bullets/LightningChain");
-
-        if (chainGo != null && chainGo.TryGetComponent<LightningChain>(out var chain))
-        {
-            // 2. 알아서 전이하면서 데미지 주라고 파라미터를 꽉꽉 채워줍니다.
-            chain.Init(
-                startPos: hitPos,
-                firstTarget: param.meteor.gameObject,
-                damage: param.stat.damage.TotalValue,
-                range: param.stat.lightningRange.TotalValue,
-                count: Mathf.FloorToInt(param.stat.lightningCount.TotalValue)
-            );
-        }
-    }
-}
-
-// 관통탄
-public class PierceBulletAbility : IBulletAbility
-{
-    public void Execute(AbilityExecuteParams param)
-    {
-        
-    }
-}
 
 public class BurstBulletAbility : IBulletAbility
 {
@@ -257,27 +146,25 @@ public class BurstBulletAbility : IBulletAbility
 
     public void Execute(AbilityExecuteParams param)
     {
-        Debug.Log("BurstBullet Execute");
-        
-        foreach (var ability in _allAbilities)
-        {
-            // 2. 어빌리티 이름에서 타입을 역추적 (예: ExplosionBulletAbility -> ExplosionBullet)
-            Define.BulletType type = GetTypeFromAbility(ability);
-
-            // 3. 매니저에서 해당 탄종의 '최신 스탯'을 가져옴
-            BulletStat stat = Managers.Stat.GetBulletStat(type);
-
-            if (stat != null && stat.isActivated)
-            {
-                // 4. 파라미터 복사본을 만들어 스탯을 '마스터 스탯'으로 교체
-                AbilityExecuteParams burstParam = param;
-                burstParam.stat = stat;
-                //burstParam.isBurst = true;
-
-                // 5. 실행! 이제 각 능력은 자신에게 맞는 최강의 수치로 작동함
-                ability.Execute(burstParam);
-            }
-        }
+        //foreach (var ability in _allAbilities)
+        //{
+        //    // 2. 어빌리티 이름에서 타입을 역추적 (예: ExplosionBulletAbility -> ExplosionBullet)
+        //    Define.BulletType type = GetTypeFromAbility(ability);
+        //
+        //    // 3. 매니저에서 해당 탄종의 '최신 스탯'을 가져옴
+        //    BulletStat stat = Managers.Stat.GetBulletStat(type);
+        //
+        //    if (stat != null && stat.isActivated)
+        //    {
+        //        // 4. 파라미터 복사본을 만들어 스탯을 '마스터 스탯'으로 교체
+        //        AbilityExecuteParams burstParam = param;
+        //        burstParam.stat = stat;
+        //        //burstParam.isBurst = true;
+        //
+        //        // 5. 실행! 이제 각 능력은 자신에게 맞는 최강의 수치로 작동함
+        //        ability.Execute(burstParam);
+        //    }
+        //}
     }
 
     private Define.BulletType GetTypeFromAbility(IBulletAbility ability)

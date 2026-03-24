@@ -1,9 +1,9 @@
+using System;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "PlayerStatData", menuName = "ScriptableObjects/PlayerStatData")]
-public class PlayerStatDataSO : ScriptableObject
+[Serializable]
+public struct PlayerStatData
 {
-
     public float speed;
 
     public float maxHp;
@@ -24,4 +24,9 @@ public class PlayerStatDataSO : ScriptableObject
     public float multiShotCount;
     public float multiShotChance;
     public float multiShotAngle;
+}
+[CreateAssetMenu(fileName = "PlayerStatData", menuName = "ScriptableObjects/PlayerStatData")]
+public class PlayerStatDataSO : ScriptableObject
+{
+    public PlayerStatData statData;
 }

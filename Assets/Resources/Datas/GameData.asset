@@ -12,10 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f068b0e3c40678a4d90ddc0a917ba214, type: 3}
   m_Name: GameData
   m_EditorClassIdentifier: Assembly-CSharp::GameData
-  baseExpGain: 1
-  expGainIncreasePerLevel: 2
-  baseMaxExp: 5
   GameStartTime: 3
   meteorSpawnInterval: 2
   itemSpawnInterval: 60
   bossSpawnInterval: 180
+  cardReloadCount: 0
+  reviveCount: 0
+  expZero: 1
+  playerGod: 1

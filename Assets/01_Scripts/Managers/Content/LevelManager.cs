@@ -51,6 +51,10 @@ public class LevelManager
     }
     public void AddExp(float exp)
     {
+        if(Managers.Data.GameData.expZero == true)
+        {
+            return;
+        }
         CurrentExp += exp;
 
         // UI 업데이트를 위해 이벤트 호출

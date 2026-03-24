@@ -12,17 +12,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a7a6ddae07841314bba1fbc27524282d, type: 3}
   m_Name: PlayerStatData
   m_EditorClassIdentifier: Assembly-CSharp::PlayerStatDataSO
-  speed: 1
-  maxHp: 100
-  maxDefence: 10
-  maxBurstGuage: 100
-  maxBurstFullChargeTime: 10
-  reloadCount: 5
-  reloadTime: 2
-  shotRange: 2
-  shotTime: 1.5
-  hitCooldown: 1
-  isMultiShotEnabled: 0
-  multiShotCount: 2
-  multiShotChance: 30
-  multiShotAngle: 45
+  statData:
+    speed: 1
+    maxHp: 100
+    maxDefence: 100
+    maxBurstGuage: 100
+    maxBurstFullChargeTime: 60
+    reloadCount: 5
+    reloadTime: 2
+    shotRange: 0
+    shotTime: 1
+    hitCooldown: 1
+    isMultiShotEnabled: 0
+    multiShotCount: 3
+    multiShotChance: 30
+    multiShotAngle: 45

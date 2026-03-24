@@ -180,6 +180,7 @@ public class UI_LevelUpPopup : UI_Popup
                     {
                         Debug.LogError("Data null");
                     }
+                    
                     Managers.Ability.ApplyAbility(data);
 
                     // ★ 2. 레벨업 횟수 차감 및 재확인 로직

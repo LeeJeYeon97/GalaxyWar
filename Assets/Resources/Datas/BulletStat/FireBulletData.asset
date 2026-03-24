@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e17814021c373b44a80c15c0e9027585, type: 3}
+  m_Name: FireBulletData
+  m_EditorClassIdentifier: Assembly-CSharp::FireBulletStatDataSO
+  type: 6
+  stats:
+    chance: 30
+    damage: 10
+    speed: 5
+    bounceCount: 0
+  originalPrefab: {fileID: 1074223229378584734, guid: 8f74af4c4bbf24f45aa98049aca96521, type: 3}
+  fireStat:
+    fireDamageValue: 0.6
+    fireRemainTime: 3

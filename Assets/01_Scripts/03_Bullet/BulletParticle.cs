@@ -97,7 +97,7 @@ public class BulletParticle : MonoBehaviour
         }
     }
 
-    public void SpawnHit(Vector2 hitPos, Vector2 hitNormal,BulletStat stat)
+    public void SpawnHit(Vector2 hitPos, Vector2 hitNormal,BaseBulletStat stat)
     {
         if (stat == null)
             return;
@@ -119,6 +119,13 @@ public class BulletParticle : MonoBehaviour
             {
                 // 관통탄처럼 허공에서 터질 때는 그냥 총알이 날아가던 반대 방향으로 터지게 해도 멋집니다.
                 //hitGo.transform.rotation = Quaternion.LookRotation(-_rb.linearVelocity);
+            }
+
+            if (stat is ExplosionBulletStat expStat)
+            {
+                float radius = expStat.explosionRange.TotalValue;
+                // 폭발 범위에 맞춰 파티클 스케일 뻥튀기!
+                hitGo.transform.localScale = new Vector3(radius, radius, radius);
             }
         }
         ParticleSystem hitPS = hitGo.GetComponent<ParticleSystem>();

@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6b9263eb4aad8f4da9e414f78c8211d, type: 3}
+  m_Name: IceBulletData
+  m_EditorClassIdentifier: Assembly-CSharp::IceBulletStatDataSO
+  type: 1
+  stats:
+    chance: 30
+    damage: 7
+    speed: 6
+    bounceCount: 0
+  originalPrefab: {fileID: 495375208572652426, guid: 564273c4e0c174442ae68524cb8adb82, type: 3}
+  iceBulletStat:
+    slowValue: 30
+    slowTime: 1.5
+    freezeChance: 30
+    freezeTime: 1.5

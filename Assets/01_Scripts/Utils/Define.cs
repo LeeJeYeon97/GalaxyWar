@@ -69,53 +69,81 @@ public class Define
     public enum AbilityType
     {
         Unknown = 0,
+        // ==========================================
+        // [1. 글로벌 패시브] : 모든 총알과 플레이어에게 공통 적용
+        // ==========================================
+        // 플레이어
+        Passive_MaxHpUp = 1,                // 플레이어 체력 증가
+        Passive_PlayerSpeedUp = 2,          // 플레이어 이동속도 증가
+        Passive_ReloadCountUp = 3,          // 플레이어 재장전 개수 증가
+        Passive_ReloadTimeDown = 4,         // 리로드 시간 감소
+        Passive_ShotTimeDown = 5,           // 발사 딜레이 감소
+        Passive_BurstMode = 6,              // 버스트 모드 활성화 및 충전 시간 감소
+        // TODO : 플레이어 쉴드
 
-        UpgradePlayerHp = 1,                 // 플레이어 체력 증가
-        UpgradePlayerSpeed = 2,              // 플레이어 이동속도 증가
-        UpgradeReloadCount = 3,              // 재장전 개수 증가
-        UpgradeBulletBounceCount = 4,        // 모든탄 튕기는 횟수 증가
-        UpgradeBulletSpeed = 5,              // 모든 탄 스피드 증가
-        UpgradeReloadTime = 6,               // 리로드 시간 감소
-        UpgradeShotTime = 7,                 // 발사 시간 감소
-        ActivatePlayerShield = 8,            // 쉴드 활성화
-        UpgradeShieldCount = 9,              // 쉴드 갯수 증가
-
-        UpgradeBaseBulletDamage = 10,        // 기본탄 데미지 증가
+        // 모든 총알
+        Passive_AllBulletBounceCountUp = 10,// 모든 총알의 바운스(튕기는) 횟수 증가
+        Passive_AllBulletSpeed = 11,        // 모든 총알의 속도 증가
         
-        ActivateSplitBullet = 20,            // 분열탄 활성화
-        UpgradeSplitBulletCount = 22,        // 분열탄 갯수 강화
-        UpgradeSplitBulletChance = 23,       // 분열탄 확률 강화
+        // 특수 기능
+        Passive_SplitBullet = 20,           // 분열 기능 업그레이드
 
-        ActivateExplosionBullet = 30,        // 폭발탄 활성화
-        UpgradeExplosionDamage = 31,         // 폭발탄 데미지 증가
-        UpgradeExplosionRange = 32,          // 폭발탄 범위 증가
-        UpgradeExplosionChance = 33,         // 폭발탄 발동 확률 증가
+        // ==========================================
+        // [2. 액티브 무기] : 획득 시 Lv.1, 중복 획득 시 레벨업 (최대 Lv.5)
+        // ==========================================
+        Weapon_LaserBeam = 100,                // 레이저탄 : TODO
+        Weapon_ExplosionBullet = 101,         // 폭발탄 (광역 데미지)
+        Weapon_LightningBullet = 102,         // 번개탄 (체인 라이트닝)
+        Weapon_PierceBullet = 103,            // 관통탄 (직선 관통)
+        Weapon_IceBullet = 104,               // 얼음탄 (슬로우 및 빙결 CC)
+        Weapon_HomingBullet = 105,            // 유도탄 (적 추적)
+        Weapon_FireBullet = 106,              // 화염탄 (장판 및 화상 DoT)
+
+        // 신규 무기 자리
+        Weapon_BlackHoleBullet = 107,         // 블랙홀탄
+        Weapon_PoisonBullet = 108,            // 맹독탄
         
-        ActivateLightningBullet = 40,        // 번개탄 활성화
-        UpgradeLigthningCount = 41,          // 번개탄 전이 횟수 증가
-        UpgradeLigthningDamage = 42,         // 번개탄 번개 데미지 증가
-        UpgradeLightningRange = 43,          // 번개탄 전이 범위 증가
-        UpgradeLightningChance = 44,         // 번개탄 리로드 확률 증가
+        // ==========================================
+        // [2. 액티브 무기] : 획득 시 Lv.1, 중복 획득 시 레벨업 (최대 Lv.5)
+        // ==========================================
 
-        ActivatePierceBullet = 50,           // 관통탄 활성화
-        UpgradePierceCount = 51,             // 관통횟수 증가
-        UpgradePierceDamage = 52,            // 관통 데미지 증가
+        // 분열탄(플레이어)
+        //ActivateSplitBullet = 20,            // 분열탄 활성화
+        //UpgradeSplitBulletCount = 22,        // 분열탄 갯수 강화
+        //UpgradeSplitBulletChance = 23,       // 분열탄 확률 강화
 
-        ActivateBurstMode = 60,              // 버스트 모드 활성화
-        UpgradeBurstModeTime = 61,           // 버스트 모드 시간 감소
-    }
-    public enum AbilityTargetType
-    {
-        Unknown = 0,
-        Player = 1,
-        Meteor = 2,
-        Bullet = 3,
-    }
-    public enum StatType
-    {
-        Damage,
-        Speed,
-        Hp,
+        //// 폭발탄
+        //ActivateExplosionBullet = 30,        // 폭발탄 활성화
+        //UpgradeExplosionDamage = 31,         // 폭발탄 데미지 증가
+        //UpgradeExplosionRange = 32,          // 폭발탄 범위 증가
+        //UpgradeExplosionChance = 33,         // 폭발탄 확률 증가
+
+        //// 번개탄
+        //ActivateLightningBullet = 40,        // 번개탄 활성화
+        //UpgradeLigthningCount = 41,          // 번개탄 전이 횟수 증가
+        //UpgradeLigthningDamage = 42,         // 번개탄 데미지 증가
+        //UpgradeLightningRange = 43,          // 번개탄 전이 범위 증가
+        //UpgradeLightningChance = 44,         // 번개탄 확률 증가
+
+        //// 관통탄
+        //ActivatePierceBullet = 50,           // 관통탄 활성화
+        //UpgradePierceCount = 51,             // 관통횟수 증가
+        //UpgradePierceDamage = 52,            // 관통탄 데미지 증가
+
+        //// 얼음탄
+        //ActivateIceBullet = 60,              // 얼음탄 활성화
+        //UpgradeIceSlowValue = 61,            // 슬로우 % 증가
+        //UpgradeFreezeChance = 62,            // 빙결 걸릴 확률 증가
+        //UpgradeIceSlowTime = 63,             // 슬로우 시간 증가
+        //UpgradeFreezeTime = 64,              // 빙결 시간 증가
+
+        //// 유도탄        
+        //ActivateHomingBullet = 70,           // 유도탄 활성화
+        //UpgradeHomingBulletRange = 71,       // 유도탄 범위 증가
+        //                                     // 유도탄 탐색 범위 증가
+        //// TODO : 화염탄
+        //ActivateFireBullet = 80,             // 화염탄 활성화
+        //UpgradeFireBulletDamage = 81,        // 화염탄 데미지 증가
     }
     public enum BulletType
     {
@@ -127,7 +155,7 @@ public class Define
         BurstBullet = 5,        // 버스트모드 불릿
         FireBullet = 6,
         PoisonBullet = 7,
-        HommingBullet = 8,
+        HomingBullet = 8,
     }
     public enum MeteorType
     {
@@ -160,6 +188,7 @@ public class Define
         Phase4, 
         Phase5
     }
+
     #region 이벤트(Action) 관련
     // 이벤트 발신용 데이터
     public enum ActionEvent

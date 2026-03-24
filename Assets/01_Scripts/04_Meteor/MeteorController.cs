@@ -23,6 +23,7 @@ public class MeteorController : MonoBehaviour
 
     public bool _hasEnteredView;
     private float _checkOffset = 2.0f; // 경계 밖 여유 공간
+
     private SpriteRenderer _spriteRenderer; // 색상을 바꾸기 위해 렌더러 캐싱
 
     //추가: 일시정지 상태일 때 속도와 회전력을 기억해둘 변수
@@ -35,6 +36,15 @@ public class MeteorController : MonoBehaviour
     
     public Coroutine ActionCoroutine;
     private float _auraBuffEndTime = 0f; // 코루틴 대신 종료 시간을 기억할 변수!
+
+    private Coroutine _freezeCoroutine;
+    private Coroutine _slowCoroutine;
+    
+    // 슬로우를 위한 현재 속도 및 방향 저장
+    public Stat currentSpeed = new Stat();
+    private Vector2 _moveDir;
+    private float _baseAngularVelocity; // 원래 팽이처럼 돌던 회전력
+
     private void Awake()
     {
         _hpBar = Util.FindChild<Image>(gameObject, "HpBar", true);
@@ -54,9 +64,6 @@ public class MeteorController : MonoBehaviour
         _maxHp = Stat.MaxHp.TotalValue;
         _currentHp = _maxHp;
 
-        // 1.위치 설정
-        transform.position = pos;
-
         // 상태 초기화
         _hasEnteredView = false;
         _hasAuraBuff = false;
@@ -68,17 +75,20 @@ public class MeteorController : MonoBehaviour
             _originalColor = _spriteRenderer.color; // 내 원래 색상 기억
         }
 
-        // 플레이어 방향으로 방향 계산
-        Vector2 dir = ((Vector2)Managers.Game._player.transform.position - pos).normalized;
-        float speed = Random.Range(Stat.MinSpeed.TotalValue, Stat.MaxSpeed.TotalValue);
-        _rb.linearVelocity = dir * speed;
+        // 1.위치 설정
+        transform.position = pos;
 
-        // 3. 랜덤한 회전 속도 부여 (초당 회전 각도)
+        // 2. 플레이어 방향으로 방향 계산
+        _moveDir = ((Vector2)Managers.Game._player.transform.position - pos).normalized;
+
+        // 3. 랜덤으로 속도 뽑기
+        currentSpeed.Init(Random.Range(Stat.MinSpeed.TotalValue, Stat.MaxSpeed.TotalValue));
+
+        // 5. 랜덤한 회전 속도 부여 (초당 회전 각도)
         // -100 ~ 100 사이의 값을 주면 왼쪽 혹은 오른쪽으로 랜덤하게 돕니다.
-        float randomTorque = Random.Range(-100f, 100f);
-        _rb.angularVelocity = randomTorque;
+        _baseAngularVelocity = Random.Range(-100f, 100f);
         _rb.simulated = true;
-
+        UpdateVelocity();
 
         Stat.Behavior?.OnInit(this);
 
@@ -188,6 +198,17 @@ public class MeteorController : MonoBehaviour
     }
 
     #region 물리 연산
+    private void UpdateVelocity()
+    {
+        // 내 고유 스탯(currentSpeed)의 '최종 계산된 값(TotalValue)'을 바로 방향에 곱해줍니다.
+        _rb.linearVelocity = _moveDir * currentSpeed.TotalValue;
+
+        // 회전력 처리: 완전 빙결(TotalValue == 0)일 때는 멈추고, 아니면 돌게 만듭니다.
+        if (currentSpeed.TotalValue == 0)
+            _rb.angularVelocity = 0f;
+        else
+            _rb.angularVelocity = _baseAngularVelocity; // (원한다면 슬로우 비율만큼 곱해줘도 됩니다!)
+    }
     private void PausePhysics()
     {
         _isPaused = true;
@@ -201,7 +222,7 @@ public class MeteorController : MonoBehaviour
         _rb.angularVelocity = 0f;
         _rb.simulated = false; // 충돌 및 물리 연산 완전 정지
     }
-    //=물리 엔진 복구 로직
+    //물리 엔진 복구 로직
     private void ResumePhysics()
     {
         _isPaused = false;
@@ -270,5 +291,81 @@ public class MeteorController : MonoBehaviour
         // 노란색의 반투명한 선으로 반경(auraRadius)을 그립니다.
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(transform.position, Stat.auraRadius.TotalValue);
+    }
+
+
+    public void ApplySlow(float slowPercent, float duration)
+    {
+        // 이미 슬로우가 걸려있다면 기존 코루틴을 끄고 시간을 리셋!
+        if (_slowCoroutine != null)
+        {
+            StopCoroutine(_slowCoroutine);
+            // 주의: 코루틴을 강제로 끄기 전에 깎였던 스탯을 한 번 원상복구 해줘야 중첩 버그가 안 생깁니다!
+            currentSpeed.SubMultiplier(-slowPercent);
+            UpdateVelocity();
+        }
+
+        _slowCoroutine = StartCoroutine(CoSlowRoutine(slowPercent, duration));
+    }
+
+    // 슬로우 루틴
+    private IEnumerator CoSlowRoutine(float slowPercent, float duration)
+    {
+        // 1. 스탯 깎기 (예: 50% 슬로우면 multiplier에 -0.5를 더함)
+        currentSpeed.AddMultiplier(-slowPercent);
+
+        // 속도에 반영
+        UpdateVelocity();
+
+        // 시각적 효과 (파랗게 질림)
+        if (_spriteRenderer != null) _spriteRenderer.color = new Color(0.5f, 0.8f, 1f);
+
+        // 2. 지정된 시간만큼 대기
+        yield return new WaitForSeconds(duration);
+
+        // 3. 스탯 완벽하게 원상 복구! (깎았던 만큼 다시 빼줌)
+        currentSpeed.SubMultiplier(-slowPercent);
+
+        // 시각적 효과 복구
+        if (_spriteRenderer != null && !_hasAuraBuff) _spriteRenderer.color = _originalColor;
+
+        _slowCoroutine = null;
+    }
+
+    // 완전 빙결(Freeze)도 똑같은 방식으로 창구를 열어줍니다.
+    public void ApplyFreeze(float duration)
+    {
+        // 1. 이미 얼어있는 상태에서 또 맞았다면? -> 빙결 시간 리셋!
+        if (_freezeCoroutine != null)
+        {
+            StopCoroutine(_freezeCoroutine);
+            // 코루틴을 강제로 끄기 전에 스탯을 한 번 원상복구 해줘야 버그가 안 생깁니다.
+            currentSpeed.SetForceZero(false);
+            UpdateVelocity();
+        }
+        _freezeCoroutine = StartCoroutine(CoFreezeRoutine(duration));
+    }
+    private IEnumerator CoFreezeRoutine(float duration)
+    {
+        // 1. 스탯 강제 0 스위치 ON! (유저님의 Stat 클래스 기능 활용)
+        currentSpeed.SetForceZero(true);
+
+        // 2. 물리 엔진(Rigidbody) 완전히 멈추기
+        UpdateVelocity();
+        
+
+        // 시각적 효과 (슬로우보다 조금 더 쨍하고 진한 얼음색!)
+        if (_spriteRenderer != null)    _spriteRenderer.color = new Color(0.2f, 0.6f, 1f);
+
+        // 3. 빙결 지속 시간(예: 2초) 동안 대기
+        yield return new WaitForSeconds(duration);
+
+        // 4. 해동! 스탯 강제 0 스위치 OFF!
+        currentSpeed.SetForceZero(false);
+        UpdateVelocity(); // -> 0 스위치가 풀렸으니 원래 속도(슬로우가 걸려있다면 깎인 속도)로 튀어나갑니다!
+
+        if (_spriteRenderer != null && !_hasAuraBuff) _spriteRenderer.color = _originalColor;
+
+        _freezeCoroutine = null;
     }
 }

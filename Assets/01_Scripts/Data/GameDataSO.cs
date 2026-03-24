@@ -3,12 +3,6 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "GameData", menuName = "ScriptableObjects/GameData")]
 public class GameDataSO : ScriptableObject
 {
-    [Header("Exp Gain Settings")]
-    public float baseExpGain;          // 몬스터 한 마리당 기본 경험치
-    public float expGainIncreasePerLevel; // 레벨당 추가 경험치 획득량
-
-    [Header("Level Up Settings (Required Exp)")]
-    public float baseMaxExp;          // 1레벨에서 필요한 최대 경험치
 
     [Tooltip("게임 시작 전 카운트 다운 시간")]
     public int GameStartTime;
@@ -21,4 +15,8 @@ public class GameDataSO : ScriptableObject
     [Header("Pick Reload Count")]
     public int cardReloadCount;
     public int reviveCount;
+
+    [Header("GameTestMode")]
+    public bool expZero;
+    public bool playerGod;
 }

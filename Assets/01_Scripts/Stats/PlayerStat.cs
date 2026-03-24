@@ -35,23 +35,23 @@ public class PlayerStat
             return;
         }
 
-        speed.Init(data.speed);
-        maxHp.Init(data.maxHp);
-        maxDefence.Init(data.maxDefence);
-        reloadCount.Init(data.reloadCount);
-        reloadTime.Init(data.reloadTime);
-        shotRange.Init(data.shotRange);
-        shotTime.Init(data.shotTime);
+        speed.Init(data.statData.speed);
+        maxHp.Init(data.statData.maxHp);
+        maxDefence.Init(data.statData.maxDefence);
+        reloadCount.Init(data.statData.reloadCount);
+        reloadTime.Init(data.statData.reloadTime);
+        shotRange.Init(data.statData.shotRange);
+        shotTime.Init(data.statData.shotTime);
 
         enableBurst = false;
-        maxBurstGuage.Init(data.maxBurstGuage);
-        maxBurstFullChargeTime.Init(data.maxBurstFullChargeTime);
-        hitCooldown = data.hitCooldown;
+        maxBurstGuage.Init(data.statData.maxBurstGuage);
+        maxBurstFullChargeTime.Init(data.statData.maxBurstFullChargeTime);
+        hitCooldown = data.statData.hitCooldown;
 
         isMultiShotEnabled = false;
-        multiShotCount.Init(data.multiShotCount);
-        multiShotAngle = data.multiShotAngle;
-        multiShotChance.Init(data.multiShotChance);
+        multiShotCount.Init(data.statData.multiShotCount);
+        multiShotAngle = data.statData.multiShotAngle;
+        multiShotChance.Init(data.statData.multiShotChance);
     }
     private void AutoInitStats()
     {

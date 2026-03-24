@@ -23,7 +23,7 @@ public class DataManager
     {
         // [사용 예시]
         // 1. Bullets는 SO의 'name'을 키로 사용
-        BulletDataDict = LoadDataToDict<Define.BulletType, BulletStatDataSO>("Bullets", data => data.type);
+        BulletDataDict = LoadDataToDict<Define.BulletType, BulletStatDataSO>("BulletStat", data => data.type);
 
         // 2. Abilities는 만약 내부에 'abilityID' 같은 별도 필드가 있다면 그것을 키로 사용
         // AbilityDataDict = LoadDataToDict<string, AbilityDataSO>("Abilities", data => data.abilityID);
