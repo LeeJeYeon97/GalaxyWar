@@ -12,8 +12,10 @@ public abstract class BaseBulletStat
     public Stat damage = new Stat();
     public Stat bounceCount = new Stat();
     public Stat chance = new Stat();
+    public bool isReload;
 
     public int curLevel;
+
 
     // 가상 함수(virtual): 자식들이 이 함수를 물려받아서 자기 스탯을 추가로 세팅할 수 있게 합니다.
     public virtual void Init(BulletStatDataSO data)
@@ -26,8 +28,10 @@ public abstract class BaseBulletStat
         bounceCount.Init(data.stats.bounceCount);
         chance.Init(data.stats.chance);
         curLevel = (data.type == Define.BulletType.NormalBullet) ? 1 : 0;
+        isReload = data.stats.isReload;
 
         behavior = CreateAbility(data);
+        
     }
 
     // (기존 CreateAbility 로직 그대로 유지)
@@ -94,7 +98,7 @@ public class LightningBulletStat : BaseBulletStat
             lightningDamageValue.Init(da.lightningStat.lightningDamageValue);
             lightningRange.Init(da.lightningStat.lightningRange);
             lightningCount.Init(da.lightningStat.lightningCount);
-            ligthningChainObject = da.lightningStat.ligthningChainObject;
+            ligthningChainObject = da.lightningChain;
         }
     }
 }

@@ -18,6 +18,7 @@ MonoBehaviour:
     damage: 7
     speed: 6
     bounceCount: 0
+    isReload: 1
   originalPrefab: {fileID: 495375208572652426, guid: 564273c4e0c174442ae68524cb8adb82, type: 3}
   iceBulletStat:
     slowValue: 30

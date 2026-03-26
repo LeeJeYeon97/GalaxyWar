@@ -18,5 +18,5 @@ MonoBehaviour:
   bossSpawnInterval: 180
   cardReloadCount: 0
   reviveCount: 0
-  expZero: 1
+  expZero: 0
   playerGod: 1

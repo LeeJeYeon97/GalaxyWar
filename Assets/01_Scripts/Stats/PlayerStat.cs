@@ -28,6 +28,10 @@ public class PlayerStat
     public Stat multiShotChance = new Stat();
     public float multiShotAngle;
 
+    [Header("À¯µµÅº °ü·Ã")]
+    public bool isHomingShotEnabled;
+    public Stat homingShotDelay = new Stat();
+    public Stat homingRange = new Stat();
     public void SetStat(PlayerStatDataSO data)
     {
         if(data == null)
@@ -43,15 +47,20 @@ public class PlayerStat
         shotRange.Init(data.statData.shotRange);
         shotTime.Init(data.statData.shotTime);
 
-        enableBurst = false;
+        enableBurst = data.statData.isBurstModeEnabled;
         maxBurstGuage.Init(data.statData.maxBurstGuage);
         maxBurstFullChargeTime.Init(data.statData.maxBurstFullChargeTime);
         hitCooldown = data.statData.hitCooldown;
 
-        isMultiShotEnabled = false;
+        isMultiShotEnabled = data.statData.isMultiShotEnabled;
         multiShotCount.Init(data.statData.multiShotCount);
         multiShotAngle = data.statData.multiShotAngle;
         multiShotChance.Init(data.statData.multiShotChance);
+
+        isHomingShotEnabled = data.statData.isHomingShotEnabled;
+        homingShotDelay.Init(data.statData.homingShotDelay);
+        homingRange.Init(data.statData.homingRange);
+
     }
     private void AutoInitStats()
     {

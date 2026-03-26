@@ -19,6 +19,8 @@ public class HomingBulletAbilityDataSO : BulletAbilityDataSO
         // 내 현재 레벨 데이터 꺼내기
         HomingBulletStatData data = stats[level - 1];
 
+        Managers.Game._player.Stat.isHomingShotEnabled = true;
+
         if (targetStat is HomingBulletStat stat)
         {
             stat.homingRange.AddValue(data.homingRange);

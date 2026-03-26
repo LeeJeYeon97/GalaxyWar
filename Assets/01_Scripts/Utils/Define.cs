@@ -200,6 +200,7 @@ public class Define
         LevelUp,                    // 레벨업
         ReloadStart,                // 리로딩 시작
         ReloadEnd,                  // 리로딩 끝
+        BulletBounceCountUp,        // 불릿 튕기는 횟수 증가
         
     }
     public struct PlayerStatusEvent

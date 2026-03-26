@@ -8,8 +8,7 @@ public struct PlayerStatData
 
     public float maxHp;
     public float maxDefence;
-    public float maxBurstGuage;
-    public float maxBurstFullChargeTime;
+    
 
     public float reloadCount;
     public float reloadTime;
@@ -19,11 +18,21 @@ public struct PlayerStatData
 
     public float hitCooldown;       // 피격 딜레이
 
+    [Header("버스트모드관련")]
+    public bool isBurstModeEnabled;
+    public float maxBurstGuage;
+    public float maxBurstFullChargeTime;
+
     [Header("멀티샷관련")]
     public bool isMultiShotEnabled; // 멀티샷(분열) 능력 획득 여부
     public float multiShotCount;
     public float multiShotChance;
     public float multiShotAngle;
+
+    [Header("유도탄 관련")]
+    public bool isHomingShotEnabled;
+    public float homingShotDelay;
+    public float homingRange;
 }
 [CreateAssetMenu(fileName = "PlayerStatData", menuName = "ScriptableObjects/PlayerStatData")]
 public class PlayerStatDataSO : ScriptableObject

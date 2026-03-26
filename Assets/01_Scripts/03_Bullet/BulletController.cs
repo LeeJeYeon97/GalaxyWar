@@ -36,12 +36,15 @@ public class BulletController : MonoBehaviour
         }
 
         _particle = Util.GetOrAddComponent<BulletParticle>(gameObject);
+
+
     }
 
     private void OnEnable()
     {
         Managers.Game.AddActiveObject(this);
 
+        Managers.Event.Subscribe<int>(ActionEvent.BulletBounceCountUp,UpdateBounceCount);
     }
     private void OnDisable()
     {
@@ -49,7 +52,9 @@ public class BulletController : MonoBehaviour
         {
             Stat.behavior.OnRelease(this);
         }
+        Managers.Event.UnSubscribe<int>(ActionEvent.BulletBounceCountUp, UpdateBounceCount);
         Managers.Game.RemoveActiveObject(this);
+
     }
     private void FixedUpdate()
     {
@@ -118,9 +123,7 @@ public class BulletController : MonoBehaviour
         }
         
         Stat = stat;
-        currentBounceCount = Mathf.FloorToInt(stat.bounceCount.TotalValue);
-        //currentPierceCount = Mathf.FloorToInt(stat.pierceCount.TotalValue);
-        
+
         SetPhysicsState(true); // 대기 중엔 물리 끄기
         
         // 각 탄환별로 초기화 시 실행시킬 로직 실행
@@ -172,11 +175,14 @@ public class BulletController : MonoBehaviour
         {
             gameObject.SetActive(true);
         }
+
+        transform.position = shotPos;
         _shotDir = dragVector.normalized * Stat.speed.TotalValue;
 
         SetPhysicsState(false);
         Rb.AddForce(_shotDir, ForceMode2D.Impulse);
 
+        currentBounceCount = Mathf.FloorToInt(Stat.bounceCount.TotalValue);
         _particle.SpawnShot(dragVector,shotPos);
         Stat.behavior.OnShot(this);
     }
@@ -191,7 +197,6 @@ public class BulletController : MonoBehaviour
             Rb.angularVelocity = 0f;
         }
     }
-    
     public void DecreasePierceCount()
     {
         currentPierceCount--;
@@ -202,7 +207,17 @@ public class BulletController : MonoBehaviour
         }
         // 필요하다면 여기서 0 이하가 됐을 때의 로직을 추가할 수도 있음
     }
+    public void UpdateBounceCount(int count)
+    {
+        if (count <= 0) return;
 
+        int maxBounce = (int)Stat.bounceCount.TotalValue;
+        if (currentBounceCount >= maxBounce) return;
+
+        // 마법의 코드: (현재값 + 더할값)과 (최댓값) 중에서 '더 작은 것'을 내 현재값으로 설정합니다!
+        // 이렇게 하면 알아서 최댓값을 넘어가지 않게 딱 잘라줍니다.
+        currentBounceCount = Mathf.Min(currentBounceCount + count, maxBounce);
+    }
     // [추가] 튕김 처리를 요청할 때 사용하는 함수
     public void DecreaseBounceCount()
     {
@@ -213,10 +228,6 @@ public class BulletController : MonoBehaviour
             // 반납처리 필요
             Managers.Pool.Release(gameObject);
         }
-    }
-    public void SetRigidVelocity(Vector2 velocity)
-    {
-        Rb.linearVelocity = velocity;
     }
     //private IEnumerator CoDropFireTrail()
     //{

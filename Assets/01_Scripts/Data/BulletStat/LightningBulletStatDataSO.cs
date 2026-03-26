@@ -10,19 +10,17 @@ using UnityEngine.Localization;
 [Serializable]
 public struct LightningBulletStatData
 {
-    
-    [Header("얼음탄 전용 증가량")]
     public float lightningDamageValue;
     public float lightningRange;
     public int lightningCount;
-
-    public GameObject ligthningChainObject;
 }
 
 [CreateAssetMenu(fileName = "LightningBulletData", menuName = "ScriptableObjects/BulletData/Lightning")]
 public class LightningBulletStatDataSO : BulletStatDataSO
 {
     public LightningBulletStatData lightningStat;
+    public GameObject lightningChain;
+
     public override BaseBulletStat CreateRuntimeStat()
     {
         return new LightningBulletStat();

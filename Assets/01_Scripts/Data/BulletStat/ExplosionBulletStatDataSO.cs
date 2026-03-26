@@ -6,8 +6,7 @@ using UnityEngine.Localization;
 [Serializable]
 public struct ExplosionBulletStatData
 {
-    [Header("폭발탄 전용 증가량")]
-    public float explosionRange;    // 기본 폭발 범위
+    public float explosionRange;         // 기본 폭발 범위
     public float explosionDamageValue;   // 폭발 데미지
 }
 

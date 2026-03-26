@@ -30,6 +30,8 @@ public class PlayerController : MonoBehaviour
     public float currentBurst;
     public PlayerStat Stat;
 
+    public float _lastHomingShotTime;
+
     [Header("Bullet")]
     public Transform _bulletPos;        // 총알이 나갈 발사구 위치
     public List<BulletController> bullets = new List<BulletController>();
@@ -102,6 +104,7 @@ public class PlayerController : MonoBehaviour
         
         // 발사 로직
         Shoot();
+        HomingShot();
         AddBurstGauge();
     }
     private void FixedUpdate()
@@ -301,6 +304,28 @@ public class PlayerController : MonoBehaviour
                 // 발사 시간 설정
                 _lastShotTime = Time.time;
             }
+        }
+    }
+
+    // 유도탄 발사
+    void HomingShot()
+    {
+        if(Stat.isHomingShotEnabled == false)
+        {
+            return;
+        }
+
+        if (Time.time - _lastHomingShotTime >= Stat.homingShotDelay.TotalValue)
+        {
+            BaseBulletStat homingStat = Managers.Stat.GetBulletStat(Define.BulletType.HomingBullet);
+            Poolable go = Managers.Pool.Get(homingStat.originalPrefabs);
+            BulletController bullet = go?.GetComponent<BulletController>();
+
+            bullet.SetBullet(homingStat);
+            bullet.Shot(transform.up, _bulletPos.position);
+
+            // 발사 시간 설정
+            _lastHomingShotTime = Time.time;
         }
     }
 

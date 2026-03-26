@@ -55,7 +55,7 @@ public class StatManager
         // 2. 전체 딕셔너리를 돌면서 체크합니다. (LINQ의 Where + Sum 역할)
         foreach (var stat in bulletStatDict.Values)
         {
-            if (stat.curLevel >= 1)
+            if (stat.curLevel >= 1 && stat.isReload == true)
             {
                 activeStats.Add(stat);
                 totalWeight += (int)stat.chance.TotalValue; // 합계도 동시에 구합니다.

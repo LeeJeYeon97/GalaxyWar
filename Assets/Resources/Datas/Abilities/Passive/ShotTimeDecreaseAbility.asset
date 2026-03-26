@@ -1,0 +1,77 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c0a8f28e6e94d7d4d8c317d20efee09c, type: 3}
+  m_Name: ShotTimeDecreaseAbility
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerShotTimeDecreaseAbilityDataSO
+  type: 5
+  localizedName:
+    m_TableReference:
+      m_TableCollectionName: GUID:82c20406597040c4f8b1423cea141506
+    m_TableEntryReference:
+      m_KeyId: 3640729298685952
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  localizationDesc:
+  - m_TableReference:
+      m_TableCollectionName: GUID:82c20406597040c4f8b1423cea141506
+    m_TableEntryReference:
+      m_KeyId: 3640756490358784
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  - m_TableReference:
+      m_TableCollectionName: GUID:82c20406597040c4f8b1423cea141506
+    m_TableEntryReference:
+      m_KeyId: 3640756490358784
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  - m_TableReference:
+      m_TableCollectionName: GUID:82c20406597040c4f8b1423cea141506
+    m_TableEntryReference:
+      m_KeyId: 3640756490358784
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  - m_TableReference:
+      m_TableCollectionName: GUID:82c20406597040c4f8b1423cea141506
+    m_TableEntryReference:
+      m_KeyId: 3640756490358784
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  - m_TableReference:
+      m_TableCollectionName: GUID:82c20406597040c4f8b1423cea141506
+    m_TableEntryReference:
+      m_KeyId: 3640756490358784
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  icon: {fileID: 0}
+  maxLevel: 5
+  _requiredAbility: 0
+  shotTimeDecreases:
+  - 0.2
+  - 0.2
+  - 0.2
+  - 0.2
+  - 0.1
+  references:
+    version: 2
+    RefIds: []

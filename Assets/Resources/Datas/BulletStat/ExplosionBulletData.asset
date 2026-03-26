@@ -18,6 +18,7 @@ MonoBehaviour:
     damage: 15
     speed: 3
     bounceCount: 0
+    isReload: 1
   originalPrefab: {fileID: 7507157687402869154, guid: 5fd1171952241dd4abda2444d286596a, type: 3}
   explosionStat:
     explosionRange: 1

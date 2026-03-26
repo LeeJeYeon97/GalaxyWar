@@ -18,9 +18,10 @@ MonoBehaviour:
     damage: 8
     speed: 6
     bounceCount: 0
+    isReload: 1
   originalPrefab: {fileID: 8103278171357427903, guid: a136c2fb288a206429d851fa388ab16f, type: 3}
   lightningStat:
     lightningDamageValue: 0.5
-    lightningRange: 1.5
+    lightningRange: 20
     lightningCount: 2
-    ligthningChainObject: {fileID: 1758810356495374573, guid: 907563ff35d3ef141b2e6ab1117e146b, type: 3}
+  lightningChain: {fileID: 1758810356495374573, guid: 907563ff35d3ef141b2e6ab1117e146b, type: 3}

@@ -15,9 +15,50 @@ MonoBehaviour:
   type: 101
   localizedName:
     m_TableReference:
-      m_TableCollectionName: 
+      m_TableCollectionName: GUID:82c20406597040c4f8b1423cea141506
     m_TableEntryReference:
-      m_KeyId: 0
+      m_KeyId: 3642049569116160
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  localizationDesc:
+  - m_TableReference:
+      m_TableCollectionName: GUID:82c20406597040c4f8b1423cea141506
+    m_TableEntryReference:
+      m_KeyId: 3642099510693888
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  - m_TableReference:
+      m_TableCollectionName: GUID:82c20406597040c4f8b1423cea141506
+    m_TableEntryReference:
+      m_KeyId: 3642169702371328
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  - m_TableReference:
+      m_TableCollectionName: GUID:82c20406597040c4f8b1423cea141506
+    m_TableEntryReference:
+      m_KeyId: 3642169702371328
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  - m_TableReference:
+      m_TableCollectionName: GUID:82c20406597040c4f8b1423cea141506
+    m_TableEntryReference:
+      m_KeyId: 3642169702371328
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  - m_TableReference:
+      m_TableCollectionName: GUID:82c20406597040c4f8b1423cea141506
+    m_TableEntryReference:
+      m_KeyId: 3642169702371328
       m_Key: 
     m_FallbackState: 0
     m_WaitForCompletion: 0
@@ -31,19 +72,19 @@ MonoBehaviour:
     damage: 0
     speed: 0
     bounceCount: 0
-  - chance: 0
+  - chance: 10
     damage: 0
     speed: 0
     bounceCount: 0
-  - chance: 0
+  - chance: 10
     damage: 0
     speed: 0
     bounceCount: 0
-  - chance: 0
+  - chance: 10
     damage: 0
     speed: 0
     bounceCount: 0
-  - chance: 0
+  - chance: 10
     damage: 0
     speed: 0
     bounceCount: 0

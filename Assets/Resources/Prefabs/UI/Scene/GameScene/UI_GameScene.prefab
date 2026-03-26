@@ -536,7 +536,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1927385750178596619}
   - component: {fileID: 1927385750178596621}
-  - component: {fileID: 1927385750178596620}
+  - component: {fileID: 7350368500468826691}
+  - component: {fileID: 4360848669335842667}
   m_Layer: 5
   m_Name: GameZoneBackground
   m_TagString: Untagged
@@ -558,10 +559,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 5105521134246101820}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 4096, y: 4096}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1927385750178596621
 CanvasRenderer:
@@ -571,7 +572,7 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1927385750178596618}
   m_CullTransparentMesh: 0
---- !u!114 &1927385750178596620
+--- !u!114 &7350368500468826691
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -580,9 +581,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 1927385750178596618}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Script: {fileID: 11500000, guid: 1344c3c82d62a2a41a3576d8abb8e3ea, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.RawImage
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 0
@@ -591,16 +592,31 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -1138330935363778494, guid: aa43e51ce628de947b5526f8b318d425, type: 3}
-  m_Type: 0
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
-  m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
+  m_Texture: {fileID: 2800000, guid: ddcac1fac1f5c8943a30c2ef6b724062, type: 3}
+  m_UVRect:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 1
+    height: 1
+--- !u!114 &4360848669335842667
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1927385750178596618}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d6389b6dfbee938468c0fccb53a1003a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::InfiniteBackGround
+  backgroundImage: {fileID: 7350368500468826691}
+  playerTransform: {fileID: 0}
+  parallaxSpeed: 0.01
+  useRotation: 1
+  rotationMultiplier: 0.01
+  rotationSmoothSpeed: 2.5
 --- !u!1 &1975237539346419274
 GameObject:
   m_ObjectHideFlags: 0

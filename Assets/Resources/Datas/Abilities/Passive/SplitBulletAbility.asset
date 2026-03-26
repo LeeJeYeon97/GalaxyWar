@@ -1,0 +1,82 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea3b9c52bcd9b0e4ba2d7fa7b0f85560, type: 3}
+  m_Name: SplitBulletAbility
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerSplitBulletAbilityDataSO
+  type: 20
+  localizedName:
+    m_TableReference:
+      m_TableCollectionName: GUID:82c20406597040c4f8b1423cea141506
+    m_TableEntryReference:
+      m_KeyId: 3640669752152064
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  localizationDesc:
+  - m_TableReference:
+      m_TableCollectionName: GUID:82c20406597040c4f8b1423cea141506
+    m_TableEntryReference:
+      m_KeyId: 3640693529661440
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  - m_TableReference:
+      m_TableCollectionName: GUID:82c20406597040c4f8b1423cea141506
+    m_TableEntryReference:
+      m_KeyId: 3641336877174784
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  - m_TableReference:
+      m_TableCollectionName: GUID:82c20406597040c4f8b1423cea141506
+    m_TableEntryReference:
+      m_KeyId: 3641336877174784
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  - m_TableReference:
+      m_TableCollectionName: GUID:82c20406597040c4f8b1423cea141506
+    m_TableEntryReference:
+      m_KeyId: 3641336877174784
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  - m_TableReference:
+      m_TableCollectionName: GUID:82c20406597040c4f8b1423cea141506
+    m_TableEntryReference:
+      m_KeyId: 3641336877174784
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  icon: {fileID: 0}
+  maxLevel: 5
+  _requiredAbility: 0
+  splitIncreases:
+  - countIncrease: 0
+    chanceIncrease: 30
+  - countIncrease: 2
+    chanceIncrease: 10
+  - countIncrease: 2
+    chanceIncrease: 10
+  - countIncrease: 2
+    chanceIncrease: 10
+  - countIncrease: 2
+    chanceIncrease: 10
+  references:
+    version: 2
+    RefIds: []

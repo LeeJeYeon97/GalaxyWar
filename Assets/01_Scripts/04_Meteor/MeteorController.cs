@@ -296,6 +296,8 @@ public class MeteorController : MonoBehaviour
 
     public void ApplySlow(float slowPercent, float duration)
     {
+        if (!gameObject.activeInHierarchy) return;
+
         // 이미 슬로우가 걸려있다면 기존 코루틴을 끄고 시간을 리셋!
         if (_slowCoroutine != null)
         {

@@ -10,7 +10,6 @@ using UnityEngine.Localization;
 [Serializable]
 public struct FireBulletStatData
 {
-    [Header("화염탄 전용 증가량")]
     public float fireDamageValue;
     public float fireRemainTime;
 }

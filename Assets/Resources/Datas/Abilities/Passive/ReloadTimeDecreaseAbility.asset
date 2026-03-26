@@ -1,0 +1,77 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ad750acd61f584c4daf982e4d76ef36d, type: 3}
+  m_Name: ReloadTimeDecreaseAbility
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerReloadTimeDecreaseAbilityDataSO
+  type: 4
+  localizedName:
+    m_TableReference:
+      m_TableCollectionName: GUID:82c20406597040c4f8b1423cea141506
+    m_TableEntryReference:
+      m_KeyId: 3640512042127360
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  localizationDesc:
+  - m_TableReference:
+      m_TableCollectionName: GUID:82c20406597040c4f8b1423cea141506
+    m_TableEntryReference:
+      m_KeyId: 3640559307739136
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  - m_TableReference:
+      m_TableCollectionName: GUID:82c20406597040c4f8b1423cea141506
+    m_TableEntryReference:
+      m_KeyId: 3640559307739136
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  - m_TableReference:
+      m_TableCollectionName: GUID:82c20406597040c4f8b1423cea141506
+    m_TableEntryReference:
+      m_KeyId: 3640559307739136
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  - m_TableReference:
+      m_TableCollectionName: GUID:82c20406597040c4f8b1423cea141506
+    m_TableEntryReference:
+      m_KeyId: 3640559307739136
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  - m_TableReference:
+      m_TableCollectionName: GUID:82c20406597040c4f8b1423cea141506
+    m_TableEntryReference:
+      m_KeyId: 3640559307739136
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  icon: {fileID: 0}
+  maxLevel: 5
+  _requiredAbility: 0
+  reloadTimeDecreases:
+  - 0.4
+  - 0.4
+  - 0.4
+  - 0.4
+  - 0.3
+  references:
+    version: 2
+    RefIds: []

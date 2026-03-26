@@ -13,9 +13,10 @@ MonoBehaviour:
   m_Name: NormalBulletData
   m_EditorClassIdentifier: Assembly-CSharp::NormalBulletStatDataSO
   type: 0
-  originalPrefab: {fileID: 7551283248292453691, guid: c1b265a41367a8648b6683ee4164953e, type: 3}
   stats:
     chance: 100
     damage: 10
     speed: 5
     bounceCount: 0
+    isReload: 1
+  originalPrefab: {fileID: 7551283248292453691, guid: c1b265a41367a8648b6683ee4164953e, type: 3}

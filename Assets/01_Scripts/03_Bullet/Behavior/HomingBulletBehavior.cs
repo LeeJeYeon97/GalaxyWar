@@ -7,10 +7,6 @@ using System.Threading.Tasks;
 using UnityEngine;
 public class HomingBulletBehavior : IBulletBehavior
 {
-    // 코루틴을 기억해뒀다가 꺼주기 위한 변수 (메모리 누수 방지)
-    private Coroutine _homingCoroutine;
-
-
     public void OnHit(BulletController bullet, GameObject target)
     {
     }
@@ -21,16 +17,17 @@ public class HomingBulletBehavior : IBulletBehavior
 
     public void OnRelease(BulletController bullet)
     {
-        if (_homingCoroutine != null)
-        {
-            bullet.StopCoroutine(_homingCoroutine);
-            _homingCoroutine = null;
-        }
+        //if (_homingCoroutine != null)
+        //{
+        //    bullet.StopCoroutine(_homingCoroutine);
+        //    _homingCoroutine = null;
+        //}
     }
 
     public void OnShot(BulletController bullet)
     {
-        _homingCoroutine = bullet.StartCoroutine(CoHomingRoutine(bullet));
+        // 저장할 필요 없이 그냥 실행만 시켜줍니다.
+        bullet.StartCoroutine(CoHomingRoutine(bullet));
     }
 
     public void OnUpdate(BulletController bullet)
@@ -44,14 +41,20 @@ public class HomingBulletBehavior : IBulletBehavior
 
         LayerMask targetLayer = LayerMask.GetMask("Meteor");
         // 2. transform.position 대신 bullet.transform.position 사용!
-        Collider2D[] colliders = Physics2D.OverlapCircleAll(bullet.transform.position, homingStat.homingRange.TotalValue, targetLayer);
+
+        float homingRange = Managers.Game._player.Stat.homingRange.TotalValue;
+
+        Collider2D[] colliders = Physics2D.OverlapCircleAll(bullet.transform.position, homingRange, targetLayer);
 
         MeteorController closestTarget = null;
         float minDistance = float.MaxValue;
 
         foreach (var col in colliders)
         {
-            if (!col.gameObject.activeSelf) continue;
+            if (col == null || !col.gameObject.activeSelf) continue;
+
+            MeteorController meteor = col.GetComponent<MeteorController>();
+            if (meteor == null) continue;
 
             float dist = Vector2.Distance(bullet.transform.position, col.transform.position);
             if (dist < minDistance)
@@ -78,7 +81,7 @@ public class HomingBulletBehavior : IBulletBehavior
         yield return new WaitForSeconds(0.2f);
 
         // gameObject 대신 bullet.gameObject 사용!
-        while (bullet.gameObject.activeSelf)
+        while (bullet != null && bullet.gameObject.activeSelf)
         {
             if (target == null || !target.gameObject.activeSelf)
             {
@@ -87,16 +90,13 @@ public class HomingBulletBehavior : IBulletBehavior
 
             if (target != null)
             {
-                // 타겟을 향하는 방향
                 Vector2 directionToTarget = ((Vector2)target.transform.position - (Vector2)bullet.transform.position).normalized;
-
                 Vector2 currentVelocity = rb.linearVelocity;
                 float angle = Vector2.SignedAngle(currentVelocity, directionToTarget);
                 float rotateAmount = Mathf.Clamp(angle, -turnSpeed * Time.fixedDeltaTime, turnSpeed * Time.fixedDeltaTime);
 
                 currentVelocity = Quaternion.Euler(0, 0, rotateAmount) * currentVelocity;
 
-                // 3. 꺾인 방향 * 스피드로 속도 재설정
                 rb.linearVelocity = currentVelocity.normalized * homingStat.speed.TotalValue;
 
                 float faceAngle = Mathf.Atan2(rb.linearVelocity.y, rb.linearVelocity.x) * Mathf.Rad2Deg;

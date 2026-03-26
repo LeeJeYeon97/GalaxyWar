@@ -10,7 +10,6 @@ using UnityEngine.Localization;
 [Serializable]
 public struct PierceBulletStatData
 {
-    [Header("관통탄 전용 증가량")]
     public int pierceCount;
     public int pierceDamageDecreaseValue;
 }

@@ -10,6 +10,7 @@ public struct BaseBulletStatData
     public float damage;
     public float speed;
     public float bounceCount;
+    public bool isReload;
 }
 public abstract class BulletStatDataSO : ScriptableObject
 {

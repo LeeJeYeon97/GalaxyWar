@@ -18,6 +18,7 @@ MonoBehaviour:
     damage: 10
     speed: 5
     bounceCount: 0
+    isReload: 1
   originalPrefab: {fileID: 1074223229378584734, guid: 8f74af4c4bbf24f45aa98049aca96521, type: 3}
   fireStat:
     fireDamageValue: 0.6

@@ -5,7 +5,6 @@ using UnityEngine.Localization;
 [Serializable]
 public struct IceBulletStatData
 {
-    [Header("얼음탄 전용 증가량")]
     public float slowValue;
     public float slowTime;
     public float freezeChance;
