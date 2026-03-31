@@ -13,7 +13,7 @@ public class UI_StartCountDownPopup : UI_Popup
         text
     }
 
-    private TextMeshProUGUI _text;
+    private TMP_Text _text;
     private void Start()
     {
         Init();
@@ -24,7 +24,7 @@ public class UI_StartCountDownPopup : UI_Popup
     {
         base.Init();
 
-        Bind<TextMeshProUGUI>(typeof(Texts));
+        Bind<TMP_Text>(typeof(Texts));
 
         _text = GetTMP((int)Texts.text);
         _text.text = "";

@@ -14,12 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PierceBulletStatDataSO
   type: 4
   stats:
-    chance: 0
-    damage: 0
-    speed: 0
+    chance: 150
+    damage: 15
+    speed: 7
     bounceCount: 0
     isReload: 1
-  originalPrefab: {fileID: 0}
+  originalPrefab: {fileID: 8177002106139725670, guid: eefe11f61ecd3f447a526ae732865504, type: 3}
   pierceBulletStat:
     pierceCount: 2
     pierceDamageDecreaseValue: 15

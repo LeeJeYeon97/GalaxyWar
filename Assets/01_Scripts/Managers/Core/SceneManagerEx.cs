@@ -23,7 +23,7 @@ public class SceneManagerEx
     }
     public void Clear()
     {
-        //SceneManager.sceneLoaded -= OnSceneLoaded;
+        SceneManager.sceneLoaded -= OnSceneLoaded;
         _currentScene = null;
         CurrentScene.Clear();
     }

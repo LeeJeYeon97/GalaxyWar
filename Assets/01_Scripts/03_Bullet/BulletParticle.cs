@@ -118,7 +118,7 @@ public class BulletParticle : MonoBehaviour
             else
             {
                 // 관통탄처럼 허공에서 터질 때는 그냥 총알이 날아가던 반대 방향으로 터지게 해도 멋집니다.
-                //hitGo.transform.rotation = Quaternion.LookRotation(-_rb.linearVelocity);
+                hitGo.transform.rotation = Quaternion.identity;
             }
 
             if (stat is ExplosionBulletStat expStat)

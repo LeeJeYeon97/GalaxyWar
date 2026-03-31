@@ -10,15 +10,22 @@ public class PierceBulletBehavior : IBulletBehavior
 
     public void OnHit(BulletController bullet, GameObject target)
     {
-        bullet.Collider.isTrigger = true;
+       
     }
 
     public void OnInit(BulletController bullet)
     {
+        bullet.Collider.isTrigger = true;
+
+        if (bullet.Stat is PierceBulletStat stat)
+        {
+            bullet.currentPierceCount = Mathf.FloorToInt(stat.pierceCount.TotalValue);
+        }
     }
 
     public void OnRelease(BulletController bullet)
     {
+        bullet.Collider.isTrigger = false;
     }
 
     public void OnShot(BulletController bullet)

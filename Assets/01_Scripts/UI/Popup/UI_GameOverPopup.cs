@@ -31,7 +31,7 @@ public class UI_GameOverPopup : UI_Popup
         base.Init();
 
         Bind<Button>(typeof(Buttons));
-        Bind<TextMeshProUGUI>(typeof(Texts));
+        Bind<TMP_Text>(typeof(Texts));
 
         GetButton((int)Buttons.Btn_Restart).onClick.AddListener(OnClickRestartButton);
         GetButton((int)Buttons.Btn_QuitLobby).onClick.AddListener(OnClickQuitLobbyButton);

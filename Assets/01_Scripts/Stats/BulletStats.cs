@@ -48,6 +48,7 @@ public abstract class BaseBulletStat
         return null;
     }
 }
+[Serializable]
 public class NormalBulletStat : BaseBulletStat
 {
     public override void Init(BulletStatDataSO data)
@@ -61,6 +62,7 @@ public class NormalBulletStat : BaseBulletStat
         }
     }
 }
+[Serializable]
 public class ExplosionBulletStat : BaseBulletStat
 {
     public Stat explosionRange = new Stat();
@@ -78,7 +80,7 @@ public class ExplosionBulletStat : BaseBulletStat
         }
     }
 }
-
+[Serializable]
 public class LightningBulletStat : BaseBulletStat
 {
     [Header("Lighting Stat Settings")]
@@ -102,11 +104,12 @@ public class LightningBulletStat : BaseBulletStat
         }
     }
 }
-
+[Serializable]
 public class FireBulletStat : BaseBulletStat //»ó¼Ó!
 {
     public Stat fireRemainTime = new Stat();
     public Stat fireDamageValue = new Stat();
+    public Stat fireTickTime = new Stat();
 
     // ºÎ¸ðÀÇ ¼¼ÆÃ ÇÔ¼ö¸¦ µ¤¾î¾º¿ó´Ï´Ù(override).
     public override void Init(BulletStatDataSO data)
@@ -120,10 +123,11 @@ public class FireBulletStat : BaseBulletStat //»ó¼Ó!
             // 3. È­¿°Åº Àü¿ë ½ºÅÈÀ» ¼¼ÆÃÇÕ´Ï´Ù!
             fireRemainTime.Init(fireData.fireStat.fireRemainTime);
             fireDamageValue.Init(fireData.fireStat.fireDamageValue);
+            fireTickTime.Init(fireData.fireStat.fireTickTime);
         }
     }
 }
-
+[Serializable]
 public class IceBulletStat : BaseBulletStat
 {
     [Header("IceBullet Stat Settings")]
@@ -147,7 +151,7 @@ public class IceBulletStat : BaseBulletStat
         }
     }
 }
-
+[Serializable]
 public class PierceBulletStat : BaseBulletStat
 {
     [Header("PierceBullet Stat Settings")]
@@ -166,7 +170,7 @@ public class PierceBulletStat : BaseBulletStat
         }
     }
 }
-
+[Serializable]
 public class HomingBulletStat : BaseBulletStat
 {
     public Stat homingRange = new Stat();

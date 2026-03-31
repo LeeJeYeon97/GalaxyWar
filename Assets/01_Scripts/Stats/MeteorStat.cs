@@ -8,6 +8,8 @@ public class MeteorStat
     public string Name;
     public bool isExclude;
 
+    public GameObject originalPrefabs;
+
     public Stat MaxHp = new Stat();
     public Stat MaxSpeed = new Stat();
     public Stat MinSpeed = new Stat();
@@ -38,6 +40,8 @@ public class MeteorStat
 
         spawnPhase = data.spawnPhase;
         auraRadius.Init(data.auraRadius);
+
+        originalPrefabs = data.originalPrefabs;
 
         // ... Ω∫≈» √ ±‚»≠ ...
         Behavior = CreateBehavior(data);

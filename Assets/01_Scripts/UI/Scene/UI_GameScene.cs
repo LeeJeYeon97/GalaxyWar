@@ -12,7 +12,8 @@ public class UI_GameScene : UI_Scene
     {
         LevelText,
         ScoreText,
-        BurstModeText
+        BurstModeText,
+        TimeText
     }
     enum Sliders
     {
@@ -31,6 +32,8 @@ public class UI_GameScene : UI_Scene
         BurstModeBar,
         BurstModeLock,
     }
+
+    private TMP_Text timeText;
     
     private void OnEnable()
     {
@@ -40,7 +43,7 @@ public class UI_GameScene : UI_Scene
         
         Managers.Event.Subscribe<PlayerStatusEvent>(ActionEvent.PlayerStatusChanged, UpdateHUD);
         Managers.Event.Subscribe(ActionEvent.EnableBurstMode, EnableBurstButton);
-
+        Managers.Event.Subscribe<float>(ActionEvent.UpdateGameTime, UpdateGameTime);
 
     }
     private void OnDisable()
@@ -51,19 +54,22 @@ public class UI_GameScene : UI_Scene
 
         Managers.Event.UnSubscribe<PlayerStatusEvent>(ActionEvent.PlayerStatusChanged, UpdateHUD);
         Managers.Event.UnSubscribe(ActionEvent.EnableBurstMode, EnableBurstButton);
+
+        Managers.Event.UnSubscribe<float>(ActionEvent.UpdateGameTime, UpdateGameTime);
     }
     public override void Init()
     {
         base.Init();
 
-        Bind<TextMeshProUGUI>(typeof(Texts));
+        Bind<TMP_Text>(typeof(Texts));
         Bind<Slider>(typeof(Sliders));
         Bind<Button>(typeof(Buttons));
         Bind<Image>(typeof(Images));
 
-        Get<TextMeshProUGUI>((int)Texts.BurstModeText).gameObject.SetActive(false);
+        Get<TMP_Text>((int)Texts.BurstModeText).gameObject.SetActive(false);
         Get<Image>((int)Images.BurstModeLock).gameObject.SetActive(true);
 
+        timeText = Get<TMP_Text>((int)Texts.TimeText);
 
         Canvas canvas = Util.GetOrAddComponent<Canvas>(this.gameObject);
         canvas.renderMode = RenderMode.ScreenSpaceCamera;
@@ -105,10 +111,10 @@ public class UI_GameScene : UI_Scene
         
         burstBar.DOKill();
         burstBar.DOFillAmount(data.burst / data.maxBurst, 0.2f).SetEase(Ease.OutCubic);
-        
+
 
         // 4. 버스트 텍스트 업데이트
-        TextMeshProUGUI burstText = GetTMP((int)Texts.BurstModeText);
+        TMP_Text burstText = GetTMP((int)Texts.BurstModeText);
         if (burstText != null)
         {
             burstText.text = Mathf.FloorToInt(data.burst).ToString();
@@ -119,7 +125,7 @@ public class UI_GameScene : UI_Scene
     {
         // 버스트 모드 활성화 되었을 때 한번 실행됨
         Get<Image>((int)Images.BurstModeLock).gameObject.SetActive(false);
-        Get<TextMeshProUGUI>((int)Texts.BurstModeText).gameObject.SetActive(true);
+        Get<TMP_Text>((int)Texts.BurstModeText).gameObject.SetActive(true);
     }
     public void OnBurstButton()
     {
@@ -159,6 +165,23 @@ public class UI_GameScene : UI_Scene
     {
         Managers.Game.ChangeGameState(GameState.Pause);
         Managers.UI.ShowPopupUI<UI_PausePopup>();
+    }
+
+    private void UpdateGameTime(float time)
+    {
+        // 1. float 시간을 분(int)과 초(int)로 쪼갭니다.
+        int minutes = Mathf.FloorToInt(time / 60f); // 60으로 나눈 몫 (분)
+        int seconds = Mathf.FloorToInt(time % 60f); // 60으로 나눈 나머지 (초)
+
+        // 2. 분과 초를 "00:00" 형식의 문자열로 만듭니다.
+        // (예: 5분 3초 -> "05:03")
+        string timeString = $"{minutes:00}:{seconds:00}";
+
+        // 3. 텍스트 UI에 덮어씌웁니다.
+        if (timeText != null)
+        {
+            timeText.text = timeString;
+        }
     }
     
 }

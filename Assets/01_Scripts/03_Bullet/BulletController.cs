@@ -11,7 +11,7 @@ using static Define;
 public class BulletController : MonoBehaviour
 {
 
-    [field: SerializeField] public BaseBulletStat Stat { get; private set; }
+    [field: SerializeReference] public BaseBulletStat Stat { get; private set; }
     [field: SerializeField] public Collider2D Collider { get; private set; }
     [field: SerializeField] public Rigidbody2D Rb { get; private set; }
 
@@ -22,7 +22,7 @@ public class BulletController : MonoBehaviour
 
     // 바뀌는 값은 여기서 선언
     [field: SerializeField] public int currentBounceCount { get; private set; }
-    [field: SerializeField] public int currentPierceCount { get; private set; }
+    [field: SerializeField] public int currentPierceCount { get; set; }
  
     public void Awake()
     {
@@ -88,6 +88,8 @@ public class BulletController : MonoBehaviour
                 // 5. 속도 재설정
                 Rb.linearVelocity = _shotDir * Stat.speed.TotalValue;
 
+
+                _particle?.SpawnHit(hit.point, Vector2.zero, Stat);
                 // 바운스 카운트 감소
                 DecreaseBounceCount();
             }
@@ -153,11 +155,12 @@ public class BulletController : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         // 관통탄 or 관통 열려있을때 버스트탄
-        _particle?.SpawnHit(collision.transform.position,Vector2.zero,Stat);
+
         MeteorController meteor = collision.gameObject.GetComponent<MeteorController>();
 
         if (meteor != null)
         {
+            _particle?.SpawnHit(meteor.transform.position, Vector2.zero, Stat);
             // 데미지 주고 관통횟수 감소
             meteor.OnDamage(Stat.damage.TotalValue);
             DecreasePierceCount();

@@ -1,7 +1,6 @@
 using DG.Tweening;
 using System.Collections;
-using TMPro;
-using Unity.AppUI.Core;
+using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
@@ -9,8 +8,6 @@ using static Define;
 
 public class MeteorController : MonoBehaviour
 {
-    [SerializeField] 
-    private Image _hpBar;
     
     [SerializeField]
     private float _currentHp;
@@ -23,8 +20,6 @@ public class MeteorController : MonoBehaviour
 
     public bool _hasEnteredView;
     private float _checkOffset = 2.0f; // 경계 밖 여유 공간
-
-    private SpriteRenderer _spriteRenderer; // 색상을 바꾸기 위해 렌더러 캐싱
 
     //추가: 일시정지 상태일 때 속도와 회전력을 기억해둘 변수
     private Vector2 _savedVelocity;
@@ -45,12 +40,19 @@ public class MeteorController : MonoBehaviour
     private Vector2 _moveDir;
     private float _baseAngularVelocity; // 원래 팽이처럼 돌던 회전력
 
+    private Coroutine _burnCoroutine;
+
+    public List<GameObject> visuals = new List<GameObject>();
+
+    public MeshRenderer _meshRenderer;
+
+    UI_HpBar _myHpBar;
+
+    private Coroutine _flashCoroutine;
+
     private void Awake()
     {
-        _hpBar = Util.FindChild<Image>(gameObject, "HpBar", true);
         _rb = Util.GetOrAddComponent<Rigidbody2D>(gameObject);
-        _spriteRenderer = GetComponent<SpriteRenderer>();
-
         _hasEnteredView = false;
     }
     public void Init(Vector2 pos, MeteorStat stat)
@@ -64,17 +66,14 @@ public class MeteorController : MonoBehaviour
         _maxHp = Stat.MaxHp.TotalValue;
         _currentHp = _maxHp;
 
+        RandomVisaul();
+
         // 상태 초기화
         _hasEnteredView = false;
         _hasAuraBuff = false;
         _isPaused = false;
 
-        if (_spriteRenderer != null)
-        {
-            _spriteRenderer.color = Color.white;
-            _originalColor = _spriteRenderer.color; // 내 원래 색상 기억
-        }
-
+        
         // 1.위치 설정
         transform.position = pos;
 
@@ -92,7 +91,15 @@ public class MeteorController : MonoBehaviour
 
         Stat.Behavior?.OnInit(this);
 
-        UpdateHPBar();
+
+        GameObject hpBarGo = Managers.Resource.Instantiate("UI/UI_HpBar");
+
+        if (hpBarGo != null)
+        {
+            _myHpBar = hpBarGo.GetComponent<UI_HpBar>();
+            _myHpBar.SetTarget(this.transform); // 나를 따라다니라고 설정
+        }
+
     }
 
     public void OnCollisionEnter2D(Collision2D collision)
@@ -105,18 +112,6 @@ public class MeteorController : MonoBehaviour
             player.OnDamage(Stat.Damage.TotalValue);
         }
     }
-    private void UpdateHPBar()
-    {
-        if (_hpBar == null)
-            return;
-
-        // 현재 체력 비율 (0.0 ~ 1.0)
-        float ratio = _currentHp / _maxHp;
-
-        // DOFillAmount(목표값, 시간) 사용
-        _hpBar.DOKill(); // 이전 애니메이션이 실행 중이면 중지
-        _hpBar.DOFillAmount(ratio, 0.2f).SetEase(Ease.OutCubic);
-    }
     private void OnEnable()
     {
         Managers.Game.AddActiveObject(this);
@@ -126,6 +121,12 @@ public class MeteorController : MonoBehaviour
         if (Stat != null)
         {
             Stat.Behavior?.OnRelease(this);
+        }
+        // 3. 내가 죽으면 빌려 쓴 HP바도 풀에 반납
+        if (_myHpBar != null)
+        {
+            Managers.Pool.Release(_myHpBar.gameObject);
+            _myHpBar = null;
         }
         Managers.Game.RemoveActiveObject(this);
     }
@@ -168,6 +169,9 @@ public class MeteorController : MonoBehaviour
 
             Vector3 textPos = transform.position + new Vector3(Random.Range(-0.5f, 0.5f), 0.5f, 0);
 
+            if (_flashCoroutine != null) StopCoroutine(_flashCoroutine);
+            _flashCoroutine = StartCoroutine(CoHitFlash());
+
             // 핵심: Stat 원본을 수정하지 않고, 들어온 damage 변수값만 즉석에서 반토막 냅니다!
             if (_hasAuraBuff)
             {
@@ -186,12 +190,16 @@ public class MeteorController : MonoBehaviour
             }
             else
             {
-                UpdateHPBar();
+                if (_myHpBar != null)
+                {
+                    _myHpBar.UpdateHP(_currentHp, _maxHp);
+                }
             }
         }
     }
     private void Die()
     {
+        ReturnColor();
         Stat.Behavior?.OnDie(this);
         Managers.Level.AddExp(Stat.Exp.TotalValue);
         Managers.Pool.Release(gameObject);
@@ -262,26 +270,20 @@ public class MeteorController : MonoBehaviour
     // 다른 일반 운석들이 오라 버프를 받을 때 실행되는 함수
     public void ReceiveAuraBuff(float duration)
     {
-        // 1. 버프 종료 시간을 "현재 시간 + 0.3초"로 연장(리필)합니다.
-        _auraBuffEndTime = Time.time + duration;
-
-        // 2. 처음 버프를 받은 거라면 색깔을 노랗게 바꿔줍니다.
-        if (!_hasAuraBuff)
-        {
-            _hasAuraBuff = true;
-            if (_spriteRenderer != null)
-            {
-                _spriteRenderer.color = Color.yellow;
-            }
-        }
+       // 1. 버프 종료 시간을 "현재 시간 + 0.3초"로 연장(리필)합니다.
+       _auraBuffEndTime = Time.time + duration;
+       
+       // 2. 처음 버프를 받은 거라면 색깔을 노랗게 바꿔줍니다.
+       if (!_hasAuraBuff)
+       {
+           _hasAuraBuff = true;
+            SetColor(Color.yellow);
+       }
     }
     private void LoseAuraBuff()
     {
-        _hasAuraBuff = false;
-        if (_spriteRenderer != null)
-        {
-            _spriteRenderer.color = _originalColor;
-        }
+        _hasAuraBuff = false; 
+        ReturnColor();
     }
     private void OnDrawGizmos()
     {
@@ -320,7 +322,7 @@ public class MeteorController : MonoBehaviour
         UpdateVelocity();
 
         // 시각적 효과 (파랗게 질림)
-        if (_spriteRenderer != null) _spriteRenderer.color = new Color(0.5f, 0.8f, 1f);
+        SetColor(new Color(0.5f, 0.8f, 1f));
 
         // 2. 지정된 시간만큼 대기
         yield return new WaitForSeconds(duration);
@@ -328,8 +330,7 @@ public class MeteorController : MonoBehaviour
         // 3. 스탯 완벽하게 원상 복구! (깎았던 만큼 다시 빼줌)
         currentSpeed.SubMultiplier(-slowPercent);
 
-        // 시각적 효과 복구
-        if (_spriteRenderer != null && !_hasAuraBuff) _spriteRenderer.color = _originalColor;
+        ReturnColor();
 
         _slowCoroutine = null;
     }
@@ -354,10 +355,25 @@ public class MeteorController : MonoBehaviour
 
         // 2. 물리 엔진(Rigidbody) 완전히 멈추기
         UpdateVelocity();
-        
+
 
         // 시각적 효과 (슬로우보다 조금 더 쨍하고 진한 얼음색!)
-        if (_spriteRenderer != null)    _spriteRenderer.color = new Color(0.2f, 0.6f, 1f);
+        if (_meshRenderer != null)
+        {
+            MaterialPropertyBlock mpb = new MaterialPropertyBlock();
+            _meshRenderer.GetPropertyBlock(mpb);
+
+            // 색상 변경 ("_Color"는 일반 3D 셰이더 기준입니다. URP를 쓰신다면 "_BaseColor"일 수 있습니다)
+            SetColor(new Color(0.2f, 0.8f, 1f));
+
+            // [옵션 2] 유니티 기본 Cyan 색상 (조금 더 진한 하늘색)
+            // mpb.SetColor("_BaseColor", Color.cyan); 
+
+            // [옵션 3] 살짝 투명해보이는 창백한 얼음색 (조금 더 고급스러운 느낌)
+            // mpb.SetColor("_BaseColor", new Color(0.6f, 0.9f, 1f));
+
+            _meshRenderer.SetPropertyBlock(mpb);
+        }
 
         // 3. 빙결 지속 시간(예: 2초) 동안 대기
         yield return new WaitForSeconds(duration);
@@ -366,8 +382,171 @@ public class MeteorController : MonoBehaviour
         currentSpeed.SetForceZero(false);
         UpdateVelocity(); // -> 0 스위치가 풀렸으니 원래 속도(슬로우가 걸려있다면 깎인 속도)로 튀어나갑니다!
 
-        if (_spriteRenderer != null && !_hasAuraBuff) _spriteRenderer.color = _originalColor;
+        ReturnColor();
 
         _freezeCoroutine = null;
+    }
+
+    public void ApplyBurn(float burnDamage, float duration, float tickTime)
+    {
+        // 1. 핵심 방어: 운석이 죽어서 창고(Pool)에 들어갔다면 불을 붙이지 않습니다!
+        if (!gameObject.activeInHierarchy) return;
+
+        // 2. 이미 불타는 중인데 화염탄을 또 맞았다면?
+        if (_burnCoroutine != null)
+        {
+            StopCoroutine(_burnCoroutine); // 기존 불을 끄고
+            // (주의: 화상은 슬로우와 달리 스탯을 복구할 필요가 없으니 그냥 끄기만 하면 됩니다!)
+        }
+
+        // 3. 새로운 지속 시간으로 화상 코루틴 다시 시작!
+        _burnCoroutine = StartCoroutine(CoBurnRoutine(burnDamage, duration, tickTime));
+    }
+
+    private IEnumerator CoBurnRoutine(float tickDamage, float duration, float tickTime)
+    {
+        float timer = 0f;
+        float tickInterval = tickTime; // 0.5초마다 틱 데미지가 들어갑니다. (입맛에 맞게 조절하세요!)
+
+        // 시간이 다 되기 전까지, 그리고 운석이 살아있는 동안에만 반복!
+        while (timer < duration && gameObject.activeInHierarchy)
+        {
+            // ==========================================
+            // 1. 화상 시작 시: 붉은색으로 칠하기 (PropertyBlock 사용)
+            // ==========================================
+            SetColor(new Color(1f, 0.4f, 0f));
+
+            // ★ 데미지 적용
+            // 여기서 운석의 체력이 0이 되면 OnDamage 내부에서 스스로 Pool로 반납될 것입니다.
+            OnDamage(tickDamage);
+
+            // 0.5초를 기다립니다.
+            yield return new WaitForSeconds(tickInterval);
+            timer += tickInterval;
+            // (선택 사항) 여기에 불타는 데미지 텍스트 팝업이나 파티클을 띄워주면 타격감이 아주 좋습니다!
+            // Debug.Log($"운석에 화상 데미지 {tickDamage} 적중! 남은 시간: {duration - timer}초");
+        }
+
+        ReturnColor();
+
+        // 지속 시간이 다 끝나면 코루틴 변수 비우기
+        _burnCoroutine = null;
+    }
+
+    private void RandomVisaul()
+    {
+        if (visuals == null || visuals.Count == 0)
+        {
+            Debug.LogWarning("운석 비주얼 리스트가 비어있습니다!");
+            return;
+        }
+
+        // 2. 0부터 (리스트 갯수 - 1) 사이의 랜덤한 숫자 하나를 뽑습니다.
+        // 유니티의 Random.Range(int min, int max)는 max 값을 포함하지 않습니다!
+        int randomIndex = UnityEngine.Random.Range(0, visuals.Count);
+        _meshRenderer = visuals[randomIndex].GetComponent<MeshRenderer>();
+
+        // 3. 리스트를 쫙 돌면서 랜덤으로 뽑힌 애만 켜고, 나머지는 끕니다.
+        for (int i = 0; i < visuals.Count; i++)
+        {
+            if (visuals[i] != null)
+            {
+                // 현재 순서(i)가 아까 뽑은 당첨 번호(randomIndex)와 같으면 true, 다르면 false!
+                visuals[i].SetActive(i == randomIndex);
+
+            }
+        }
+
+        // ==========================================
+        //  2. 켜진 3D 메쉬의 크기에 맞춰 콜라이더 조절하기
+        // ==========================================
+        // MeshRenderer의 짝꿍인 MeshFilter에서 뼈대(Mesh) 정보를 가져옵니다.
+        MeshFilter meshFilter = visuals[randomIndex].GetComponent<MeshFilter>();
+
+        if (meshFilter != null && meshFilter.sharedMesh != null)
+        {
+            // 3D 메쉬 원본의 (가로, 세로, 높이) 크기를 가져옵니다.
+            Vector3 meshSize = meshFilter.sharedMesh.bounds.size;
+
+            // 자식 오브젝트(비주얼)의 Transform Scale을 곱해서 실제 게임 속 크기를 구합니다.
+            // (2D 물리 엔진을 쓰고 계시므로 x, y 값만 추출합니다.)
+            Vector2 finalSize = new Vector2(
+                meshSize.x * visuals[randomIndex].transform.localScale.x,
+                meshSize.y * visuals[randomIndex].transform.localScale.y
+            );
+
+            // [경우 A] BoxCollider2D를 사용하는 경우
+            BoxCollider2D boxCol = GetComponent<BoxCollider2D>();
+            if (boxCol != null)
+            {
+                boxCol.size = finalSize;
+
+                // 메쉬의 중심점 오프셋 적용 (2D 콜라이더이므로 x, y만)
+                Vector3 center = meshFilter.sharedMesh.bounds.center;
+                boxCol.offset = new Vector2(center.x, center.y);
+            }
+
+            // [경우 B] CircleCollider2D를 사용하는 경우
+            CircleCollider2D circleCol = GetComponent<CircleCollider2D>();
+            if (circleCol != null)
+            {
+                // 가로, 세로 중 더 긴 쪽을 기준으로 반지름(Radius)을 구합니다. (지름 / 2)
+                circleCol.radius = Mathf.Max(finalSize.x, finalSize.y) / 2f;
+
+                Vector3 center = meshFilter.sharedMesh.bounds.center;
+                circleCol.offset = new Vector2(center.x, center.y);
+            }
+        }
+    }
+
+    private void SetColor(Color color)
+    {
+        if (_meshRenderer != null)
+        {
+            MaterialPropertyBlock mpb = new MaterialPropertyBlock();
+            _meshRenderer.GetPropertyBlock(mpb);
+
+            // 색상 변경 ("_Color"는 일반 3D 셰이더 기준입니다. URP를 쓰신다면 "_BaseColor"일 수 있습니다)
+            mpb.SetColor("_BaseColorTint", color); // 주황/붉은 빛
+
+            _meshRenderer.SetPropertyBlock(mpb);
+        }
+    }
+    private void ReturnColor()
+    {
+        if (_meshRenderer != null)
+        {
+            MaterialPropertyBlock mpb = new MaterialPropertyBlock();
+            _meshRenderer.GetPropertyBlock(mpb);
+
+            mpb.SetColor("_BaseColorTint", GetCurrentStatusColor()); // 원래 색상 (대부분 흰색)
+
+            _meshRenderer.SetPropertyBlock(mpb);
+        }
+    }
+    private IEnumerator CoHitFlash()
+    {
+        if (_meshRenderer == null) yield break;
+
+        
+        SetColor(new Color(5f, 5f, 5f, 1f));
+
+        // 2. 가장 찰진 타격감을 주는 시간 (0.05초 ~ 0.1초 대기)
+        yield return new WaitForSeconds(0.1f);
+
+        ReturnColor();
+    }
+
+    private Color GetCurrentStatusColor()
+    {
+        // 만약 화상 코루틴 변수가 null이 아니라면? -> 불타는 색상 유지!
+        if (_burnCoroutine != null) return new Color(1f, 0.4f, 0f);
+
+        // 만약 빙결/슬로우 상태라면? -> 얼어있는 색상 유지!
+        // (얼음 코루틴 변수 이름이 _slowCoroutine이라고 가정했습니다)
+        // if (_slowCoroutine != null) return new Color(0.2f, 0.8f, 1f); 
+
+        // 아무 상태 이상도 없다면 원래 색상인 흰색 반환
+        return Color.white;
     }
 }

@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: GameData
   m_EditorClassIdentifier: Assembly-CSharp::GameData
   GameStartTime: 3
-  meteorSpawnInterval: 2
+  meteorSpawnInterval: 1.5
   itemSpawnInterval: 60
   bossSpawnInterval: 180
-  cardReloadCount: 0
-  reviveCount: 0
+  cardReloadCount: 1
+  reviveCount: 1
   expZero: 0
-  playerGod: 1
+  playerGod: 0

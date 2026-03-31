@@ -9,6 +9,8 @@ public class MeteorStatDataSO : ScriptableObject
     public Sprite Sprite;
     public string Name;
 
+    public GameObject originalPrefabs;
+
     public bool isExclude; 
 
     public float MaxHp;

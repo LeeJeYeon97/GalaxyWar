@@ -61,16 +61,15 @@ public class Spawner : MonoBehaviour
                     break;
             }
             // 2. 풀링 매니저에서 운석 꺼내기
-            // (주의: PoolingManager에 "Meteor"라는 이름으로 프리팹이 등록되어 있어야 함)
-            MeteorController meteor = Managers.Resource.Instantiate("Object/Meteor").GetComponent<MeteorController>();
-            
+            MeteorStat stat = Managers.Stat.GetRandomMeteorStat();
+
+            MeteorController meteor = Managers.Pool.Get(stat.originalPrefabs).GetComponent<MeteorController>();
             if (meteor != null)
             {
-                MeteorStat stat = Managers.Stat.GetRandomMeteorStat();
-
                 // 3. 운석 초기화 (위치 설정 및 이동 시작)
                 meteor.Init(spawnPos, stat);
             }
+
         }
     }
     private float GetSpawnIntervalByTime(float time)

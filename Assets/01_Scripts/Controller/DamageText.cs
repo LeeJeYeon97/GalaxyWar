@@ -21,7 +21,7 @@ public class DamageText : MonoBehaviour
         // 1. 위치와 텍스트 세팅
         transform.position = spawnPos;
         _textMesh.text = damage.ToString();
-
+        Debug.Log($"damage : {damage}");
         // 투명도 복구 (알파값 1)
         Color color = _textMesh.color;
         color.a = 1f;

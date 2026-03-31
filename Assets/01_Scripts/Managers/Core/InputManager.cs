@@ -52,7 +52,6 @@ public class InputManager : MonoBehaviour
     private void OnTouchStartedInternal(InputAction.CallbackContext ctx)
     {
         _isPressed = true;
-        Debug.Log("터치 들어옴");
         if (mainCam == null) mainCam = Camera.main;
 
         Vector2 screenPos = control.Player.Point.ReadValue<Vector2>();
@@ -62,7 +61,6 @@ public class InputManager : MonoBehaviour
 
     private void OnTouchCanceledInternal(InputAction.CallbackContext ctx)
     {
-        Debug.Log("터치 나감");
         _isPressed = false;
         OnDragEnded?.Invoke();
     }

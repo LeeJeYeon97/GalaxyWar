@@ -64,16 +64,17 @@ public class GameManager : MonoBehaviour
         if (Managers.Game.currentGameState == GameState.Playing)
         {
             gamePlayTime += Time.deltaTime;
+            Managers.Event.PostEvent(ActionEvent.UpdateGameTime, gamePlayTime);
             UpdatePhase();
         }
     }
     private void UpdatePhase()
     {
         // 시간에 따라 현재 페이즈를 갱신합니다.
-        if (gamePlayTime >= 480f) currentPhase = Define.PhaseType.Phase5; // 8분
-        else if (gamePlayTime >= 360f) currentPhase = Define.PhaseType.Phase4; // 6분
-        else if (gamePlayTime >= 240f) currentPhase = Define.PhaseType.Phase3; // 4분
-        else if (gamePlayTime >= 120f) currentPhase = Define.PhaseType.Phase2; // 2분
+        if (gamePlayTime >= 420f) currentPhase = Define.PhaseType.Phase5; // 8분
+        else if (gamePlayTime >= 300f) currentPhase = Define.PhaseType.Phase4; // 6분
+        else if (gamePlayTime >= 180f) currentPhase = Define.PhaseType.Phase3; // 4분
+        else if (gamePlayTime >= 90f) currentPhase = Define.PhaseType.Phase2; // 2분
         else currentPhase = Define.PhaseType.Phase1;
     }
     public void AddActiveObject<T>(T item)

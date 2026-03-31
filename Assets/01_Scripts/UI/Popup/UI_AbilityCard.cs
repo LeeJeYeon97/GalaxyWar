@@ -36,7 +36,7 @@ public class UI_AbilityCard : UI_Base
         //base.Init();
         // UI ¼¼ÆÃ
         Bind<Image>(typeof(Images));
-        Bind<TextMeshProUGUI>(typeof(Texts));
+        Bind<TMP_Text>(typeof(Texts));
 
         _isInit = true;
     }

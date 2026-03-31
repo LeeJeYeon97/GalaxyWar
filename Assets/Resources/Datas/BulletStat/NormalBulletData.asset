@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::NormalBulletStatDataSO
   type: 0
   stats:
-    chance: 100
+    chance: 50
     damage: 10
     speed: 5
     bounceCount: 0

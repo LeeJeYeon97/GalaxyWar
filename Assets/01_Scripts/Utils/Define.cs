@@ -201,6 +201,7 @@ public class Define
         ReloadStart,                // 리로딩 시작
         ReloadEnd,                  // 리로딩 끝
         BulletBounceCountUp,        // 불릿 튕기는 횟수 증가
+        UpdateGameTime,                 // 게임 시간 업데이트
         
     }
     public struct PlayerStatusEvent

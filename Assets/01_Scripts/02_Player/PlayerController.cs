@@ -385,7 +385,6 @@ public class PlayerController : MonoBehaviour
         
         lr.enabled = false;
 
-        Debug.Log("재장전 시작...");
 
         Managers.Event.PostEvent<float>(ActionEvent.ReloadStart, Stat.reloadTime.TotalValue);
         Managers.Sound.Play(Define.SoundID.Sfx_Reloading);
@@ -437,7 +436,6 @@ public class PlayerController : MonoBehaviour
         }
         _isReloading = false;
 
-        Debug.Log("재장전 완료!");
     }
     #endregion
 
@@ -497,25 +495,53 @@ public class PlayerController : MonoBehaviour
     IEnumerator CoInvincible()
     {
         _isInvincible = true;
-
-        // 무적 시간 동안 스프라이트 깜빡이기 (예: 1초 동안 0.1초 간격)
+        _isInvincible = true;
         float elapsed = 0;
-        SpriteRenderer sr = GetComponent<SpriteRenderer>();
 
-        // 카메라가 0.2초 동안 0.5의 강도로 흔들림
+        // 1. SpriteRenderer 대신 MeshRenderer를 가져옵니다.
+        //MeshRenderer mr = GetComponent<MeshRenderer>();
+
+        // (만약 플레이어 비주얼 오브젝트가 자식으로 있다면 아래처럼 가져오세요)
+        MeshRenderer mr = GetComponentInChildren<MeshRenderer>();
+
         mainCam.transform.DOShakePosition(0.2f, 0.5f, 20, 90f).SetUpdate(true);
+
+        // 2. PropertyBlock과 셰이더 색상 이름표 준비 (URP 기본은 "_BaseColor", 스탠다드는 "_Color")
+        MaterialPropertyBlock mpb = new MaterialPropertyBlock();
+        string colorProp = "_BaseColorTint"; // 디버그 모드에서 찾으신 진짜 이름표로 바꿔주세요!
+
+        bool isTransparent = false; // 깜빡임 상태를 체크할 스위치
 
         while (elapsed < Stat.hitCooldown)
         {
-            // 투명도를 0.5와 1.0 사이로 교체
-            sr.color = new Color(1, 1, 1, sr.color.a == 1f ? 0.5f : 1f);
+            if (mr != null)
+            {
+                mr.GetPropertyBlock(mpb);
 
-            // 아주 짧은 대기도 캐싱해서 쓰면 더 좋습니다!
+                // 스위치 상태에 따라 알파(투명도) 값을 0.5 또는 1.0으로 결정
+                float targetAlpha = isTransparent ? 1f : 0.5f;
+
+                // 색상은 원래 색(보통 흰색)을 유지하고, 마지막 알파값만 바꿔줍니다.
+                mpb.SetColor(colorProp, new Color(1f, 1f, 1f, targetAlpha));
+
+                mr.SetPropertyBlock(mpb);
+
+                // 다음 턴을 위해 스위치 뒤집기
+                isTransparent = !isTransparent;
+            }
+
             yield return new WaitForSeconds(0.1f);
             elapsed += 0.1f;
         }
 
-        sr.color = Color.white; // 원래대로 복구
+        // 3. 무적 종료 시 원래대로 (불투명한 원래 색상) 복구
+        if (mr != null)
+        {
+            mr.GetPropertyBlock(mpb);
+            mpb.SetColor(colorProp, Color.white);
+            mr.SetPropertyBlock(mpb);
+        }
+
         _isInvincible = false;
     }
 

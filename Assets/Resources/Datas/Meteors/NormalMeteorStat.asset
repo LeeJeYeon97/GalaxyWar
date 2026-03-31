@@ -15,9 +15,14 @@ MonoBehaviour:
   Type: 0
   Sprite: {fileID: 0}
   Name: "\uAE30\uBCF8\uC6B4\uC11D"
-  MaxHp: 10
+  originalPrefabs: {fileID: 7634854350376040158, guid: 1e5eb75550d976748ae4687059bad26c, type: 3}
+  isExclude: 0
+  MaxHp: 15
   MaxSpeed: 0.5
   MinSpeed: 0.2
   Damage: 10
   Score: 1
   Exp: 1
+  spawnPhase: 0
+  magmaTick: 0
+  auraRadius: 0
