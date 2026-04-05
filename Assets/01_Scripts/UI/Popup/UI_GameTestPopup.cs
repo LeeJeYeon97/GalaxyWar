@@ -16,11 +16,6 @@ public class UI_GameTestPopup : UI_Popup
         CloseButton
     }
 
-    private void Start()
-    {
-        Init();
-    }
-
     public override void Init()
     {
         base.Init();

@@ -92,7 +92,7 @@ public class MeteorController : MonoBehaviour
         Stat.Behavior?.OnInit(this);
 
 
-        GameObject hpBarGo = Managers.Resource.Instantiate("UI/UI_HpBar");
+        GameObject hpBarGo = Managers.Resource.Instantiate("UI/World/UI_HpBar");
 
         if (hpBarGo != null)
         {

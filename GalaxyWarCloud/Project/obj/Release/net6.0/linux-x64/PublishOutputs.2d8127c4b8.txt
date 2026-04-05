@@ -1,0 +1,13 @@
+C:\Users\dlwpd\AppData\Local\Temp\GalaxyWarCloud\module-compilation\Project.dll
+C:\Users\dlwpd\AppData\Local\Temp\GalaxyWarCloud\module-compilation\Project.deps.json
+C:\Users\dlwpd\AppData\Local\Temp\GalaxyWarCloud\module-compilation\Project.pdb
+C:\Users\dlwpd\AppData\Local\Temp\GalaxyWarCloud\module-compilation\Unity.Services.CloudCode.Apis.dll
+C:\Users\dlwpd\AppData\Local\Temp\GalaxyWarCloud\module-compilation\Unity.Services.CloudCode.Core.dll
+C:\Users\dlwpd\AppData\Local\Temp\GalaxyWarCloud\module-compilation\Google.Protobuf.dll
+C:\Users\dlwpd\AppData\Local\Temp\GalaxyWarCloud\module-compilation\Grpc.Core.Api.dll
+C:\Users\dlwpd\AppData\Local\Temp\GalaxyWarCloud\module-compilation\Grpc.Net.Client.dll
+C:\Users\dlwpd\AppData\Local\Temp\GalaxyWarCloud\module-compilation\Grpc.Net.Common.dll
+C:\Users\dlwpd\AppData\Local\Temp\GalaxyWarCloud\module-compilation\JsonSubTypes.dll
+C:\Users\dlwpd\AppData\Local\Temp\GalaxyWarCloud\module-compilation\Microsoft.Extensions.DependencyInjection.Abstractions.dll
+C:\Users\dlwpd\AppData\Local\Temp\GalaxyWarCloud\module-compilation\Microsoft.Extensions.Logging.Abstractions.dll
+C:\Users\dlwpd\AppData\Local\Temp\GalaxyWarCloud\module-compilation\Newtonsoft.Json.dll

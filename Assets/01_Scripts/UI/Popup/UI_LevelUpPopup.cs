@@ -27,10 +27,6 @@ public class UI_LevelUpPopup : UI_Popup
     // 3개의 카드를 담을 배열 생성
     public GameObject[] cards = new GameObject[3];
 
-    private void Start()
-    {
-        Init();
-    }
     // 3개의 카드 붙이기
     public override void Init()
     {

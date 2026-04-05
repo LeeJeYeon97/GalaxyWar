@@ -1,3 +1,4 @@
+using GLTFast;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,6 +10,7 @@ public class UIManager
 
     Stack<UI_Popup> _popupStack = new Stack<UI_Popup>();
     UI_Scene _sceneUI = null;
+    public UI_Transition Transition;
 
     public GameObject Root
     {
@@ -23,11 +25,18 @@ public class UIManager
 
     public void Init()
     {
-
+        // 씬 전환 애니메이션용 프리팹
+        GameObject go  = Managers.Resource.Instantiate("UI/SubItem/UI_Transition");
+        Object.DontDestroyOnLoad(go);
+        Transition = go.GetComponent<UI_Transition>();
     }
     public void Clear()
     {
         CloseAllPopupUI();
+        if(_sceneUI != null)
+        {
+            Managers.Resource.Destroy(_sceneUI.gameObject);
+        }
     }
     public void SetCanvas(GameObject go, bool sort = true)
     {
@@ -45,7 +54,6 @@ public class UIManager
             canvas.sortingOrder = 0;
         }
     }
-
     public T MakeSubItem<T>(Transform parent = null, string name = null) where T : UI_Base
     {
         if (string.IsNullOrEmpty(name))
@@ -57,7 +65,6 @@ public class UIManager
 
         return Util.GetOrAddComponent<T>(go);
     }
-
     public T ShowSceneUI<T>(string name = null) where T : UI_Scene
     {
         if (string.IsNullOrEmpty(name))
@@ -72,7 +79,6 @@ public class UIManager
 
         return sceneUI;
     }
-
     public T ShowPopupUI<T>(string name = null) where T : UI_Popup
     {
         if (string.IsNullOrEmpty(name))
@@ -86,7 +92,6 @@ public class UIManager
 
         return popup;
     }
-
     public void ClosePopupUI(UI_Popup popup)
     {
         if (_popupStack.Count == 0)
@@ -100,7 +105,6 @@ public class UIManager
 
         ClosePopupUI();
     }
-
     public void ClosePopupUI()
     {
         if (_popupStack.Count == 0)
@@ -112,10 +116,10 @@ public class UIManager
         popup = null;
         _order--;
     }
-
     public void CloseAllPopupUI()
     {
         while (_popupStack.Count > 0)
             ClosePopupUI();
     }
+
 }

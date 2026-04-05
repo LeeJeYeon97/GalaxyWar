@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class DamageText : MonoBehaviour
 {
-    private TextMeshPro _textMesh;
+    private TMP_Text _textMesh;
 
     private void Awake()
     {
-        _textMesh = GetComponent<TextMeshPro>();
+        _textMesh = GetComponent<TMP_Text>();
     }
 
     // 메테오가 맞았을 때 외부에서 호출해 줄 초기화 함수
@@ -21,7 +21,6 @@ public class DamageText : MonoBehaviour
         // 1. 위치와 텍스트 세팅
         transform.position = spawnPos;
         _textMesh.text = damage.ToString();
-        Debug.Log($"damage : {damage}");
         // 투명도 복구 (알파값 1)
         Color color = _textMesh.color;
         color.a = 1f;

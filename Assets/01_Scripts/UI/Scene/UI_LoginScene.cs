@@ -19,11 +19,6 @@ public class UI_LoginScene : UI_Scene
     TMP_Text touchToStartText;
     Button backgroundButton;
 
-    private void Start()
-    {
-        Init();
-    }
-
     public override void Init()
     {
         base.Init();
@@ -39,8 +34,7 @@ public class UI_LoginScene : UI_Scene
         backgroundButton.onClick.AddListener(OnStartButtonClicked);
         backgroundButton.gameObject.SetActive(false);
 
-        GetButton((int)Buttons.Button_LoginGoogle).onClick.AddListener(Managers.Login.StartSignInWithGooglePlayGames);
-
+        Managers.Login.OnLoginSuccess -= OnLoginFinished;
         Managers.Login.OnLoginSuccess += OnLoginFinished;
 
         if (Managers.Login.IsLoginFinished == true)
@@ -49,11 +43,20 @@ public class UI_LoginScene : UI_Scene
             OnLoginFinished();
         }
     }
+    public override void Clear()
+    {
+        base.Clear(); // 부모의 Clear도 혹시 모르니 불러주고
+
+
+        // 매니저 연락처 지우기
+        if (Managers.Login != null)
+        {
+            Managers.Login.OnLoginSuccess -= OnLoginFinished;
+        }
+    }
     // LoginManager에서 로그인이 성공하면 자동으로 이 함수가 실행됩니다!
     private void OnLoginFinished()
     {
-        Debug.Log("타이틀 씬: 로그인 완료 확인! 터치 대기 상태로 전환합니다.");
-
         loadingText.gameObject.SetActive(false);
         touchToStartText.gameObject.SetActive(true); // "터치하세요" 글씨가 짠! 나타남
         backgroundButton.gameObject.SetActive(true);    //버튼 터치
@@ -61,7 +64,8 @@ public class UI_LoginScene : UI_Scene
     }
     private void OnStartButtonClicked()
     {
-        Debug.Log("start button touch");
         Managers.Scene.LoadScene(Define.Scene.LobbyScene);
     }
+
+    
 }

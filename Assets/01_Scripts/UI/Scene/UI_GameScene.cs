@@ -76,7 +76,7 @@ public class UI_GameScene : UI_Scene
         canvas.worldCamera = Camera.main;
 
         BindingButtonClickListener();
-
+        
 
     }
     private void BindingButtonClickListener()

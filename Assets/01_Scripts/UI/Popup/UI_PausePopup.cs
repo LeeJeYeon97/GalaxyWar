@@ -11,10 +11,6 @@ public class UI_PausePopup : UI_Popup
         Btn_Settings,
         Btn_QuitGame
     }
-    private void Start()
-    {
-        Init();
-    }
     public override void Init()
     {
         base.Init();

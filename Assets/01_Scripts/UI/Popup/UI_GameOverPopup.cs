@@ -19,15 +19,9 @@ public class UI_GameOverPopup : UI_Popup
     [SerializeField]
     private LocalizedString _localizedRewardCountText;
 
-    private bool _isInit = false; // 중복 초기화 방지용 자물쇠
 
-    private void Start()
-    {
-        Init();
-    }
     public override void Init()
     {
-        if (_isInit) return; // 이미 바인딩이 끝났다면 패스
         base.Init();
 
         Bind<Button>(typeof(Buttons));
@@ -45,7 +39,6 @@ public class UI_GameOverPopup : UI_Popup
             rewardButton.gameObject.SetActive(false);
         }
 
-        _isInit = true; // 바인딩 완료 도장 쾅!
         RefreshRewardCountText();
     }
     //유니티 눈치 안 보고 내가 원할 때 직접 번역본을 가져오는 마법의 함수!

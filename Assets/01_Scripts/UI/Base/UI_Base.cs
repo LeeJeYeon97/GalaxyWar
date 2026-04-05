@@ -12,7 +12,29 @@ public abstract class UI_Base : MonoBehaviour
 {
     protected Dictionary<Type, UnityEngine.Object[]> _objects = new Dictionary<Type, UnityEngine.Object[]>();
 
-    public abstract void Init();
+    // 추가: 초기화 여부를 기억하는 변수
+    protected bool _init = false;
+
+    public virtual void Init()
+    {
+        if (_init)
+            return; // 이미 초기화가 끝났다면 그냥 돌아감
+
+        _init = true; // 이제 초기화 완료!
+    }
+
+    public virtual void Clear()
+    {
+        // 기본적으로는 아무것도 안 함
+    }
+    private void Awake()
+    {
+        Init();
+    }
+    private void OnDestroy()
+    {
+        Clear();
+    }
 
     protected void Bind<T>(Type type) where T : UnityEngine.Object
     {

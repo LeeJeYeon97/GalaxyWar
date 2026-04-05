@@ -1,0 +1,13 @@
+D:\01.UnityProject\NeonMeteor\GalaxyWarCloud\Project\bin\Release\net6.0\any\Project.deps.json
+D:\01.UnityProject\NeonMeteor\GalaxyWarCloud\Project\bin\Release\net6.0\any\Project.dll
+D:\01.UnityProject\NeonMeteor\GalaxyWarCloud\Project\bin\Release\net6.0\any\Project.pdb
+D:\01.UnityProject\NeonMeteor\GalaxyWarCloud\Project\obj\Release\net6.0\any\Project.csproj.AssemblyReference.cache
+D:\01.UnityProject\NeonMeteor\GalaxyWarCloud\Project\obj\Release\net6.0\any\Project.GeneratedMSBuildEditorConfig.editorconfig
+D:\01.UnityProject\NeonMeteor\GalaxyWarCloud\Project\obj\Release\net6.0\any\Project.AssemblyInfoInputs.cache
+D:\01.UnityProject\NeonMeteor\GalaxyWarCloud\Project\obj\Release\net6.0\any\Project.AssemblyInfo.cs
+D:\01.UnityProject\NeonMeteor\GalaxyWarCloud\Project\obj\Release\net6.0\any\Project.csproj.CoreCompileInputs.cache
+D:\01.UnityProject\NeonMeteor\GalaxyWarCloud\Project\obj\Release\net6.0\any\Project.sourcelink.json
+D:\01.UnityProject\NeonMeteor\GalaxyWarCloud\Project\obj\Release\net6.0\any\Project.dll
+D:\01.UnityProject\NeonMeteor\GalaxyWarCloud\Project\obj\Release\net6.0\any\refint\Project.dll
+D:\01.UnityProject\NeonMeteor\GalaxyWarCloud\Project\obj\Release\net6.0\any\Project.pdb
+D:\01.UnityProject\NeonMeteor\GalaxyWarCloud\Project\obj\Release\net6.0\any\ref\Project.dll

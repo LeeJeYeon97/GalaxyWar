@@ -14,10 +14,7 @@ public class UI_StartCountDownPopup : UI_Popup
     }
 
     private TMP_Text _text;
-    private void Start()
-    {
-        Init();
-    }
+    
 
     
     public override void Init()

@@ -6,6 +6,7 @@ public class UI_Popup : UI_Base
 {
     public override void Init()
     {
+        base.Init();
         Managers.UI.SetCanvas(gameObject, true);
     }
 

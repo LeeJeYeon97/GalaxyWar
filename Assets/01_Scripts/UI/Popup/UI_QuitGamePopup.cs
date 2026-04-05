@@ -9,10 +9,6 @@ public class UI_QuitGamePopup : UI_Popup
         Btn_Yes,
         Btn_Cancel
     }
-    private void Start()
-    {
-        Init();
-    }
     public override void Init()
     {
         base.Init();

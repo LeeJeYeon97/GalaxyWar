@@ -8,10 +8,6 @@ public class UI_SettingsPopup : UI_Popup
         Btn_ClosePopup,
         
     }
-    private void Start()
-    {
-        Init();
-    }
     public override void Init()
     {
         base.Init();

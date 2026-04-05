@@ -3,6 +3,8 @@ using Unity.Services.Authentication;
 using Unity.Services.Authentication.PlayerAccounts;
 using Unity.Services.Core;
 using UnityEngine;
+using UnityEngine.UnityConsent;
+using System;
 
 #if UNITY_IOS
 using Unity.Advertisment.IosSupport;
@@ -11,46 +13,83 @@ using Unity.Advertisment.IosSupport;
 #if UNITY_ANDROID
 using GooglePlayGames;
 using GooglePlayGames.BasicApi;
-using System;
 #endif
+
 public class LoginManager
 {
     private string _GooglePlayGamesToken;
 
     // 누군가 이 Action을 구독해두면, 로그인이 끝났을 때 알려줍니다!
     public Action OnLoginSuccess;
+    
     public bool IsLoginFinished { get; private set; } = false;
+
+
+    // UI 팝업을 띄워달라고 요청하는 이벤트 (UI 스크립트가 이걸 듣고 팝업을 켭니다)
+    //public System.Action ShowConsentPopupEvent;
+    //
+    //// 유저가 버튼을 누를 때까지 코드를 멈춰두는 마법의 객체
+    //private TaskCompletionSource<bool> _consentWaitTask;
 
     // 유니티 서비스 초기화
     public async void Init()
     {
-        // 1. 구글 플레이 게임즈 초기화 (안드로이드)
+        // 1. 유니티 서비스 초기화 (필수)
+        if (UnityServices.State == ServicesInitializationState.Uninitialized)
+        {
+            Debug.Log("Unity Services Initializing...");
+            await UnityServices.InitializeAsync();
+            Debug.Log("Unity Services Initialized Successfully!");
+
+            
+
+            EndUserConsent.SetConsentState(new ConsentState
+            {
+                AnalyticsIntent = ConsentStatus.Granted,
+                //AdsIntent = ConsentStatus.Denied
+            });
+
+        }
+
+        
+
+        // 2. 구글 플레이 게임즈 초기화 (안드로이드)
 #if UNITY_ANDROID
         PlayGamesPlatform.DebugLogEnabled = true;
         PlayGamesPlatform.Activate();
-        LoginGooglePlayGames();
+        //LoginGooglePlayGames(); // 구글 로그인이 바로 되게 하려면 풀기
+#else
+        //// 안드로이드가 아닌 환경(에디터 등)에서는 무조건 익명 로그인
+        //StartAnonymousSignIn();
 #endif
+        // 3. 플랫폼 상관없이 무조건 익명(게스트) 로그인으로 게임을 시작합니다!
+        StartAnonymousSignIn();
+        //PlayerAccountService.Instance.SignedIn += SignInOrLinkWithUnity;
 
-        // 2. 유니티 서비스 초기화
-        if (UnityServices.State == ServicesInitializationState.Uninitialized)
-        {
-            Debug.Log("Services Initializing...");
-            await UnityServices.InitializeAsync();
-            Debug.Log("Services Initialized Successfully!");
-        }
+        //// 3. 익명 로그인 캐시 확인
+        //if (AuthenticationService.Instance.SessionTokenExists == false)
+        //{
+        //    Debug.Log("Session Token not Found. Waiting for user input...");
+        //    return;
+        //}
 
-        PlayerAccountService.Instance.SignedIn += SignInOrLinkWithUnity;
-
-        // 3. 익명 로그인 캐시 확인
-        if (AuthenticationService.Instance.SessionTokenExists == false)
-        {
-            Debug.Log("Session Token not Found. Waiting for user input...");
-            return;
-        }
-
-        Debug.Log("Returning player signing in...");
-        await SignInAnonymouslyAsync();
+        //Debug.Log("Returning player signing in...");
+        //await SignInAnonymouslyAsync();
     }
+
+    //// UI에서 '동의' 버튼을 눌렀을 때 호출
+    //public void OnUserAcceptConsent()
+    //{
+    //    // 멈춰있던 Task에 true를 던져주고 코드를 다시 진행시킵니다!
+    //    _consentWaitTask?.TrySetResult(true);
+    //}
+    //
+    //// UI에서 '거절' 버튼을 눌렀을 때 호출
+    //public void OnUserDeclineConsent()
+    //{
+    //    // 멈춰있던 Task에 false를 던져주고 코드를 다시 진행시킵니다!
+    //    _consentWaitTask?.TrySetResult(false);
+    //}
 
     #region 익명 로그인
     public async void StartAnonymousSignIn()
@@ -65,16 +104,31 @@ public class LoginManager
             await AuthenticationService.Instance.SignInAnonymouslyAsync();
             Debug.Log("Sign in anonymously succeeded!");
 
+            await SetRandomNicknameIfEmpty();
+
             // Shows how to get the playerID
             Debug.Log($"PlayerID: {AuthenticationService.Instance.PlayerId}");
+
             IsLoginFinished = true;
             OnLoginSuccess?.Invoke();
         }
         catch (AuthenticationException ex)
         {
-            // Compare error code to AuthenticationErrorCodes
-            // Notify the player with the proper error message
-            Debug.LogException(ex);
+            // 핵심: 만약 에러 코드가 '잘못된 세션 토큰'이라면?
+            if (ex.ErrorCode == AuthenticationErrorCodes.InvalidSessionToken)
+            {
+                Debug.LogWarning("유효하지 않은 토큰입니다. 세션을 초기화하고 다시 시도합니다.");
+
+                // 유령 열쇠를 버립니다.
+                AuthenticationService.Instance.SignOut(true);
+
+                // 다시 로그인을 시도하면 서버에서 새로운 유저로 만들어줍니다!
+                await SignInAnonymouslyAsync();
+            }
+            else
+            {
+                Debug.LogException(ex);
+            }
         }
         catch (RequestFailedException ex)
         {
@@ -184,14 +238,24 @@ public class LoginManager
 
                 PlayGamesPlatform.Instance.RequestServerSideAccess(true, code =>
                 {
-                    Debug.Log("Authorization code: " + code);
-                    _GooglePlayGamesToken = code;
-                    // This token serves as an example to be used for SignInWithGooglePlayGames
+                    if (!string.IsNullOrEmpty(code))
+                    {
+                        _GooglePlayGamesToken = code;
+                        SignInOrLinkWithGooglePlayGames();
+                    }
+                    else
+                    {
+                        // 토큰 요청 실패 시에도 게임은 시켜줘야 하므로 익명 로그인으로 우회
+                        Debug.LogWarning("Google Token null, switching to Anonymous");
+                        StartAnonymousSignIn();
+                    }
                 });
             }
             else
             {
                 Debug.Log($"Google Play Games Login Unsuccessful status : {status}");
+                Debug.Log("신규 유저입니다. 바로 게스트(익명) 로그인을 시작합니다!");
+                StartAnonymousSignIn();
             }
         });
     }
@@ -270,8 +334,11 @@ public class LoginManager
         {
             await AuthenticationService.Instance.SignInWithGooglePlayGamesAsync(authCode);
             Debug.Log("SignIn is successful.");
+
+
+            await ChangeNickNameToGoole();
             IsLoginFinished = true;
-            OnLoginSuccess?.Invoke();
+            HandleGoogleLinkSuccess();
         }
         catch (AuthenticationException ex)
         {
@@ -306,8 +373,10 @@ public class LoginManager
         {
             await AuthenticationService.Instance.LinkWithGooglePlayGamesAsync(authCode);
             Debug.Log("Link is successful.");
+
+            await ChangeNickNameToGoole();
             IsLoginFinished = true;
-            OnLoginSuccess?.Invoke();
+            HandleGoogleLinkSuccess();
         }
         catch (AuthenticationException ex) when (ex.ErrorCode == AuthenticationErrorCodes.AccountAlreadyLinked)
         {
@@ -327,6 +396,24 @@ public class LoginManager
             // Notify the player with the proper error message
             Debug.LogException(ex);
         }
+    }
+    // 내부의 구글 연동 성공 처리 함수
+    private async void HandleGoogleLinkSuccess()
+    {
+        try
+        {
+            // 1. 연동 성공 후, 내 최신 계정 정보(Identities 등)를 서버에서 다시 받아옴
+            await AuthenticationService.Instance.GetPlayerInfoAsync();
+            Debug.Log("서버에서 최신 유저 정보 갱신 완료!");
+        }
+        catch (AuthenticationException ex)
+        {
+            Debug.LogError($"플레이어 정보 갱신 실패: {ex.Message}");
+        }
+
+        // 2. 정보 갱신이 완전히 끝난 후, UI들에게 "이제 화면 바꿔도 돼!" 하고 방송함
+        if (OnLoginSuccess != null)
+            OnLoginSuccess.Invoke();
     }
 
     /// <summary> Google Play 계정 연결 해제
@@ -356,4 +443,47 @@ public class LoginManager
     //    }
     //}
     #endregion
+
+    // 랜덤 닉네임 설정
+    private async Task SetRandomNicknameIfEmpty()
+    {
+        // 현재 설정된 이름이 있는지 확인
+        string currentName = AuthenticationService.Instance.PlayerName;
+
+        // 이름이 아예 없거나, 유니티 기본값(DefaultPlayer)인 경우에만 생성
+        if (string.IsNullOrEmpty(currentName))
+        {
+            // 1. 랜덤 숫자 생성 (예: 1000 ~ 9999)
+            int randomNumber = UnityEngine.Random.Range(1000, 10000);
+            string randomName = $"신병{randomNumber}";
+
+            try
+            {
+                // 2. 서버에 저장
+                await AuthenticationService.Instance.UpdatePlayerNameAsync(randomName);
+                Debug.Log($"임시 닉네임 설정 완료: {randomName}");
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"닉네임 자동 설정 실패: {ex.Message}");
+            }
+        }
+    }
+
+    private async Task ChangeNickNameToGoole()
+    {
+#if UNITY_ANDROID
+        // 1. 구글 시스템에서 유저의 프로필 이름을 가져옵니다.
+        string googleName = PlayGamesPlatform.Instance.GetUserDisplayName();
+
+        // 2. 이름이 정상적으로 가져와졌는지 확인합니다.
+        if (!string.IsNullOrEmpty(googleName))
+        {
+            // 3. 유니티 서버(UGS)의 PlayerName을 구글 이름으로 덮어씌웁니다.
+            await AuthenticationService.Instance.UpdatePlayerNameAsync(googleName);
+            Debug.Log($"구글 닉네임 UGS 동기화 완료: {googleName}");
+            
+        }
+#endif
+    }
 }

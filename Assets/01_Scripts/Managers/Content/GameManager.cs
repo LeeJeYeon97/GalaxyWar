@@ -26,12 +26,10 @@ public class GameManager : MonoBehaviour
         currentPhase = PhaseType.Phase1;
         gamePlayTime = 0f;
         ChangeGameState(GameState.Ready);
-        // UI 생성
-        UI_GameScene sceneUI = Managers.UI.ShowSceneUI<UI_GameScene>("GameScene/UI_GameScene");
-        sceneUI.Init();
 
-        // 풀링 매니저 초기화
-        
+        // UI 생성
+        UI_GameScene sceneUI = Managers.UI.ShowSceneUI<UI_GameScene>();
+
         // 맵 생성
         Managers.Map.Init();
         // 레벨
@@ -43,6 +41,7 @@ public class GameManager : MonoBehaviour
         // 스탯 매니저
         Managers.Stat.Init();
 
+        
         // 플레이어 세팅
         _player = Managers.Resource.Instantiate("Object/Player")?.GetComponent<PlayerController>();
         if (_player == null)
