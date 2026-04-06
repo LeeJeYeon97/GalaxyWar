@@ -28,6 +28,7 @@
     "com.unity.services.cloudcode": "2.10.2",
     "com.unity.services.cloudsave": "3.4.0",
     "com.unity.services.deployment": "1.7.2",
+    "com.unity.services.economy": "3.5.3",
     "com.unity.services.levelplay": "9.3.0",
     "com.unity.shadergraph": "17.3.0",
     "com.unity.test-framework": "1.6.0",

@@ -2,15 +2,20 @@ using System;
 using System.Collections.Generic;
 using Unity.Services.Authentication;
 using Unity.Services.CloudCode;
-using Unity.Services.CloudCode.GeneratedBindings;
 using UnityEngine;
 using Unity.Services.CloudSave;
+using Unity.Services.CloudCode.GeneratedBindings;
+using Newtonsoft.Json;
+using Unity.Services.CloudCode.GeneratedBindings.Project;
 
 public class PlayerDataManager
 {
-    public PlayerDataServiceBindings MyModuleBindings;
-    public string PlayerName;
+    public PlayerDataServiceBindings playerDataServiceBindings;
+    public PlayerEconomyServiceBindings playerEconomyServiceBindings;
 
+    public event Action<PlayerData> PlayerDataUpdated;
+
+    public PlayerData PlayerDataLocal;
     public void Init()
     {
         Managers.Login.OnLoginSuccess += InitializePlayer;
@@ -24,19 +29,39 @@ public class PlayerDataManager
         try
         {
             // 추가: 로그인이 성공해서 UGS가 완전히 켜진 지금 세팅합니다!
-            if (MyModuleBindings == null)
+            if (playerDataServiceBindings == null)
             {
-                MyModuleBindings = new PlayerDataServiceBindings(CloudCodeService.Instance);
+                playerDataServiceBindings = new PlayerDataServiceBindings(CloudCodeService.Instance);
             }
-            string PlayerName = AuthenticationService.Instance.PlayerName;
-            string Key = "PLAYER_NAME";
-            await MyModuleBindings.SayHello(Key, PlayerName);
-            //Debug.Log($"{resultFromCloud}");
+            if(playerEconomyServiceBindings == null)
+            {
+                playerEconomyServiceBindings = new PlayerEconomyServiceBindings(CloudCodeService.Instance);
+            }
+
+            var playerDataResponse = await playerDataServiceBindings.HandlePlayerSignIn();
+            PlayerDataLocal = playerDataResponse.PlayerData;
+            PlayerDataUpdated?.Invoke(PlayerDataLocal);
+            LogResponse(playerDataResponse);
+
+            //await playerEconomyServiceBindings.AddHealthPotion();
+
         }
         catch(CloudCodeException e)
         {
             Debug.LogException(e);
         }
+    }
+    private void LogResponse(PlayerDataResponse response)
+    {
+        string economyJson = JsonConvert.SerializeObject(response.PlayerEconomyData, Formatting.Indented);
+        Debug.Log(
+            $"====== Player Sign-In Response =====\n" +
+            $"Name : {response.PlayerData.DisplayName}\n" +
+            $"New Player : {response.IsNewPlayer} \n" +
+            $"XP : {response.PlayerData.Experience} \n" +
+            $"Economy : {economyJson}\n" +
+            $"==============================="
+            );
     }
     public void Clear()
     {

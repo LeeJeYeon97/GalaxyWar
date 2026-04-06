@@ -13,15 +13,13 @@ namespace Unity.Services.CloudCode.GeneratedBindings
             k_Service = service;
         }
 
-        public async Task SayHello(string key, string value)
+        public async Task<Project.PlayerDataResponse> HandlePlayerSignIn()
         {
-            await k_Service.CallModuleEndpointAsync(
+            return await k_Service.CallModuleEndpointAsync<Project.PlayerDataResponse>(
                 "Project",
-                "SayHello",
+                "HandlePlayerSignIn",
                 new Dictionary<string, object>()
                 {
-                    {"key", key},
-                    {"value", value},
                 });
         }
     }

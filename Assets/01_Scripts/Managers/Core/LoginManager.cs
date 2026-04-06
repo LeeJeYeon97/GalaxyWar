@@ -41,8 +41,6 @@ public class LoginManager
             await UnityServices.InitializeAsync();
             Debug.Log("Unity Services Initialized Successfully!");
 
-            
-
             EndUserConsent.SetConsentState(new ConsentState
             {
                 AnalyticsIntent = ConsentStatus.Granted,
@@ -104,7 +102,7 @@ public class LoginManager
             await AuthenticationService.Instance.SignInAnonymouslyAsync();
             Debug.Log("Sign in anonymously succeeded!");
 
-            await SetRandomNicknameIfEmpty();
+            //await SetRandomNicknameIfEmpty();
 
             // Shows how to get the playerID
             Debug.Log($"PlayerID: {AuthenticationService.Instance.PlayerId}");
@@ -443,32 +441,6 @@ public class LoginManager
     //    }
     //}
     #endregion
-
-    // 랜덤 닉네임 설정
-    private async Task SetRandomNicknameIfEmpty()
-    {
-        // 현재 설정된 이름이 있는지 확인
-        string currentName = AuthenticationService.Instance.PlayerName;
-
-        // 이름이 아예 없거나, 유니티 기본값(DefaultPlayer)인 경우에만 생성
-        if (string.IsNullOrEmpty(currentName))
-        {
-            // 1. 랜덤 숫자 생성 (예: 1000 ~ 9999)
-            int randomNumber = UnityEngine.Random.Range(1000, 10000);
-            string randomName = $"신병{randomNumber}";
-
-            try
-            {
-                // 2. 서버에 저장
-                await AuthenticationService.Instance.UpdatePlayerNameAsync(randomName);
-                Debug.Log($"임시 닉네임 설정 완료: {randomName}");
-            }
-            catch (Exception ex)
-            {
-                Debug.LogError($"닉네임 자동 설정 실패: {ex.Message}");
-            }
-        }
-    }
 
     private async Task ChangeNickNameToGoole()
     {
