@@ -34,19 +34,8 @@ public class UI_GameScene : UI_Scene
     }
 
     private TMP_Text timeText;
-    
-    private void OnEnable()
-    {
-        Managers.Event.Subscribe<(float curExp, float maxExp)>(ActionEvent.ExpChanged, UpdateExpBar);
-        Managers.Event.Subscribe<int>(ActionEvent.LevelUp, UpdateLevelText);
-        Managers.Event.Subscribe<float>(ActionEvent.ScoreChanged, UpdateScoreText);
-        
-        Managers.Event.Subscribe<PlayerStatusEvent>(ActionEvent.PlayerStatusChanged, UpdateHUD);
-        Managers.Event.Subscribe(ActionEvent.EnableBurstMode, EnableBurstButton);
-        Managers.Event.Subscribe<float>(ActionEvent.UpdateGameTime, UpdateGameTime);
 
-    }
-    private void OnDisable()
+    public override void Clear()
     {
         Managers.Event.UnSubscribe<int>(ActionEvent.LevelUp, UpdateLevelText);
         Managers.Event.UnSubscribe<(float curExp, float maxExp)>(ActionEvent.ExpChanged, UpdateExpBar);
@@ -75,8 +64,18 @@ public class UI_GameScene : UI_Scene
         canvas.renderMode = RenderMode.ScreenSpaceCamera;
         canvas.worldCamera = Camera.main;
 
+        Managers.Event.Subscribe<(float curExp, float maxExp)>(ActionEvent.ExpChanged, UpdateExpBar);
+        Managers.Event.Subscribe<int>(ActionEvent.LevelUp, UpdateLevelText);
+        Managers.Event.Subscribe<float>(ActionEvent.ScoreChanged, UpdateScoreText);
+
+        Managers.Event.Subscribe<PlayerStatusEvent>(ActionEvent.PlayerStatusChanged, UpdateHUD);
+        Managers.Event.Subscribe(ActionEvent.EnableBurstMode, EnableBurstButton);
+        Managers.Event.Subscribe<float>(ActionEvent.UpdateGameTime, UpdateGameTime);
+
         BindingButtonClickListener();
+
         
+
 
     }
     private void BindingButtonClickListener()

@@ -21,6 +21,7 @@ public class Managers : MonoBehaviour
     }
     // ========================================================== //
     // 각 관리자들 (필요한 매니저들을 여기에 추가)
+    private InitManager _init;
     private InputManager _input;
     private PoolingManager _pool;                    
     private GameManager _game;
@@ -34,14 +35,17 @@ public class Managers : MonoBehaviour
     private SceneManagerEx _scene;
     private SoundManager _sound;
     private MapManager _map;
-    private AdsManager _ad;
     private CoroutineHelper _coroutine;
-
     private LoginManager _login;
-    private PlayerDataManager _playerData;
 
+    private PlayerDataManager _playerData;
+    private PlayerEconomyManager _playerEconomy;
+    private AdsManager _ad;
+    private VirtualStoreManager _virtualStore;
+    private IAPStoreManager _iapStore;
     // ========================================================== //
     // 프로퍼티를 통해 외부에서 접근하도록 설정
+    public static InitManager Initialize => Instance._init;
     public static InputManager Input => Instance._input;
     public static PoolingManager Pool => Instance._pool;
     public static GameManager Game => Instance._game;
@@ -59,6 +63,9 @@ public class Managers : MonoBehaviour
 
     public static LoginManager Login => Instance._login;
     public static PlayerDataManager PlayerData => Instance._playerData;
+    public static PlayerEconomyManager PlayerEconomy => Instance._playerEconomy;
+    public static VirtualStoreManager VirtualStore => Instance._virtualStore;
+    public static IAPStoreManager IAPStore => Instance._iapStore;
     // ========================================================== //
 
     // 추가: 외부에서 Managers.Coroutine.StartCoroutine() 으로 접근할 수 있게 열어줍니다!
@@ -85,6 +92,7 @@ public class Managers : MonoBehaviour
             _instance = go.GetComponent<Managers>();
 
             // 컴포넌트로 붙일 필요없는 매니저 초기화
+            _instance._init = new InitManager();
             _instance._scene = new SceneManagerEx();
             _instance._resource = new ResourceManager();
             _instance._ui = new UIManager();
@@ -99,7 +107,9 @@ public class Managers : MonoBehaviour
             _instance._ad = new AdsManager();
             _instance._login = new LoginManager();
             _instance._playerData = new PlayerDataManager();
-
+            _instance._playerEconomy = new PlayerEconomyManager();
+            _instance._virtualStore = new VirtualStoreManager();
+            _instance._iapStore = new IAPStoreManager();
             // 컴포넌트 형태의 매니저들은 여기서 초기화하거나 자식으로 붙임
             _instance._game = Util.GetOrAddComponent<GameManager>(go);
             _instance._input = Util.GetOrAddComponent<InputManager>(go);
@@ -107,9 +117,14 @@ public class Managers : MonoBehaviour
 
             // 매니저들 초기화 함수
             // Core
+            // InitManager초기화는 처음 Scene에서 진행하기
 
+            
             PlayerData.Init();
-            Login.Init();
+            PlayerEconomy.Init();
+            VirtualStore.Init();
+            IAPStore.Init();
+
             AD.Init();
             Pool.Init();
             Data.Init();
@@ -133,5 +148,4 @@ public class Managers : MonoBehaviour
             _coroutine.StopAllCoroutines();
         }
     }
-    
 }

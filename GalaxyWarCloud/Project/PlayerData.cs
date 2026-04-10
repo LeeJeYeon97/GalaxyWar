@@ -15,6 +15,11 @@ namespace Project
         [JsonProperty("experience")]
         public int Experience { get; set; }
 
+        [JsonProperty("maxSurviveTime")]
+        public int MaxSurviveTime { get; set; }
+
+        [JsonProperty("maxScore")]
+        public int MaxScore { get; set; }
     }
     public class PlayerEconomyData
     {

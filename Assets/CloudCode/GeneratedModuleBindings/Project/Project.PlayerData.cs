@@ -8,6 +8,8 @@ namespace Unity.Services.CloudCode.GeneratedBindings.Project
     {
         public string DisplayName;
         public int Experience;
+        public int MaxSurviveTime;
+        public int MaxScore;
 
         [Preserve]
         public PlayerData ()

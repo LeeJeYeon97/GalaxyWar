@@ -15,9 +15,6 @@ namespace Project
 {
     public class PlayerEconomyService
     {
-        public const string k_GoldCurrencyKey = "GOLD";
-        public const string k_HealthPotionKey = "HEALTH_POTION";
-
         private readonly ILogger<PlayerEconomyService> _logger;
 
         public PlayerEconomyService(ILogger<PlayerEconomyService> logger)
@@ -27,11 +24,11 @@ namespace Project
 
         private async Task<int> GetPlayerGold(IExecutionContext context, IGameApiClient gameApiClient)
         {
-            return await GetCurrencyAmount(context, gameApiClient, k_GoldCurrencyKey);
+            return await GetCurrencyAmount(context, gameApiClient, ServerDefine.k_GoldCurrencyKey);
         }        
         private async Task<int> GetHealthPotionAmount(IExecutionContext context, IGameApiClient gameApiClient)
         {
-            return await GetInventoryItemAmount(context, gameApiClient, k_HealthPotionKey);
+            return await GetInventoryItemAmount(context, gameApiClient, ServerDefine.k_HealthPotionKey);
         }
 
         [CloudCodeFunction("GetPlayerEconomyData")]
@@ -42,7 +39,7 @@ namespace Project
                 var economyData = new PlayerEconomyData();
 
                 int goldAmount = await GetPlayerGold(context, gameApiClient);
-                economyData.Currencies[k_GoldCurrencyKey] = goldAmount;
+                economyData.Currencies[ServerDefine.k_GoldCurrencyKey] = goldAmount;
 
                 // Add any other currencies here..
 
@@ -61,7 +58,7 @@ namespace Project
         [CloudCodeFunction("AddHealthPotion")]
         public async Task AddHealthPotion(IExecutionContext context, IGameApiClient gameApiClient)
         {
-            await AddNewInventoryItem(context, gameApiClient, k_HealthPotionKey, 1);
+            await AddNewInventoryItem(context, gameApiClient, ServerDefine.k_HealthPotionKey, 1);
         }
         private async Task<List<InventoryResponse>> GetPlayerInventory(IExecutionContext context, IGameApiClient gameApiClient, int? limit = null, params string[]? inventoryItemIds)
         {
@@ -271,6 +268,173 @@ namespace Project
                 _logger.LogError($"Failed to add inventory item {itemId} for player {context.PlayerId}. Error : {ex}");
 
 
+            }
+        }
+
+        public async Task CleanUpNullOrZeroAmountItems(IExecutionContext context, IGameApiClient gameApiClient, string itemKey)
+        {
+            try
+            {
+                var items = await GetPlayerInventory(context, gameApiClient, inventoryItemIds: new string[] { itemKey });
+
+                var itemsToDelete = new List<string>();
+
+                foreach(var item in items)
+                {
+                    if (string.IsNullOrEmpty(item.PlayersInventoryItemId)) continue;
+
+                    // check for null instance data
+                    if(item.InstanceData == null)
+                    {
+                        itemsToDelete.Add(item.PlayersInventoryItemId);
+                        _logger.LogInformation($"Found {itemKey} with null instance data : {item.PlayersInventoryItemId}");
+                        continue;
+                    }
+
+                    if(!TryParseInventoryItemAmount(item, out int amount))
+                    {
+                        continue;
+                    }
+
+                    if(amount <= 0)
+                    {
+                        itemsToDelete.Add(item.PlayersInventoryItemId);
+                    }
+                }
+                foreach(var itemId in itemsToDelete)
+                {
+                    await DeleteInventoryItem(context, gameApiClient, itemId);
+                    _logger.LogInformation($"Deleted zero-amount {itemId}");
+                }
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex, $"Failed to clean up zero-amount {itemKey} for player {context.PlayerId}");
+            }
+        }
+        public async Task DeleteInventoryItem(IExecutionContext context, IGameApiClient gameApiClient, string inventoryItemId)
+        {
+            await gameApiClient.EconomyInventory.DeleteInventoryItemAsync(
+                context,
+                context.AccessToken,
+                context.ProjectId,
+                context.PlayerId ?? throw new InvalidOperationException("PlayerId is Null"),
+                inventoryItemId
+                );
+
+        }
+        public async Task AddOrUpdateInventoryItemAmount(IExecutionContext context, IGameApiClient gameApiClient, string itemKey, int amountToAdd,
+            Dictionary<string, object>? customData = null) // Optional parameter for other custom data
+        {
+            var inventoryItems = await GetPlayerInventory(context, gameApiClient, inventoryItemIds: new string[] { itemKey });
+            InventoryResponse? existingItem = inventoryItems.FirstOrDefault(item => !string.IsNullOrEmpty(item.PlayersInventoryItemId));
+
+            bool itemExistsInInventory = existingItem != null;
+
+            // Determine amount to use
+            int totalAmount = amountToAdd;
+            if(itemExistsInInventory)
+            {
+                TryParseInventoryItemAmount(existingItem!, out int currentAmount); // Defaults to 0 if parsing fails
+
+                totalAmount = currentAmount + amountToAdd;
+            }
+
+            // Prepare instance data with amount
+            var instanceData = new Dictionary<string, object>
+            {
+                {"amount", totalAmount }
+            };
+
+            // Add any custom data provided
+            if(customData != null)
+            {
+                foreach(var kvp in customData )
+                {
+                    instanceData[kvp.Key] = kvp.Value;
+                }
+            }
+
+            if(itemExistsInInventory)
+            {
+                var updateRequest = new InventoryRequestUpdate(instanceData: instanceData);
+                await gameApiClient.EconomyInventory.UpdateInventoryItemAsync(
+                    context,
+                    context.AccessToken,
+                    context.ProjectId,
+                    context.PlayerId!,
+                    existingItem!.PlayersInventoryItemId!,
+                    updateRequest
+                    );
+            }
+            else
+            {
+                // Create new item with data
+                await AddNewInventoryItem(context, gameApiClient, itemKey, instanceData);
+            }
+        }
+
+        public string GetResourceType(List<PlayerConfigurationResponseResultsInner> results, string resourceId)
+        {
+            foreach(var result in results)
+            {
+                switch(result.ActualInstance)
+                {
+                    case CurrencyResource currency when currency.Id == resourceId:
+                        return "CURRENCY";
+                    case InventoryItemResource item when item.Id == resourceId:
+                        return "INVENTORY_ITEM";
+                    case RealMoneyPurchaseResource purchase when purchase.Id == resourceId:
+                        return "REAL_MONEY_PURCHASE";
+                    case VirtualPurchaseResource virtualPurchase when virtualPurchase.Id == resourceId:
+                        return "VIRTUAL_PURCHASE";
+                }
+            }
+            return "UNKNOWN";
+        }
+        public async Task GrantResourceReward(IExecutionContext context, IGameApiClient gameApiClient, string resourceType, string resourceId, int amount)
+        {
+            switch(resourceType)
+            {
+                case "CURRENCY":
+                    await AddCurrency(context, gameApiClient, resourceId, amount);
+                    _logger.LogInformation($"Added currency : {resourceId}, Amount : {amount}");
+                    break;
+                case "INVENTORY_ITEM":
+                    await AddOrUpdateInventoryItemAmount(context, gameApiClient, resourceId, amount);
+                    _logger.LogInformation($"Added inventory item : {resourceId}, Amount : {amount}");
+                    break;
+                default:
+                    _logger.LogWarning($"Unknown resource type for reward : {resourceType}");
+                    break;
+            }
+        }
+
+        private async Task AddCurrency(IExecutionContext context, IGameApiClient gameApiClient, string resourceId, int amount)
+        {
+            try
+            {
+                // 1. 증가시킬 수량을 담은 요청(Request) 객체를 만듭니다.
+                // 참고: 만약 amount가 음수(-500)라면 알아서 차감됩니다!
+                var modifyBalanceRequest = new CurrencyModifyBalanceRequest(resourceId, amount);
+
+                // 2. UGS 서버에 해당 재화의 잔액을 변경해달라고 API를 호출합니다.
+                await gameApiClient.EconomyCurrencies.IncrementPlayerCurrencyBalanceAsync(
+                    context,
+                    context.AccessToken,
+                    context.ProjectId,
+                    context.PlayerId!,
+                    resourceId,
+                    modifyBalanceRequest
+                );
+
+                _logger.LogInformation($"Successfully added {amount} to currency {resourceId} for player {context.PlayerId}");
+            }
+            catch (ApiException ex)
+            {
+                // 에러가 발생하면 로그를 남기고 클라이언트 쪽에 예외를 던집니다.
+                _logger.LogError(ex, $"Failed to add {amount} to currency {resourceId} for player {context.PlayerId}. Error: {ex.Message}");
+                throw new Exception($"Failed to add currency {resourceId}: {ex.Message}", ex);
             }
         }
     }

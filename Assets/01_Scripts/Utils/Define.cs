@@ -4,6 +4,15 @@ using UnityEngine;
 
 public class Define
 {
+    // 서버 키
+    public const string k_PlayerDataKey = "PLAYER_DATA";
+    public const string k_PlayerNameKey = "PLAYER_NAME";
+
+    public const string k_GoldCurrencyKey = "GOLD";
+    public const string k_HealthPotionKey = "HEALTH_POTION";
+
+    public const string k_goldPurchase100Id = "GOLD_PURCHASE_100";
+    public const string k_HealthPotionPurchaseId = "HEALTH_POTION_VIRTUAL_PURCHASE";
     public enum Scene
     {
         Unknown,

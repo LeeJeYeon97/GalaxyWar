@@ -11,39 +11,46 @@ using Unity.Services.CloudCode.GeneratedBindings.Project;
 public class PlayerDataManager
 {
     public PlayerDataServiceBindings playerDataServiceBindings;
-    public PlayerEconomyServiceBindings playerEconomyServiceBindings;
 
     public event Action<PlayerData> PlayerDataUpdated;
 
     public PlayerData PlayerDataLocal;
+
     public void Init()
     {
+        Managers.Login.OnLoginSuccess -= InitializePlayer;
         Managers.Login.OnLoginSuccess += InitializePlayer;
 
-        // 클라우드 코드 바인딩 초기화
-        //MyModuleBindings = new MyModuleBindings(CloudCodeService.Instance);
-    }
+        Managers.Initialize.OnUnityServiceInit -= SetupBindings;
+        Managers.Initialize.OnUnityServiceInit += SetupBindings;
 
+    }
+    // 2. 바인딩 세팅용 함수를 따로 만듭니다.
+    private void SetupBindings()
+    {
+        if (playerDataServiceBindings == null)
+        {
+            playerDataServiceBindings = new PlayerDataServiceBindings(CloudCodeService.Instance);
+        }
+    }
     private async void InitializePlayer()
     {
         try
         {
             // 추가: 로그인이 성공해서 UGS가 완전히 켜진 지금 세팅합니다!
-            if (playerDataServiceBindings == null)
-            {
-                playerDataServiceBindings = new PlayerDataServiceBindings(CloudCodeService.Instance);
-            }
-            if(playerEconomyServiceBindings == null)
-            {
-                playerEconomyServiceBindings = new PlayerEconomyServiceBindings(CloudCodeService.Instance);
-            }
+            
+            // 추가: Auth 시스템이 가지고 있는 내 닉네임(태그 포함)을 가져옵니다.
+            string myName = AuthenticationService.Instance.PlayerName;
 
-            var playerDataResponse = await playerDataServiceBindings.HandlePlayerSignIn();
+            var playerDataResponse = await playerDataServiceBindings.HandlePlayerSignIn(myName);
+
             PlayerDataLocal = playerDataResponse.PlayerData;
             PlayerDataUpdated?.Invoke(PlayerDataLocal);
+
+            Managers.PlayerEconomy.HandleEconomyUpdate(playerDataResponse.PlayerEconomyData);
+
             LogResponse(playerDataResponse);
 
-            //await playerEconomyServiceBindings.AddHealthPotion();
 
         }
         catch(CloudCodeException e)
@@ -62,9 +69,5 @@ public class PlayerDataManager
             $"Economy : {economyJson}\n" +
             $"==============================="
             );
-    }
-    public void Clear()
-    {
-        Managers.Login.OnLoginSuccess -= InitializePlayer;
     }
 }

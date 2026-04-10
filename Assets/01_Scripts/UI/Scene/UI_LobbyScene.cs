@@ -2,6 +2,7 @@ using DG.Tweening;
 using NUnit.Framework;
 using System.Collections.Generic;
 using TMPro;
+using Unity.Services.CloudCode.GeneratedBindings.Project;
 using UnityEngine;
 using UnityEngine.UI;
 using static Define;
@@ -18,6 +19,8 @@ public class UI_LobbyScene : UI_Scene
         Button_GameStart,
         Button_Profile,
         Button_Setting,
+        Button_BuyCoins,
+        Button_BuyItem,
     }
     public enum Panels
     {
@@ -26,6 +29,10 @@ public class UI_LobbyScene : UI_Scene
         Panel_Main,
         //Panel_Setting,
         Panel_Rank,
+    }
+    enum Texts
+    {
+        Text_Coins
     }
 
     public List<GameObject> PanelList = new List<GameObject>();
@@ -41,11 +48,24 @@ public class UI_LobbyScene : UI_Scene
 
         Bind<Button>(typeof(Buttons));
         Bind<GameObject>(typeof(Panels));
+        Bind<TMP_Text>(typeof(Texts));
+        
 
         SetPanels();
         ButtonSetting();
+
+        Managers.PlayerEconomy.PlayerEconomyUpdated -= UpdateCoinsText;
+        Managers.PlayerEconomy.PlayerEconomyUpdated += UpdateCoinsText;
+
+        if (Managers.PlayerData.PlayerDataLocal != null)
+        {
+            UpdateCoinsText(Managers.PlayerEconomy.EconomyDataLocal);
+        }
     }
-    
+    public override void Clear()
+    {
+        Managers.PlayerEconomy.PlayerEconomyUpdated -= UpdateCoinsText;
+    }
     private void OnClickStartButton()
     {
         Managers.Sound.Play(SoundID.Sfx_UIButtonClick);
@@ -54,6 +74,21 @@ public class UI_LobbyScene : UI_Scene
     private void OnClickProfileButton()
     {
         Managers.UI.ShowPopupUI<UI_ProfilePopup>();
+    }
+
+    private void OnClickBuyCoinsButton()
+    {
+        // TODO
+        Debug.Log("코인 구매");
+    }
+    private void OnClickBuyItem()
+    {
+        //Managers.VirtualStore.PurchaseHealthPotion();
+    }
+    private void UpdateCoinsText(PlayerEconomyData data)
+    {
+        int amount = data.Currencies[Define.k_GoldCurrencyKey];
+        GetTMP((int)Texts.Text_Coins).text = amount.ToString("N0");
     }
     public void ShowPanel(Panels targetPanel)
     {
@@ -150,6 +185,10 @@ public class UI_LobbyScene : UI_Scene
         GetButton((int)_currentTabButton).transform.localScale = Vector3.one * 1.1f;
 
         GetButton((int)Buttons.Button_Setting).onClick.AddListener(() => Managers.UI.ShowPopupUI<UI_SettingsPopup>());
+
+        GetButton((int)Buttons.Button_BuyCoins).onClick.AddListener(OnClickBuyCoinsButton);
+
+        GetButton((int)Buttons.Button_BuyItem).onClick.AddListener(OnClickBuyItem);
     }
     private Buttons GetTabButtonByPanel(Panels panel)
     {
@@ -163,4 +202,6 @@ public class UI_LobbyScene : UI_Scene
             default: return Buttons.Button_MainPanel;
         }
     }
+
+    
 }
