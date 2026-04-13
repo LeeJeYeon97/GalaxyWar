@@ -13,21 +13,13 @@ public class UI_LobbyScene : UI_Scene
     {
         Button_ShopPanel,
         Button_MainPanel,
-        //Button_InfoPanel,
-        //Button_SettingPanel,
         Button_RankingPanel,
-        Button_GameStart,
         Button_Profile,
-        Button_Setting,
-        Button_BuyCoins,
-        Button_BuyItem,
     }
     public enum Panels
     {
         Panel_Shop,
-        //Panel_Info,
         Panel_Main,
-        //Panel_Setting,
         Panel_Rank,
     }
     enum Texts
@@ -50,7 +42,6 @@ public class UI_LobbyScene : UI_Scene
         Bind<GameObject>(typeof(Panels));
         Bind<TMP_Text>(typeof(Texts));
         
-
         SetPanels();
         ButtonSetting();
 
@@ -66,24 +57,9 @@ public class UI_LobbyScene : UI_Scene
     {
         Managers.PlayerEconomy.PlayerEconomyUpdated -= UpdateCoinsText;
     }
-    private void OnClickStartButton()
-    {
-        Managers.Sound.Play(SoundID.Sfx_UIButtonClick);
-        Managers.Scene.LoadScene(Define.Scene.GameScene);
-    }
     private void OnClickProfileButton()
     {
         Managers.UI.ShowPopupUI<UI_ProfilePopup>();
-    }
-
-    private void OnClickBuyCoinsButton()
-    {
-        // TODO
-        Debug.Log("코인 구매");
-    }
-    private void OnClickBuyItem()
-    {
-        //Managers.VirtualStore.PurchaseHealthPotion();
     }
     private void UpdateCoinsText(PlayerEconomyData data)
     {
@@ -175,33 +151,22 @@ public class UI_LobbyScene : UI_Scene
     }
     public void ButtonSetting()
     {
-        GetButton((int)Buttons.Button_GameStart).onClick.AddListener(OnClickStartButton);
+
         GetButton((int)Buttons.Button_ShopPanel).onClick.AddListener(() => ShowPanel(Panels.Panel_Shop));
-        //GetButton((int)Buttons.Button_SettingPanel).onClick.AddListener(() => ShowPanel(Panels.Panel_Setting));
         GetButton((int)Buttons.Button_MainPanel).onClick.AddListener(() => ShowPanel(Panels.Panel_Main));
-
         GetButton((int)Buttons.Button_Profile).onClick.AddListener(OnClickProfileButton);
-
         GetButton((int)_currentTabButton).transform.localScale = Vector3.one * 1.1f;
 
-        GetButton((int)Buttons.Button_Setting).onClick.AddListener(() => Managers.UI.ShowPopupUI<UI_SettingsPopup>());
 
-        GetButton((int)Buttons.Button_BuyCoins).onClick.AddListener(OnClickBuyCoinsButton);
-
-        GetButton((int)Buttons.Button_BuyItem).onClick.AddListener(OnClickBuyItem);
     }
     private Buttons GetTabButtonByPanel(Panels panel)
     {
         switch (panel)
         {
             case Panels.Panel_Shop: return Buttons.Button_ShopPanel;
-            //case Panels.Panel_Info: return Buttons.Button_InfoPanel;
             case Panels.Panel_Main: return Buttons.Button_MainPanel;
-            //case Panels.Panel_Setting: return Buttons.Button_SettingPanel;
             case Panels.Panel_Rank: return Buttons.Button_RankingPanel;
             default: return Buttons.Button_MainPanel;
         }
     }
-
-    
 }

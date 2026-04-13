@@ -120,7 +120,7 @@ public class VirtualStoreManager
     //        Debug.LogException(ex);
     //    }
     //}
-    public async void PurchaseItem(string purchaseId)
+    public async void PurchaseVurtualItem(string purchaseId)
     {
         int cost = GetItemCostFromConfig(purchaseId);
 

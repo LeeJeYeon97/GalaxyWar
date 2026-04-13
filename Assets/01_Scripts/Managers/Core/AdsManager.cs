@@ -1,32 +1,32 @@
+using Newtonsoft.Json;
 using System;
-using UnityEngine;
+using System.Data;
+using System.Threading.Tasks;
+using Unity.Services.Authentication;
+using Unity.Services.CloudCode;
+using Unity.Services.CloudCode.GeneratedBindings;
 using Unity.Services.LevelPlay;
+using UnityEngine;
 
 [Serializable]
 public class AdsManager
 {
     // 아이언소스 대시보드에서 발급받은 App Key를 여기에 넣습니다.
     [Header("App key")]
-    [SerializeField] private string androidAppKey = "257e5279d";
-    [SerializeField] private string iosAppKey;
+    [SerializeField] private const string androidAppKey = "257e5279d";
+    [SerializeField] private const string iosAppKey = "";
 
     [Header("Banner Ad Unit Id")]
     [SerializeField] private string androidBannerAdUnitId = "hq871f6jphj2tmtu";
-    [SerializeField] private string iosBannerAdUnitId;
+    [SerializeField] private const string iosBannerAdUnitId = "";
 
     [Header("Interstitial Ad Unit Id")]
     [SerializeField] private string androidInterstitialAdUnitId = "r7hx8d6lrtdp0m1h";
-    [SerializeField] private string iosInterstitialAdUnitId;
+    [SerializeField] private const string iosInterstitialAdUnitId = "";
 
     [Header("Rewarded Ad Unit Id")]
     [SerializeField] private string androidRewardedAdUnitId = "zqhm9b6kdyoaoosw";
-    [SerializeField] private string iosRewardedAdUnitId;
-
-    // 마지막으로 전면/보상형 광고를 본 시간 (게임 시작 시점 기준)
-    private float _lastAdTime = -999f;
-
-    // 전면 광고 쿨타임 (예: 180초 = 3분)
-    private float _adCooldown = 180f;
+    [SerializeField] private const string iosRewardedAdUnitId = "";
 
     private string appKey
     {
@@ -83,31 +83,87 @@ public class AdsManager
         }
     }
 
+
+    private bool _IsInit;
+
+    // 마지막으로 전면/보상형 광고를 본 시간 (게임 시작 시점 기준)
+    private DateTime _lastRewardAdCompletionTime;
+    private float _lastInterstitialAdTime = -999f;
+
+    // 전면 광고 쿨타임 (예: 180초 = 3분)
+    private float _rewardAdCooldownSeconds = 180f;
+    private float _interstitialAdCooldownSeconds = 180f;
+
+    // 레벨플레이 광고 객체
     private LevelPlayBannerAd bannerAd;
     private LevelPlayInterstitialAd interstitialAd;
     private LevelPlayRewardedAd rewardedAd;
 
+    private AdServiceBindings _adsServiceBindings;
+
+    private string _lastAdToken;
+
+    public event Action<bool> AdSuccessfullyCompleted;
+    public event Action<bool> AdAvailable;
+
     public void Init()
     {
+        LevelPlay.OnInitSuccess += SdkInitializationCompleted;
+        LevelPlay.OnInitFailed += SdkInitializationFailed;
+
+        Managers.Initialize.OnUnityServiceInit -= SetupBindings;
+        Managers.Initialize.OnUnityServiceInit += SetupBindings;
+    }
+    public void SetupBindings()
+    {
+        _adsServiceBindings = new AdServiceBindings(CloudCodeService.Instance);
+
+        AuthenticationService.Instance.SignedIn += InitializeLevelPlayAds;
+        if (AuthenticationService.Instance.IsSignedIn && _IsInit == false)
+        {
+            InitializeLevelPlayAds();
+        }
+
+    }
+    // 게임에 로그인하면 레벨플레이 초기화 실행
+    private void InitializeLevelPlayAds()
+    {
+        string userId = AuthenticationService.Instance.PlayerId;
+
+        //[핵심 변경] 유니티 에디터이거나, 빌드 세팅에서 'Development Build'를 체크했을 때만 컴파일됩니다.
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+        LevelPlay.SetMetaData("is_test_suite", "enable");
+        Debug.Log("[Ads] Test Suite Enabled (Development Mode)");
+#endif
+        LevelPlay.Init(appKey, userId);
+        LevelPlay.SetPauseGame(true);
+    }
+    // 레벨플레이 초기화 완료시 실행
+    private void SdkInitializationCompleted(LevelPlayConfiguration configuration)
+    {
+        if (_IsInit == true) return;
+
+        _IsInit = true;
+        Debug.Log("LevelPlay SDK Init Success");
+
+        // 에디터에서 플레이하거나, 개발용 빌드를 뽑았을 때만 실행됩니다.
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+        // 1. 연동 검증: "AdMob, Unity Ads 등 내가 붙인 광고들이 잘 연결되었나?" 콘솔에 로그를 쫙 뿌려줍니다.
         LevelPlay.ValidateIntegration();
-        // Register OnInitFailed and OnInitSuccess listeners
-        LevelPlay.OnInitSuccess += SdkInitializationCompletedEvent;
-        LevelPlay.OnInitFailed += SdkInitializationFailedEvent;
-        // SDK init
-        LevelPlay.Init(appKey);
-    }
 
-    private void SdkInitializationFailedEvent(LevelPlayInitError error)
-    {
-        Debug.LogError("LevelPlay Init Failed" + error);
-    }
+        // 2. 테스트 메뉴 띄우기: 화면에 아이언소스 테스트 UI를 강제로 띄웁니다.
+        LevelPlay.LaunchTestSuite();
 
-    private void SdkInitializationCompletedEvent(LevelPlayConfiguration configuration)
-    {
-        Debug.Log("LevelPlay Init Success");
+        Debug.Log("[Ads] Launching test suite");
+#endif
+
         CreateBannerAd();
         CreateInterstitialAd();
         CreateRewardedAd();
+    }
+    private void SdkInitializationFailed(LevelPlayInitError error)
+    {
+        Debug.LogError("LevelPlay Init Failed" + error);
     }
 
     #region 배너광고
@@ -143,6 +199,9 @@ public class AdsManager
     }
     public void ShowBanner()
     {
+        // [설명] 실제로 배너를 메모리에 올리고 화면에 보여주는 역할을 합니다.
+        // [주의] CreateBannerAd에서 configBuilder.SetDisplayOnLoad(true)가 
+        // 기본값이기 때문에 LoadAd()만 호출해도 화면에 나타납니다.
         bannerAd.LoadAd();
     }
     public void HideBanner()
@@ -193,18 +252,18 @@ public class AdsManager
     public void ShowInterstitialAd()
     {
         // 1. 마지막으로 광고를 본 지 180초가 지났는지 확인
-        if (Time.time - _lastAdTime >= _adCooldown)
+        if (Time.time - _lastInterstitialAdTime >= _interstitialAdCooldownSeconds)
         {
             if (interstitialAd.IsAdReady())
             {
                 interstitialAd.ShowAd();
                 // 2. 광고를 띄웠으니 쿨타임 초기화
-                _lastAdTime = Time.time;
+                _lastInterstitialAdTime = Time.time;
             }
         }
         else
         {
-            Debug.Log($"아직 쿨타임입니다. 남은 시간: {_adCooldown - (Time.time - _lastAdTime)}초");
+            Debug.Log($"아직 쿨타임입니다. 남은 시간: {_interstitialAdCooldownSeconds - (Time.time - _lastInterstitialAdTime)}초");
             // 쿨타임 중이면 광고 없이 그냥 조용히 넘어갑니다!
         }
     }
@@ -216,24 +275,37 @@ public class AdsManager
     void InterstitialOnAdDisplayedEvent(LevelPlayAdInfo adInfo) { }
     void InterstitialOnAdDisplayFailedEvent(LevelPlayAdInfo adInfo, LevelPlayAdError error) { }
     void InterstitialOnAdClickedEvent(LevelPlayAdInfo adInfo) { }
-    void InterstitialOnAdClosedEvent(LevelPlayAdInfo adInfo) 
+    async void InterstitialOnAdClosedEvent(LevelPlayAdInfo adInfo) 
     {
+        Debug.LogWarning("No ads to show, will retry");
+        await Task.Delay(5000); // 5000밀리초(5초) 대기
         LoadInterstitialAd(); 
     }
     void InterstitialOnAdInfoChangedEvent(LevelPlayAdInfo adInfo) { }
     #endregion
 
     #region 보상형 광고
+    
     private void CreateRewardedAd()
     {
+        // 보상형 객체 생성
         rewardedAd = new LevelPlayRewardedAd(rewardedAdUnitId);
 
-        rewardedAd.OnAdLoaded += RewardedOnAdLoadedEvent;
-        rewardedAd.OnAdLoadFailed += RewardedOnAdLoadFailedEvent;
-        rewardedAd.OnAdDisplayed += RewardedOnAdDisplayedEvent;
-        rewardedAd.OnAdDisplayFailed += RewardedOnAdDisplayFailedEvent;
-        rewardedAd.OnAdRewarded += RewardedOnAdRewardedEvent;
-        rewardedAd.OnAdClosed += RewardedOnAdClosedEvent;
+        // 이벤트 구독
+        // Load이벤트
+        rewardedAd.OnAdLoaded += RewardedOnAdLoaded;
+        rewardedAd.OnAdLoadFailed += RewardedOnAdLoadFailed;
+
+        // DisPlay이벤트
+        rewardedAd.OnAdDisplayed += RewardedOnAdDisplayed;
+        rewardedAd.OnAdDisplayFailed += RewardedOnAdDisplayFailed;
+
+        // 리워드 이벤트
+        rewardedAd.OnAdRewarded += RewardedOnAdRewarded;
+
+        // 완료 이벤트
+        rewardedAd.OnAdClosed += RewardedOnAdClosed;
+
         // Optional 
         rewardedAd.OnAdClicked += RewardedOnAdClickedEvent;
         rewardedAd.OnAdInfoChanged += RewardedOnAdInfoChangedEvent;
@@ -242,39 +314,233 @@ public class AdsManager
     }
     public void LoadRewardedAd()
     {
-        rewardedAd.LoadAd();
-    }
-    public void ShowRewardedAd()
-    {
-        if(rewardedAd.IsAdReady())
+        if(rewardedAd != null)
         {
-            rewardedAd.ShowAd();
+            rewardedAd.LoadAd();
         }
     }
-    void RewardedOnAdLoadedEvent(LevelPlayAdInfo adInfo) { }
-    void RewardedOnAdLoadFailedEvent(LevelPlayAdError error) 
+    public void ShowRewardedAd(string placementName)
     {
+        //Managers.Ads.AdAvailable += (isReady) => {
+        //    myRewardButton.interactable = isReady;
+        //};
+
+
+        if (_IsInit == false)
+        {
+            Debug.LogWarning("SDK not initialized");
+            return;
+        }
+        if(rewardedAd == null)
+        {
+            Debug.LogWarning("Rewarded ad object not created");
+            return;
+        }
+
+        bool isAdReady = rewardedAd.IsAdReady();
+        bool isCooldownExpired = HasCooldownExpired();
+        bool isPlacementCapped = LevelPlayRewardedAd.IsPlacementCapped(placementName);
+
+        if(isAdReady == false)
+        {
+            Debug.LogWarning("Ad not ready - still loading or no inventory available");
+            return;
+        }
+        if(isPlacementCapped == true)
+        {
+            Debug.LogWarning("Placement has reached its capping limit");
+            return;
+        }
+        if(isCooldownExpired == false)
+        {
+            Debug.LogWarning("Ad Cooldown");
+            return;
+        }
+
+        if(string.IsNullOrEmpty(placementName))
+        {
+            Debug.LogWarning("Placement name is empty, showing ad unit without placement");
+            rewardedAd.ShowAd();
+        }
+        else
+        {
+            rewardedAd.ShowAd(placementName);
+        }
+    }
+    private bool HasCooldownExpired()
+    {
+        // 1. 아직 한 번도 광고를 안 본 뉴비라면? -> 무조건 통과!
+        if (_lastRewardAdCompletionTime == default)
+        {
+            return true;
+        }
+
+        // 2. 현재 시간(UtcNow)에서 마지막으로 광고를 본 시간을 뺍니다.
+        // 예: 현재가 12시 05분이고, 마지막 시청이 12시 00분이면 -> '5분(300초)'이라는 경과 시간이 나옵니다.
+        TimeSpan timeSinceLastAd = DateTime.UtcNow - _lastRewardAdCompletionTime;
+
+        // 3. 목표 쿨타임(180초)에서 지나간 시간(300초)을 뺍니다.
+        // 180 - 300 = -120초 (쿨타임이 이미 120초나 지났다는 뜻입니다)
+        float remaining = _rewardAdCooldownSeconds - (float)timeSinceLastAd.TotalSeconds;
+
+        // 4. 남은 시간이 마이너스(-)로 떨어지는 것을 막기 위해 수학 함수를 씁니다.
+        // 0과 -120 중 더 큰 값(Max)을 고르므로, remaining은 깔끔하게 '0'이 됩니다.
+        remaining = Math.Max(0f, remaining);
+
+        // 5. 판정: 남은 시간이 0초보다 크면? (아직 쿨타임 중!)
+        if (remaining > 0f)
+        {
+            Debug.Log($"Ad still on cooldown for {remaining:F1} seconds");
+            return false; // 쿨타임 안 지났음!
+        }
+
+        // 6. 남은 시간이 0초 이하면? (쿨타임 끝!)
+        return true;
+    }
+    void RewardedOnAdLoaded(LevelPlayAdInfo adInfo) 
+    {
+        AdAvailable?.Invoke(true);
+        Debug.Log($"Rewarded ad loaded : {adInfo.AdNetwork}");
+    }
+    private async void RewardedOnAdLoadFailed(LevelPlayAdError error) 
+    {
+        Debug.LogError($"Rewarded ad failed to load : {error.ErrorMessage} (Code : {error.ErrorCode}");
+
+        // Different retry strategies based on actual LevelPlay error codes
+        // Note: Some error codes may not apply to format - https://developers.is.com/ironsource-mobile/air/supersonic-sdk-error-codes/
+        switch (error.ErrorCode)
+        {
+            case 509: // Tried waterfall, all networks say "no inventory"
+                Debug.LogWarning("No ads to show, will retry");
+                await Task.Delay(5000); // 5000밀리초(5초) 대기
+                LoadRewardedAd();       // 5초 뒤에 실행됨!
+                break;
+
+            case 520:
+                Debug.LogWarning("No internet connection");
+                AdAvailable?.Invoke(false);
+                // Could implement connectivity-based retry logic here
+                break;
+
+            case 524:
+                Debug.LogWarning("Placement is capped, will not retry loading");
+                AdAvailable?.Invoke(false);
+                // Don't retry - placement is capped
+                break;
+
+            case 526:
+                Debug.LogWarning("Ad unit has reached daily cap, will not retry");
+                AdAvailable?.Invoke(false);
+                // Don't retry - daily cap reached
+                break;
+
+            // 1022: Cannot show an Rewarded Video (RV) while another RV is showing
+            // 1023: Show RV called when there are no available ads to show, check IsAdReady before calling ShowAd
+
+            default:
+                Debug.LogWarning($"Unknown error code {error.ErrorCode}, retrying with standard delay");
+                await Task.Delay(2000); // 5000밀리초(5초) 대기
+                LoadRewardedAd();       // 5초 뒤에 실행됨!
+                break;
+        }
+    }
+    void RewardedOnAdDisplayed(LevelPlayAdInfo adInfo) { Debug.Log("Rewarded ad displayed"); }
+    void RewardedOnAdDisplayFailed(LevelPlayAdInfo adInfo, LevelPlayAdError error) 
+    {
+        Debug.LogError($"Rewarded ad failed to display : {error}");
+        AdSuccessfullyCompleted?.Invoke(false);
+    }
+
+    // 보상 지급
+    private async void RewardedOnAdRewarded(LevelPlayAdInfo adInfo, LevelPlayReward reward) 
+    {
+        try
+        {
+            Debug.Log($"Validating ad reward : {reward.Name} amount : {reward.Amount}");
+
+
+            // Create a unique token for this ad view
+            string adToken = GenerateAdToken(adInfo, reward);
+            DateTime completionTime = DateTime.UtcNow;
+
+            _lastAdToken = adToken;
+            _lastRewardAdCompletionTime = completionTime;
+
+            var playerEconomyData = await _adsServiceBindings.HandleGrantVideoAdReward(adToken);
+            Managers.PlayerEconomy.HandleEconomyUpdate(playerEconomyData);
+            
+            AdSuccessfullyCompleted?.Invoke(true);
+
+            Debug.Log($"Ad reward granted successfully : {reward.Name} x{reward.Amount}");
+        }
+        catch (Exception e)
+        {
+            Debug.LogError($"Failed to validate ad reward : {e.Message}");
+            AdSuccessfullyCompleted?.Invoke(false);
+        }
+    }
+    private string GenerateAdToken(LevelPlayAdInfo adInfo, LevelPlayReward reward)
+    {
+        // Validate required data is present
+        if (adInfo == null)
+        {
+            throw new ArgumentException("Ad info cannot be null for token generation");
+        }
+
+        if (reward == null)
+        {
+            throw new ArgumentException("Reward info cannot be null for token generation");
+        }
+
+        if (string.IsNullOrEmpty(adInfo.InstanceId))
+        {
+            throw new ArgumentException("Ad instance ID cannot be null or empty for token generation");
+        }
+
+        // 1. 아이언소스 대시보드에서 설정한 진짜 보상 이름을 가져옵니다.
+        string finalRewardName = reward.Name;
+
+        // 2. 유니티 에디터에서 테스트할 때는 "editor_reward"로 오기 때문에, 테스트용 기본 재화로 덮어씌웁니다.
+#if UNITY_EDITOR
+        if (finalRewardName == "editor_reward")
+        {
+            finalRewardName = "GOLD"; // 에디터 테스트 시 기본 지급할 재화 ID
+        }
+#endif
+
+        // Create token with ad info, reward data, and timestamp
+        var tokenData = new
+        {
+            // Store as ticks for consistent serialization
+            Timestamp = DateTime.UtcNow.Ticks,
+            InstanceId = adInfo.InstanceId,
+            InstanceName = adInfo.InstanceName,
+            AdNetwork = adInfo.AdNetwork,
+            PlacementName = adInfo.PlacementName,
+            RewardName = finalRewardName, // Can use RewardName = reward.Name, but in editor reward is "editor_reward" and will fail validation
+            RewardAmount = reward.Amount
+        };
+
+        string json = JsonConvert.SerializeObject(tokenData);
+        Debug.Log($"Generated ad token: {json}");
+        return json;
+    }
+
+    void RewardedOnAdClosed(LevelPlayAdInfo adInfo) 
+    {
+        Debug.Log("Rewarded ad closed");
         LoadRewardedAd();
     }
-    void RewardedOnAdDisplayedEvent(LevelPlayAdInfo adInfo) { }
-    void RewardedOnAdDisplayFailedEvent(LevelPlayAdInfo adInfo, LevelPlayAdError error) { }
-    void RewardedOnAdRewardedEvent(LevelPlayAdInfo adInfo, LevelPlayReward adReward) 
+    void RewardedOnAdClickedEvent(LevelPlayAdInfo adInfo) { Debug.Log("Rewarded ad clicked"); }
+    void RewardedOnAdInfoChangedEvent(LevelPlayAdInfo adInfo) 
     {
-        // 보상 처리
-        string rewardName = adReward.Name;
-        int rewardAmount = adReward.Amount;
-        Debug.Log($"reawrdName : {rewardName}, rewardAmount : {rewardAmount}");
-
-        _lastAdTime = Time.time;
-
-        Managers.Game.RevivePlayer();
+        Debug.Log($"Rewarded ad info changed : {adInfo.AdNetwork}");
+        if(adInfo != null)
+        {
+            Debug.Log($"Updated ad info - Network : {adInfo.AdNetwork}, Instance : {adInfo.InstanceId}");
+            // Could trigger UI Update here
+        }
     }
-    void RewardedOnAdClosedEvent(LevelPlayAdInfo adInfo) 
-    {
-        LoadRewardedAd();
-    }
-    void RewardedOnAdClickedEvent(LevelPlayAdInfo adInfo) { }
-    void RewardedOnAdInfoChangedEvent(LevelPlayAdInfo adInfo) { }
     #endregion
 }
 

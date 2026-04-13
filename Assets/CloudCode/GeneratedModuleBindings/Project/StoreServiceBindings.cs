@@ -13,16 +13,6 @@ namespace Unity.Services.CloudCode.GeneratedBindings
             k_Service = service;
         }
 
-        public async Task<Project.PlayerEconomyData> VirtualPurchaseHealthPotion()
-        {
-            return await k_Service.CallModuleEndpointAsync<Project.PlayerEconomyData>(
-                "Project",
-                "VirtualPurchaseHealthPotion",
-                new Dictionary<string, object>()
-                {
-                });
-        }
-
         public async Task<Project.PlayerEconomyData> PurchaseVirtualItem(string purchaseId)
         {
             return await k_Service.CallModuleEndpointAsync<Project.PlayerEconomyData>(

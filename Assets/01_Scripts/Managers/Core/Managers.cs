@@ -119,7 +119,9 @@ public class Managers : MonoBehaviour
             // Core
             // InitManager초기화는 처음 Scene에서 진행하기
 
-            
+            // 로그 안보이게
+            Debug.unityLogger.logEnabled = Debug.isDebugBuild;
+
             PlayerData.Init();
             PlayerEconomy.Init();
             VirtualStore.Init();

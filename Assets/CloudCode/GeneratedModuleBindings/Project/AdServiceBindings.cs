@@ -5,32 +5,22 @@ using System;
 
 namespace Unity.Services.CloudCode.GeneratedBindings
 {
-    public class PlayerEconomyServiceBindings
+    public class AdServiceBindings
     {
         readonly ICloudCodeService k_Service;
-        public PlayerEconomyServiceBindings(ICloudCodeService service)
+        public AdServiceBindings(ICloudCodeService service)
         {
             k_Service = service;
         }
 
-        public async Task<Project.PlayerEconomyData> GetPlayerEconomyData()
+        public async Task<Project.PlayerEconomyData> HandleGrantVideoAdReward(string adToken)
         {
             return await k_Service.CallModuleEndpointAsync<Project.PlayerEconomyData>(
                 "Project",
-                "GetPlayerEconomyData",
+                "HandleGrantVideoAdReward",
                 new Dictionary<string, object>()
                 {
-                });
-        }
-
-        public async Task<int> GetInventoryItemAmount(string key)
-        {
-            return await k_Service.CallModuleEndpointAsync<int>(
-                "Project",
-                "GetInventoryItemAmount",
-                new Dictionary<string, object>()
-                {
-                    {"key", key},
+                    {"adToken", adToken},
                 });
         }
     }

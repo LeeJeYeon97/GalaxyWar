@@ -9,6 +9,7 @@ namespace Unity.Services.CloudCode.GeneratedBindings.Project
     {
         public Dictionary<string,int> Currencies;
         public Dictionary<string,int> ItemInventory;
+        public List<EquipmentItemData> EquipmentList;
 
         [Preserve]
         public PlayerEconomyData ()

@@ -10,9 +10,14 @@ public class Define
 
     public const string k_GoldCurrencyKey = "GOLD";
     public const string k_HealthPotionKey = "HEALTH_POTION";
+    public const string k_testEquipKey = "TEST_EQUIP";
 
     public const string k_goldPurchase100Id = "GOLD_PURCHASE_100";
     public const string k_HealthPotionPurchaseId = "HEALTH_POTION_VIRTUAL_PURCHASE";
+    public const string k_testEquipPurchaseId = "VP_TEST_EQUIP";
+
+    public const string placementShopGoldAd = "Shop_Gold";
+
     public enum Scene
     {
         Unknown,

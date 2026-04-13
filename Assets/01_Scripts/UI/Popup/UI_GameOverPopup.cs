@@ -81,7 +81,7 @@ public class UI_GameOverPopup : UI_Popup
         {
             return;
         }
-        Managers.AD.ShowRewardedAd();
+        Managers.AD.ShowRewardedAd("Main_Menu");
 
         ClosePopupUI();
     }
