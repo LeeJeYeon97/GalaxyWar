@@ -55,10 +55,10 @@ public class UI_LoginScene : UI_Scene
         Managers.PlayerEconomy.PlayerEconomyUpdated += OnInitFinished;
 
         // 예외 처리: 이미 로딩이 다 끝난 상태에서 UI가 켜졌다면 바로 완료 처리
-        if (Managers.PlayerEconomy.EconomyDataLocal != null)
-        {
-            OnInitFinished(Managers.PlayerEconomy.EconomyDataLocal);
-        }
+        //if (Managers.PlayerEconomy.EconomyDataLocal != null)
+        //{
+        //    OnInitFinished(Managers.PlayerEconomy.EconomyDataLocal);
+        //}
     }
     public override void Clear()
     {
@@ -86,7 +86,7 @@ public class UI_LoginScene : UI_Scene
     // PlayerDataManager가 끝났을 때: 진짜 로딩 완료! (PlayerData 매개변수 필요)
     private void OnInitFinished(PlayerEconomyData data)
     {
-        loadingBar.DOValue(1f, 0.5f).OnComplete(() =>
+        loadingBar.DOValue(1f, 0.2f).OnComplete(() =>
         {
             loadingText.text = "아무 곳이나 터치하여 시작";
             backgroundButton.gameObject.SetActive(true);
@@ -94,7 +94,7 @@ public class UI_LoginScene : UI_Scene
     }
     public void UpdateProgress(float progress, string text)
     {
-        loadingBar.DOValue(progress, 0.5f);
+        loadingBar.DOValue(progress, 0.2f);
 
         if (text != null)
         {

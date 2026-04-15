@@ -8,15 +8,18 @@ public class Define
     public const string k_PlayerDataKey = "PLAYER_DATA";
     public const string k_PlayerNameKey = "PLAYER_NAME";
 
+    // 재화키
     public const string k_GoldCurrencyKey = "GOLD";
-    public const string k_HealthPotionKey = "HEALTH_POTION";
-    public const string k_testEquipKey = "TEST_EQUIP";
 
-    public const string k_goldPurchase100Id = "GOLD_PURCHASE_100";
-    public const string k_HealthPotionPurchaseId = "HEALTH_POTION_VIRTUAL_PURCHASE";
-    public const string k_testEquipPurchaseId = "VP_TEST_EQUIP";
+    // 인벤토리 아이템 키
+    public const string k_RemoveAdItem = "REMOVE_AD_TICKET";
 
-    public const string placementShopGoldAd = "Shop_Gold";
+    // 광고 키
+    public const string placement_ShopGold = "Shop_Gold";
+    public const string placement_InGameCardReload = "InGame_Card_Reload";
+
+    // 구매 키
+    public const string k_IAP_RemoveAd = "IAP_REMOVE_AD";
 
     public enum Scene
     {

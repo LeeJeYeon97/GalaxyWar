@@ -8,7 +8,7 @@ using UnityEngine.Rendering;
 using static Define;
 
 
-public class BulletController : MonoBehaviour
+public class BulletController : BaseController
 {
 
     [field: SerializeReference] public BaseBulletStat Stat { get; private set; }
@@ -19,6 +19,10 @@ public class BulletController : MonoBehaviour
 
     private BulletParticle _particle;
 
+
+    //  2. 물리 정지 상태를 기억할 변수들
+    private bool _isPhysicsPaused = false;
+    private Vector2 _savedVelocity;
 
     // 바뀌는 값은 여기서 선언
     [field: SerializeField] public int currentBounceCount { get; private set; }
@@ -56,7 +60,37 @@ public class BulletController : MonoBehaviour
         Managers.Game.RemoveActiveObject(this);
 
     }
-    private void FixedUpdate()
+    protected override void FixedUpdate()
+    {
+        bool isGamePaused = (Managers.Game.currentGameState == GameState.Pause);
+
+        // [얼리기] 방금 일시정지가 되었다면?
+        if (isGamePaused && !_isPhysicsPaused)
+        {
+            // 현재 날아가던 속도와 방향을 백업해둡니다.
+            _savedVelocity = Rb.linearVelocity;
+
+            // 미끄러짐 방지를 위해 속도를 0으로 덮어씌우고 물리 엔진 스위치를 끕니다.
+            Rb.linearVelocity = Vector2.zero;
+            Rb.simulated = false;
+            _isPhysicsPaused = true;
+        }
+        // [녹이기] 방금 일시정지가 풀렸다면?
+        else if (!isGamePaused && _isPhysicsPaused)
+        {
+            // 물리 엔진 스위치를 켜고, 아까 백업해둔 속도를 다시 넣어줍니다.
+            Rb.simulated = true;
+            Rb.linearVelocity = _savedVelocity;
+            _isPhysicsPaused = false;
+        }
+
+        //  4. 부모(BaseController)의 FixedUpdate 호출!
+        // (일시정지 중이면 여기서 막히고, 아니면 아래 OnFixedUpdate가 실행됩니다.)
+        base.FixedUpdate();
+    }
+
+    //  5. 실제 로직은 OnFixedUpdate 안에서 안전하게 실행
+    protected override void OnFixedUpdate()
     {
         WallBounce();
         Rotate();
@@ -206,7 +240,7 @@ public class BulletController : MonoBehaviour
         if(currentPierceCount < 0)
         {
             // 반납처리 필요
-            Managers.Pool.Release(gameObject);
+            Managers.Resource.Destroy(gameObject);
         }
         // 필요하다면 여기서 0 이하가 됐을 때의 로직을 추가할 수도 있음
     }
@@ -229,30 +263,7 @@ public class BulletController : MonoBehaviour
         if (currentBounceCount < 0)
         {
             // 반납처리 필요
-            Managers.Pool.Release(gameObject);
+            Managers.Resource.Destroy(gameObject);
         }
     }
-    //private IEnumerator CoDropFireTrail()
-    //{
-    //    Vector2 lastDropPos = transform.position;
-    //    float dropDistance = 1.0f; // 1.0 거리마다 장판 1개 생성
-
-    //    while (gameObject.activeSelf)
-    //    {
-    //        if (Vector2.Distance(lastDropPos, transform.position) >= dropDistance)
-    //        {
-    //            // 풀에서 파이어존(장판)을 꺼내서 총알 위치에 배치
-    //            GameObject fireZone = Managers.Pool.Get("FireZone").gameObject;
-    //            if (fireZone != null)
-    //            {
-    //                fireZone.transform.position = transform.position;
-    //                // (FireZone 스크립트 내부의 OnEnable에서 3초 뒤 자동 반납되도록 구현되어 있어야 합니다)
-    //            }
-
-    //            lastDropPos = transform.position;
-    //        }
-    //        yield return null;
-    //    }
-    //}
-   
 }

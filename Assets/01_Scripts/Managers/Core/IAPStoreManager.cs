@@ -144,7 +144,10 @@ public class IAPStoreManager
 
     private void OnPurchaseDeferred(DeferredOrder deferred)
     {
-        Debug.Log($"[IAP] OnPurchaseDeferred : {deferred.Info}");
+        // 5. '부모 승인 요청' 상태가 되면 일단 유저가 할 일은 끝났으므로 로딩 OFF!
+        Managers.UI.ClosePopupUI();
+        _isPurchaseInProgress = false;
+        Debug.Log($"[IAP] 구매 승인 대기 중 (Ask to Buy)");
     }
 
     //[핵심] 결제 대기 상태(구글/애플에서 결제는 성공했고, 우리가 보상을 줄 차례)
@@ -206,11 +209,16 @@ public class IAPStoreManager
         {
             Debug.LogError($"[IAP] Error processing pending order : {ex.Message}");
             PurchaseFailed?.Invoke("Purchase failed : " + ex.Message);
+
+            // 서버 검증에서 에러가 나면 여기서 로딩을 닫아줘야 유저가 다시 시도할 수 있습니다.
+            Managers.UI.ClosePopupUI();
+            _isPurchaseInProgress = false;
         }
     }
     private void OnPurchaseConfirmed(Order order)
     {
-        // 결제가 완전히 끝났으므로 락(Lock)을 풀어줍니다
+        // 3. 모든 과정(서버 보상 + 스토어 확정)이 끝났을 때 로딩 OFF!
+        Managers.UI.ClosePopupUI();
         _isPurchaseInProgress = false;
 
         if (order is FailedOrder failedOrder)
@@ -229,9 +237,10 @@ public class IAPStoreManager
     {
         // 결제 도중 취소하거나 잔액이 부족해 실패한 경우 락(Lock)을 풀어줍니다.
         _isPurchaseInProgress = false;
+        Managers.UI.ClosePopupUI();
 
         Debug.LogError($"[IAP] Purchase failed : {failed.FailureReason.ToString()}");
-        PurchaseFailed.Invoke($"Purchase failed : {failed.FailureReason.ToString()}");
+        PurchaseFailed?.Invoke($"Purchase failed : {failed.FailureReason.ToString()}");
 
     }
     private async void InitializeIAPSync()
@@ -386,8 +395,23 @@ public class IAPStoreManager
             return;
         }
 
+        //  1. 결제 시작 시 로딩 팝업 ON!
+        // (구글/애플 결제창이 뜨기 전까지의 짧은 공백을 메워줍니다)
+        Managers.UI.ShowPopupUI<UI_LoadingPopup>();
+
         _isPurchaseInProgress = true;
         _storeController.PurchaseProduct(productId);
     }
     #endregion
+
+    public string GetLocalizedPrice(string productId)
+    {
+        var product = _storeController?.GetProductById(productId);
+        if (product != null)
+        {
+            // 스토어가 주는 "1,500" 같은 문자열을 그대로 반환
+            return product.metadata.localizedPriceString;
+        }
+        return "N/A"; // 아직 로드가 안 됐을 경우
+    }
 }

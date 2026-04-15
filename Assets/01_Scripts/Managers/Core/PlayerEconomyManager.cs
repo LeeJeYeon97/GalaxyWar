@@ -5,10 +5,27 @@ using Unity.Services.CloudCode;
 using Unity.Services.CloudCode.GeneratedBindings;
 using Unity.Services.CloudCode.GeneratedBindings.Project;
 using Unity.Services.Economy;
+using Unity.Services.Economy.Model;
 using UnityEngine;
 
 public class PlayerEconomyManager
 {
+    //// [1단계 해커 방어] 메모리 변조를 막기 위한 암호화 변수
+    //private int _adKey1 = 1234567;
+    //private int _adKey2 = 7654321;
+    //private int _adStatus = 0;
+
+    //// 게임 전체에서 접근할 프로퍼티 (암호화 & 복호화 자동 처리)
+    //public bool IsAdsRemoved
+    //{
+    //    get { return _adStatus == (_adKey1 ^ _adKey2); }
+    //    private set
+    //    {
+    //        if (value) _adStatus = _adKey1 ^ _adKey2; // true면 암호 결합
+    //        else _adStatus = 0;                       // false면 0으로 초기화
+    //    }
+    //}
+
     // [1] 서버 통신용 바인딩 객체
     // Cloud Code(서버)에 있는 함수를 원격으로 호출할 수 있게 해주는 연결선
     public PlayerEconomyServiceBindings playerEconomyServiceBindings { get; private set; }
@@ -85,6 +102,27 @@ public class PlayerEconomyManager
     {
         EconomyDataLocal = economyData;
         PlayerEconomyUpdated?.Invoke(EconomyDataLocal);
+    }
+
+    // 초기화 또는 인벤토리 동기화 완료 시 호출되는 함수
+    public void CheckAdRemovalStatus()
+    {
+        // Dictionary의 특성을 활용해 foreach 루프 없이 한 번에 검색합니다.
+        if (EconomyDataLocal.ItemInventory.ContainsKey(Define.k_RemoveAdItem))
+        {
+            Managers.AD.IsAdsRemoved = true;
+            Debug.Log(" 광고 제거 유저입니다! 전면/배너 광고를 비활성화합니다.");
+
+            // 만약 배너 광고가 켜져있다면 여기서 꺼줍니다.
+            // Managers.AD.HideBanner();
+        }
+        else
+        {
+            Managers.AD.IsAdsRemoved = false;
+            Debug.Log("일반 유저입니다. (광고 제거 아이템 없음)");
+        }
+
+        Managers.AD.IsAdsRemoved = false;
     }
 
     // [8] 재화 조회 유틸리티 함수

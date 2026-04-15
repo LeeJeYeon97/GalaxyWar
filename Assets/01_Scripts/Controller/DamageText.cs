@@ -53,7 +53,7 @@ public class DamageText : MonoBehaviour
         _textMesh.DOFade(0f, 0.5f).SetDelay(0.5f).OnComplete(() =>
         {
             // 애니메이션이 끝나면 반납
-            Managers.Pool.Release(this.gameObject);
+            Managers.Resource.Destroy(this.gameObject);
         });
     }
 }

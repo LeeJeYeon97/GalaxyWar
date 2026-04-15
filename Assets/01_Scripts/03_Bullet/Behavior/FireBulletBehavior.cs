@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using static Define;
 
 
 public class FireBulletBehavior : IBulletBehavior
@@ -57,11 +58,19 @@ public class FireBulletBehavior : IBulletBehavior
         // 3. 총알이 화면에 살아있는 동안 계속 감시합니다.
         while (bullet != null && bullet.gameObject.activeSelf)
         {
+
+            //  코루틴 방어 로직: 일시정지나 광고 중이면 계산을 아예 건너뛰고 멍때립니다.
+            // (만약 Managers.Game.IsPaused 프로퍼티를 만드셨다면 if(Managers.Game.IsPaused) 로 쓰시면 훨씬 깔끔합니다!)
+            if (Managers.Game.currentGameState == GameState.Pause)
+            {
+                yield return null;
+                continue;
+            }
+
             // 이전에 깔았던 위치와 지금 총알의 위치 거리를 잽니다.
             if (Vector2.Distance(lastDropPos, bullet.transform.position) >= dropDistance)
             {
-                // ★ 지정한 거리만큼 멀어졌다면 장판을 소환!
-                // (유저님의 Pool 매니저가 문자열을 받는지, 프리팹을 받는지에 따라 수정해 주세요)
+                // 지정한 거리만큼 멀어졌다면 장판을 소환!
                 GameObject fireZoneGo = Managers.Resource.Instantiate("Bullets/FirePuddle");
 
                 if (fireZoneGo != null)

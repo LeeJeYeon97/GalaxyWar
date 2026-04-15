@@ -91,7 +91,7 @@ public class AdsManager
     private float _lastInterstitialAdTime = -999f;
 
     // 전면 광고 쿨타임 (예: 180초 = 3분)
-    private float _rewardAdCooldownSeconds = 180f;
+    private float _rewardAdCooldownSeconds = 5f;
     private float _interstitialAdCooldownSeconds = 180f;
 
     // 레벨플레이 광고 객체
@@ -105,6 +105,15 @@ public class AdsManager
 
     public event Action<bool> AdSuccessfullyCompleted;
     public event Action<bool> AdAvailable;
+
+    // 1. 현재 실행해야 할 콜백 함수를 저장할 변수 추가
+    private Action<bool> _onCurrentAdCompletedCallback;
+
+    //  1. 광고를 보기 직전의 TimeScale을 기억해둘 변수
+    private float _previousTimeScale = 1f;
+
+    // 광고 제거 여부를 게임 전체에서 쉽게 확인할 수 있는 프로퍼티
+    public bool IsAdsRemoved { get; set; } = false;
 
     public void Init()
     {
@@ -251,6 +260,13 @@ public class AdsManager
     }
     public void ShowInterstitialAd()
     {
+        // 1. 결제 유저면 아예 광고 로직 자체를 무시!
+        if (IsAdsRemoved)
+        {
+            Debug.Log("광고 제거 결제 유저이므로 전면 광고를 스킵합니다.");
+            return;
+        }
+
         // 1. 마지막으로 광고를 본 지 180초가 지났는지 확인
         if (Time.time - _lastInterstitialAdTime >= _interstitialAdCooldownSeconds)
         {
@@ -319,45 +335,38 @@ public class AdsManager
             rewardedAd.LoadAd();
         }
     }
-    public void ShowRewardedAd(string placementName)
+    public void ShowRewardedAd(string placementName, Action<bool> onCompleted = null)
     {
-        //Managers.Ads.AdAvailable += (isReady) => {
-        //    myRewardButton.interactable = isReady;
-        //};
-
-
-        if (_IsInit == false)
+        
+        if (_IsInit == false || rewardedAd == null)
         {
-            Debug.LogWarning("SDK not initialized");
+            Debug.LogWarning("SDK not initialized or Ad object null");
             return;
         }
-        if(rewardedAd == null)
-        {
-            Debug.LogWarning("Rewarded ad object not created");
-            return;
-        }
+
+        // 1. 광고 버튼 클릭 즉시 로딩 팝업 ON!
+        // 광고 화면이 로드되어 실제로 화면을 덮기 전까지 유저의 중복 클릭을 막습니다.
+        Managers.UI.ShowPopupUI<UI_LoadingPopup>();
 
         bool isAdReady = rewardedAd.IsAdReady();
         bool isCooldownExpired = HasCooldownExpired();
         bool isPlacementCapped = LevelPlayRewardedAd.IsPlacementCapped(placementName);
 
-        if(isAdReady == false)
+        // 광고를 보여줄 수 없는 상황이라면 즉시 로딩 OFF
+        if (!isAdReady || isPlacementCapped || !isCooldownExpired)
         {
-            Debug.LogWarning("Ad not ready - still loading or no inventory available");
-            return;
-        }
-        if(isPlacementCapped == true)
-        {
-            Debug.LogWarning("Placement has reached its capping limit");
-            return;
-        }
-        if(isCooldownExpired == false)
-        {
-            Debug.LogWarning("Ad Cooldown");
+            Debug.LogWarning($"Ad Not Ready: Ready({isAdReady}), Capped({isPlacementCapped}), Cooldown(!{isCooldownExpired})");
+            Managers.UI.ClosePopupUI();
             return;
         }
 
-        if(string.IsNullOrEmpty(placementName))
+        _onCurrentAdCompletedCallback = onCompleted;
+
+        // 2. 광고 호출 직전에 현재 TimeScale을 저장하고, 1로 강제 할당!
+        _previousTimeScale = Time.timeScale;
+        Time.timeScale = 1f;
+
+        if (string.IsNullOrEmpty(placementName))
         {
             Debug.LogWarning("Placement name is empty, showing ad unit without placement");
             rewardedAd.ShowAd();
@@ -444,11 +453,21 @@ public class AdsManager
                 break;
         }
     }
-    void RewardedOnAdDisplayed(LevelPlayAdInfo adInfo) { Debug.Log("Rewarded ad displayed"); }
+
+    // 광고 표시 실패 시
+    void RewardedOnAdDisplayed(LevelPlayAdInfo adInfo) 
+    { 
+        Debug.Log("Rewarded ad displayed"); 
+    }
     void RewardedOnAdDisplayFailed(LevelPlayAdInfo adInfo, LevelPlayAdError error) 
     {
         Debug.LogError($"Rewarded ad failed to display : {error}");
+
+        //  2. 광고가 뜨지 않았으므로 로딩 OFF
+        Managers.UI.ClosePopupUI();
         AdSuccessfullyCompleted?.Invoke(false);
+        _onCurrentAdCompletedCallback = null;
+        Time.timeScale = _previousTimeScale;
     }
 
     // 보상 지급
@@ -456,8 +475,19 @@ public class AdsManager
     {
         try
         {
+            // 광고 화면이 닫히면서 유니티로 돌아올 때, 로딩이 이미 떠 있거나 다시 떠야 합니다.
+            // 보통 광고가 닫히기 전 이 이벤트가 먼저 들어오므로 로딩은 켜져 있는 상태입니다.
+
+            
             Debug.Log($"Validating ad reward : {reward.Name} amount : {reward.Amount}");
 
+            // 핵심 분기점: 인게임 리롤 같은 '휘발성 보상'은 서버 검증을 스킵합니다!
+            if (adInfo.PlacementName == Define.placement_InGameCardReload)
+            {
+                Debug.Log("인게임 리롤: 서버 검증 없이 즉시 클라이언트 보상을 지급합니다.");
+                _onCurrentAdCompletedCallback?.Invoke(true);
+                return;
+            }
 
             // Create a unique token for this ad view
             string adToken = GenerateAdToken(adInfo, reward);
@@ -467,6 +497,7 @@ public class AdsManager
             _lastRewardAdCompletionTime = completionTime;
 
             var playerEconomyData = await _adsServiceBindings.HandleGrantVideoAdReward(adToken);
+
             Managers.PlayerEconomy.HandleEconomyUpdate(playerEconomyData);
             
             AdSuccessfullyCompleted?.Invoke(true);
@@ -529,6 +560,11 @@ public class AdsManager
     void RewardedOnAdClosed(LevelPlayAdInfo adInfo) 
     {
         Debug.Log("Rewarded ad closed");
+
+        //5. 혹시나 보상 단계(Rewarded)를 거치지 않고 그냥 닫혔을 경우를 대비한 안전장치
+        Managers.UI.ClosePopupUI();
+        _onCurrentAdCompletedCallback = null;
+        Time.timeScale = _previousTimeScale;
         LoadRewardedAd();
     }
     void RewardedOnAdClickedEvent(LevelPlayAdInfo adInfo) { Debug.Log("Rewarded ad clicked"); }

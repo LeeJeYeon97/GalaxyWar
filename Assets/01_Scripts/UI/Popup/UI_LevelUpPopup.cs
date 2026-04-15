@@ -21,7 +21,8 @@ public class UI_LevelUpPopup : UI_Popup
     }
     enum Buttons
     {
-        ReloadButton_AD
+        ReloadButton_AD,
+        ReloadButton_Coin
     }
     private bool _isSelecting = false;
     // 3개의 카드를 담을 배열 생성
@@ -37,21 +38,35 @@ public class UI_LevelUpPopup : UI_Popup
         Bind<GameObject>(typeof(Cards));
         Bind<Button>(typeof(Buttons));
 
-        GetButton((int)Buttons.ReloadButton_AD).onClick.AddListener(OnCardReloadButton);
+        GetButton((int)Buttons.ReloadButton_AD).onClick.AddListener(OnCardReloadButtonAd);
+
+        GetButton((int)Buttons.ReloadButton_Coin).onClick.AddListener(OnCardReloadButtonCoin);
 
         RefreshCards();
     }
-    private void OnCardReloadButton()
+    private void OnCardReloadButtonAd()
     {
-        if(Managers.Game.cardReloadCount > 0)
+        // 광고보게하기
+        // 플레이스먼트
+        // 광고 보기 (두 번째 파라미터로 콜백 함수를 화살표 함수 형태로 넘깁니다)
+        Managers.AD.ShowRewardedAd(placement_InGameCardReload, (success) =>
         {
-            RefreshCards();
-        }
-        else
-        {
-            // 광고 보게 하기
-            Debug.Log("광고봅시다");
-        }
+            if (success)
+            {
+                Debug.Log("광고 시청 완료! 카드를 리롤합니다.");
+                RefreshCards();
+            }
+            else
+            {
+                Debug.Log("광고 시청에 실패했거나 취소했습니다.");
+                // 필요하다면 유저에게 "광고 시청 실패" 안내 메시지 띄우기
+            }
+        });
+    }
+    private void OnCardReloadButtonCoin()
+    {
+        // TODO 코인까기
+        RefreshCards();
     }
     private void RefreshCards()
     {

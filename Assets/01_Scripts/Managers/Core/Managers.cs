@@ -37,6 +37,7 @@ public class Managers : MonoBehaviour
     private MapManager _map;
     private CoroutineHelper _coroutine;
     private LoginManager _login;
+    private SettingManager _setting;
 
     private PlayerDataManager _playerData;
     private PlayerEconomyManager _playerEconomy;
@@ -66,6 +67,7 @@ public class Managers : MonoBehaviour
     public static PlayerEconomyManager PlayerEconomy => Instance._playerEconomy;
     public static VirtualStoreManager VirtualStore => Instance._virtualStore;
     public static IAPStoreManager IAPStore => Instance._iapStore;
+    public static SettingManager Setting => Instance._setting;
     // ========================================================== //
 
     // 추가: 외부에서 Managers.Coroutine.StartCoroutine() 으로 접근할 수 있게 열어줍니다!
@@ -110,6 +112,8 @@ public class Managers : MonoBehaviour
             _instance._playerEconomy = new PlayerEconomyManager();
             _instance._virtualStore = new VirtualStoreManager();
             _instance._iapStore = new IAPStoreManager();
+            _instance._setting = new SettingManager();
+
             // 컴포넌트 형태의 매니저들은 여기서 초기화하거나 자식으로 붙임
             _instance._game = Util.GetOrAddComponent<GameManager>(go);
             _instance._input = Util.GetOrAddComponent<InputManager>(go);
@@ -134,6 +138,7 @@ public class Managers : MonoBehaviour
             Sound.Init();
             Scene.Init();
             UI.Init();
+            Setting.Init();
 
             Application.targetFrameRate = 60; // 60프레임 고정 (부드러운 화면)
 

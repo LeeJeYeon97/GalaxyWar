@@ -14,8 +14,8 @@ public class SludgePuddle : MonoBehaviour
 
     private IEnumerator CoDestroySelf()
     {
-        yield return new WaitForSeconds(lifeTime);
-        Managers.Pool.Release(gameObject); // 3초 뒤 스스로 풀로 돌아감
+        yield return new WaitForGameTime(lifeTime);
+        Managers.Resource.Destroy(gameObject); // 3초 뒤 스스로 풀로 돌아감
     }
 
     // 장판 위에 머무는 동안 계속 실행됨

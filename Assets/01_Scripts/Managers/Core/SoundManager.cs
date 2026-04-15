@@ -14,6 +14,10 @@ public class SoundManager
     // 볼륨 등 부가 정보도 필요하다면 원본 엔트리를 통째로 캐싱해도 됩니다.
     private Dictionary<SoundID, SoundDataSO.SoundInfo> _soundInfo = new Dictionary<SoundID, SoundDataSO.SoundInfo>();
 
+    // [추가] 마스터 볼륨 계수 (0.0 ~ 1.0)
+    private float _bgmVolumeMultiplier = 1.0f;
+    private float _sfxVolumeMultiplier = 1.0f;
+
     public void Init()
     {
         // 1. AudioSource 기본 세팅
@@ -60,10 +64,12 @@ public class SoundManager
 
         if (_audioClips.TryGetValue(id, out AudioClip clip))
         {
-            float volume = _soundInfo[id].volume; // SO에서 설정한 볼륨 가져오기
+
+            float baseVolume = _soundInfo[id].volume;
 
             if (type == Sound.Bgm)
             {
+                float finalVolume = baseVolume * _bgmVolumeMultiplier;
                 AudioSource audioSource = _audioSources[(int)Sound.Bgm];
 
                 // 1. 만약 지금 틀려는 브금이 이미 재생 중인 브금과 똑같다면 무시! (씬 전환 시 노래 끊김 방지)
@@ -83,9 +89,8 @@ public class SoundManager
                         audioSource.clip = clip;
                         audioSource.pitch = pitch;
                         audioSource.Play();
-
                         // 새로운 노래의 볼륨을 목표 볼륨(targetVolume)까지 0.5초 동안 스르륵 키움
-                        audioSource.DOFade(volume, 0.5f);
+                        audioSource.DOFade(finalVolume, 0.5f); // 최종 볼륨 적용
                     });
                 }
                 else
@@ -95,22 +100,61 @@ public class SoundManager
                     audioSource.clip = clip;
                     audioSource.pitch = pitch;
                     audioSource.Play();
-
-                    audioSource.DOFade(volume, 1.0f); // 처음 켤 때는 조금 더 길게(1초) 켜져도 멋집니다.
+                    audioSource.DOFade(finalVolume, 1.0f); // 최종 볼륨 적용
                 }
             }
             else
             {
+                // 효과음 최종 볼륨 적용
+                float finalVolume = baseVolume * _sfxVolumeMultiplier;
                 AudioSource audioSource = _audioSources[(int)Sound.Sfx];
                 audioSource.pitch = pitch;
-                // PlayOneShot은 클립과 볼륨을 같이 넘길 수 있습니다.
-                audioSource.PlayOneShot(clip, volume);
+                audioSource.PlayOneShot(clip, finalVolume);
             }
         }
         else
         {
             Debug.LogWarning($"사운드를 찾을 수 없습니다: {id}");
         }
+    }
+
+
+    // --- [설정 연동 함수들] ---
+
+    // 배경음 볼륨 설정 (SettingManager에서 호출)
+    public void SetBGMVolume(float volume)
+    {
+        _bgmVolumeMultiplier = volume;
+        AudioSource bgmSource = _audioSources[(int)Sound.Bgm];
+
+        // 현재 배경음이 재생 중이라면 즉시 볼륨 반영
+        if (bgmSource.isPlaying && bgmSource.clip != null)
+        {
+            // 현재 클립의 기본 볼륨 정보가 있는지 확인 후 적용
+            // (SoundID를 알기 어렵다면 현재 소스 볼륨을 직접 조절하거나, 
+            // 마지막 재생 정보를 저장해두었다가 사용하는 것이 좋습니다.)
+            bgmSource.DOKill(); // 기존 페이드 애니메이션 중지
+            bgmSource.volume = GetFinalBGMVolume(bgmSource.clip);
+        }
+    }
+
+    // 효과음 볼륨 설정 (SettingManager에서 호출)
+    public void SetSFXVolume(float volume)
+    {
+        _sfxVolumeMultiplier = volume;
+    }
+
+    // 클립의 원래 볼륨과 마스터 볼륨을 곱한 최종 볼륨 계산기
+    private float GetFinalBGMVolume(AudioClip clip)
+    {
+        // 현재 재생 중인 클립의 정보를 딕셔너리에서 역추적하거나 
+        // 마지막 재생 시 저장된 볼륨 값을 사용합니다.
+        foreach (var info in _soundInfo.Values)
+        {
+            if (info.clip == clip)
+                return info.volume * _bgmVolumeMultiplier;
+        }
+        return _bgmVolumeMultiplier;
     }
 
     public void Clear()

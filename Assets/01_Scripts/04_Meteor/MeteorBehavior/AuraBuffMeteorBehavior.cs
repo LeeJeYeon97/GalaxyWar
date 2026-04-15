@@ -32,9 +32,17 @@ public class AuraBuffMeteorBehavior : IMeteorBehavior
     }
     private IEnumerator CoAuraPulse(MeteorController meteor)
     {
-        while (true)
+        //  1. 생명주기 안전장치: while(true) 대신 운석이 살아있을 때만 돌게 합니다.
+        while (meteor != null && meteor.gameObject.activeInHierarchy)
         {
-            yield return new WaitForSeconds(0.2f);
+            //  2. 마법의 타이머 적용: 일시정지면 알아서 시간이 멈춥니다.
+            yield return new WaitForGameTime(0.2f);
+
+            // 3. 이중 방어막: 대기가 막 끝난 찰나에 팝업이 떴을 수도 있으니 검사!
+            if (Managers.Game.currentGameState == GameState.Pause)
+            {
+                continue; // 버프를 뿌리지 않고 루프 처음으로 돌아갑니다.
+            }
 
             // 내 위치를 기준으로 auraRadius 반경 안의 모든 2D 콜라이더를 찾습니다!
             Collider2D[] colliders = Physics2D.OverlapCircleAll(meteor.transform.position, meteor.Stat.auraRadius.TotalValue);

@@ -5,8 +5,9 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 using static Define;
+using static UnityEngine.Rendering.DebugUI;
 
-public class MeteorController : MonoBehaviour
+public class MeteorController : BaseController
 {
     
     [SerializeField]
@@ -22,9 +23,10 @@ public class MeteorController : MonoBehaviour
     private float _checkOffset = 2.0f; // 경계 밖 여유 공간
 
     //추가: 일시정지 상태일 때 속도와 회전력을 기억해둘 변수
+    // 물리 복구용 변수 (이제 _isPaused 변수는 BaseController의 상태로 판별하므로 제거합니다)
     private Vector2 _savedVelocity;
     private float _savedAngularVelocity;
-    private bool _isPaused = false;
+    private bool _physicsFrozenByPause = false; // 일시정지 때문에 물리가 멈췄는지 체크하는 스위치
 
     private bool _hasAuraBuff = false;      // 내가 지금 오라 버프를 받고 있는가?
     private Color _originalColor;           // 내 원래 색상을 기억할 변수
@@ -71,7 +73,6 @@ public class MeteorController : MonoBehaviour
         // 상태 초기화
         _hasEnteredView = false;
         _hasAuraBuff = false;
-        _isPaused = false;
 
         
         // 1.위치 설정
@@ -125,37 +126,61 @@ public class MeteorController : MonoBehaviour
         // 3. 내가 죽으면 빌려 쓴 HP바도 풀에 반납
         if (_myHpBar != null)
         {
-            Managers.Pool.Release(_myHpBar.gameObject);
+            Managers.Resource.Destroy(_myHpBar.gameObject);
             _myHpBar = null;
         }
         Managers.Game.RemoveActiveObject(this);
     }
-    private void Update()
+    protected override void OnUpdate()
     {
-        //게임 상태가 'Playing'이 아닐 때 (일시정지, 게임오버 등)
-        if (Managers.Game.currentGameState != Define.GameState.Playing)
-        {
-            if (!_isPaused)
-            {
-                PausePhysics(); // 멈춰!
-            }
-            return; // 멈춰있는 동안에는 아래의 CheckBoundaries() 등도 실행 안 함
-        }
-
-        //게임 상태가 'Playing'으로 돌아왔을 때
-        if (_isPaused)
-        {
-            ResumePhysics();
-        }
-
         // 버프 만료 체크 (Update에서 가볍게 시간만 비교!)
-        if (_hasAuraBuff && Time.time > _auraBuffEndTime)
+        if (_hasAuraBuff)
         {
-            LoseAuraBuff();
+            // 이제 Time.time 대신 게임 플레이 타임을 쓰는 것이 더 안전합니다.
+            // 하지만 현재 Time.time으로 설정하셨으므로, 아래 코드처럼 보정해주거나 그대로 둡니다.
+            // (권장: _auraBuffEndTime += Time.deltaTime 방식으로 누적하는 것이 일시정지에 완벽히 대응됩니다.)
+            if (Time.time > _auraBuffEndTime)
+            {
+                LoseAuraBuff();
+            }
         }
 
         Stat.Behavior?.OnUpdate(this);
         CheckBoundaries();
+    }
+
+    //  3. FixedUpdate를 재정의하여 물리 엔진 정지/복구 제어
+    protected override void FixedUpdate()
+    {
+        bool isGamePaused = (Managers.Game.currentGameState == GameState.Pause);
+
+        // [얼리기] 게임이 멈췄고, 아직 물리가 켜져 있다면?
+        if (isGamePaused && !_physicsFrozenByPause)
+        {
+            _savedVelocity = _rb.linearVelocity;
+            _savedAngularVelocity = _rb.angularVelocity;
+
+            _rb.linearVelocity = Vector2.zero;
+            _rb.angularVelocity = 0f;
+            _rb.simulated = false;
+            _physicsFrozenByPause = true;
+        }
+        // [녹이기] 게임이 다시 실행됐고, 내가 아까 물리를 껐었다면?
+        else if (!isGamePaused && _physicsFrozenByPause)
+        {
+            _rb.simulated = true;
+            _rb.linearVelocity = _savedVelocity;
+            _rb.angularVelocity = _savedAngularVelocity;
+            _physicsFrozenByPause = false;
+        }
+
+        // 부모의 FixedUpdate 호출 (일시정지 중이면 여기서 막힘)
+        base.FixedUpdate();
+    }
+    protected override void OnFixedUpdate()
+    {
+        // Meteor는 현재 FixedUpdate에서 물리 연산(UpdateVelocity 등)을 매 프레임 하지 않으므로 
+        // 여길 비워두어도 됩니다. (속도는 맞았을 때나 디버프 걸릴 때만 갱신 중임)
     }
 
     public void OnDamage(float damage)
@@ -202,7 +227,7 @@ public class MeteorController : MonoBehaviour
         ReturnColor();
         Stat.Behavior?.OnDie(this);
         Managers.Level.AddExp(Stat.Exp.TotalValue);
-        Managers.Pool.Release(gameObject);
+        Managers.Resource.Destroy(gameObject);
     }
 
     #region 물리 연산
@@ -216,29 +241,6 @@ public class MeteorController : MonoBehaviour
             _rb.angularVelocity = 0f;
         else
             _rb.angularVelocity = _baseAngularVelocity; // (원한다면 슬로우 비율만큼 곱해줘도 됩니다!)
-    }
-    private void PausePhysics()
-    {
-        _isPaused = true;
-
-        // 현재 날아가던 속도와 팽이처럼 돌던 회전값을 변수에 저장
-        _savedVelocity = _rb.linearVelocity;
-        _savedAngularVelocity = _rb.angularVelocity;
-
-        // 속도 0으로 강제 고정하고, 다른 물체랑 부딪혀서 밀려나지 않게 물리 시뮬레이션을 끕니다.
-        _rb.linearVelocity = Vector2.zero;
-        _rb.angularVelocity = 0f;
-        _rb.simulated = false; // 충돌 및 물리 연산 완전 정지
-    }
-    //물리 엔진 복구 로직
-    private void ResumePhysics()
-    {
-        _isPaused = false;
-
-        // 물리 연산을 다시 켜고, 아까 저장해뒀던 속도를 그대로 다시 주입
-        _rb.simulated = true;
-        _rb.linearVelocity = _savedVelocity;
-        _rb.angularVelocity = _savedAngularVelocity;
     }
     void CheckBoundaries()
     {
@@ -260,7 +262,7 @@ public class MeteorController : MonoBehaviour
             if (pos.x < min.x - _checkOffset || pos.x > max.x + _checkOffset ||
                 pos.y < min.y - _checkOffset || pos.y > max.y + _checkOffset)
             {
-                Managers.Pool.Release(gameObject);
+                Managers.Resource.Destroy(gameObject);
             }
         }
     }
@@ -325,7 +327,7 @@ public class MeteorController : MonoBehaviour
         SetColor(new Color(0.5f, 0.8f, 1f));
 
         // 2. 지정된 시간만큼 대기
-        yield return new WaitForSeconds(duration);
+        yield return new WaitForGameTime(duration);
 
         // 3. 스탯 완벽하게 원상 복구! (깎았던 만큼 다시 빼줌)
         currentSpeed.SubMultiplier(-slowPercent);
@@ -376,7 +378,7 @@ public class MeteorController : MonoBehaviour
         }
 
         // 3. 빙결 지속 시간(예: 2초) 동안 대기
-        yield return new WaitForSeconds(duration);
+        yield return new WaitForGameTime(duration);
 
         // 4. 해동! 스탯 강제 0 스위치 OFF!
         currentSpeed.SetForceZero(false);
@@ -411,6 +413,11 @@ public class MeteorController : MonoBehaviour
         // 시간이 다 되기 전까지, 그리고 운석이 살아있는 동안에만 반복!
         while (timer < duration && gameObject.activeInHierarchy)
         {
+            if (Managers.Game.currentGameState == GameState.Pause)
+            {
+                yield return null;
+                continue;
+            }
             // ==========================================
             // 1. 화상 시작 시: 붉은색으로 칠하기 (PropertyBlock 사용)
             // ==========================================
@@ -532,7 +539,7 @@ public class MeteorController : MonoBehaviour
         SetColor(new Color(5f, 5f, 5f, 1f));
 
         // 2. 가장 찰진 타격감을 주는 시간 (0.05초 ~ 0.1초 대기)
-        yield return new WaitForSeconds(0.1f);
+        yield return new WaitForGameTime(0.1f);
 
         ReturnColor();
     }

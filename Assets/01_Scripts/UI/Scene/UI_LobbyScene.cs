@@ -15,12 +15,13 @@ public class UI_LobbyScene : UI_Scene
         Button_MainPanel,
         Button_RankingPanel,
         Button_Profile,
+        Button_Setting,
     }
     public enum Panels
     {
-        Panel_Shop,
-        Panel_Main,
-        Panel_Rank,
+        UI_ShopPanel,
+        UI_MainPanel,
+        
     }
     enum Texts
     {
@@ -29,7 +30,7 @@ public class UI_LobbyScene : UI_Scene
 
     public List<GameObject> PanelList = new List<GameObject>();
 
-    private Panels _currentPanel = Panels.Panel_Main;
+    private Panels _currentPanel = Panels.UI_MainPanel;
 
     private float _slideDistance = 1080f;
 
@@ -56,10 +57,6 @@ public class UI_LobbyScene : UI_Scene
     public override void Clear()
     {
         Managers.PlayerEconomy.PlayerEconomyUpdated -= UpdateCoinsText;
-    }
-    private void OnClickProfileButton()
-    {
-        Managers.UI.ShowPopupUI<UI_ProfilePopup>();
     }
     private void UpdateCoinsText(PlayerEconomyData data)
     {
@@ -152,20 +149,22 @@ public class UI_LobbyScene : UI_Scene
     public void ButtonSetting()
     {
 
-        GetButton((int)Buttons.Button_ShopPanel).onClick.AddListener(() => ShowPanel(Panels.Panel_Shop));
-        GetButton((int)Buttons.Button_MainPanel).onClick.AddListener(() => ShowPanel(Panels.Panel_Main));
-        GetButton((int)Buttons.Button_Profile).onClick.AddListener(OnClickProfileButton);
-        GetButton((int)_currentTabButton).transform.localScale = Vector3.one * 1.1f;
+        GetButton((int)Buttons.Button_ShopPanel).onClick.AddListener(() => ShowPanel(Panels.UI_ShopPanel));
+        GetButton((int)Buttons.Button_MainPanel).onClick.AddListener(() => ShowPanel(Panels.UI_MainPanel));
 
+        GetButton((int)Buttons.Button_Profile).onClick.AddListener(() => Managers.UI.ShowPopupUI<UI_ProfilePopup>());
+        GetButton((int)Buttons.Button_Setting).onClick.AddListener(() => Managers.UI.ShowPopupUI<UI_SettingsPopup>());
+
+        GetButton((int)_currentTabButton).transform.localScale = Vector3.one * 1.1f;
 
     }
     private Buttons GetTabButtonByPanel(Panels panel)
     {
         switch (panel)
         {
-            case Panels.Panel_Shop: return Buttons.Button_ShopPanel;
-            case Panels.Panel_Main: return Buttons.Button_MainPanel;
-            case Panels.Panel_Rank: return Buttons.Button_RankingPanel;
+            case Panels.UI_ShopPanel: return Buttons.Button_ShopPanel;
+            case Panels.UI_MainPanel: return Buttons.Button_MainPanel;
+            //case Panels.UI_RankPanel: return Buttons.Button_RankingPanel;
             default: return Buttons.Button_MainPanel;
         }
     }

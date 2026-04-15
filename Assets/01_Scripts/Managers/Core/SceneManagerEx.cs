@@ -53,7 +53,16 @@ public class SceneManagerEx
             asyncOper.completed += (AsyncOperation obj) =>
             {
                 Debug.Log("씬로드 완료 페이드인 부름");
-                transition.FadeIn();
+
+                if (sceneName == "GameScene")
+                {
+
+                    transition.FadeIn( () => Managers.UI.ShowPopupUI<UI_StartCountDownPopup>());
+                }
+                else
+                {
+                    transition.FadeIn();
+                }
             };
         });
     }

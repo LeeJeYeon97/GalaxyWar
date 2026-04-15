@@ -25,7 +25,7 @@ public class LightningBulletBehavior : IBulletBehavior
             // 1. 번개 전담 객체(LightningChain)를 풀에서 꺼냅니다.
             // (리소스 경로는 유저님 프로젝트에 맞게 수정해주세요! 또는 param.stat 안에 프리팹을 넣어두면 가장 좋습니다.)
 
-            GameObject chainGo = Managers.Pool.Get(stat.ligthningChainObject).gameObject;
+            GameObject chainGo = Managers.Resource.Instantiate(stat.ligthningChainObject);
 
             if (chainGo != null && chainGo.TryGetComponent<LightningChain>(out var chain))
             {

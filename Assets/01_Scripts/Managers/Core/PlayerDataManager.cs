@@ -48,6 +48,7 @@ public class PlayerDataManager
             PlayerDataUpdated?.Invoke(PlayerDataLocal);
 
             Managers.PlayerEconomy.HandleEconomyUpdate(playerDataResponse.PlayerEconomyData);
+            Managers.PlayerEconomy.CheckAdRemovalStatus();
 
             LogResponse(playerDataResponse);
 

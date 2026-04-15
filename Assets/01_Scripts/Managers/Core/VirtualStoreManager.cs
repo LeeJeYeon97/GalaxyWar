@@ -16,6 +16,8 @@ public class VirtualStoreManager
 
     private Dictionary<string, int> _itemCosts = new Dictionary<string, int>();
 
+    private bool _isPurchasing = false; // 구매 진행 중 플래그
+
     public void Init()
     {
         // 매니저가 "상점 물가표(Config) 다운로드 끝났어!" 라고 방송하면 상점 세팅을 시작합니다.
@@ -120,9 +122,12 @@ public class VirtualStoreManager
     //        Debug.LogException(ex);
     //    }
     //}
-    public async void PurchaseVurtualItem(string purchaseId)
+    public async void PurchaseVirtualItem(string purchaseId)
     {
-        int cost = GetItemCostFromConfig(purchaseId);
+        if (_isPurchasing) return; // 이미 진행 중이면 무시
+
+        // 권장 (키가 없을 경우 실시간 조회로 백업)
+        int cost = _itemCosts.ContainsKey(purchaseId) ? _itemCosts[purchaseId] : GetItemCostFromConfig(purchaseId);
 
         if (!CanAffordVirtualPurchase(cost))
         {
@@ -131,7 +136,9 @@ public class VirtualStoreManager
         }
         try
         {
-            // 서버의 VirtualPurchaseItem 함수 호출 (서버 코드도 범용적으로 수정 필요)
+            _isPurchasing = true; // 플래그 켜기
+            Managers.UI.ShowPopupUI<UI_LoadingPopup>();
+            // 서버의 VirtualPurchaseItem 함수 호출
             var economyData = await _storeServiceBindings.PurchaseVirtualItem(purchaseId);
 
             Debug.Log($"Successfully Purchased - Product :{purchaseId}");
@@ -143,6 +150,11 @@ public class VirtualStoreManager
         catch (Exception ex)
         {
             Debug.LogException(ex);
+        }
+        finally
+        {
+            _isPurchasing = false; // 플래그 끄기
+            Managers.UI.ClosePopupUI();
         }
     }
 

@@ -6,7 +6,7 @@ using static Define;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : BaseController
 {
 
     [Header("Components")]
@@ -47,11 +47,23 @@ public class PlayerController : MonoBehaviour
     private PlayerStatusEvent _curStatus = new PlayerStatusEvent();
     private Volume _volume;
     private ChromaticAberration _chromatic;
+
+    // 일시정지 대응을 위한 변수
+    private Vector2 _savedVelocity;
+    private float _savedAngularVelocity;
+    private bool _physicsFrozenByPause = false;
+
+    public float rotatePower;
+    public float movePower;
+
     public void Init()
     {
         _rb = GetComponent<Rigidbody2D>();
         _rb.gravityScale = 0f;  // 우주니까 중력은 0
 
+        // [추진장치 느낌 내기] 선형 항력을 설정합니다.
+        // 이 값이 클수록 손을 뗐을 때 더 빨리 멈춥니다. (기본값 2f~5f 추천)
+        _rb.linearDamping = 0.5f;
 
         mainCam = Camera.main;
         lr = GetComponent<LineRenderer>();
@@ -97,28 +109,44 @@ public class PlayerController : MonoBehaviour
         }
         Managers.Event.UnSubscribe(ActionEvent.EnableBurstMode, OnEnableBurstMode);
     }
-    void Update()
+    //  FixedUpdate를 오버라이드하여 일시정지 시 물리를 완벽하게 멈춥니다.
+    protected override void FixedUpdate()
     {
+        bool isGamePaused = (Managers.Game.currentGameState == GameState.Pause);
 
-        if (currentState != PlayerState.Playing) return;
-        
+        if (isGamePaused && !_physicsFrozenByPause)
+        {
+            _savedVelocity = _rb.linearVelocity;
+            _savedAngularVelocity = _rb.angularVelocity;
+            _rb.linearVelocity = Vector2.zero;
+            _rb.angularVelocity = 0f;
+            _rb.simulated = false;
+            _physicsFrozenByPause = true;
+        }
+        else if (!isGamePaused && _physicsFrozenByPause)
+        {
+            _rb.simulated = true;
+            _rb.linearVelocity = _savedVelocity;
+            _rb.angularVelocity = _savedAngularVelocity;
+            _physicsFrozenByPause = false;
+        }
+
+        base.FixedUpdate();
+    }
+    protected override void OnUpdate()
+    {
         // 발사 로직
         Shoot();
         HomingShot();
         AddBurstGauge();
     }
-    private void FixedUpdate()
+    protected override void OnFixedUpdate()
     {
+        //  게임 오버 등의 상태일 때는 아예 움직이지 못하게 막음
         if (currentState != PlayerState.Playing)
         {
             _rb.linearVelocity = Vector2.zero;
-            _rb.angularVelocity = 0f;
-            _rb.simulated = false;
             return;
-        }
-        else
-        {
-            _rb.simulated = true;
         }
 
         Move();
@@ -131,29 +159,28 @@ public class PlayerController : MonoBehaviour
     }
 
     #region DrawLine
-    void DrawReflectionLine(Vector2 startPos, Vector2 dir)
-    {
-        if (currentState != PlayerState.Playing) return;
+    //void DrawReflectionLine(Vector2 startPos, Vector2 dir)
+    //{
+    //    if (currentState != PlayerState.Playing) return;
 
-        lr.positionCount = 1;
-        lr.SetPosition(0, startPos);
+    //    lr.positionCount = 1;
+    //    lr.SetPosition(0, startPos);
 
-        float remainingDistance = maxLineLength;
-        RaycastHit2D hit = Physics2D.Raycast(startPos, dir, remainingDistance, LayerMask.GetMask("Wall"));
+    //    float remainingDistance = maxLineLength;
+    //    RaycastHit2D hit = Physics2D.Raycast(startPos, dir, remainingDistance, LayerMask.GetMask("Wall"));
 
-        if (hit.collider != null)
-        {
-            lr.positionCount = 2;
-            lr.SetPosition(1, hit.point);
-        }
-        else
-        {
-            lr.positionCount = 2;
-            lr.SetPosition(1, startPos + dir * remainingDistance);
-        }
-    }
+    //    if (hit.collider != null)
+    //    {
+    //        lr.positionCount = 2;
+    //        lr.SetPosition(1, hit.point);
+    //    }
+    //    else
+    //    {
+    //        lr.positionCount = 2;
+    //        lr.SetPosition(1, startPos + dir * remainingDistance);
+    //    }
+    //}
     #endregion
-
     #region 이동관련
     void OnDragStart(Vector2 pos)
     {
@@ -170,28 +197,30 @@ public class PlayerController : MonoBehaviour
         // (만약 반대 방향으로 움직이고 싶다면 순서를 바꾸세요)
         dragDir = (dragPos - dragStartPos).normalized;
 
-        DrawReflectionLine(transform.position, dragDir);
+        //DrawReflectionLine(transform.position, dragDir);
     }
 
     void OnDragRelease()
     {
+        //  드래그를 떼면 방향을 초기화하여 힘이 더 이상 들어가지 않게 합니다.
+        dragDir = Vector2.zero;
         lr.enabled = false; // 드래그 떼면 조준선 끄기
     }
     private void Move()
     {
-            // 이동 입력이 없을 때는 리턴
-        if (dragDir == Vector2.zero) 
+        //  입력이 없을 때
+        if (dragDir == Vector2.zero)
+        {
+            // 선형 항력(linearDamping)이 설정되어 있으므로 가만히 두면 알아서 멈춥니다.
             return;
+        }
 
-        // 2. 가속 힘 계산
-        // moveForce를 고정값으로 두면 속도가 빠를수록 최고 속도 도달이 답답하게 느껴집니다.
-        // 그래서 보통 maxSpeed의 일정 비율(예: 2~3배)을 힘으로 주면 체감이 좋습니다.
-        float finalForce = Stat.speed.TotalValue * 5f;
-
-        // 1. 힘 가하기 (가속)
+        //  추진장치 로직: 
+        // ForceMode2D.Force는 '지속적인 가속'을 줍니다.
+        float finalForce = Stat.speed.TotalValue * movePower;
         _rb.AddForce(dragDir * finalForce, ForceMode2D.Force);
 
-        // 2. 속도 제한
+        // 속도 제한 (최고 속도 조절)
         if (_rb.linearVelocity.magnitude > Stat.speed.TotalValue)
         {
             _rb.linearVelocity = _rb.linearVelocity.normalized * Stat.speed.TotalValue;
@@ -199,11 +228,28 @@ public class PlayerController : MonoBehaviour
     }
     private void Rotate()
     {
-        // 3.우주선 회전(진행 방향 바라보기)
-        // 부드러운 회전을 위해 리지드바디의 회전 기능을 사용합니다.
-        float targetAngle = Mathf.Atan2(dragDir.y, dragDir.x) * Mathf.Rad2Deg;
-        // -90f는 우주선의 스프라이트가 위(Y축)를 향하고 있을 때의 보정값입니다.
-        _rb.MoveRotation(Mathf.LerpAngle(_rb.rotation, targetAngle - 90f, Time.fixedDeltaTime * 10f));
+        Vector2 targetLookDir = Vector2.zero;
+
+        // [회전 버그 수정] 우선순위를 정합니다.
+        // 1. 드래그 중이라면 드래그 방향(조준 방향)을 봅니다.
+        if (dragDir != Vector2.zero)
+        {
+            targetLookDir = dragDir;
+        }
+        // 2. 드래그 중이 아니어도 이동 속도가 남아있다면 미끄러지는 방향을 봅니다.
+        else if (_rb.linearVelocity.sqrMagnitude > 0.1f)
+        {
+            targetLookDir = _rb.linearVelocity.normalized;
+        }
+
+        // 아무런 입력도 없고 속도도 거의 없다면 회전하지 않고 마지막 각도를 유지합니다.
+        if (targetLookDir == Vector2.zero) return;
+
+        float targetAngle = Mathf.Atan2(targetLookDir.y, targetLookDir.x) * Mathf.Rad2Deg;
+        float finalAngle = targetAngle - 90f;
+
+        //  회전 속도를 5f -> 10f 정도로 높이면 더 기민하게 반응합니다.
+        _rb.MoveRotation(Mathf.LerpAngle(_rb.rotation, finalAngle, Time.fixedDeltaTime * rotatePower));
     }
 
     #endregion
@@ -240,7 +286,7 @@ public class PlayerController : MonoBehaviour
 
     //        // 플레이어와 메테오 사이의 거리 계산
     //        float distance = Vector3.Distance(transform.position, meteor.transform.position);
-            
+
     //        //탐지 범위 안에 있고, 지금까지 찾은 것보다 더 가깝다면 갱신
     //        if (distance <= stat.shotRange.TotalValue && distance < minDistance)
     //        {
@@ -318,8 +364,9 @@ public class PlayerController : MonoBehaviour
         if (Time.time - _lastHomingShotTime >= Stat.homingShotDelay.TotalValue)
         {
             BaseBulletStat homingStat = Managers.Stat.GetBulletStat(Define.BulletType.HomingBullet);
-            Poolable go = Managers.Pool.Get(homingStat.originalPrefabs);
-            BulletController bullet = go?.GetComponent<BulletController>();
+            GameObject go = Managers.Resource.Instantiate(homingStat.originalPrefabs);
+
+            BulletController bullet = go.GetComponent<BulletController>();
 
             bullet.SetBullet(homingStat);
             bullet.Shot(transform.up, _bulletPos.position);
@@ -353,7 +400,7 @@ public class PlayerController : MonoBehaviour
             {
                 // 나머지 발사체들은 기준 총알(mainBullet)과 똑같은 놈으로 풀에서 공짜로 복사해옵니다!
                 // (주의: mainBullet 스크립트 안에 자신의 Stat을 반환하는 변수나 함수가 있어야 합니다!)
-                Poolable go = Managers.Pool.Get(mainBullet.Stat.originalPrefabs);
+                GameObject go = Managers.Resource.Instantiate(mainBullet.Stat.originalPrefabs);
                 bulletToFire = go?.GetComponent<BulletController>();
 
                 if (bulletToFire != null)
@@ -389,7 +436,8 @@ public class PlayerController : MonoBehaviour
         Managers.Event.PostEvent<float>(ActionEvent.ReloadStart, Stat.reloadTime.TotalValue);
         Managers.Sound.Play(Define.SoundID.Sfx_Reloading);
 
-        yield return new WaitForSeconds(Stat.reloadTime.TotalValue);
+        yield return new WaitForGameTime(Stat.reloadTime.TotalValue);
+
         Reload();
 
         // 리로딩 끝
@@ -402,7 +450,7 @@ public class PlayerController : MonoBehaviour
         // 남은 총알 청소
         foreach (var bullet in bullets)
         {
-            Managers.Pool.Release(bullet.gameObject);
+            Managers.Resource.Destroy(bullet.gameObject);
         }
         bullets.Clear();
 
@@ -425,7 +473,7 @@ public class PlayerController : MonoBehaviour
 
             if (stat == null) return;
 
-            Poolable go = Managers.Pool.Get(stat.originalPrefabs);
+            GameObject go = Managers.Resource.Instantiate(stat.originalPrefabs);
             BulletController bullet = go?.GetComponent<BulletController>();
 
             if (bullet == null) return;
@@ -629,9 +677,14 @@ public class PlayerController : MonoBehaviour
         // 버스트 게이지 감소
         while (currentBurst > 0)
         {
-            // 초당 10씩 감소 총 10초유지
+            
+            if (Managers.Game.currentGameState == GameState.Pause)
+            {
+                yield return null;
+                continue;
+            }
             currentBurst -= 10.0f * Time.deltaTime;
-            OnStatusEvent(); 
+            OnStatusEvent();
             yield return null;
         }
 
@@ -687,7 +740,5 @@ public class PlayerController : MonoBehaviour
             currentHp = Stat.maxHp.TotalValue;
         }
     }
-
-    
 
 }

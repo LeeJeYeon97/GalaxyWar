@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using static Define;
 public class HomingBulletBehavior : IBulletBehavior
 {
     public void OnHit(BulletController bullet, GameObject target)
@@ -83,6 +84,14 @@ public class HomingBulletBehavior : IBulletBehavior
         // gameObject 대신 bullet.gameObject 사용!
         while (bullet != null && bullet.gameObject.activeSelf)
         {
+            //  코루틴 방어 로직: 일시정지나 광고 중이면 계산을 아예 건너뛰고 멍때립니다.
+            // (만약 Managers.Game.IsPaused 프로퍼티를 만드셨다면 if(Managers.Game.IsPaused) 로 쓰시면 훨씬 깔끔합니다!)
+            if (Managers.Game.currentGameState == GameState.Pause)
+            {
+                yield return null;
+                continue;
+            }
+
             if (target == null || !target.gameObject.activeSelf)
             {
                 target = FindClosestTarget(bullet);

@@ -77,18 +77,28 @@ public class AdService
             //읽어온 리스트를 검증 함수에 넘겨줍니다.
             ValidateTokenUsageLocal(tokenData.PlacementName, adToken, recentTokens);
 
-            // 기존 코드 주석
-            // 이 유저가 방금 전에 제출했던 영수증을 또 낸 건 아닌지(중복/ 쿨타임) 2차로 검사합니다.
-            // Validate token usage (checks against player's history)
-            //await ValidateTokenUsage(context, gameApiClient, adToken);
-
             // Grant reward
 
-            // [수정된 코드] 토큰에 적혀있는 바로 그 재화(RewardName)를 지급합니다!
-            //  개선 3: PlacementName에 따른 추가 로직 (필요 시)
-            // if (tokenData.PlacementName == "Special_Event") { ... }
-            //모든 검사가 통과되면 진짜 돈(재화)을 유저 지갑에 꽂아줍니다.
-            await _playerEconomyService.AddCurrency(context, gameApiClient, tokenData.RewardName, tokenData.RewardAmount);
+            // 1. 플레이스먼트 이름이 "Game_Over" 인지 확인
+            if (tokenData.PlacementName == "Game_Over")
+            {
+                //  2. Economy(지갑)는 건드리지 않고, PlayerData(Cloud Save)에 부활 자격 저장
+                // "IS_REVIVE_PENDING"이라는 키를 true로 만듭니다.
+                await _playerDataService.SaveData(context, gameApiClient, "IS_REVIVE_PENDING", true);
+
+                _logger.LogInformation("부활 자격 부여 완료 (Game_Over)");
+            }
+            else
+            {
+                // 상점 광고 등은 기존처럼 골드 지급
+                await _playerEconomyService.AddCurrency(context, gameApiClient, tokenData.RewardName, tokenData.RewardAmount);
+            }
+
+            //// [수정된 코드] 토큰에 적혀있는 바로 그 재화(RewardName)를 지급합니다!
+            ////  개선 3: PlacementName에 따른 추가 로직 (필요 시)
+            //// if (tokenData.PlacementName == "Special_Event") { ... }
+            ////모든 검사가 통과되면 진짜 돈(재화)을 유저 지갑에 꽂아줍니다.
+            //await _playerEconomyService.AddCurrency(context, gameApiClient, tokenData.RewardName, tokenData.RewardAmount);
 
             //이 영수증은 이제 사용 완료됨!" 이라고 DB에 도장을 찍어 저장합니다.
             // Store the token to prevent reuse

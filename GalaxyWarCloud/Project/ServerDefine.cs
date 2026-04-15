@@ -15,12 +15,10 @@ public class ServerDefine
     public const string k_GoldCurrencyKey = "GOLD";
 
     // InventoryItem
-    public const string k_HealthPotionKey = "HEALTH_POTION";
-    public const string k_testEquipKey = "TEST_EQUIP";
 
+    // IAP
     public const string k_goldPurchase100Id = "GOLD_PURCHASE_100";
-    public const string k_HealthPotionPurchaseId = "HEALTH_POTION_VIRTUAL_PURCHASE";
-    public const string k_testEquipPurchaseId = "VP_TEST_EQUIP";
 
+    // VP
     public const string placementShopGoldAd = "Shop_Gold";
 }

@@ -21,8 +21,8 @@ public class MagmaPuddle : MonoBehaviour
 
     private IEnumerator CoDestroySelf()
     {
-        yield return new WaitForSeconds(lifeTime);
-        Managers.Pool.Release(gameObject);
+        yield return new WaitForGameTime(lifeTime);
+        Managers.Resource.Destroy(gameObject);
     }
 
     // 플레이어가 장판 위에 머무는 동안 데미지 주기

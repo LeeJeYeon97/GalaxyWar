@@ -20,12 +20,11 @@ public class GameManager : MonoBehaviour
     public PhaseType currentPhase;
 
     public int reviveCount { get; private set; } // 광고 봤을 때 사용가능한 살아나기 횟수
-    public int cardReloadCount { get; private set; }
     public void Init()
     {
         currentPhase = PhaseType.Phase1;
         gamePlayTime = 0f;
-        ChangeGameState(GameState.Ready);
+        ChangeGameState(GameState.Pause);
 
         // UI 생성
         UI_GameScene sceneUI = Managers.UI.ShowSceneUI<UI_GameScene>();
@@ -53,9 +52,8 @@ public class GameManager : MonoBehaviour
             return;
 
         reviveCount = Managers.Data.GameData.reviveCount;
-        cardReloadCount = Managers.Data.GameData.cardReloadCount;
 
-        Managers.UI.ShowPopupUI<UI_StartCountDownPopup>();
+
         
     }
     private void Update()
@@ -117,7 +115,6 @@ public class GameManager : MonoBehaviour
         // Resume은 '상태'라기보다 '동작'에 가깝습니다.
         if (state == GameState.Resume)
         {
-            Time.timeScale = 1.0f;
             // 이전 상태로 되돌리고 함수 종료 (아래의 currentGameState = state를 실행하지 않음)
             ChangeGameState(previousGameState);
             return;
@@ -136,20 +133,15 @@ public class GameManager : MonoBehaviour
         switch (currentGameState)
         {
             case GameState.Ready:
-
                 break;
             case GameState.Playing:
-                Time.timeScale = 1f;
                 // 게임 시작 이벤트
                 spawner.StartSpawn();
                 _player?.SetState(PlayerState.Playing);
                 break;
             case GameState.Pause:
-                Time.timeScale = 0f;
-                // 일시정지 시 추가 로직 (UI 띄우기 등)
                 break;
             case GameState.GameOver:
-                Time.timeScale = 0f;
                 spawner.StopSpawn();
                 _player?.SetState(PlayerState.Die);
                 Managers.UI.ShowPopupUI<UI_GameOverPopup>();
@@ -191,7 +183,7 @@ public class GameManager : MonoBehaviour
         for (int i = activeBullets.Count - 1; i >= 0; i--)
         {
             // 리스트의 i번째 요소를 참조하여 처리
-            Managers.Pool.Release(activeBullets[i].gameObject);
+            Managers.Resource.Destroy(activeBullets[i].gameObject);
         }
     }
 
@@ -201,7 +193,7 @@ public class GameManager : MonoBehaviour
 
         for (int i = activeMeteors.Count - 1; i >= 0; i--)
         {
-            Managers.Pool.Release(activeMeteors[i].gameObject);
+            Managers.Resource.Destroy(activeMeteors[i].gameObject);
         }
         activeMeteors.Clear(); // 리스트 비우기
     }

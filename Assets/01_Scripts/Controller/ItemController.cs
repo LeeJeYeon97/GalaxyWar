@@ -73,7 +73,7 @@ public class ItemController : MonoBehaviour
             if (pos.x < min.x - _checkOffset || pos.x > max.x + _checkOffset ||
                 pos.y < min.y - _checkOffset || pos.y > max.y + _checkOffset)
             {
-                Managers.Pool.Release(gameObject);
+                Managers.Resource.Destroy(gameObject);
             }
         }
     }

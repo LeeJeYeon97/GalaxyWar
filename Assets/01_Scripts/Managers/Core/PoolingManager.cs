@@ -204,7 +204,7 @@ public class PoolingManager
             // 명찰은 있는데 내 바구니 목록에 없다면? (에러 상황) -> 그냥 파괴
             if (_pool.ContainsKey(name) == false)
             {
-                UnityEngine.Object.Destroy(go);
+                Object.Destroy(go);
                 return;
             }
 
@@ -214,7 +214,7 @@ public class PoolingManager
         else
         {
             // 3. 명찰이 없는 객체(일회용 파티클, 보스 등)라면 미련 없이 즉시 파괴!
-            UnityEngine.Object.Destroy(go);
+            Object.Destroy(go);
         }
     }
 

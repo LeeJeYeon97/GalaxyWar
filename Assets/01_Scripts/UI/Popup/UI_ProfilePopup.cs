@@ -9,7 +9,7 @@ public class UI_ProfilePopup : UI_Popup
     {
         Button_Exit,
         Button_LinkAccount,
-        
+        Button_ClosePopup
     }
     enum Texts
     {
@@ -24,6 +24,8 @@ public class UI_ProfilePopup : UI_Popup
         Bind<TMP_Text>(typeof(Texts));
 
         GetButton((int)Buttons.Button_Exit).onClick.AddListener(OnClickExitButton);
+        GetButton((int)Buttons.Button_ClosePopup).onClick.AddListener(OnClickExitButton);
+
         GetButton((int)Buttons.Button_LinkAccount).onClick.AddListener(OnClickLinkButton);
 
         TextSetting();

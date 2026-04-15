@@ -148,6 +148,8 @@ MonoBehaviour:
   _lastHomingShotTime: 0
   _bulletPos: {fileID: 7994210264769737220}
   bullets: []
+  rotatePower: 4
+  movePower: 4
 --- !u!114 &-3447856920038501843
 MonoBehaviour:
   m_ObjectHideFlags: 0

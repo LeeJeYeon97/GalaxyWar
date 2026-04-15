@@ -101,8 +101,8 @@ public class BulletParticle : MonoBehaviour
     {
         if (stat == null)
             return;
-        
-        GameObject hitGo = Managers.Pool.Get(hitEffect).gameObject;
+
+        GameObject hitGo = Managers.Resource.Instantiate(hitEffect);
         if (hitGo != null)
         {
 
@@ -139,7 +139,7 @@ public class BulletParticle : MonoBehaviour
 
     public void SpawnShot(Vector2 shotDir, Vector2 shotPos)
     {
-        GameObject flash = Managers.Pool.Get(flashEffect).gameObject;
+        GameObject flash = Managers.Resource.Instantiate(flashEffect);
         if (flash != null)
         {
             flash.transform.position = shotPos;

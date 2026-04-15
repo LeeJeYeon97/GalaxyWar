@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using static Define;
 
 public class MagmaMeteorBehavior : IMeteorBehavior
 {
@@ -14,13 +15,22 @@ public class MagmaMeteorBehavior : IMeteorBehavior
 
     private IEnumerator CoDropMagma(MeteorController meteor)
     {
-        while (true)
+        //  1. 생명주기 안전장치: 운석이 씬에 살아있을 때만 무한 반복합니다.
+        while (meteor != null && meteor.gameObject.activeInHierarchy)
         {
-            yield return new WaitForSeconds(0.5f);
+            //  2. 마법의 타이머: 게임이 일시정지되면 0.5초 타이머도 알아서 멈춥니다.
+            yield return new WaitForGameTime(0.5f);
 
-            if (Managers.Game.currentGameState == Define.GameState.Playing)
+            //  3. 이중 방어막: 타이머가 끝난 찰나에 팝업이 떠서 멈췄다면 장판 생성을 스킵!
+            if (Managers.Game.currentGameState == GameState.Pause)
             {
-                GameObject go = Managers.Resource.Instantiate("Object/MagmaPuddle");
+                continue;
+            }
+
+            // 안전 검사 통과 시 마그마 소환!
+            GameObject go = Managers.Resource.Instantiate("Object/MagmaPuddle");
+            if (go != null)
+            {
                 MagmaPuddle puddle = go.GetComponent<MagmaPuddle>();
                 if (puddle != null)
                 {

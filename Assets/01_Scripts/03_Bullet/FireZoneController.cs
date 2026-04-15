@@ -40,7 +40,7 @@ public class FireZoneController : MonoBehaviour
     public IEnumerator CoFireZoneRelease(float duration)
     {
         // stat에 설정된 시간만큼 대기
-        yield return new WaitForSeconds(duration);
+        yield return new WaitForGameTime(duration);
 
         // 오브젝트 풀로 반납
         Managers.Resource.Destroy(this.gameObject);

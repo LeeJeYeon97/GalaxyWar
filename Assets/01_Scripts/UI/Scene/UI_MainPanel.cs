@@ -8,7 +8,6 @@ public class UI_MainPanel : UI_Base
     {
 
         Button_GameStart,
-        Button_Setting,
     }
 
     public override void Init()
@@ -18,7 +17,7 @@ public class UI_MainPanel : UI_Base
         Bind<Button>(typeof(Buttons));
 
         GetButton((int)Buttons.Button_GameStart).onClick.AddListener(OnClickStartButton);
-        GetButton((int)Buttons.Button_Setting).onClick.AddListener(() => Managers.UI.ShowPopupUI<UI_SettingsPopup>());
+
     }
     public override void Clear()
     {

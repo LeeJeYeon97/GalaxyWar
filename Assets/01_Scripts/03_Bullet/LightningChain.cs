@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static Define;
 
 public class LightningChain : MonoBehaviour
 {
@@ -34,6 +35,13 @@ public class LightningChain : MonoBehaviour
     {
         while (_remainCount > 0)
         {
+
+            if (Managers.Game.currentGameState == GameState.Pause)
+            {
+                yield return null;
+                continue;
+            }
+
             // 1. 현재 내 위치를 기준으로 다음 타겟 찾기
             Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, _range, _targetLayer);
             Collider2D closestEnemy = null;
@@ -77,7 +85,7 @@ public class LightningChain : MonoBehaviour
                         meteor.OnDamage(_damage);
 
                         // TODO: 여기서 찌릿! 하는 타격 사운드나 조그만 불꽃 파티클을 스폰하면 아주 좋습니다.
-                        GameObject hitGo = Managers.Pool.Get(hitEffect).gameObject;
+                        GameObject hitGo = Managers.Resource.Instantiate(hitEffect);
                         if(hitGo != null)
                         {
                             hitGo.transform.position = meteor.transform.position;
@@ -93,6 +101,6 @@ public class LightningChain : MonoBehaviour
         // 5. 전이가 다 끝났다면 씬에서 사라지기 (풀에 반납)
         // 만약 꼬리(Trail Renderer)가 달려있다면, 잔상이 사라질 수 있도록 0.5초 정도 대기 후 꺼주는 게 예쁩니다.
         yield return new WaitForSeconds(0.2f);
-        Managers.Pool.Release(gameObject);
+        Managers.Resource.Destroy(gameObject);
     }
 }
