@@ -1,0 +1,139 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: UI_en
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Tables.StringTable
+  m_LocaleId:
+    m_Code: en
+  m_SharedData: {fileID: 11400000, guid: fcacc423b0edf4a47a3eb9d10c75ff59, type: 2}
+  m_Metadata:
+    m_Items: []
+  m_TableData:
+  - m_Id: 99079049216
+    m_Localized: System Init...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 283766837248
+    m_Localized: Touch To Start
+    m_Metadata:
+      m_Items: []
+  - m_Id: 788064784384
+    m_Localized: Check Account...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 195585789952
+    m_Localized: PlayerData Async...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11032912351232
+    m_Localized: SFX
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11187304681472
+    m_Localized: BGM
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11270419009536
+    m_Localized: Vibration
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11338433843200
+    m_Localized: Language
+    m_Metadata:
+      m_Items: []
+  - m_Id: 10990264668160
+    m_Localized: GAME START
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12224199544832
+    m_Localized: Touch To Close
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12363618209792
+    m_Localized: Setting
+    m_Metadata:
+      m_Items: []
+  - m_Id: 13046530592768
+    m_Localized: Loading...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 13344665915392
+    m_Localized: QUIT
+    m_Metadata:
+      m_Items: []
+  - m_Id: 13380871147520
+    m_Localized: YES
+    m_Metadata:
+      m_Items: []
+  - m_Id: 13399292530688
+    m_Localized: NO
+    m_Metadata:
+      m_Items: []
+  - m_Id: 13492309610496
+    m_Localized: Do you really want to quit game?
+    m_Metadata:
+      m_Items: []
+  - m_Id: 13825815498752
+    m_Localized: Link Google Account
+    m_Metadata:
+      m_Items: []
+  - m_Id: 13788565884928
+    m_Localized: PlayerID
+    m_Metadata:
+      m_Items: []
+  - m_Id: 13785076224000
+    m_Localized: NickName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 13749642743808
+    m_Localized: Profile
+    m_Metadata:
+      m_Items: []
+  - m_Id: 19109195698176
+    m_Localized: RESTART
+    m_Metadata:
+      m_Items: []
+  - m_Id: 19067349127168
+    m_Localized: QUIT
+    m_Metadata:
+      m_Items: []
+  - m_Id: 19254285062144
+    m_Localized: 'Count : {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 23026897932288
+    m_Localized: PAUSE
+    m_Metadata:
+      m_Items: []
+  - m_Id: 21899305439232
+    m_Localized: QUIT
+    m_Metadata:
+      m_Items: []
+  - m_Id: 21858436141056
+    m_Localized: SETTING
+    m_Metadata:
+      m_Items: []
+  - m_Id: 21837296848896
+    m_Localized: RESTART
+    m_Metadata:
+      m_Items: []
+  - m_Id: 21789209153536
+    m_Localized: RESUME
+    m_Metadata:
+      m_Items: []
+  - m_Id: 19171908931584
+    m_Localized: COTINUE
+    m_Metadata:
+      m_Items: []
+  references:
+    version: 2
+    RefIds: []

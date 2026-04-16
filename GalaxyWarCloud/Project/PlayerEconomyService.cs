@@ -53,6 +53,61 @@ public class PlayerEconomyService
 
     #endregion
 
+    // [추가] 클라이언트의 재화 소모 요청을 처리하는 전용 함수
+    [CloudCodeFunction("HandleSpendCurrency")]
+    public async Task<PlayerEconomyData> HandleSpendCurrency(IExecutionContext context, IGameApiClient gameApiClient, string currencyKey, int amount)
+    {
+        try
+        {
+            // 1. [보안 체크] 서버 DB에서 이 유저의 진짜 잔액을 확인합니다.
+            int currentBalance = await GetCurrencyAmount(context, gameApiClient, currencyKey);
+
+            // 2. [검증] 잔액이 부족하면 매몰차게 에러를 던져 요청을 거부합니다.
+            if (currentBalance < amount)
+            {
+                throw new Exception($"Not enough {currencyKey}. Current: {currentBalance}, Required: {amount}");
+            }
+
+            // 3. [차감 실행] 유저님이 만들어두신 AddCurrency에 '음수'를 넘겨서 차감시킵니다!
+            await AddCurrency(context, gameApiClient, currencyKey, -amount);
+
+            _logger.LogInformation($"Player {context.PlayerId} successfully spent {amount} of {currencyKey}.");
+
+            // 4. [동기화] 차감이 끝났으니, 최신 상태의 인벤토리/지갑 데이터를 클라이언트로 배송해줍니다.
+            return await GetPlayerEconomyData(context, gameApiClient);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, $"Failed to spend {amount} of {currencyKey} for player {context.PlayerId}");
+            throw new Exception($"Failed to spend currency: {ex.Message}"); // 클라이언트로 에러 전달
+        }
+    }
+
+    // [추가] 클라이언트의 재화 획득(증가) 요청을 처리하는 전용 함수
+    [CloudCodeFunction("HandleAddCurrency")]
+    public async Task<PlayerEconomyData> HandleAddCurrency(IExecutionContext context, IGameApiClient gameApiClient, string currencyKey, int amount)
+    {
+        try
+        {
+            // 1. [방어 코드] 획득량은 무조건 0보다 커야 합니다. (혹시 모를 음수 버그 방지)
+            if (amount <= 0)
+            {
+                throw new Exception($"Invalid amount. Must be greater than 0. Received: {amount}");
+            }
+
+            // 2. [증가 실행] 아까 고쳐둔 안전한 AddCurrency 함수를 호출합니다!
+            await AddCurrency(context, gameApiClient, currencyKey, amount);
+
+            // 3. [동기화] 처리가 끝난 최신 지갑 데이터를 클라이언트로 배송해 줍니다.
+            return await GetPlayerEconomyData(context, gameApiClient);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, $"Failed to add {amount} of {currencyKey} for player {context.PlayerId}");
+            throw new Exception($"Failed to add currency: {ex.Message}");
+        }
+    }
+
     //[핵심] 클라이언트가 게임에 접속하거나 상점에서 물건을 산 뒤 "내 최신 정보 좀 줘!" 할 때 부르는 함수
     [CloudCodeFunction("GetPlayerEconomyData")]
     public async Task<PlayerEconomyData> GetPlayerEconomyData(IExecutionContext context, IGameApiClient gameApiClient)
@@ -194,23 +249,41 @@ public class PlayerEconomyService
     {
         try
         {
-            // 1. 증가시킬 수량을 담은 요청(Request) 객체를 만듭니다.
-            // 참고: 만약 amount가 음수(-500)라면 알아서 차감됩니다!
-            // UGS에 보낼 영수증(요청서) 작성
-            var modifyBalanceRequest = new CurrencyModifyBalanceRequest(resourceId, amount);
+            if (amount < 0)
+            {
+                // 1. 차감 로직 (음수가 들어오면 실행)
+                // UGS API는 양수만 받으므로 Math.Abs로 절대값(양수)으로 바꿔줍니다. (예: -100 -> 100)
+                int decreaseAmount = Math.Abs(amount);
+                var modifyBalanceRequest = new CurrencyModifyBalanceRequest(resourceId, decreaseAmount);
 
-            // 2. UGS 서버에 해당 재화의 잔액을 변경해달라고 API를 호출합니다.
-            // API 호출: 잔액 변경! (UGS가 알아서 기존 금액에 더하거나 뺍니다)
-            await gameApiClient.EconomyCurrencies.IncrementPlayerCurrencyBalanceAsync(
-                context,
-                context.AccessToken,
-                context.ProjectId,
-                context.PlayerId!,
-                resourceId,
-                modifyBalanceRequest
-            );
+                // Increment 대신 Decrement API를 호출합니다!
+                await gameApiClient.EconomyCurrencies.DecrementPlayerCurrencyBalanceAsync(
+                    context,
+                    context.AccessToken,
+                    context.ProjectId,
+                    context.PlayerId!,
+                    resourceId,
+                    modifyBalanceRequest
+                );
 
-            _logger.LogInformation($"Successfully added {amount} to currency {resourceId} for player {context.PlayerId}");
+                _logger.LogInformation($"Successfully spent {decreaseAmount} of currency {resourceId} for player {context.PlayerId}");
+            }
+            else
+            {
+                // 2. 증가 로직 (양수가 들어오면 기존대로 실행)
+                var modifyBalanceRequest = new CurrencyModifyBalanceRequest(resourceId, amount);
+
+                await gameApiClient.EconomyCurrencies.IncrementPlayerCurrencyBalanceAsync(
+                    context,
+                    context.AccessToken,
+                    context.ProjectId,
+                    context.PlayerId!,
+                    resourceId,
+                    modifyBalanceRequest
+                );
+
+                _logger.LogInformation($"Successfully added {amount} to currency {resourceId} for player {context.PlayerId}");
+            }
         }
         catch (ApiException ex)
         {

@@ -21,9 +21,8 @@ public class UI_AbilityCard : UI_Base
     }
     public AbilityDataSO _data;
 
-
-    private LocalizedString _currentNameLoc;
-    private LocalizedString _currentDescLoc;
+    public TMP_Text nameText;
+    public TMP_Text descText;
 
     public UI_MarqueeText descMarquee;
     public override void Init()
@@ -32,9 +31,13 @@ public class UI_AbilityCard : UI_Base
         {
             return;
         }
+
         base.Init();
         Bind<Image>(typeof(Images));
         Bind<TMP_Text>(typeof(Texts));
+
+        nameText = GetTMP((int)Texts.AbilityNameText);
+        descText = GetTMP((int)Texts.AbilityDescription);
 
     }
     public void SetAbilityCard(AbilityDataSO data)
@@ -42,77 +45,36 @@ public class UI_AbilityCard : UI_Base
         if (data == null)
             return;
 
-        Init();
+        if(_init == false)
+        {
+            Init();
+        }
 
         _data = data;
+
         // 1. 아이콘 세팅
         GetImage((int)Images.AbilityImage).sprite = data.icon;
 
-        ClearLocalization();
 
-        _currentNameLoc = data.localizedName;
+        // 1. 플레이어가 현재 이 능력을 몇 레벨 가지고 있는지 확인합니다.
+        // 현재 레벨 처음이면 0
+        int currentLevel = Managers.Ability.GetCurrentLevel(_data.type);
 
-        int nextLevel = Managers.Ability.GetCurrentLevel(data.type) + 1;
-        // ★ 다형성의 마법: 이게 화염탄이든 체력증가든 알아서 자기 레벨에 맞는 설명을 뱉어냅니다!
-        if (nextLevel > 0 && nextLevel <= data.localizationDesc.Count)
-        {
-            _currentDescLoc = data.localizationDesc[nextLevel - 1];
+        string nameKey = $"{data.type}_Name";
+        nameText.text = Util.GetLocalizeString("Ability", nameKey);
 
-            // ★ 2. 마법의 코드: 번역 텍스트 안의 {0.damage} 같은 구멍을 실제 데이터로 채워줍니다!
-            //object levelData = data.(nextLevel);
-            //if (levelData != null)
-            //{
-            //    _currentDescLoc.Arguments = new object[] { levelData };
-            //}
-        }
+        
+        string descKey = $"{data.type}_Desc_{currentLevel}";
 
-        // [참고] 스마트 스트링(Arguments)이 필요하다면 아래처럼 쓰시면 되지만,
-        // 이제 레벨마다 LocalizedString이 따로 있으므로, 로컬라이제이션 테이블(번역표)에 
-        // "데미지 5 증가" 라고 직접 적어두는 것이 훨씬 관리가 편합니다!
-        // _currentDescLoc.Arguments = new object[] { nextValue }; // (이 부분은 삭제 추천!)
+        // 0레벨이면 "범위 공격을 주는 폭발탄을 획득합니다."가 그대로 출력됨
+        string localizedFormat = Util.GetLocalizeString("Ability", descKey);
 
-        // 4. 이벤트 등록
-        if (_currentNameLoc != null)
-            _currentNameLoc.StringChanged += UpdateNameText;
+        object[] upgradeValues = _data.GetUpgradeValues();
 
-        if (_currentDescLoc != null)
-            _currentDescLoc.StringChanged += UpdateDescText;
+        // 4. 조립 및 출력
+        // 레벨 0 텍스트에 {0}이 없으면? -> 알아서 무시하고 "범위 공격을 획득합니다." 출력
+        // 레벨 1 텍스트에 {0}이 있으면? -> 알아서 수치 넣고 "범위가 10% 증가합니다." 출력
+        descText.text = string.Format(localizedFormat, upgradeValues);
+
     }
-
-    // 번역이 완료되거나 언어가 바뀔 때마다 실행될 콜백 함수들
-    private void UpdateNameText(string translatedText)
-    {
-        TMP_Text name = GetTMP((int)Texts.AbilityNameText);
-        name.text = translatedText;
-
-        descMarquee = name.GetComponent<UI_MarqueeText>();
-        descMarquee.PlayMarquee(translatedText);
-    }
-
-    private void UpdateDescText(string translatedText)
-    {
-        GetTMP((int)Texts.AbilityDescription).text = translatedText;
-    }
-
-    private void ClearLocalization()
-    {
-        if (_currentNameLoc != null)
-        {
-            _currentNameLoc.StringChanged -= UpdateNameText;
-            _currentNameLoc = null;
-        }
-
-        if (_currentDescLoc != null)
-        {
-            _currentDescLoc.StringChanged -= UpdateDescText;
-            _currentDescLoc = null;
-        }
-    }
-
-    // UI가 화면에서 사라질 때 (팝업이 닫힐 때) 안전하게 메모리 정리
-    private void OnDisable()
-    {
-        ClearLocalization();
-    }
-
 }

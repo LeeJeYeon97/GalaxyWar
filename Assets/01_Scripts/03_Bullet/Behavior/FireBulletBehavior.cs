@@ -37,7 +37,10 @@ public class FireBulletBehavior : IBulletBehavior
 
     public void OnShot(BulletController bullet)
     {
-        bullet.StartCoroutine(CoDropFireTrail(bullet));
+        if(bullet.Stat.curLevel >= 5)
+        {
+            bullet.StartCoroutine(CoDropFireTrail(bullet));
+        }
     }
 
     public void OnUpdate(BulletController bullet)

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Localization.Settings;
 
 public class Util
 {
@@ -51,6 +52,13 @@ public class Util
         return null;
     }
 
-    
+    public static string GetLocalizeString(string tableName, string key)
+    {
+        // 1. 혹시 키가 비어있으면 에러를 막기 위해 빈 문자열 반환
+        if (string.IsNullOrEmpty(key)) return "";
+
+        // 2. 유니티 Localization 데이터베이스에서 동기(Synchronous) 방식으로 텍스트를 즉시 가져옵니다.
+        return LocalizationSettings.StringDatabase.GetLocalizedString(tableName, key);
+    }
 
 }

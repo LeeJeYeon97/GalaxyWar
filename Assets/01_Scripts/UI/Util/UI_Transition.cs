@@ -23,7 +23,7 @@ public class UI_Transition : MonoBehaviour
         fadeImage.color = new Color(0, 0, 0, 0);
 
         // 0.5초 동안 까매지고, 끝나면 감독(SceneManager)에게 알려줌
-        fadeImage.DOFade(1f, 1.0f).SetUpdate(true).OnComplete(() =>
+        fadeImage.DOFade(1f, 1.0f).SetLink(gameObject).SetUpdate(true).OnComplete(() =>
         {
             if (onComplete != null) onComplete.Invoke();
         });
@@ -41,7 +41,7 @@ public class UI_Transition : MonoBehaviour
         yield return null;
 
         //  OnComplete 부분에 전달받은 신호를 실행하도록 추가합니다.
-        fadeImage.DOFade(0f, 1.0f).SetUpdate(true).OnComplete(() =>
+        fadeImage.DOFade(0f, 1.0f).SetLink(gameObject).SetUpdate(true).OnComplete(() =>
         {
             fadeImage.gameObject.SetActive(false);
 

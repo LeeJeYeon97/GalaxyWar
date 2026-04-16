@@ -15,7 +15,7 @@ public struct ExplosionBulletStatData
 public class ExplosionBulletStatDataSO : BulletStatDataSO
 {
     [Header("Explosion Stat Settings")]
-    public ExplosionBulletStatData explosionStat;   // 폭발 데미지
+    public ExplosionBulletStatData explosionStat;  
 
     public override BaseBulletStat CreateRuntimeStat()
     {

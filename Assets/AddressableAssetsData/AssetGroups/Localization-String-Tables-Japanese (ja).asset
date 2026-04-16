@@ -14,19 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Unity.Addressables.Editor::UnityEditor.AddressableAssets.Settings.AddressableAssetGroup
   m_GroupName: Localization-String-Tables-Japanese (ja)
   m_GUID: 440686a22071e994380fe6f2e13534a5
-  m_SerializeEntries:
-  - m_GUID: 66f872d7a8a2a2045ac81ed2bf1fef63
-    m_Address: String Table_ja
-    m_ReadOnly: 1
-    m_SerializedLabels:
-    - Locale-ja
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: f89c0b30457a45743a2c3ead246fb8ce
-    m_Address: AbilityDataTable_ja
-    m_ReadOnly: 1
-    m_SerializedLabels:
-    - Locale-ja
-    FlaggedDuringContentUpdateRestriction: 0
+  m_SerializeEntries: []
   m_ReadOnly: 1
   m_Settings: {fileID: 11400000, guid: 9936b9edca63e874aa3f1ab076e2fa60, type: 2}
   m_SchemaSet:

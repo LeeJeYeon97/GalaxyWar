@@ -7,6 +7,8 @@ using UnityEngine;
 
 public abstract class PlayerAbilityDataSO : AbilityDataSO
 {
-    public abstract void ApplyLevelUp(int level, PlayerStat targetStat);
+    public virtual void ApplyLevelUp(int level, PlayerStat targetStat)
+    {
+    }
 }
 

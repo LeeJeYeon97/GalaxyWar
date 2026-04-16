@@ -13,6 +13,30 @@ namespace Unity.Services.CloudCode.GeneratedBindings
             k_Service = service;
         }
 
+        public async Task<Project.PlayerEconomyData> HandleSpendCurrency(string currencyKey, int amount)
+        {
+            return await k_Service.CallModuleEndpointAsync<Project.PlayerEconomyData>(
+                "Project",
+                "HandleSpendCurrency",
+                new Dictionary<string, object>()
+                {
+                    {"currencyKey", currencyKey},
+                    {"amount", amount},
+                });
+        }
+
+        public async Task<Project.PlayerEconomyData> HandleAddCurrency(string currencyKey, int amount)
+        {
+            return await k_Service.CallModuleEndpointAsync<Project.PlayerEconomyData>(
+                "Project",
+                "HandleAddCurrency",
+                new Dictionary<string, object>()
+                {
+                    {"currencyKey", currencyKey},
+                    {"amount", amount},
+                });
+        }
+
         public async Task<Project.PlayerEconomyData> GetPlayerEconomyData()
         {
             return await k_Service.CallModuleEndpointAsync<Project.PlayerEconomyData>(

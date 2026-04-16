@@ -1,6 +1,7 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.Localization;
+using UnityEngine.Localization.Components;
 using UnityEngine.UI;
 using static Define;
 
@@ -16,9 +17,9 @@ public class UI_GameOverPopup : UI_Popup
     {
         RewardCountText,
     }
-    [SerializeField]
-    private LocalizedString _localizedRewardCountText;
 
+    private Button _btnReviveAd;
+    private TMP_Text _txtReviveCount;
 
     public override void Init()
     {
@@ -30,31 +31,48 @@ public class UI_GameOverPopup : UI_Popup
         GetButton((int)Buttons.Btn_Restart).onClick.AddListener(OnClickRestartButton);
         GetButton((int)Buttons.Btn_QuitLobby).onClick.AddListener(OnClickQuitLobbyButton);
 
+        _txtReviveCount = GetTMP((int)Texts.RewardCountText);
 
-        Button rewardButton = GetButton((int)Buttons.Btn_RewardAD);
-        rewardButton.onClick.AddListener(OnClickRewardADButton);
-
-        if(Managers.Game.reviveCount <= 0)
-        {
-            rewardButton.gameObject.SetActive(false);
-        }
+        _btnReviveAd = GetButton((int)Buttons.Btn_RewardAD);
+        _btnReviveAd.onClick.AddListener(OnClickRewardADButton);
 
         RefreshRewardCountText();
     }
     //유니티 눈치 안 보고 내가 원할 때 직접 번역본을 가져오는 마법의 함수!
     private void RefreshRewardCountText()
     {
-        // 1. {0} 에 들어갈 숫자를 확실하게 상자에 넣어줍니다.
-        _localizedRewardCountText.Arguments = new object[] { Managers.Game.reviveCount };
+        int remainCount = Managers.Game.reviveCount;
 
-        // 2. "지금 당장 저 숫자 넣어서 완벽하게 번역된 문장 내놔!" 라고 요청합니다.
-        var op = _localizedRewardCountText.GetLocalizedStringAsync();
+        // 1. 텍스트에 붙어있는 LocalizeStringEvent 컴포넌트를 가져옵니다.
+        var localizeEvent = _txtReviveCount.GetComponent<LocalizeStringEvent>();
 
-        // 3. 번역이 완료되면 바로 UI에 꽂아 넣습니다.
-        op.Completed += (handle) =>
+        if (localizeEvent != null)
         {
-            GetTMP((int)Texts.RewardCountText).text = handle.Result;
-        };
+            // 2. 컴포넌트의 번역 데이터({0} 자리)에 들어갈 값을 object 배열로 넘겨줍니다.
+            // 만약 {0}, {1} 두 개라면 new object[] { remainCount, otherValue } 처럼 넣으면 됩니다.
+            localizeEvent.StringReference.Arguments = new object[] { remainCount };
+
+            // 3. 컴포넌트에게 "인자가 들어왔으니 텍스트 다시 그려!" 라고 명령합니다.
+            // 이때 컴포넌트가 알아서 내부적으로 string.Format을 실행해 예쁘게 출력합니다.
+            localizeEvent.RefreshString();
+        }
+        else
+        {
+            // (혹시 에디터에서 실수로 컴포넌트를 지웠을 때를 대비한 안전장치)
+            string localizedText = Util.GetLocalizeString("UI", "GameOverPopup_ReviveCount");
+            if (string.IsNullOrEmpty(localizedText)) localizedText = "남은 횟수 : {0}";
+            _txtReviveCount.text = string.Format(localizedText, remainCount);
+        }
+
+        // 4. 남은 횟수가 없으면 광고 버튼 비활성화
+        if (remainCount <= 0)
+        {
+            _btnReviveAd.interactable = false;
+        }
+        else
+        {
+            _btnReviveAd.interactable = true;
+        }
     }
 
     private void OnClickRestartButton()
@@ -72,17 +90,45 @@ public class UI_GameOverPopup : UI_Popup
     }
     private void OnClickRewardADButton()
     {
+        // 클릭 중복 방지 (광고 로딩 중 버튼 끄기)
+        _btnReviveAd.interactable = false;
 
-        if (Time.timeScale == 0.0f)
+        // 아이언소스 보상형 광고 호출 (플레이스먼트 이름은 대시보드에 맞게 수정하세요)
+        Managers.AD.ShowRewardedAd(placement_GameOver, (success) =>
         {
-            Time.timeScale = 1f;
-        }
-        if (Managers.Game.reviveCount <= 0)
-        {
-            return;
-        }
-        Managers.AD.ShowRewardedAd("Main_Menu");
+            if (success)
+            {
+                Debug.Log("부활 광고 시청 완료! 플레이어를 부활시킵니다.");
 
-        ClosePopupUI();
+                // 1. 남은 횟수 차감
+                Managers.Game.reviveCount--;
+
+                // 2. 플레이어 부활 함수 호출 (이전에 만들어두신 PlayerController의 Revive() 활용!)
+                PlayerController player = GameObject.FindFirstObjectByType<PlayerController>();
+                if (player != null)
+                {
+                    player.SetState(PlayerState.Die); // Revive 내부 로직 통과를 위해 상태 맞춤 (필요시)
+                    player.Revive();
+                    player.SetState(PlayerState.Playing);
+                }
+
+                // 3. 게임 상태 복구 및 팝업 닫기
+                Managers.Game.ChangeGameState(GameState.Playing);
+                Managers.UI.ClosePopupUI();
+            }
+            else
+            {
+                Debug.Log("부활 광고 시청 실패 또는 취소.");
+
+                // 광고를 중간에 껐다면 버튼을 다시 누를 수 있게 켜줍니다.
+                RefreshRewardCountText();
+            }
+        });
+    }
+
+
+    private void SuccessReward()
+    {
+
     }
 }

@@ -40,7 +40,7 @@ public class InitManager
 
         try
         {
-            OnInitProgress?.Invoke(0.1f, "서버 시스템 초기화 중...");
+            OnInitProgress?.Invoke(0.1f, "LoadingText_SystemInit");
 
             // 1. 유니티 서비스 초기화 (필수)
             if (UnityServices.State == ServicesInitializationState.Uninitialized)
@@ -64,7 +64,7 @@ public class InitManager
             PlayGamesPlatform.DebugLogEnabled = true;
             PlayGamesPlatform.Activate();
 #endif
-            OnInitProgress?.Invoke(0.4f, "계정 정보 확인 중...");
+            OnInitProgress?.Invoke(0.4f, "LoadingText_AccountCheck");
 
             IsInitialized = true;
             Debug.Log("All Systems Initialized");

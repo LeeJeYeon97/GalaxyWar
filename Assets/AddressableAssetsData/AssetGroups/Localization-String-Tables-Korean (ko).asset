@@ -15,14 +15,14 @@ MonoBehaviour:
   m_GroupName: Localization-String-Tables-Korean (ko)
   m_GUID: ea76638597d3ec44db42278fa305460e
   m_SerializeEntries:
-  - m_GUID: 09b76d5b205056a47a1cbfa9a3cef006
-    m_Address: String Table_ko
+  - m_GUID: 62a270e6189445942bb5778dd138bd2f
+    m_Address: UI_ko
     m_ReadOnly: 1
     m_SerializedLabels:
     - Locale-ko
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 61931e993ed22c04aa8234ec2883c010
-    m_Address: AbilityDataTable_ko
+  - m_GUID: e7f1e4c86a38e6e4c805bc43cc9a9947
+    m_Address: AbilityTable_ko
     m_ReadOnly: 1
     m_SerializedLabels:
     - Locale-ko

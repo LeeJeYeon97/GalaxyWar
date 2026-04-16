@@ -1,6 +1,7 @@
 using DG.Tweening;
 using NUnit.Framework;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
@@ -40,12 +41,15 @@ public class UI_LevelUpPopup : UI_Popup
 
         GetButton((int)Buttons.ReloadButton_AD).onClick.AddListener(OnCardReloadButtonAd);
 
-        GetButton((int)Buttons.ReloadButton_Coin).onClick.AddListener(OnCardReloadButtonCoin);
+        GetButton((int)Buttons.ReloadButton_Coin).onClick.AddListener(OnCardReloadButtonCoinAsync);
 
         RefreshCards();
     }
     private void OnCardReloadButtonAd()
     {
+        if (_isSelecting) return;
+        _isSelecting = true;
+
         // 광고보게하기
         // 플레이스먼트
         // 광고 보기 (두 번째 파라미터로 콜백 함수를 화살표 함수 형태로 넘깁니다)
@@ -63,11 +67,52 @@ public class UI_LevelUpPopup : UI_Popup
             }
         });
     }
-    private void OnCardReloadButtonCoin()
+    private async void OnCardReloadButtonCoinAsync()
     {
-        // TODO 코인까기
-        RefreshCards();
+        // 
+        // 1. 연속 클릭 방지 및 로딩 표시
+        if (_isSelecting) return;
+        _isSelecting = true;
+
+        // 유저에게 "처리 중..."임을 알리기 위해 로딩 팝업을 띄웁니다.
+        Managers.UI.ShowPopupUI<UI_LoadingPopup>();
+
+        try
+        {
+            // 2. 서버(Cloud Code)에 코인 소모 요청
+            // (서버 함수 이름이 'SpendCurrency'이고, 인자로 재화 ID와 소모량을 보낸다고 가정)
+            // 성공 시 업데이트된 경제 데이터(Currency 등)를 반환받습니다.
+            var spendCurrency = await Managers.PlayerEconomy.SpendGoldAsync(100);
+
+            if (spendCurrency == true)
+            {
+                Debug.Log("코인 소모 성공! 카드를 리롤합니다.");
+
+                // 로딩 팝업 닫고 카드 리프레시
+                Managers.UI.ClosePopupUI();
+                RefreshCards();
+            }
+            else
+            {
+                // 서버 결과가 실패(코인 부족 등)인 경우
+                HandleCoinReloadFailed("코인이 부족합니다.");
+            }
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogError($"코인 리롤 중 서버 에러 발생: {e.Message}");
+            HandleCoinReloadFailed("네트워크 통신에 실패했습니다.");
+        }
     }
+    private void HandleCoinReloadFailed(string message)
+    {
+        Managers.UI.ClosePopupUI();
+        _isSelecting = false;
+
+        // 여기에 유저에게 보여줄 알림 팝업(예: UI_Toast)을 추가하면 더 좋습니다.
+        Debug.LogWarning(message);
+    }
+
     private void RefreshCards()
     {
         // ★ 1. 안전장치: 카드가 세팅되고 날아오는 동안에는 절대 클릭 못하게 잠급니다!

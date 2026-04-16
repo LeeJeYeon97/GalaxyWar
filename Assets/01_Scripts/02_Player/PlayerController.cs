@@ -56,6 +56,15 @@ public class PlayerController : BaseController
     public float rotatePower;
     public float movePower;
 
+    // 자동 조준(Auto Aim)을 위한 변수 추가
+    private GameObject _target;
+    private float _targetTimer = 0f;
+    private float _targetUpdateInterval = 0.1f; // 0.1초마다 적을 찾음 (최적화)
+
+    [Header("Weapon")]
+    public Transform gunTransform;      // 유니티 인스펙터에서 미니건(포신) 오브젝트를 드래그해서 넣으세요!
+    public float gunRotateSpeed = 20f;  // 미니건이 돌아가는 속도 (본체보다 빠르게 세팅하는 게 좋습니다)
+
     public void Init()
     {
         _rb = GetComponent<Rigidbody2D>();
@@ -112,9 +121,9 @@ public class PlayerController : BaseController
     //  FixedUpdate를 오버라이드하여 일시정지 시 물리를 완벽하게 멈춥니다.
     protected override void FixedUpdate()
     {
-        bool isGamePaused = (Managers.Game.currentGameState == GameState.Pause);
-
-        if (isGamePaused && !_physicsFrozenByPause)
+        
+        if ((Managers.Game.currentGameState == GameState.Pause || Managers.Game.currentGameState == GameState.GameOver)
+            && !_physicsFrozenByPause)
         {
             _savedVelocity = _rb.linearVelocity;
             _savedAngularVelocity = _rb.angularVelocity;
@@ -123,7 +132,8 @@ public class PlayerController : BaseController
             _rb.simulated = false;
             _physicsFrozenByPause = true;
         }
-        else if (!isGamePaused && _physicsFrozenByPause)
+        else if (!(Managers.Game.currentGameState == GameState.Pause && Managers.Game.currentGameState == GameState.GameOver) 
+            && _physicsFrozenByPause)
         {
             _rb.simulated = true;
             _rb.linearVelocity = _savedVelocity;
@@ -135,6 +145,7 @@ public class PlayerController : BaseController
     }
     protected override void OnUpdate()
     {
+        FindTarget();
         // 발사 로직
         Shoot();
         HomingShot();
@@ -151,6 +162,7 @@ public class PlayerController : BaseController
 
         Move();
         Rotate();
+        RotateGun();
     }
 
     public void SetState(PlayerState state)
@@ -257,54 +269,70 @@ public class PlayerController : BaseController
     #region Weapon
 
     // 주변 적 탐색
-    //public void FindTarget()
-    //{
-    //    // 타겟팅 타이머 (매 프레임 계산 방지)
-    //    _targetTimer += Time.deltaTime;
-    //    if (_targetTimer < _targetUpdateInterval)
-    //    {
-    //        return;
-    //    }
-    //    // 사거리에 따른 적 탐색
-    //    // 리로딩 중이면 타겟 안 찾음
-    //    if (_isReloading)
-    //    {
-    //        _target = null;
-    //        return;
-    //    }
-    //    // Managers.Game에 있는 활성화된 메테오 리스트를 가져옵니다.
-    //    if (Managers.Game.activeMeteors.Count == 0)
-    //    {
-    //        _target = null;
-    //        return;
-    //    }
+    public void FindTarget()
+    {
+        // 타겟팅 타이머 (매 프레임 계산 방지용 최적화)
+        _targetTimer += Time.deltaTime;
+        if (_targetTimer < _targetUpdateInterval)
+        {
+            return;
+        }
+        _targetTimer = 0f;
 
-    //    float minDistance = Mathf.Infinity; // 가장 짧은 거리를 저장할 변수
-    //    foreach (var meteor in Managers.Game.activeMeteors)
-    //    {
-    //        if (meteor == null) continue;
+        // 리로딩 중이거나 게임 상태가 정상이 아니면 타겟 안 찾음
+        if (currentState != PlayerState.Playing || Managers.Game.currentGameState != GameState.Playing)
+        {
+            _target = null;
+            return;
+        }
 
-    //        // 플레이어와 메테오 사이의 거리 계산
-    //        float distance = Vector3.Distance(transform.position, meteor.transform.position);
+        float minDistance = Mathf.Infinity;
+        _target = null;
 
-    //        //탐지 범위 안에 있고, 지금까지 찾은 것보다 더 가깝다면 갱신
-    //        if (distance <= stat.shotRange.TotalValue && distance < minDistance)
-    //        {
-    //            minDistance = distance;
-    //            _target = meteor.gameObject;
-    //        }
+        // 내 주변 지정된 사거리(shotRange) 안의 모든 콜라이더를 찾습니다.
+        Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, Stat.shotRange.TotalValue);
 
-    //    }
-    //    _targetTimer = 0;
-    //}
+        foreach (Collider2D col in colliders)
+        {
+            MeteorController meteor = col.GetComponent<MeteorController>();
+
+            // 콜라이더가 운석이고, 살아있는 상태라면
+            if (meteor != null && meteor.gameObject.activeInHierarchy)
+            {
+                float distance = Vector2.Distance(transform.position, meteor.transform.position);
+
+                // 지금까지 찾은 것보다 가깝다면 타겟 갱신
+                if (distance < minDistance)
+                {
+                    minDistance = distance;
+                    _target = meteor.gameObject;
+                }
+            }
+        }
+    }
+
+    #region Gizmos
+    // 플레이어 오브젝트를 클릭(Select)했을 때만 씬 뷰에 그려주는 함수입니다.
+    // (항상 보이게 하려면 OnDrawGizmos() 로 이름을 바꾸시면 됩니다!)
+    private void OnDrawGizmosSelected()
+    {
+        // 게임을 실행하기 전(에디터 상태)에는 Stat이 아직 할당되지 않아 
+        // Null 에러가 날 수 있으므로 안전장치를 걸어줍니다.
+        if (Stat == null || Stat.shotRange == null) return;
+
+        // 눈에 잘 띄도록 반투명한 붉은색(또는 초록색)으로 색상을 설정합니다.
+        Gizmos.color = new Color(1f, 0f, 0f, 0.5f);
+
+        // 내 위치를 중심으로 shotRange만큼의 크기를 가진 원(선)을 그립니다.
+        Gizmos.DrawWireSphere(transform.position, Stat.shotRange.TotalValue);
+    }
+    #endregion
 
     // 발사
     void Shoot()
     {
-        // 리로딩 중이면 리턴
         if (_isReloading) return;
-        
-        // 탄창이 비었으면 자동 리로드
+
         if (bullets.Count <= 0)
         {
             if (_reloadCoroutine == null)
@@ -312,7 +340,6 @@ public class PlayerController : BaseController
             return;
         }
 
-        // 3. 재장전 중이 아닐 때 연사 속도에 맞춰 사격
         if (Time.time - _lastShotTime >= Stat.shotTime.TotalValue)
         {
             BulletController bullet = bullets[0];
@@ -321,33 +348,35 @@ public class PlayerController : BaseController
             if (bullet != null)
             {
                 bullet.transform.position = _bulletPos.position;
-                
 
-                _currentAimDir = dragDir.normalized;
+                // 방향 결정: 타겟이 있으면 타겟 쪽으로, 없으면 내가 보는 앞쪽으로!
+                Vector2 shootDir = transform.up;
+
+                if (_target != null && _target.activeInHierarchy)
+                {
+                    shootDir = (_target.transform.position - _bulletPos.position).normalized;
+                }
+
+                _currentAimDir = shootDir;
                 Managers.Sound.Play(SoundID.Sfx_PlayerShot, Sound.Sfx);
 
-                
-                // ★ 분열 능력을 먹었다면 부채꼴 발사!
                 if (Stat.isMultiShotEnabled && Stat.multiShotCount.TotalValue > 1)
                 {
                     float multiShotChance = Random.Range(0f, 100f);
-                    if(multiShotChance <= Stat.multiShotChance.TotalValue)
+                    if (multiShotChance <= Stat.multiShotChance.TotalValue)
                     {
-
-                        FireMultiShot(bullet);
+                        //멀티샷에도 새로 계산한 방향(shootDir)을 전달해 줍니다.
+                        FireMultiShot(bullet, shootDir);
                     }
                     else
                     {
-                        bullet.Shot(transform.up, _bulletPos.position);          // 발사
+                        bullet.Shot(shootDir, _bulletPos.position);
                     }
-                    
                 }
                 else
                 {
-                    bullet.Shot(transform.up, _bulletPos.position);          // 발사
+                    bullet.Shot(shootDir, _bulletPos.position);
                 }
-
-                // 발사 시간 설정
                 _lastShotTime = Time.time;
             }
         }
@@ -377,13 +406,12 @@ public class PlayerController : BaseController
     }
 
     // 새로 추가된 부채꼴 발사 핵심 로직!
-    private void FireMultiShot(BulletController mainBullet)
+    // 부채꼴 발사도 새로운 발사 방향(baseShootDir)을 기준으로 계산하도록 수정!
+    private void FireMultiShot(BulletController mainBullet, Vector2 baseShootDir)
     {
-        // 1. 기준이 되는 중심 각도 구하기 (플레이어가 바라보는 방향 = transform.up)
-        float baseAngle = Mathf.Atan2(transform.up.y, transform.up.x) * Mathf.Rad2Deg;
+        // 기준 각도를 플레이어 앞면(transform.up)이 아닌 전달받은 방향(baseShootDir)으로 바꿉니다.
+        float baseAngle = Mathf.Atan2(baseShootDir.y, baseShootDir.x) * Mathf.Rad2Deg;
 
-        // 2. 부채꼴의 시작 각도와, 총알 사이의 간격(각도) 계산
-        // 예) 각도가 45도고 3발이면 -> -22.5도, 0도, +22.5도
         float startAngle = baseAngle - (Stat.multiShotAngle / 2f);
         float angleStep = Stat.multiShotAngle / (Stat.multiShotCount.TotalValue - 1);
 
@@ -393,33 +421,25 @@ public class PlayerController : BaseController
 
             if (i == 0)
             {
-                // 첫 번째 발사체는 탄창에서 꺼낸 그 총알을 그대로 씁니다.
                 bulletToFire = mainBullet;
             }
             else
             {
-                // 나머지 발사체들은 기준 총알(mainBullet)과 똑같은 놈으로 풀에서 공짜로 복사해옵니다!
-                // (주의: mainBullet 스크립트 안에 자신의 Stat을 반환하는 변수나 함수가 있어야 합니다!)
                 GameObject go = Managers.Resource.Instantiate(mainBullet.Stat.originalPrefabs);
                 bulletToFire = go?.GetComponent<BulletController>();
 
                 if (bulletToFire != null)
                 {
-                    bulletToFire.SetBullet(Managers.Stat.GetBulletStat(mainBullet.Stat.type)); // 스탯 복사
+                    bulletToFire.SetBullet(Managers.Stat.GetBulletStat(mainBullet.Stat.type));
                 }
             }
 
             if (bulletToFire != null)
             {
-                // 3. 현재 쏠 총알의 각도 계산
                 float currentAngle = startAngle + (angleStep * i);
-
-                // 4. 각도를 다시 방향 벡터(Vector2)로 변환
                 Vector2 shotDir = new Vector2(Mathf.Cos(currentAngle * Mathf.Deg2Rad), Mathf.Sin(currentAngle * Mathf.Deg2Rad)).normalized;
 
                 bulletToFire.transform.position = _bulletPos.position;
-
-                // 5. 총알 쏘기! (shotDir를 진행 방향으로 넘겨줌)
                 bulletToFire.Shot(shotDir, _bulletPos.position);
             }
         }
@@ -432,7 +452,6 @@ public class PlayerController : BaseController
         
         lr.enabled = false;
 
-
         Managers.Event.PostEvent<float>(ActionEvent.ReloadStart, Stat.reloadTime.TotalValue);
         Managers.Sound.Play(Define.SoundID.Sfx_Reloading);
 
@@ -443,6 +462,32 @@ public class PlayerController : BaseController
         // 리로딩 끝
         Managers.Event.PostEvent(ActionEvent.ReloadEnd);
         _reloadCoroutine = null; // 완료 후 비워줌
+    }
+
+    private void RotateGun()
+    {
+        // 미니건이 할당되어 있지 않으면 에러 방지
+        if (gunTransform == null) return;
+
+        // 1. 기본적으로는 비행기의 정면(앞쪽)을 바라봅니다.
+        Vector2 aimDir = transform.up;
+
+        // 2. 만약 찾아둔 타겟이 있다면, 미니건부터 타겟까지의 방향을 계산합니다.
+        if (_target != null && _target.activeInHierarchy)
+        {
+            aimDir = (_target.transform.position - gunTransform.position).normalized;
+        }
+
+        // 3. 방향 벡터를 각도(Degree)로 변환합니다.
+        float targetAngle = Mathf.Atan2(aimDir.y, aimDir.x) * Mathf.Rad2Deg;
+
+        // 4. 스프라이트의 앞쪽이 위(Y)를 향한다면 -90을 빼줍니다.
+        // (만약 총구 스프라이트가 오른쪽(X)을 보고 그려져 있다면 -90f를 지우세요!)
+        float finalAngle = targetAngle - 90f;
+
+        // 5. 미니건을 목표 각도를 향해 부드럽게(혹은 빠르게) 회전시킵니다.
+        Quaternion targetRotation = Quaternion.Euler(0, 0, finalAngle);
+        gunTransform.rotation = Quaternion.Lerp(gunTransform.rotation, targetRotation, Time.fixedDeltaTime * gunRotateSpeed);
     }
 
     public void Reload()

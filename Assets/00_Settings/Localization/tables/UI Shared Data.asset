@@ -1,0 +1,144 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b11a58205ec3474ca216360e9fa74a8, type: 3}
+  m_Name: UI Shared Data
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Tables.SharedTableData
+  m_TableCollectionName: UI
+  m_TableCollectionNameGuidString: fcacc423b0edf4a47a3eb9d10c75ff59
+  m_Entries:
+  - m_Id: 99079049216
+    m_Key: LoadingText_SystemInit
+    m_Metadata:
+      m_Items: []
+  - m_Id: 195585789952
+    m_Key: LoadingText_PlayerDataLoad
+    m_Metadata:
+      m_Items: []
+  - m_Id: 283766837248
+    m_Key: LoadingText_Complete
+    m_Metadata:
+      m_Items: []
+  - m_Id: 788064784384
+    m_Key: LoadingText_AccountCheck
+    m_Metadata:
+      m_Items: []
+  - m_Id: 10990264668160
+    m_Key: LobbyScene_StartGame
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11032912351232
+    m_Key: SettingPopup_SFX
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11187304681472
+    m_Key: SettingPopup_BGM
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11270419009536
+    m_Key: SettingPopup_VIBRATE
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11338433843200
+    m_Key: SettingPopup_Language
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12224199544832
+    m_Key: TouchToClose
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12363618209792
+    m_Key: SettingPopup_Title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 13046530592768
+    m_Key: LoadingPopup_Text
+    m_Metadata:
+      m_Items: []
+  - m_Id: 13344665915392
+    m_Key: QuitPopup_Title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 13380871147520
+    m_Key: QuitPopup_Yes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 13399292530688
+    m_Key: QuitPopup_No
+    m_Metadata:
+      m_Items: []
+  - m_Id: 13492309610496
+    m_Key: QuitPopup_Desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 13749642743808
+    m_Key: ProfilePopup_Title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 13785076224000
+    m_Key: ProfilePopup_NickName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 13788565884928
+    m_Key: ProfilePopup_PlayerID
+    m_Metadata:
+      m_Items: []
+  - m_Id: 13825815498752
+    m_Key: ProfilePopup_LinkGoogle
+    m_Metadata:
+      m_Items: []
+  - m_Id: 19067349127168
+    m_Key: GameOverPopup_Quit
+    m_Metadata:
+      m_Items: []
+  - m_Id: 19109195698176
+    m_Key: GameOverPopup_Restart
+    m_Metadata:
+      m_Items: []
+  - m_Id: 19171908931584
+    m_Key: GameOverPopup_ContinueAD
+    m_Metadata:
+      m_Items: []
+  - m_Id: 19254285062144
+    m_Key: GameOverPopup_ReviveCount
+    m_Metadata:
+      m_Items: []
+  - m_Id: 21789209153536
+    m_Key: PausePopup_Resume
+    m_Metadata:
+      m_Items: []
+  - m_Id: 21837296848896
+    m_Key: PausePopup_Restart
+    m_Metadata:
+      m_Items: []
+  - m_Id: 21858436141056
+    m_Key: PausePopup_Settings
+    m_Metadata:
+      m_Items: []
+  - m_Id: 21899305439232
+    m_Key: PausePopup_QuitGame
+    m_Metadata:
+      m_Items: []
+  - m_Id: 23026897932288
+    m_Key: PausePopup_Title
+    m_Metadata:
+      m_Items: []
+  m_Metadata:
+    m_Items: []
+  m_KeyGenerator:
+    rid: 2415426198511813572
+  references:
+    version: 2
+    RefIds:
+    - rid: 2415426198511813572
+      type: {class: DistributedUIDGenerator, ns: UnityEngine.Localization.Tables, asm: Unity.Localization}
+      data:
+        m_CustomEpoch: 1776328356015

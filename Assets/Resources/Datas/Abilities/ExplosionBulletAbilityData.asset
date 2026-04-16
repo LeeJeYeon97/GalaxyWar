@@ -13,56 +13,6 @@ MonoBehaviour:
   m_Name: ExplosionBulletAbilityData
   m_EditorClassIdentifier: Assembly-CSharp::ExplosionBulletAbilityDataSO
   type: 101
-  localizedName:
-    m_TableReference:
-      m_TableCollectionName: GUID:82c20406597040c4f8b1423cea141506
-    m_TableEntryReference:
-      m_KeyId: 3642049569116160
-      m_Key: 
-    m_FallbackState: 0
-    m_WaitForCompletion: 0
-    m_LocalVariables: []
-  localizationDesc:
-  - m_TableReference:
-      m_TableCollectionName: GUID:82c20406597040c4f8b1423cea141506
-    m_TableEntryReference:
-      m_KeyId: 3642099510693888
-      m_Key: 
-    m_FallbackState: 0
-    m_WaitForCompletion: 0
-    m_LocalVariables: []
-  - m_TableReference:
-      m_TableCollectionName: GUID:82c20406597040c4f8b1423cea141506
-    m_TableEntryReference:
-      m_KeyId: 3642169702371328
-      m_Key: 
-    m_FallbackState: 0
-    m_WaitForCompletion: 0
-    m_LocalVariables: []
-  - m_TableReference:
-      m_TableCollectionName: GUID:82c20406597040c4f8b1423cea141506
-    m_TableEntryReference:
-      m_KeyId: 3642169702371328
-      m_Key: 
-    m_FallbackState: 0
-    m_WaitForCompletion: 0
-    m_LocalVariables: []
-  - m_TableReference:
-      m_TableCollectionName: GUID:82c20406597040c4f8b1423cea141506
-    m_TableEntryReference:
-      m_KeyId: 3642169702371328
-      m_Key: 
-    m_FallbackState: 0
-    m_WaitForCompletion: 0
-    m_LocalVariables: []
-  - m_TableReference:
-      m_TableCollectionName: GUID:82c20406597040c4f8b1423cea141506
-    m_TableEntryReference:
-      m_KeyId: 3642169702371328
-      m_Key: 
-    m_FallbackState: 0
-    m_WaitForCompletion: 0
-    m_LocalVariables: []
   icon: {fileID: 0}
   maxLevel: 5
   _requiredAbility: 0
@@ -72,33 +22,35 @@ MonoBehaviour:
     damage: 0
     speed: 0
     bounceCount: 0
+    isReload: 0
   - chance: 10
     damage: 0
     speed: 0
     bounceCount: 0
+    isReload: 0
   - chance: 10
     damage: 0
     speed: 0
     bounceCount: 0
+    isReload: 0
   - chance: 10
     damage: 0
     speed: 0
     bounceCount: 0
+    isReload: 0
   - chance: 10
     damage: 0
     speed: 0
     bounceCount: 0
+    isReload: 0
   stats:
   - explosionRange: 0
     explosionDamageValue: 0
-  - explosionRange: 0
-    explosionDamageValue: 0
-  - explosionRange: 0
-    explosionDamageValue: 0
-  - explosionRange: 0
-    explosionDamageValue: 0
-  - explosionRange: 0
-    explosionDamageValue: 0
-  references:
-    version: 2
-    RefIds: []
+  - explosionRange: 1
+    explosionDamageValue: 10
+  - explosionRange: 1
+    explosionDamageValue: 10
+  - explosionRange: 1
+    explosionDamageValue: 10
+  - explosionRange: 1
+    explosionDamageValue: 10

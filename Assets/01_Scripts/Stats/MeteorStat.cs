@@ -23,12 +23,13 @@ public class MeteorStat
 
     public IMeteorBehavior Behavior; // 이 타입이 공유할 단 하나의 뇌!
 
+    public GameObject sludgePuddle;
+    public GameObject magmaPuddle;
+
     public void Init(MeteorStatDataSO data)
     {
         if (data == null) return;
         type = data.Type;
-        Sprite = data.Sprite;
-        Name = data.Name;
         isExclude = data.isExclude;
         MaxHp.Init(data.MaxHp);
         MaxSpeed.Init(data.MaxSpeed);
@@ -42,6 +43,9 @@ public class MeteorStat
         auraRadius.Init(data.auraRadius);
 
         originalPrefabs = data.originalPrefabs;
+
+        magmaPuddle = data.magmaPuddle;
+        sludgePuddle = data.sludgePuddle;
 
         // ... 스탯 초기화 ...
         Behavior = CreateBehavior(data);

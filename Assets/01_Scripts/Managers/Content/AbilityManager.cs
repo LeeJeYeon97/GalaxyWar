@@ -63,6 +63,7 @@ public class AbilityManager
             return level;
         return 0;
     }
+    
     public void ApplyAbility(AbilityDataSO selectedData)
     {
         if (selectedData == null) return;
@@ -75,40 +76,29 @@ public class AbilityManager
             _abilityLevels[type] = 0;
         }
 
-        _abilityLevels[type]++;
-        int currentLevel = _abilityLevels[type];
-
-        // ==========================================
-        // 2. 마법의 다형성 분기 처리 (is 키워드 활용)
-        // ==========================================
-
+        int curLevel = _abilityLevels[type];
         // 케이스 A: 만약 선택한 카드가 '총알 능력(BulletAbility)' 이라면?
         if (selectedData is BulletAbilityDataSO bulletAbility)
         {
-            
-            // TODO: 플레이어가 현재 들고 있는 '해당 총알의 런타임 스탯'을 가져와야 합니다!
-            // (예: 플레이어 스크립트나 WeaponManager에서 가져오는 함수 호출)
             BaseBulletStat targetBulletStat = Managers.Stat.GetBulletStat(bulletAbility.bulletType);
-
             if (targetBulletStat != null)
             {
                 // 총알 스탯을 던져주고 레벨업 시킴
-                bulletAbility.ApplyLevelUp(currentLevel, targetBulletStat);
-                targetBulletStat.curLevel = currentLevel;
-                Debug.Log($"{selectedData.type} (총알) 능력이 {currentLevel}레벨로 적용되었습니다!");
+                bulletAbility.ApplyLevelUp(curLevel, targetBulletStat);
+                _abilityLevels[type]++;
             }
         }
         // 케이스 B: 만약 선택한 카드가 '플레이어 패시브(PlayerAbility)' 라면?
         else if (selectedData is PlayerAbilityDataSO playerAbility)
         {
-            // TODO: 플레이어 본체의 런타임 스탯을 가져와야 합니다!
+
             PlayerStat targetPlayerStat = Managers.Stat.playerStat;
 
             if (targetPlayerStat != null)
             {
                 // 플레이어 스탯을 던져주고 레벨업 시킴
-                playerAbility.ApplyLevelUp(currentLevel, targetPlayerStat);
-                Debug.Log($"{selectedData.type} (플레이어) 능력이 {currentLevel}레벨로 적용되었습니다!");
+                playerAbility.ApplyLevelUp(curLevel, targetPlayerStat);
+                _abilityLevels[type]++;
             }
         }
         else

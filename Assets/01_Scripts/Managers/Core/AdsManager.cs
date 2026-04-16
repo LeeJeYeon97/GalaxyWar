@@ -482,14 +482,15 @@ public class AdsManager
             Debug.Log($"Validating ad reward : {reward.Name} amount : {reward.Amount}");
 
             // 핵심 분기점: 인게임 리롤 같은 '휘발성 보상'은 서버 검증을 스킵합니다!
-            if (adInfo.PlacementName == Define.placement_InGameCardReload)
+            if (adInfo.PlacementName == Define.placement_InGameCardReload ||
+                adInfo.PlacementName == Define.placement_GameOver)
+                
             {
-                Debug.Log("인게임 리롤: 서버 검증 없이 즉시 클라이언트 보상을 지급합니다.");
+                Debug.Log("인게임 광고보상 : 서버 검증 없이 즉시 클라이언트 보상을 지급합니다.");
                 _onCurrentAdCompletedCallback?.Invoke(true);
                 return;
             }
 
-            // Create a unique token for this ad view
             string adToken = GenerateAdToken(adInfo, reward);
             DateTime completionTime = DateTime.UtcNow;
 

@@ -17,6 +17,7 @@ public class Define
     // 광고 키
     public const string placement_ShopGold = "Shop_Gold";
     public const string placement_InGameCardReload = "InGame_Card_Reload";
+    public const string placement_GameOver = "Game_Over";
 
     // 구매 키
     public const string k_IAP_RemoveAd = "IAP_REMOVE_AD";

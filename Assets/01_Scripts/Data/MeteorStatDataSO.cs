@@ -6,11 +6,9 @@ using UnityEngine;
 public class MeteorStatDataSO : ScriptableObject
 {
     public Define.MeteorType Type;
-    public Sprite Sprite;
-    public string Name;
 
     public GameObject originalPrefabs;
-
+    
     public bool isExclude; 
 
     public float MaxHp;
@@ -25,6 +23,10 @@ public class MeteorStatDataSO : ScriptableObject
 
     [Header("Magma Meteor Setting")]
     public float magmaTick;
+    public GameObject magmaPuddle;
+
+    [Header("Sludge Meteor Setting")]
+    public GameObject sludgePuddle;
 
     [Header("Aura Meteor Setting")]
     // 오라버프

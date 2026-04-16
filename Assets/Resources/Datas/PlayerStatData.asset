@@ -18,7 +18,7 @@ MonoBehaviour:
     maxDefence: 100
     reloadCount: 5
     reloadTime: 2
-    shotRange: 0
+    shotRange: 3
     shotTime: 1
     hitCooldown: 1
     isBurstModeEnabled: 0

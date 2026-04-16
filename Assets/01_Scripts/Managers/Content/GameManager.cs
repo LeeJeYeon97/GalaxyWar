@@ -19,7 +19,7 @@ public class GameManager : MonoBehaviour
     public float gamePlayTime;
     public PhaseType currentPhase;
 
-    public int reviveCount { get; private set; } // 광고 봤을 때 사용가능한 살아나기 횟수
+    public int reviveCount { get; set; } // 광고 봤을 때 사용가능한 살아나기 횟수
     public void Init()
     {
         currentPhase = PhaseType.Phase1;
@@ -52,8 +52,6 @@ public class GameManager : MonoBehaviour
             return;
 
         reviveCount = Managers.Data.GameData.reviveCount;
-
-
         
     }
     private void Update()

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Unity.Services.Authentication;
 using Unity.Services.CloudCode;
 using Unity.Services.CloudCode.GeneratedBindings;
@@ -136,5 +137,94 @@ public class PlayerEconomyManager
             return amount;
         }
         return 0;
+    }
+
+    // [추가] 재화 소모 함수 (비동기)
+    // currencyKey: 소모할 재화 ID (예: "GOLD")
+    // amount: 소모할 양
+    public async Task<bool> SpendCurrencyAsync(string currencyKey, int amount)
+    {
+        // 1. [로컬 체크] 서버에 찌르기 전에 내 가방에 돈이 있는지 먼저 확인 (서버 비용 절약)
+        int currentBalance = GetCurrencyAmount(currencyKey);
+        if (currentBalance < amount)
+        {
+            Debug.LogWarning($"[{currencyKey}] 잔액 부족: 현재 {currentBalance}, 필요 {amount}");
+            return false;
+        }
+
+        try
+        {
+            // 2. [서버 통신] Cloud Code를 통해 서버 DB의 재화를 차감합니다.
+            // 성공하면 서버는 차감 후의 최신 PlayerEconomyData를 반환합니다.
+            if (playerEconomyServiceBindings == null)
+            {
+                Debug.LogError("Service Bindings가 초기화되지 않았습니다.");
+                return false;
+            }
+
+            // Bindings에 정의된 서버 함수 호출 (HandleSpendCurrency는 서버 함수 이름에 맞춰 변경 가능)
+            var updatedData = await playerEconomyServiceBindings.HandleSpendCurrency(currencyKey, amount);
+
+            if (updatedData != null)
+            {
+                // 3. [로컬 업데이트] 서버에서 받아온 최신 지갑 데이터로 내 로컬 데이터를 갱신합니다.
+                HandleEconomyUpdate(updatedData);
+                Debug.Log($"[{currencyKey}] 소모 성공! 남은 잔액: {GetCurrencyAmount(currencyKey)}");
+                return true;
+            }
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError($"재화 소모 중 서버 통신 에러: {ex.Message}");
+        }
+
+        return false;
+    }
+
+    // [추가] 골드 전용 소모 함수 (지름길)
+    public async Task<bool> SpendGoldAsync(int amount)
+    {
+        return await SpendCurrencyAsync(Define.k_GoldCurrencyKey, amount);
+    }
+
+    public async Task<bool> AddCurrencyAsync(string currencyKey, int amount)
+    {
+        if (amount <= 0)
+        {
+            Debug.LogWarning("획득할 재화량은 0보다 커야 합니다.");
+            return false;
+        }
+
+        try
+        {
+            if (playerEconomyServiceBindings == null)
+            {
+                Debug.LogError("Service Bindings가 초기화되지 않았습니다.");
+                return false;
+            }
+
+            // 1. [서버 통신] Cloud Code의 HandleAddCurrency 함수를 호출하여 증가시킵니다.
+            var updatedData = await playerEconomyServiceBindings.HandleAddCurrency(currencyKey, amount);
+
+            if (updatedData != null)
+            {
+                // 2. [로컬 업데이트] 서버에서 받아온 최신 지갑 데이터로 로컬을 갱신합니다.
+                HandleEconomyUpdate(updatedData);
+                Debug.Log($"[{currencyKey}] {amount} 획득 성공! 현재 잔액: {GetCurrencyAmount(currencyKey)}");
+                return true;
+            }
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError($"재화 획득 중 서버 통신 에러: {ex.Message}");
+        }
+
+        return false;
+    }
+
+    // [추가] 골드 전용 획득 함수 (지름길)
+    public async Task<bool> AddGoldAsync(int amount)
+    {
+        return await AddCurrencyAsync(Define.k_GoldCurrencyKey, amount);
     }
 }

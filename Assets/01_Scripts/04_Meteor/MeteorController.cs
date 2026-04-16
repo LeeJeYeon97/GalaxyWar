@@ -153,9 +153,9 @@ public class MeteorController : BaseController
     protected override void FixedUpdate()
     {
         bool isGamePaused = (Managers.Game.currentGameState == GameState.Pause);
-
+        bool isGameOver = (Managers.Game.currentGameState == GameState.GameOver);
         // [얼리기] 게임이 멈췄고, 아직 물리가 켜져 있다면?
-        if (isGamePaused && !_physicsFrozenByPause)
+        if ((isGamePaused || isGameOver) && !_physicsFrozenByPause)
         {
             _savedVelocity = _rb.linearVelocity;
             _savedAngularVelocity = _rb.angularVelocity;
@@ -166,7 +166,7 @@ public class MeteorController : BaseController
             _physicsFrozenByPause = true;
         }
         // [녹이기] 게임이 다시 실행됐고, 내가 아까 물리를 껐었다면?
-        else if (!isGamePaused && _physicsFrozenByPause)
+        else if (!(isGamePaused && isGameOver) && _physicsFrozenByPause)
         {
             _rb.simulated = true;
             _rb.linearVelocity = _savedVelocity;

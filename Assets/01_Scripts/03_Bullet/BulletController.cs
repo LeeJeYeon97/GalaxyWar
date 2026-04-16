@@ -40,8 +40,6 @@ public class BulletController : BaseController
         }
 
         _particle = Util.GetOrAddComponent<BulletParticle>(gameObject);
-
-
     }
 
     private void OnEnable()
@@ -63,9 +61,9 @@ public class BulletController : BaseController
     protected override void FixedUpdate()
     {
         bool isGamePaused = (Managers.Game.currentGameState == GameState.Pause);
-
+        bool isGameOver = Managers.Game.currentGameState == GameState.GameOver;
         // [얼리기] 방금 일시정지가 되었다면?
-        if (isGamePaused && !_isPhysicsPaused)
+        if ((isGamePaused || isGameOver) && !_isPhysicsPaused)
         {
             // 현재 날아가던 속도와 방향을 백업해둡니다.
             _savedVelocity = Rb.linearVelocity;
@@ -76,7 +74,7 @@ public class BulletController : BaseController
             _isPhysicsPaused = true;
         }
         // [녹이기] 방금 일시정지가 풀렸다면?
-        else if (!isGamePaused && _isPhysicsPaused)
+        else if (!(isGamePaused && isGameOver) && _isPhysicsPaused)
         {
             // 물리 엔진 스위치를 켜고, 아까 백업해둔 속도를 다시 넣어줍니다.
             Rb.simulated = true;

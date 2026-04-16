@@ -15,6 +15,7 @@ MonoBehaviour:
   Type: 6
   Sprite: {fileID: 0}
   Name: 
+  originalPrefabs: {fileID: 6013582365609022052, guid: 5902b06f1655fed44b7ad9c287678989, type: 3}
   isExclude: 0
   MaxHp: 20
   MaxSpeed: 0.3
