@@ -15,11 +15,11 @@ MonoBehaviour:
   type: 2
   stats:
     chance: 30
-    damage: 15
-    speed: 3
+    damage: 10
+    speed: 12
     bounceCount: 0
-    isReload: 1
   originalPrefab: {fileID: 7507157687402869154, guid: 5fd1171952241dd4abda2444d286596a, type: 3}
+  isReload: 1
   explosionStat:
-    explosionRange: 1
-    explosionDamageValue: 0.7
+    explosionRange: 2
+    explosionDamageValue: 0.5

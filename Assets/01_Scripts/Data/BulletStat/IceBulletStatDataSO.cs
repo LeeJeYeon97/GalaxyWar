@@ -7,7 +7,6 @@ public struct IceBulletStatData
 {
     public float slowValue;
     public float slowTime;
-    public float freezeChance;
     public float freezeTime;
 }
 [CreateAssetMenu(fileName = "IceBulletData", menuName = "ScriptableObjects/BulletData/Ice")]

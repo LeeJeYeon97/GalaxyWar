@@ -20,8 +20,8 @@ public class FireBulletAbilityDataSO : BulletAbilityDataSO
         {
             return null;
         }
-            // 폭발탄은 수치가 2개니까 2개만 배열로 묶어서 줍니다.
-        return new object[] { stats[nextLevel].fireDamageValue, stats[nextLevel].fireTickTime , stats[nextLevel].fireRemainTime };
+
+        return new object[] { stats[nextLevel].fireDamageValue,stats[nextLevel].fireRemainTime };
     }
 
     // 뼈대(Base)에서 시킨 스탯 적용 함수를 내 입맛에 맞게 구현!

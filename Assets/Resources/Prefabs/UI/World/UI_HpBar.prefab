@@ -103,7 +103,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d6d6a44621c5ca64d9b6b385832a7556, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UI_HpBar
-  _hpSlider: {fileID: 8221303128497500117}
+  _hpSlider: {fileID: 3651010842370466640}
   _offset: {x: 0, y: -0.7, z: 0}
 --- !u!1 &9196309163481660909
 GameObject:

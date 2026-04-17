@@ -15,12 +15,12 @@ MonoBehaviour:
   Type: 0
   originalPrefabs: {fileID: 7634854350376040158, guid: 1e5eb75550d976748ae4687059bad26c, type: 3}
   isExclude: 0
-  MaxHp: 15
-  MaxSpeed: 0.5
-  MinSpeed: 0.2
-  Damage: 300
-  Score: 1
-  Exp: 1
+  MaxHp: 20
+  MaxSpeed: 0.8
+  MinSpeed: 0.5
+  Damage: 10
+  Score: 100
+  Exp: 10
   spawnPhase: 0
   magmaTick: 0
   magmaPuddle: {fileID: 0}

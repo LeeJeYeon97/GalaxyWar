@@ -13,16 +13,16 @@ MonoBehaviour:
   m_Name: AuraBuffMeteor
   m_EditorClassIdentifier: Assembly-CSharp::MeteorStatDataSO
   Type: 10
-  Sprite: {fileID: 0}
-  Name: "\uC624\uB77C\uBC84\uD504\uBA54\uD14C\uC624"
   originalPrefabs: {fileID: 5089178002345023113, guid: 5ce1e9a82d535aa44a2b59d3c356bcbc, type: 3}
   isExclude: 0
-  MaxHp: 30
-  MaxSpeed: 0.2
-  MinSpeed: 0.1
+  MaxHp: 40
+  MaxSpeed: 0.6
+  MinSpeed: 0.4
   Damage: 10
-  Score: 4
-  Exp: 4
-  spawnPhase: 2
+  Score: 500
+  Exp: 50
+  spawnPhase: 3
   magmaTick: 0
+  magmaPuddle: {fileID: 0}
+  sludgePuddle: {fileID: 0}
   auraRadius: 2

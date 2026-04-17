@@ -13,56 +13,6 @@ MonoBehaviour:
   m_Name: LightningBulletAbilityData
   m_EditorClassIdentifier: Assembly-CSharp::LightningBulletAbilityDataSO
   type: 102
-  localizedName:
-    m_TableReference:
-      m_TableCollectionName: GUID:82c20406597040c4f8b1423cea141506
-    m_TableEntryReference:
-      m_KeyId: 3644854052737024
-      m_Key: 
-    m_FallbackState: 0
-    m_WaitForCompletion: 0
-    m_LocalVariables: []
-  localizationDesc:
-  - m_TableReference:
-      m_TableCollectionName: GUID:82c20406597040c4f8b1423cea141506
-    m_TableEntryReference:
-      m_KeyId: 3644895031087104
-      m_Key: 
-    m_FallbackState: 0
-    m_WaitForCompletion: 0
-    m_LocalVariables: []
-  - m_TableReference:
-      m_TableCollectionName: GUID:82c20406597040c4f8b1423cea141506
-    m_TableEntryReference:
-      m_KeyId: 3644910021529600
-      m_Key: 
-    m_FallbackState: 0
-    m_WaitForCompletion: 0
-    m_LocalVariables: []
-  - m_TableReference:
-      m_TableCollectionName: GUID:82c20406597040c4f8b1423cea141506
-    m_TableEntryReference:
-      m_KeyId: 3644910021529600
-      m_Key: 
-    m_FallbackState: 0
-    m_WaitForCompletion: 0
-    m_LocalVariables: []
-  - m_TableReference:
-      m_TableCollectionName: GUID:82c20406597040c4f8b1423cea141506
-    m_TableEntryReference:
-      m_KeyId: 3644910021529600
-      m_Key: 
-    m_FallbackState: 0
-    m_WaitForCompletion: 0
-    m_LocalVariables: []
-  - m_TableReference:
-      m_TableCollectionName: GUID:82c20406597040c4f8b1423cea141506
-    m_TableEntryReference:
-      m_KeyId: 3644910021529600
-      m_Key: 
-    m_FallbackState: 0
-    m_WaitForCompletion: 0
-    m_LocalVariables: []
   icon: {fileID: 0}
   maxLevel: 5
   _requiredAbility: 0
@@ -72,19 +22,19 @@ MonoBehaviour:
     damage: 0
     speed: 0
     bounceCount: 0
-  - chance: 0
+  - chance: 10
     damage: 0
     speed: 0
     bounceCount: 0
-  - chance: 0
+  - chance: 10
     damage: 0
     speed: 0
     bounceCount: 0
-  - chance: 0
+  - chance: 10
     damage: 0
     speed: 0
     bounceCount: 0
-  - chance: 0
+  - chance: 10
     damage: 0
     speed: 0
     bounceCount: 0
@@ -92,23 +42,15 @@ MonoBehaviour:
   - lightningDamageValue: 0
     lightningRange: 0
     lightningCount: 0
-    ligthningChainObject: {fileID: 0}
-  - lightningDamageValue: 0
+  - lightningDamageValue: 0.2
     lightningRange: 0
-    lightningCount: 0
-    ligthningChainObject: {fileID: 0}
-  - lightningDamageValue: 0
+    lightningCount: 1
+  - lightningDamageValue: 0.2
     lightningRange: 0
-    lightningCount: 0
-    ligthningChainObject: {fileID: 0}
-  - lightningDamageValue: 0
+    lightningCount: 1
+  - lightningDamageValue: 0.2
     lightningRange: 0
-    lightningCount: 0
-    ligthningChainObject: {fileID: 0}
-  - lightningDamageValue: 0
+    lightningCount: 1
+  - lightningDamageValue: 0.2
     lightningRange: 0
-    lightningCount: 0
-    ligthningChainObject: {fileID: 0}
-  references:
-    version: 2
-    RefIds: []
+    lightningCount: 1

@@ -14,7 +14,7 @@ public class PlayerReloadTimeDecreaseAbilityDataSO : PlayerAbilityDataSO
     {
         int nextLevel = Managers.Ability.GetCurrentLevel(type);
 
-        if (nextLevel <= 0 || nextLevel > reloadTimeDecreases.Count)
+        if (nextLevel < 0 || nextLevel > reloadTimeDecreases.Count)
         {
             return null;
         }
@@ -23,10 +23,10 @@ public class PlayerReloadTimeDecreaseAbilityDataSO : PlayerAbilityDataSO
     }
     public override void ApplyLevelUp(int level, PlayerStat targetStat)
     {
-        if (level <= 0 || level > reloadTimeDecreases.Count) return;
+        if (level <0 || level > reloadTimeDecreases.Count) return;
 
         // 타겟(플레이어)의 스피드 스탯에 바로 더해줍니다!
-        float amount = reloadTimeDecreases[level - 1];
+        float amount = reloadTimeDecreases[level];
         targetStat.reloadTime.SubValue(amount);
 
     }

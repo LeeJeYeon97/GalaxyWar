@@ -15,13 +15,12 @@ MonoBehaviour:
   type: 1
   stats:
     chance: 30
-    damage: 7
-    speed: 6
+    damage: 5
+    speed: 15
     bounceCount: 0
-    isReload: 1
   originalPrefab: {fileID: 495375208572652426, guid: 564273c4e0c174442ae68524cb8adb82, type: 3}
+  isReload: 1
   iceBulletStat:
-    slowValue: 30
+    slowValue: 0.3
     slowTime: 1.5
-    freezeChance: 30
-    freezeTime: 1.5
+    freezeTime: 2

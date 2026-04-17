@@ -13,16 +13,16 @@ MonoBehaviour:
   m_Name: IronMeteor
   m_EditorClassIdentifier: Assembly-CSharp::MeteorStatDataSO
   Type: 2
-  Sprite: {fileID: 0}
-  Name: "\uAC15\uCCA0\uC6B4\uC11D"
   originalPrefabs: {fileID: 1474625085365856687, guid: eddda9f988ea55a43bc63e3e337df3d1, type: 3}
   isExclude: 0
-  MaxHp: 50
-  MaxSpeed: 0.1
-  MinSpeed: 0.2
+  MaxHp: 70
+  MaxSpeed: 0.5
+  MinSpeed: 0.3
   Damage: 20
-  Score: 5
-  Exp: 5
-  spawnPhase: 3
+  Score: 300
+  Exp: 30
+  spawnPhase: 1
   magmaTick: 0
+  magmaPuddle: {fileID: 0}
+  sludgePuddle: {fileID: 0}
   auraRadius: 0

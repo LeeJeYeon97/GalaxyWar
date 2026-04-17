@@ -10,7 +10,12 @@ public class PierceBulletBehavior : IBulletBehavior
 
     public void OnHit(BulletController bullet, GameObject target)
     {
-       
+        if (bullet == null) return;
+
+        if (bullet.Stat is PierceBulletStat stat)
+        {
+            bullet.CurDamage = bullet.CurDamage * stat.pierceDamageDecreaseValue.TotalValue;
+        }
     }
 
     public void OnInit(BulletController bullet)

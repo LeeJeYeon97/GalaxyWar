@@ -30,7 +30,7 @@ public class FireZoneController : MonoBehaviour
         {
             // 2. 이전에 만든 ApplyBurn 함수를 호출하여 화상 상태 이상 부여!
             // 데미지, 지속 시간, 틱 간격을 전달합니다.
-            meteor.ApplyBurn(_damage, _stat.fireRemainTime.TotalValue, _stat.fireTickTime.TotalValue);
+            meteor.ApplyBurn(_damage, _stat.fireRemainTime.TotalValue, 0.5f);
 
             Debug.Log($"장판이 {collision.name}에게 화상을 입혔습니다!");
         }

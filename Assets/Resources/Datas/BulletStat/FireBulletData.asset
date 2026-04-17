@@ -16,12 +16,10 @@ MonoBehaviour:
   stats:
     chance: 30
     damage: 10
-    speed: 5
+    speed: 14
     bounceCount: 0
-    isReload: 1
   originalPrefab: {fileID: 1074223229378584734, guid: 8f74af4c4bbf24f45aa98049aca96521, type: 3}
+  isReload: 1
   fireStat:
-    fireDamageValue: 0.06
-    fireRemainTime: 3
-    fireTickTime: 0.5
-    fireZoneRadius: 0
+    fireDamageValue: 0.2
+    fireRemainTime: 2

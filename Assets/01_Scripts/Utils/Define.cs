@@ -101,7 +101,6 @@ public class Define
 
         // 모든 총알
         Passive_AllBulletBounceCountUp = 10,// 모든 총알의 바운스(튕기는) 횟수 증가
-        Passive_AllBulletSpeed = 11,        // 모든 총알의 속도 증가
         
         // 특수 기능
         Passive_SplitBullet = 20,           // 분열 기능 업그레이드

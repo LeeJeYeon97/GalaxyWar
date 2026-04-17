@@ -71,10 +71,16 @@ public class UI_AbilityCard : UI_Base
 
         object[] upgradeValues = _data.GetUpgradeValues();
 
-        // 4. 조립 및 출력
-        // 레벨 0 텍스트에 {0}이 없으면? -> 알아서 무시하고 "범위 공격을 획득합니다." 출력
-        // 레벨 1 텍스트에 {0}이 있으면? -> 알아서 수치 넣고 "범위가 10% 증가합니다." 출력
-        descText.text = string.Format(localizedFormat, upgradeValues);
-
+        // 방어 로직 추가: upgradeValues가 null이거나 비어있으면 Format을 생략합니다.
+        if (upgradeValues == null || upgradeValues.Length == 0)
+        {
+            // 레벨 0: 수치가 없으므로 번역된 텍스트 원본 그대로 출력
+            descText.text = localizedFormat;
+        }
+        else
+        {
+            // 레벨 1 이상: 수치가 존재하므로 string.Format으로 {0}, {1} 자리에 끼워 넣음
+            descText.text = string.Format(localizedFormat, upgradeValues);
+        }
     }
 }

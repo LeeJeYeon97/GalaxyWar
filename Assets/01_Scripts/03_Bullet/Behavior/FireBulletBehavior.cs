@@ -19,11 +19,15 @@ public class FireBulletBehavior : IBulletBehavior
 
         if (meteor == null) return;
 
+        float tickTime = 0.5f;
+
         if (bullet.Stat is FireBulletStat stat)
         {
             // 직접 맞았을 때의 화상 데미지 적용
             float totalBurnDamage = stat.damage.TotalValue * stat.fireDamageValue.TotalValue;
-            meteor.ApplyBurn(totalBurnDamage, stat.fireRemainTime.TotalValue , stat.fireTickTime.TotalValue);
+
+            float actualTickDamage = totalBurnDamage * tickTime;
+            meteor.ApplyBurn(actualTickDamage, stat.fireRemainTime.TotalValue, tickTime);
         }
     }
 

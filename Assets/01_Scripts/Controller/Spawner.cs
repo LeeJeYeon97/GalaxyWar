@@ -90,10 +90,32 @@ public class Spawner : MonoBehaviour
     }
     private float GetSpawnIntervalByTime(float time)
     {
-        float baseInterval = Managers.Data.GameData.meteorSpawnInterval;
-        if (time > 480f) return baseInterval * 0.3f; // 8분 이후: 3배 빨리 나옴
-        if (time > 240f) return baseInterval * 0.6f; // 4분 이후
-        return baseInterval;
+        // 안전장치: 혹시라도 리스트가 비어있다면 기본 스폰 간격을 반환합니다.
+        float defaultInterval = 1.5f;
+        var phaseList = Managers.Data.GameData.phases;
+
+        if (phaseList == null || phaseList.Count == 0)
+            return defaultInterval;
+
+        float targetInterval = defaultInterval;
+
+        // 리스트를 순회하며 현재 플레이 타임(time)보다 작거나 같은 페이즈를 찾습니다.
+        foreach (var info in phaseList)
+        {
+            if (time >= info.startTime)
+            {
+                // 조건을 만족할 때마다 targetInterval을 해당 페이즈의 스폰 주기로 덮어씌웁니다.
+                targetInterval = info.meteorSpawnInterval;
+            }
+            else
+            {
+                // 시간 순서대로 정렬되어 있다고 가정하므로, 
+                // 현재 시간을 초과하는 페이즈를 만나면 순회를 멈춥니다.
+                break;
+            }
+        }
+
+        return targetInterval;
     }
 
 

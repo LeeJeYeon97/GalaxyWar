@@ -11,7 +11,6 @@ using UnityEngine.Localization;
 public struct LightningBulletStatData
 {
     public float lightningDamageValue;
-    public float lightningRange;
     public int lightningCount;
 }
 
@@ -19,6 +18,7 @@ public struct LightningBulletStatData
 public class LightningBulletStatDataSO : BulletStatDataSO
 {
     public LightningBulletStatData lightningStat;
+    public float lightningRange;
     public GameObject lightningChain;
 
     public override BaseBulletStat CreateRuntimeStat()

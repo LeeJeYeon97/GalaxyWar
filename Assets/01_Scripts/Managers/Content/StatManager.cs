@@ -52,7 +52,7 @@ public class StatManager
         List<BaseBulletStat> activeStats = new List<BaseBulletStat>();
         int totalWeight = 0;
 
-        // 2. 전체 딕셔너리를 돌면서 체크합니다. (LINQ의 Where + Sum 역할)
+        // 2. 전체 딕셔너리를 돌면서 체크합니다.
         foreach (var stat in bulletStatDict.Values)
         {
             if (stat.curLevel >= 1 && stat.isReload == true)

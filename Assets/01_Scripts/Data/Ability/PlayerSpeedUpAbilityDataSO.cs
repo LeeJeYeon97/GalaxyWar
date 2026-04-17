@@ -17,7 +17,7 @@ public class PlayerSpeedUpAbilityDataSO : PlayerAbilityDataSO
     {
         int nextLevel = Managers.Ability.GetCurrentLevel(type);
 
-        if (nextLevel <= 0 || nextLevel > speedIncreases.Count)
+        if (nextLevel < 0 || nextLevel > speedIncreases.Count)
         {
             return null;
         }
@@ -26,10 +26,10 @@ public class PlayerSpeedUpAbilityDataSO : PlayerAbilityDataSO
     }
     public override void ApplyLevelUp(int level, PlayerStat targetStat)
     {
-        if (level <= 0 || level > speedIncreases.Count) return;
+        if (level < 0 || level > speedIncreases.Count) return;
 
         // 타겟(플레이어)의 스피드 스탯에 바로 더해줍니다!
-        float amount = speedIncreases[level - 1];
+        float amount = speedIncreases[level];
         targetStat.speed.AddValue(amount);
 
     }

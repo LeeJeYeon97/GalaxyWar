@@ -16,7 +16,7 @@ MonoBehaviour:
     speed: 1
     maxHp: 100
     maxDefence: 100
-    reloadCount: 5
+    reloadCount: 7
     reloadTime: 2
     shotRange: 3
     shotTime: 1

@@ -37,42 +37,33 @@ public class HomingBulletBehavior : IBulletBehavior
 
     private MeteorController FindClosestTarget(BulletController bullet)
     {
-        // 1. 안전하게 다운캐스팅해서 유도탄 스탯을 빼옵니다.
-        if (!(bullet.Stat is HomingBulletStat homingStat)) return null;
+        var meteors = Managers.Game.activeMeteors;
 
-        LayerMask targetLayer = LayerMask.GetMask("Meteor");
-        // 2. transform.position 대신 bullet.transform.position 사용!
+        if (meteors == null || meteors.Count == 0) return null;
 
-        float homingRange = Managers.Game._player.Stat.homingRange.TotalValue;
-
-        Collider2D[] colliders = Physics2D.OverlapCircleAll(bullet.transform.position, homingRange, targetLayer);
-
-        MeteorController closestTarget = null;
-        float minDistance = float.MaxValue;
-
-        foreach (var col in colliders)
+        // 2. 유효한(활성화된) 적들만 따로 필터링 (화면 안의 적만 고르고 싶을 때 유리)
+        // Linq를 쓰면 가독성이 좋지만, 모바일 최적화를 위해 단순 리스트 추출을 권장합니다.
+        List<MeteorController> validMeteors = new List<MeteorController>();
+        foreach (var m in meteors)
         {
-            if (col == null || !col.gameObject.activeSelf) continue;
-
-            MeteorController meteor = col.GetComponent<MeteorController>();
-            if (meteor == null) continue;
-
-            float dist = Vector2.Distance(bullet.transform.position, col.transform.position);
-            if (dist < minDistance)
+            if (m != null && m._hasEnteredView == true)
             {
-                minDistance = dist;
-                closestTarget = col.GetComponent<MeteorController>();
+                validMeteors.Add(m);
             }
         }
 
-        return closestTarget;
+        if (validMeteors.Count == 0) return null;
+
+        // 3. 필터링된 리스트에서 랜덤하게 인덱스 하나 추출
+        int randomIndex = UnityEngine.Random.Range(0, validMeteors.Count);
+        return validMeteors[randomIndex];
+
     }
 
     private IEnumerator CoHomingRoutine(BulletController bullet)
     {
         MeteorController target = null;
-        float turnSpeed = 200f;
-
+        
         // bullet의 Stat에서 속도 등을 가져오기 위해 캐스팅
         if (!(bullet.Stat is HomingBulletStat homingStat)) yield break;
 
@@ -102,7 +93,7 @@ public class HomingBulletBehavior : IBulletBehavior
                 Vector2 directionToTarget = ((Vector2)target.transform.position - (Vector2)bullet.transform.position).normalized;
                 Vector2 currentVelocity = rb.linearVelocity;
                 float angle = Vector2.SignedAngle(currentVelocity, directionToTarget);
-                float rotateAmount = Mathf.Clamp(angle, -turnSpeed * Time.fixedDeltaTime, turnSpeed * Time.fixedDeltaTime);
+                float rotateAmount = Mathf.Clamp(angle, -homingStat.turnSpeed * Time.fixedDeltaTime, homingStat.turnSpeed * Time.fixedDeltaTime);
 
                 currentVelocity = Quaternion.Euler(0, 0, rotateAmount) * currentVelocity;
 

@@ -28,7 +28,7 @@ public abstract class BaseBulletStat
         bounceCount.Init(data.stats.bounceCount);
         chance.Init(data.stats.chance);
         curLevel = (data.type == Define.BulletType.NormalBullet) ? 1 : 0;
-        isReload = data.stats.isReload;
+        isReload = data.isReload;
 
         behavior = CreateAbility(data);
         
@@ -98,7 +98,7 @@ public class LightningBulletStat : BaseBulletStat
         {
             // 3. 화염탄 전용 스탯을 세팅합니다!
             lightningDamageValue.Init(da.lightningStat.lightningDamageValue);
-            lightningRange.Init(da.lightningStat.lightningRange);
+            lightningRange.Init(da.lightningRange);
             lightningCount.Init(da.lightningStat.lightningCount);
             ligthningChainObject = da.lightningChain;
         }
@@ -109,7 +109,6 @@ public class FireBulletStat : BaseBulletStat //상속!
 {
     public Stat fireRemainTime = new Stat();
     public Stat fireDamageValue = new Stat();
-    public Stat fireTickTime = new Stat();
 
     // 부모의 세팅 함수를 덮어씌웁니다(override).
     public override void Init(BulletStatDataSO data)
@@ -123,7 +122,6 @@ public class FireBulletStat : BaseBulletStat //상속!
             // 3. 화염탄 전용 스탯을 세팅합니다!
             fireRemainTime.Init(fireData.fireStat.fireRemainTime);
             fireDamageValue.Init(fireData.fireStat.fireDamageValue);
-            fireTickTime.Init(fireData.fireStat.fireTickTime);
         }
     }
 }
@@ -133,7 +131,6 @@ public class IceBulletStat : BaseBulletStat
     [Header("IceBullet Stat Settings")]
     public Stat slowValue = new Stat();
     public Stat slowTime = new Stat();
-    public Stat freezeChance = new Stat();
     public Stat freezeTime = new Stat();
     
     public override void Init(BulletStatDataSO data)
@@ -143,10 +140,9 @@ public class IceBulletStat : BaseBulletStat
 
         if (data is IceBulletStatDataSO da)
         {
-            // 3. 화염탄 전용 스탯을 세팅합니다!
+            // 3. 전용 스탯을 세팅합니다!
             slowValue.Init(da.iceBulletStat.slowValue);
             slowTime.Init(da.iceBulletStat.slowTime);
-            freezeChance.Init(da.iceBulletStat.freezeChance);
             freezeTime.Init(da.iceBulletStat.freezeTime);
         }
     }
@@ -173,7 +169,8 @@ public class PierceBulletStat : BaseBulletStat
 [Serializable]
 public class HomingBulletStat : BaseBulletStat
 {
-    public Stat homingRange = new Stat();
+    public float turnSpeed;
+    public Stat homingShotDelay = new Stat();
     public override void Init(BulletStatDataSO data)
     {
         // 1. 일단 부모(Base)한테 기본 공통 스탯 세팅을 맡깁니다.
@@ -181,8 +178,8 @@ public class HomingBulletStat : BaseBulletStat
 
         if (data is HomingBulletStatDataSO da)
         {
-            // 3. 화염탄 전용 스탯을 세팅합니다!
-            homingRange.Init(da.homingBulletStat.homingRange);
+            homingShotDelay.Init(da.homingBulletStat.homingShotDelay);
+            turnSpeed = da.trunSpeed;
         }
     }
 }

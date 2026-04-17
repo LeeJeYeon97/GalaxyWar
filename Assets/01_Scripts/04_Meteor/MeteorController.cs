@@ -152,21 +152,22 @@ public class MeteorController : BaseController
     //  3. FixedUpdate를 재정의하여 물리 엔진 정지/복구 제어
     protected override void FixedUpdate()
     {
-        bool isGamePaused = (Managers.Game.currentGameState == GameState.Pause);
+        bool isPaused = (Managers.Game.currentGameState == GameState.Pause);
         bool isGameOver = (Managers.Game.currentGameState == GameState.GameOver);
-        // [얼리기] 게임이 멈췄고, 아직 물리가 켜져 있다면?
-        if ((isGamePaused || isGameOver) && !_physicsFrozenByPause)
+
+        // [얼리기] 정지 또는 게임오버인데 아직 물리 스위치가 켜져 있다면
+        if ((isPaused || isGameOver) && !_physicsFrozenByPause)
         {
             _savedVelocity = _rb.linearVelocity;
             _savedAngularVelocity = _rb.angularVelocity;
 
             _rb.linearVelocity = Vector2.zero;
             _rb.angularVelocity = 0f;
-            _rb.simulated = false;
+            _rb.simulated = false; // 물리 연산 중단
             _physicsFrozenByPause = true;
         }
-        // [녹이기] 게임이 다시 실행됐고, 내가 아까 물리를 껐었다면?
-        else if (!(isGamePaused && isGameOver) && _physicsFrozenByPause)
+        // [녹이기] 이제 '정지'도 아니고 '게임오버'도 아닐 때만 풀어줘야 합니다.
+        else if (!isPaused && !isGameOver && _physicsFrozenByPause)
         {
             _rb.simulated = true;
             _rb.linearVelocity = _savedVelocity;
@@ -174,13 +175,10 @@ public class MeteorController : BaseController
             _physicsFrozenByPause = false;
         }
 
-        // 부모의 FixedUpdate 호출 (일시정지 중이면 여기서 막힘)
+        // 일시정지 중이면 부모의 FixedUpdate(이동 로직 등)를 실행하지 않도록 방어
+        if (isPaused || isGameOver) return;
+
         base.FixedUpdate();
-    }
-    protected override void OnFixedUpdate()
-    {
-        // Meteor는 현재 FixedUpdate에서 물리 연산(UpdateVelocity 등)을 매 프레임 하지 않으므로 
-        // 여길 비워두어도 됩니다. (속도는 맞았을 때나 디버프 걸릴 때만 갱신 중임)
     }
 
     public void OnDamage(float damage)
@@ -189,8 +187,6 @@ public class MeteorController : BaseController
         {
             _currentHp -= damage;
 
-            // 때릴때마다 점수 1점
-            Managers.Level.AddScore(Mathf.FloorToInt(Stat.Score.TotalValue));
 
             Vector3 textPos = transform.position + new Vector3(Random.Range(-0.5f, 0.5f), 0.5f, 0);
 
@@ -226,6 +222,8 @@ public class MeteorController : BaseController
     {
         ReturnColor();
         Stat.Behavior?.OnDie(this);
+
+        Managers.Level.AddScore(Mathf.FloorToInt(Stat.Score.TotalValue));
         Managers.Level.AddExp(Stat.Exp.TotalValue);
         Managers.Resource.Destroy(gameObject);
     }
@@ -338,9 +336,11 @@ public class MeteorController : BaseController
     }
 
     // 완전 빙결(Freeze)도 똑같은 방식으로 창구를 열어줍니다.
-    public void ApplyFreeze(float duration)
+    public void ApplyFreeze(float freezeDuration, float slowPercent, float slowDuration)
     {
-        // 1. 이미 얼어있는 상태에서 또 맞았다면? -> 빙결 시간 리셋!
+        if (!gameObject.activeInHierarchy) return;
+
+        // 이미 얼어있는 상태에서 또 맞았다면? -> 빙결 시간 리셋!
         if (_freezeCoroutine != null)
         {
             StopCoroutine(_freezeCoroutine);
@@ -348,45 +348,32 @@ public class MeteorController : BaseController
             currentSpeed.SetForceZero(false);
             UpdateVelocity();
         }
-        _freezeCoroutine = StartCoroutine(CoFreezeRoutine(duration));
-    }
-    private IEnumerator CoFreezeRoutine(float duration)
-    {
-        // 1. 스탯 강제 0 스위치 ON! (유저님의 Stat 클래스 기능 활용)
-        currentSpeed.SetForceZero(true);
 
-        // 2. 물리 엔진(Rigidbody) 완전히 멈추기
+        // 2. 코루틴에 슬로우 수치들도 같이 넘겨줍니다.   
+        _freezeCoroutine = StartCoroutine(CoFreezeRoutine(freezeDuration, slowPercent, slowDuration));
+    }
+    private IEnumerator CoFreezeRoutine(float duration, float slowPercent, float slowDuration)
+    {
+        // 1. 스탯 강제 0 스위치 ON!
+        currentSpeed.SetForceZero(true);
         UpdateVelocity();
 
-
         // 시각적 효과 (슬로우보다 조금 더 쨍하고 진한 얼음색!)
-        if (_meshRenderer != null)
-        {
-            MaterialPropertyBlock mpb = new MaterialPropertyBlock();
-            _meshRenderer.GetPropertyBlock(mpb);
+        SetColor(new Color(0.2f, 0.8f, 1f));
 
-            // 색상 변경 ("_Color"는 일반 3D 셰이더 기준입니다. URP를 쓰신다면 "_BaseColor"일 수 있습니다)
-            SetColor(new Color(0.2f, 0.8f, 1f));
-
-            // [옵션 2] 유니티 기본 Cyan 색상 (조금 더 진한 하늘색)
-            // mpb.SetColor("_BaseColor", Color.cyan); 
-
-            // [옵션 3] 살짝 투명해보이는 창백한 얼음색 (조금 더 고급스러운 느낌)
-            // mpb.SetColor("_BaseColor", new Color(0.6f, 0.9f, 1f));
-
-            _meshRenderer.SetPropertyBlock(mpb);
-        }
-
-        // 3. 빙결 지속 시간(예: 2초) 동안 대기
+        // 2. 빙결 지속 시간(예: 1.5초) 동안 대기
         yield return new WaitForGameTime(duration);
 
-        // 4. 해동! 스탯 강제 0 스위치 OFF!
+        // 3. 해동! 스탯 강제 0 스위치 OFF!
         currentSpeed.SetForceZero(false);
-        UpdateVelocity(); // -> 0 스위치가 풀렸으니 원래 속도(슬로우가 걸려있다면 깎인 속도)로 튀어나갑니다!
-
+        UpdateVelocity();
         ReturnColor();
 
         _freezeCoroutine = null;
+
+        //  4. 핵심: 빙결이 완전히 풀린 직후, 이미 만들어둔 ApplySlow를 호출해서 바통 터치!
+        // (운석이 살아있는지 체크는 ApplySlow 내부에 이미 있으니 안전합니다)
+        ApplySlow(slowPercent, slowDuration);
     }
 
     public void ApplyBurn(float burnDamage, float duration, float tickTime)

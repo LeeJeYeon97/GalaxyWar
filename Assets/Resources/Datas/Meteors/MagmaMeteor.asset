@@ -13,16 +13,16 @@ MonoBehaviour:
   m_Name: MagmaMeteor
   m_EditorClassIdentifier: Assembly-CSharp::MeteorStatDataSO
   Type: 4
-  Sprite: {fileID: 0}
-  Name: "\uC6A9\uC554\uC6B4\uC11D"
   originalPrefabs: {fileID: 2714268791658077296, guid: 362d22e8b18918e4fa7b49b4d39be583, type: 3}
   isExclude: 0
   MaxHp: 30
-  MaxSpeed: 1
-  MinSpeed: 1
+  MaxSpeed: 0.9
+  MinSpeed: 0.6
   Damage: 15
-  Score: 5
-  Exp: 5
-  spawnPhase: 4
+  Score: 250
+  Exp: 25
+  spawnPhase: 2
   magmaTick: 0.5
+  magmaPuddle: {fileID: 3933623234490032603, guid: f808f3dc3442e714f8f8f949f9c43eb3, type: 3}
+  sludgePuddle: {fileID: 0}
   auraRadius: 0

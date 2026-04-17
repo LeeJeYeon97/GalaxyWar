@@ -30,8 +30,6 @@ public class PlayerStat
 
     [Header("À¯µµÅº °ü·Ã")]
     public bool isHomingShotEnabled;
-    public Stat homingShotDelay = new Stat();
-    public Stat homingRange = new Stat();
     public void SetStat(PlayerStatDataSO data)
     {
         if(data == null)
@@ -58,8 +56,6 @@ public class PlayerStat
         multiShotChance.Init(data.statData.multiShotChance);
 
         isHomingShotEnabled = data.statData.isHomingShotEnabled;
-        homingShotDelay.Init(data.statData.homingShotDelay);
-        homingRange.Init(data.statData.homingRange);
 
     }
     private void AutoInitStats()

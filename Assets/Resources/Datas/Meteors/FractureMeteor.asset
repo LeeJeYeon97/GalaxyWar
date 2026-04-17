@@ -13,16 +13,16 @@ MonoBehaviour:
   m_Name: FractureMeteor
   m_EditorClassIdentifier: Assembly-CSharp::MeteorStatDataSO
   Type: 3
-  Sprite: {fileID: 0}
-  Name: "\uBD84\uC5F4\uC6B4\uC11D"
   originalPrefabs: {fileID: 4104740561661645504, guid: 1665639ca04554341aa292d0317dc6eb, type: 3}
   isExclude: 0
-  MaxHp: 20
-  MaxSpeed: 0.6
-  MinSpeed: 0.3
-  Damage: 10
-  Score: 3
-  Exp: 3
-  spawnPhase: 2
+  MaxHp: 50
+  MaxSpeed: 0.7
+  MinSpeed: 0.5
+  Damage: 15
+  Score: 400
+  Exp: 40
+  spawnPhase: 3
   magmaTick: 0
+  magmaPuddle: {fileID: 0}
+  sludgePuddle: {fileID: 0}
   auraRadius: 0

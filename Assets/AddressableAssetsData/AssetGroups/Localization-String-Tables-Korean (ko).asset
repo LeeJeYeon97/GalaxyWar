@@ -22,7 +22,7 @@ MonoBehaviour:
     - Locale-ko
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: e7f1e4c86a38e6e4c805bc43cc9a9947
-    m_Address: AbilityTable_ko
+    m_Address: Ability_ko
     m_ReadOnly: 1
     m_SerializedLabels:
     - Locale-ko

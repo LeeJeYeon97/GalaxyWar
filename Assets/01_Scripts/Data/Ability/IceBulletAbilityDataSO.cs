@@ -20,7 +20,7 @@ public class IceBulletAbilityDataSO : BulletAbilityDataSO
             return null;
         }
         // 폭발탄은 수치가 2개니까 2개만 배열로 묶어서 줍니다.
-        return new object[] { stats[nextLevel].slowValue, stats[nextLevel].slowTime, stats[nextLevel].freezeChance, stats[nextLevel].freezeTime };
+        return new object[] { stats[nextLevel].slowValue, stats[nextLevel].slowTime };
     }
 
     // 뼈대(Base)에서 시킨 스탯 적용 함수를 내 입맛에 맞게 구현!
@@ -36,7 +36,6 @@ public class IceBulletAbilityDataSO : BulletAbilityDataSO
             stat.slowValue.AddValue(data.slowValue);
             stat.slowTime.AddValue(data.slowTime);
             stat.freezeTime.AddValue(data.freezeTime);
-            stat.freezeChance.AddValue(data.freezeChance);
         }
         base.ApplyLevelUp(level, targetStat);
     }

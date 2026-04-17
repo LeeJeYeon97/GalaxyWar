@@ -13,7 +13,7 @@ public class PlayerAllBulletBounceCountUpAbilityDataSO : PlayerAbilityDataSO
     {
         int nextLevel = Managers.Ability.GetCurrentLevel(type);
 
-        if (nextLevel <= 0 || nextLevel > increases.Count)
+        if (nextLevel < 0 || nextLevel > increases.Count)
         {
             return null;
         }
@@ -27,10 +27,16 @@ public class PlayerAllBulletBounceCountUpAbilityDataSO : PlayerAbilityDataSO
 
         foreach (var stat in Managers.Stat.bulletStatDict)
         {
-            stat.Value.bounceCount.AddValue(increases[level - 1]);
+            // 유도탄은 패스
+            if(stat.Value.type == Define.BulletType.HomingBullet)
+            {
+                continue;
+            }
+
+            stat.Value.bounceCount.AddValue(increases[level]);
         }
 
-        Managers.Event.PostEvent(Define.ActionEvent.BulletBounceCountUp, increases[level - 1]);
+        Managers.Event.PostEvent(Define.ActionEvent.BulletBounceCountUp, increases[level]);
     }
 }
 

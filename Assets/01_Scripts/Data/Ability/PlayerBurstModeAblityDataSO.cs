@@ -12,7 +12,7 @@ public class PlayerBurstModeAblityDataSO : PlayerAbilityDataSO
     {
         int nextLevel = Managers.Ability.GetCurrentLevel(type);
 
-        if (nextLevel <= 0 || nextLevel > levels.Count)
+        if (nextLevel < 0 || nextLevel > levels.Count)
         {
             return null;
         }
@@ -22,10 +22,10 @@ public class PlayerBurstModeAblityDataSO : PlayerAbilityDataSO
 
     public override void ApplyLevelUp(int level, PlayerStat targetStat)
     {
-        if (level <= 0 || level > levels.Count) return;
+        if (level < 0 || level > levels.Count) return;
 
         targetStat.enableBurst = true; // 버스트모드 활성화!
-        targetStat.maxBurstFullChargeTime.SubValue(levels[level - 1]);
+        targetStat.maxBurstFullChargeTime.SubValue(levels[level]);
     }
 }
 

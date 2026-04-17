@@ -16,9 +16,11 @@ MonoBehaviour:
   stats:
     chance: 30
     damage: 5
-    speed: 4
+    speed: 3
     bounceCount: 0
-    isReload: 0
   originalPrefab: {fileID: 6416228612985485557, guid: aa9496035f44cf64ba973983174a22e4, type: 3}
+  isReload: 0
   homingBulletStat:
-    homingRange: 5
+    homingShotDelay: 2
+  trunSpeed: 500
+  homingRange: 10

@@ -10,7 +10,6 @@ public struct BaseBulletStatData
     public float damage;
     public float speed;
     public float bounceCount;
-    public bool isReload;
 }
 public abstract class BulletStatDataSO : ScriptableObject
 {
@@ -21,6 +20,8 @@ public abstract class BulletStatDataSO : ScriptableObject
 
     [Header("Common Settings")]
     public GameObject originalPrefab;
+
+    public bool isReload;   // 얻었을 때 장전할건지 안할건지 체크
 
     public abstract BaseBulletStat CreateRuntimeStat();
 }

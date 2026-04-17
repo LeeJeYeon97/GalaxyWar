@@ -7,7 +7,7 @@ public class UI_PausePopup : UI_Popup
     enum Buttons
     {
         Btn_Resume,
-        Btn_Restart,
+        Btn_ReStart,
         Btn_Settings,
         Btn_QuitGame
     }
@@ -18,7 +18,7 @@ public class UI_PausePopup : UI_Popup
         Bind<Button>(typeof(Buttons));
 
         GetButton((int)Buttons.Btn_Resume).onClick.AddListener(OnClickResumeButton);
-        GetButton((int)Buttons.Btn_Restart).onClick.AddListener(OnClickRestartButton);
+        GetButton((int)Buttons.Btn_ReStart).onClick.AddListener(OnClickRestartButton);
         GetButton((int)Buttons.Btn_Settings).onClick.AddListener(OnClickSettingButton);
         GetButton((int)Buttons.Btn_QuitGame).onClick.AddListener(OnClickQuitGameButton);
 

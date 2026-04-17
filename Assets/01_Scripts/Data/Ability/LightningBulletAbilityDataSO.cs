@@ -22,7 +22,7 @@ public class LightningBulletAbilityDataSO : BulletAbilityDataSO
             return null;
         }
         // 폭발탄은 수치가 2개니까 2개만 배열로 묶어서 줍니다.
-        return new object[] { stats[nextLevel].lightningDamageValue, stats[nextLevel].lightningRange, stats[nextLevel].lightningCount };
+        return new object[] { stats[nextLevel].lightningCount, stats[nextLevel].lightningDamageValue};
     }
 
     // 뼈대(Base)에서 시킨 스탯 적용 함수를 내 입맛에 맞게 구현!
@@ -35,7 +35,6 @@ public class LightningBulletAbilityDataSO : BulletAbilityDataSO
 
         if (targetStat is LightningBulletStat stat)
         {
-            stat.lightningRange.AddValue(data.lightningRange);
             stat.lightningDamageValue.AddValue(data.lightningDamageValue);
             stat.lightningCount.AddValue(data.lightningCount);
         }

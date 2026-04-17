@@ -26,6 +26,7 @@ public abstract class BulletAbilityDataSO : AbilityDataSO
             stat.damage.AddValue(data.damage);
             stat.bounceCount.AddValue(data.bounceCount);
             stat.speed.AddValue(data.speed);
+            stat.curLevel++;
         }
     }
 }

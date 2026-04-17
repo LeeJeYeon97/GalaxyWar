@@ -35,11 +35,13 @@ public class ExplosionBulletAbilityDataSO : BulletAbilityDataSO
 
         ExplosionBulletStatData data = stats[level];
 
+        
+
         if (targetStat is ExplosionBulletStat stat)
         {
             stat.explosionRange.AddValue(data.explosionRange);
             stat.explosionDamage.AddValue(data.explosionDamageValue);
-
+            
             Debug.Log($"폭발탄 Lv.{level + 1} 강화 완료! 추가 범위: +{data.explosionRange}, 추가 데미지: +{data.explosionDamageValue}");
         }
     }

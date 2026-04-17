@@ -13,16 +13,16 @@ MonoBehaviour:
   m_Name: Fragment
   m_EditorClassIdentifier: Assembly-CSharp::MeteorStatDataSO
   Type: 9
-  Sprite: {fileID: 0}
-  Name: "\uD30C\uD3B8"
   originalPrefabs: {fileID: 7634854350376040158, guid: 1e5eb75550d976748ae4687059bad26c, type: 3}
   isExclude: 1
   MaxHp: 5
   MaxSpeed: 0.8
   MinSpeed: 0.6
   Damage: 3
-  Score: 1
-  Exp: 1
+  Score: 100
+  Exp: 10
   spawnPhase: 0
   magmaTick: 0
+  magmaPuddle: {fileID: 0}
+  sludgePuddle: {fileID: 0}
   auraRadius: 0

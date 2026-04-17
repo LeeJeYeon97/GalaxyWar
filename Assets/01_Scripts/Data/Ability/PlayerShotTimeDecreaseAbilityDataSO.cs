@@ -14,7 +14,7 @@ public class PlayerShotTimeDecreaseAbilityDataSO : PlayerAbilityDataSO
     {
         int nextLevel = Managers.Ability.GetCurrentLevel(type);
 
-        if (nextLevel <= 0 || nextLevel > shotTimeDecreases.Count)
+        if (nextLevel < 0 || nextLevel > shotTimeDecreases.Count)
         {
             return null;
         }
@@ -23,10 +23,10 @@ public class PlayerShotTimeDecreaseAbilityDataSO : PlayerAbilityDataSO
     }
     public override void ApplyLevelUp(int level, PlayerStat targetStat)
     {
-        if (level <= 0 || level > shotTimeDecreases.Count) return;
+        if (level < 0 || level > shotTimeDecreases.Count) return;
 
         // 타겟(플레이어)의 스피드 스탯에 바로 더해줍니다!
-        float amount = shotTimeDecreases[level - 1];
+        float amount = shotTimeDecreases[level];
         targetStat.shotTime.SubValue(amount);
     }
 }

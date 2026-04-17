@@ -65,12 +65,33 @@ public class GameManager : MonoBehaviour
     }
     private void UpdatePhase()
     {
-        // 시간에 따라 현재 페이즈를 갱신합니다.
-        if (gamePlayTime >= 420f) currentPhase = Define.PhaseType.Phase5; // 8분
-        else if (gamePlayTime >= 300f) currentPhase = Define.PhaseType.Phase4; // 6분
-        else if (gamePlayTime >= 180f) currentPhase = Define.PhaseType.Phase3; // 4분
-        else if (gamePlayTime >= 90f) currentPhase = Define.PhaseType.Phase2; // 2분
-        else currentPhase = Define.PhaseType.Phase1;
+        // 데이터가 없으면 리턴
+        var phaseList = Managers.Data.GameData.phases;
+        if (phaseList == null || phaseList.Count == 0) return;
+
+        Define.PhaseType targetPhase = currentPhase;
+
+        // 리스트를 순회하며 현재 플레이 타임보다 작거나 같은 가장 높은 페이즈를 찾습니다.
+        // 보통 시간이 낮은 순서(Phase1 -> 2 -> 3)로 등록하므로, 순차적으로 체크합니다.
+        foreach (var info in phaseList)
+        {
+            if (gamePlayTime >= info.startTime)
+            {
+                targetPhase = info.phaseType;
+            }
+            else
+            {
+                // 리스트가 시간 순서대로 정렬되어 있다면, 
+                // 현재 타임보다 큰 시간을 만나면 더 이상 뒤는 볼 필요 없습니다.
+                break;
+            }
+        }
+
+        // 페이즈가 변경되었을 때만 처리
+        if (currentPhase != targetPhase)
+        {
+            currentPhase = targetPhase;
+        }
     }
     public void AddActiveObject<T>(T item)
     {

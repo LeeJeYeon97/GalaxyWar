@@ -11,9 +11,7 @@ using UnityEngine.Localization;
 public struct FireBulletStatData
 {
     public float fireDamageValue;
-    public float fireRemainTime;        // 장판 지속시간
-    public float fireTickTime;          // 화상 데미지 틱 시간
-    public float fireZoneRadius;        // 장판 범위
+    public float fireRemainTime;        // 화상 지속 시간
 }
 
 [CreateAssetMenu(fileName = "FireBulletData", menuName = "ScriptableObjects/BulletData/Fire")]

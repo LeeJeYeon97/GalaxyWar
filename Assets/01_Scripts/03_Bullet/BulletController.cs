@@ -27,7 +27,8 @@ public class BulletController : BaseController
     // 바뀌는 값은 여기서 선언
     [field: SerializeField] public int currentBounceCount { get; private set; }
     [field: SerializeField] public int currentPierceCount { get; set; }
- 
+
+    public float CurDamage;
     public void Awake()
     {
         if(Rb == null)
@@ -60,30 +61,29 @@ public class BulletController : BaseController
     }
     protected override void FixedUpdate()
     {
-        bool isGamePaused = (Managers.Game.currentGameState == GameState.Pause);
-        bool isGameOver = Managers.Game.currentGameState == GameState.GameOver;
-        // [얼리기] 방금 일시정지가 되었다면?
-        if ((isGamePaused || isGameOver) && !_isPhysicsPaused)
-        {
-            // 현재 날아가던 속도와 방향을 백업해둡니다.
-            _savedVelocity = Rb.linearVelocity;
+        bool isPaused = (Managers.Game.currentGameState == GameState.Pause);
+        bool isGameOver = (Managers.Game.currentGameState == GameState.GameOver);
 
-            // 미끄러짐 방지를 위해 속도를 0으로 덮어씌우고 물리 엔진 스위치를 끕니다.
+        // [얼리기] 정지 또는 게임오버인데 아직 물리 스위치가 켜져 있다면
+        if ((isPaused || isGameOver) && !_isPhysicsPaused)
+        {
+            // 현재 날아가던 속도를 백업하고 물리 엔진을 끕니다.
+            _savedVelocity = Rb.linearVelocity;
             Rb.linearVelocity = Vector2.zero;
             Rb.simulated = false;
             _isPhysicsPaused = true;
         }
-        // [녹이기] 방금 일시정지가 풀렸다면?
-        else if (!(isGamePaused && isGameOver) && _isPhysicsPaused)
+        // [녹이기]  수정된 부분: 정지도 아니고 게임오버도 아닐 때만 풀어줍니다.
+        else if (!isPaused && !isGameOver && _isPhysicsPaused)
         {
-            // 물리 엔진 스위치를 켜고, 아까 백업해둔 속도를 다시 넣어줍니다.
             Rb.simulated = true;
             Rb.linearVelocity = _savedVelocity;
             _isPhysicsPaused = false;
         }
 
-        //  4. 부모(BaseController)의 FixedUpdate 호출!
-        // (일시정지 중이면 여기서 막히고, 아니면 아래 OnFixedUpdate가 실행됩니다.)
+        // 일시정지 중이면 아래 부모의 FixedUpdate 및 OnFixedUpdate(WallBounce, Rotate)를 실행하지 않습니다.
+        if (isPaused || isGameOver) return;
+
         base.FixedUpdate();
     }
 
@@ -96,6 +96,9 @@ public class BulletController : BaseController
 
     private void WallBounce()
     {
+        // 일시정지 중이면 연산 자체를 건너뜁니다.
+        if (_isPhysicsPaused) return;
+
         // 관통탄(Trigger)일 때만 수동 튕기기 체크
         if (Collider.isTrigger)
         {
@@ -157,7 +160,7 @@ public class BulletController : BaseController
         }
         
         Stat = stat;
-
+        CurDamage = Stat.damage.TotalValue;
         SetPhysicsState(true); // 대기 중엔 물리 끄기
         
         // 각 탄환별로 초기화 시 실행시킬 로직 실행
@@ -194,11 +197,10 @@ public class BulletController : BaseController
         {
             _particle?.SpawnHit(meteor.transform.position, Vector2.zero, Stat);
             // 데미지 주고 관통횟수 감소
-            meteor.OnDamage(Stat.damage.TotalValue);
+            meteor.OnDamage(CurDamage);
             DecreasePierceCount();
             // 바운스 횟수는 WallBounce에서 까줌
 
-            
             // 가지고 있는 능력 실행
             Stat.behavior.OnHit(this,collision.gameObject);
         }

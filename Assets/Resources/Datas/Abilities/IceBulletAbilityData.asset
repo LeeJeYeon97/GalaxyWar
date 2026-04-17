@@ -13,56 +13,6 @@ MonoBehaviour:
   m_Name: IceBulletAbilityData
   m_EditorClassIdentifier: Assembly-CSharp::IceBulletAbilityDataSO
   type: 104
-  localizedName:
-    m_TableReference:
-      m_TableCollectionName: GUID:82c20406597040c4f8b1423cea141506
-    m_TableEntryReference:
-      m_KeyId: 3644428754505728
-      m_Key: 
-    m_FallbackState: 0
-    m_WaitForCompletion: 0
-    m_LocalVariables: []
-  localizationDesc:
-  - m_TableReference:
-      m_TableCollectionName: GUID:82c20406597040c4f8b1423cea141506
-    m_TableEntryReference:
-      m_KeyId: 3644463810498560
-      m_Key: 
-    m_FallbackState: 0
-    m_WaitForCompletion: 0
-    m_LocalVariables: []
-  - m_TableReference:
-      m_TableCollectionName: GUID:82c20406597040c4f8b1423cea141506
-    m_TableEntryReference:
-      m_KeyId: 3644500560990208
-      m_Key: 
-    m_FallbackState: 0
-    m_WaitForCompletion: 0
-    m_LocalVariables: []
-  - m_TableReference:
-      m_TableCollectionName: GUID:82c20406597040c4f8b1423cea141506
-    m_TableEntryReference:
-      m_KeyId: 3644500560990208
-      m_Key: 
-    m_FallbackState: 0
-    m_WaitForCompletion: 0
-    m_LocalVariables: []
-  - m_TableReference:
-      m_TableCollectionName: GUID:82c20406597040c4f8b1423cea141506
-    m_TableEntryReference:
-      m_KeyId: 3644500560990208
-      m_Key: 
-    m_FallbackState: 0
-    m_WaitForCompletion: 0
-    m_LocalVariables: []
-  - m_TableReference:
-      m_TableCollectionName: GUID:82c20406597040c4f8b1423cea141506
-    m_TableEntryReference:
-      m_KeyId: 3644500560990208
-      m_Key: 
-    m_FallbackState: 0
-    m_WaitForCompletion: 0
-    m_LocalVariables: []
   icon: {fileID: 0}
   maxLevel: 5
   _requiredAbility: 0
@@ -72,43 +22,35 @@ MonoBehaviour:
     damage: 0
     speed: 0
     bounceCount: 0
-  - chance: 0
+  - chance: 10
     damage: 0
     speed: 0
     bounceCount: 0
-  - chance: 0
+  - chance: 10
     damage: 0
     speed: 0
     bounceCount: 0
-  - chance: 0
+  - chance: 10
     damage: 0
     speed: 0
     bounceCount: 0
-  - chance: 0
+  - chance: 10
     damage: 0
     speed: 0
     bounceCount: 0
   stats:
   - slowValue: 0
     slowTime: 0
-    freezeChance: 0
     freezeTime: 0
-  - slowValue: 0
-    slowTime: 0
-    freezeChance: 0
+  - slowValue: 0.1
+    slowTime: 0.5
     freezeTime: 0
-  - slowValue: 0
-    slowTime: 0
-    freezeChance: 0
+  - slowValue: 0.1
+    slowTime: 0.5
     freezeTime: 0
-  - slowValue: 0
-    slowTime: 0
-    freezeChance: 0
+  - slowValue: 0.1
+    slowTime: 0.5
     freezeTime: 0
-  - slowValue: 0
-    slowTime: 0
-    freezeChance: 0
+  - slowValue: 0.1
+    slowTime: 0.5
     freezeTime: 0
-  references:
-    version: 2
-    RefIds: []

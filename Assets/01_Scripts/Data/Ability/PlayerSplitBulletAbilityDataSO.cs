@@ -21,7 +21,7 @@ public class PlayerSplitBulletAbilityDataSO : PlayerAbilityDataSO
     {
         int nextLevel = Managers.Ability.GetCurrentLevel(type);
 
-        if (nextLevel <= 0 || nextLevel > splitIncreases.Count)
+        if (nextLevel < 0 || nextLevel > splitIncreases.Count)
         {
             return null;
         }
@@ -30,9 +30,9 @@ public class PlayerSplitBulletAbilityDataSO : PlayerAbilityDataSO
     }
     public override void ApplyLevelUp(int level, PlayerStat targetStat)
     {
-        if (level <= 0 || level > splitIncreases.Count) return;
+        if (level < 0 || level > splitIncreases.Count) return;
 
-        SplitShotLevelData data = splitIncreases[level - 1];
+        SplitShotLevelData data = splitIncreases[level];
 
         // 플레이어 스탯에 멀티샷 관련 수치들만 딱딱 더해줍니다!
         targetStat.isMultiShotEnabled = true; // 멀티샷 활성화!

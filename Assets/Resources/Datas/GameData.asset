@@ -13,10 +13,23 @@ MonoBehaviour:
   m_Name: GameData
   m_EditorClassIdentifier: Assembly-CSharp::GameData
   GameStartTime: 3
-  meteorSpawnInterval: 1.5
   itemSpawnInterval: 60
-  bossSpawnInterval: 180
-  cardReloadCount: 1
   reviveCount: 1
-  expZero: 1
+  expZero: 0
   playerGod: 0
+  phases:
+  - phaseType: 0
+    startTime: 0
+    meteorSpawnInterval: 1.5
+  - phaseType: 1
+    startTime: 90
+    meteorSpawnInterval: 1
+  - phaseType: 2
+    startTime: 240
+    meteorSpawnInterval: 0.5
+  - phaseType: 3
+    startTime: 420
+    meteorSpawnInterval: 0.25
+  - phaseType: 4
+    startTime: 540
+    meteorSpawnInterval: 0.15

@@ -11,7 +11,7 @@ using UnityEngine.Localization;
 public struct PierceBulletStatData
 {
     public int pierceCount;
-    public int pierceDamageDecreaseValue;
+    public float pierceDamageDecreaseValue;
 }
 [CreateAssetMenu(fileName = "PierceBulletData", menuName = "ScriptableObjects/BulletData/Pierce")]
 public class PierceBulletStatDataSO : BulletStatDataSO

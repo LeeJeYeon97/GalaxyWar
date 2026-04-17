@@ -26,27 +26,29 @@ public class LevelManager
 
     public float GetMaxExp()
     {
-        // 1. 유저님이 제안하신 완벽한 기본 공식 (1, 2, 3, 4... 씩 늘어나는 수학 공식)
-        // n(n+1)/2 공식을 쓰면 반복문 없이 깔끔하게 계산됩니다!
+        // 새로운 메테오 경험치(최소 10 ~ 최대 70)에 맞춰 스케일업된 공식!
         int n = CurrentLevel - 1;
-        float baseRequired = 5 + (n * (n + 1)) / 2;
 
-        // 2. 초반 (1~10레벨): 운석이 경험치 1을 주므로 공식을 그대로 씁니다.
+        // 1. 기본 요구량 (기존 5 -> 20으로 상향)
+        // n(n+1)/2 공식에 15를 곱해서 초반 레벨업 템포를 기가 막히게 조절합니다.
+        float baseRequired = 20 + ((n * (n + 1)) / 2f) * 15;
+
+        // 2. 초반 (1~10레벨): Phase 1~2 구간. 공식을 그대로 씁니다.
         if (CurrentLevel <= 10)
         {
             return baseRequired;
         }
-        // 3. 중반 (11~20레벨): 운석이 경험치를 3~10씩 주므로 요구량도 가파르게 올립니다.
+        // 3. 중반 (11~20레벨): Phase 3~4 구간. 운석이 0.5초마다 쏟아지므로 페널티를 확 늘립니다.
         else if (CurrentLevel <= 20)
         {
             float midStep = CurrentLevel - 10;
-            return baseRequired + (midStep * 20); // 레벨당 20씩 추가 페널티
+            return baseRequired + (midStep * 150); // 기존 20 -> 150으로 페널티 강화
         }
-        // 4. 후반 (21레벨 이상): 운석이 경험치를 50씩 주므로 요구량을 확 늘립니다!
+        // 4. 후반 (21레벨 이상): Phase 5 구간. 오라, 분열 메테오가 50~70씩 주므로 억제기를 켭니다!
         else
         {
             float lateStep = CurrentLevel - 20;
-            return baseRequired + 200 + (lateStep * 80); // 후반용 폭발적 증가
+            return baseRequired + 1500 + (lateStep * 400); // 후반용 폭발적 증가
         }
     }
     public void AddExp(float exp)
