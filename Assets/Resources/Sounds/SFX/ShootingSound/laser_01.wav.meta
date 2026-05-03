@@ -25,5 +25,5 @@ AssetOrigin:
   productId: 177096
   packageName: Shooting Sound
   packageVersion: 1.0
-  assetPath: Assets/ShootingSound/laser_01.wav
+  assetPath: Assets/Resources/Sounds/SFX/ShootingSound/laser_01.wav
   uploadId: 385456

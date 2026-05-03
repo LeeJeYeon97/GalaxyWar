@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class MeteorStat
@@ -21,10 +23,15 @@ public class MeteorStat
 
     public Define.PhaseType spawnPhase;
 
+
+    [Header("Drop Item Settings")]
+    public List<DropItemRate> dropTable = new List<DropItemRate>();
+
     public IMeteorBehavior Behavior; // 이 타입이 공유할 단 하나의 뇌!
 
     public GameObject sludgePuddle;
     public GameObject magmaPuddle;
+
 
     public void Init(MeteorStatDataSO data)
     {
@@ -35,9 +42,10 @@ public class MeteorStat
         MaxSpeed.Init(data.MaxSpeed);
         MinSpeed.Init(data.MinSpeed);
         Damage.Init(data.Damage);
-
         Score.Init(data.Score);
         Exp.Init(data.Exp);
+
+        dropTable = data.dropTable;
 
         spawnPhase = data.spawnPhase;
         auraRadius.Init(data.auraRadius);

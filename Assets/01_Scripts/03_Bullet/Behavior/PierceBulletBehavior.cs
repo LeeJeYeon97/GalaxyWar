@@ -12,6 +12,7 @@ public class PierceBulletBehavior : IBulletBehavior
     {
         if (bullet == null) return;
 
+        Managers.Sound.Play(Define.SoundID.Sfx_PierceBullet_Hit);
         if (bullet.Stat is PierceBulletStat stat)
         {
             bullet.CurDamage = bullet.CurDamage * stat.pierceDamageDecreaseValue.TotalValue;

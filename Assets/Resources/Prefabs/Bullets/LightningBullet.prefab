@@ -4883,8 +4883,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 1.3, y: 1.3, z: 1.3}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 8580126965590203521}
   - {fileID: 5390488603601503033}
@@ -14704,11 +14704,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 080142353ce7f1d4eb89f7f4a59ce3d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BulletController
+  <Stat>k__BackingField:
+    rid: -2
   <Collider>k__BackingField: {fileID: 0}
   <Rb>k__BackingField: {fileID: 0}
   _shotDir: {x: 0, y: 0}
   <currentBounceCount>k__BackingField: 0
   <currentPierceCount>k__BackingField: 0
+  CurDamage: 0
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
 --- !u!114 &610620743746810434
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14790,7 +14798,7 @@ CapsuleCollider2D:
   m_CompositeOperation: 0
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
-  m_Size: {x: 0.3, y: 0.3}
+  m_Size: {x: 0.4, y: 0.4}
   m_Direction: 0
 --- !u!114 &8187411642518033631
 MonoBehaviour:

@@ -71,6 +71,7 @@ public class UI_SettingsPopup : UI_Popup
         Toggle toggleVibrate = Get<Toggle>((int)Toggles.Toggle_VIBRATE);
         toggleVibrate.isOn = Managers.Setting.IsVibrationOn;
         toggleVibrate.onValueChanged.AddListener((isOn) => {
+            Managers.Sound.Play(SoundID.Sfx_UIButtonClick);
             Managers.Setting.ToggleVibration(isOn);
         });
     }
@@ -117,7 +118,7 @@ public class UI_SettingsPopup : UI_Popup
     // delta 값(+1 or -1)에 따라 cyclic하게 index를 계산하고 변경하는 핵심 로직
     private void OnLanguageSelectorChanged(int delta)
     {
-        Managers.Sound.Play(SoundID.Sfx_UIButtonClick); // 버튼 클릭음
+        // Managers.Sound.Play(SoundID.Sfx_UIButtonClick); // 버튼 클릭음
 
         int totalLocales = _availableLocales.Count;
         // cyclic wrapping 로직 (목록 처음/끝 넘어갈 때 순환)
@@ -146,16 +147,16 @@ public class UI_SettingsPopup : UI_Popup
         // 유니티 Localization 테이블을 이용해 언어 이름 자체도 localize해서 보여주는 것이 상용 수준입니다.
 
         // [중요 Assumption] hierarchy의 'Text (TMP)' 오브젝트 이름을 'Text_LanguageName'으로 변경해야 binding됨
-        TMP_Text languageNameText = GetTMP((int)Texts.Text_LanguageName);
-        if (languageNameText != null)
-        {
-            // Locale Identifier 코드 자체를 보여줍니다 ("ko", "en").
-            // image_2.png처럼 Localized Name (예: "Korean" vs "English")을 보여주려면 
-            // 별도의 localization String Table을 구성하여 index에 맞춰 text를 변경해야 합니다.
-            // 일단 identifier code를 보여주도록 작성합니다.
-            //languageNameText.text = selectedLocale.Identifier.Code.ToUpper();
-            languageNameText.text = selectedLocale.Identifier.CultureInfo.NativeName;
-        }
+        //TMP_Text languageNameText = GetTMP((int)Texts.Text_LanguageName);
+        //if (languageNameText != null)
+        //{
+        //    // Locale Identifier 코드 자체를 보여줍니다 ("ko", "en").
+        //    // image_2.png처럼 Localized Name (예: "Korean" vs "English")을 보여주려면 
+        //    // 별도의 localization String Table을 구성하여 index에 맞춰 text를 변경해야 합니다.
+        //    // 일단 identifier code를 보여주도록 작성합니다.
+        //    //languageNameText.text = selectedLocale.Identifier.Code.ToUpper();
+        //    languageNameText.text = selectedLocale.Identifier.CultureInfo.NativeName;
+        //}
     }
 }
 

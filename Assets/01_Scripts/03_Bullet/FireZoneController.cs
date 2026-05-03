@@ -17,8 +17,18 @@ public class FireZoneController : MonoBehaviour
         _damage = _stat.damage.TotalValue * _stat.fireDamageValue.TotalValue;
 
         // 일정 시간(화염 유지 시간) 이후에 사라지는 코루틴 시작
-        StopAllCoroutines();
-        StartCoroutine(CoFireZoneRelease(_stat.fireRemainTime.TotalValue));
+        //StopAllCoroutines();
+        //StartCoroutine(CoFireZoneRelease(_stat.fireRemainTime.TotalValue));
+
+        ParticleSystem ps = GetComponent<ParticleSystem>();
+
+        // 2. 파티클의 '메인 모듈'에 접근합니다. (이 과정을 꼭 거쳐야 합니다!)
+        ParticleSystem.MainModule mainModule = ps.main;
+
+        // 3. Duration 값을 원하는 시간(초 단위)으로 설정합니다.
+        mainModule.duration = _stat.fireZoneDestroyTime.TotalValue;
+
+        ps.Play();
     }
 
     public void OnTriggerEnter2D(Collider2D collision)

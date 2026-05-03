@@ -23,5 +23,17 @@ namespace Unity.Services.CloudCode.GeneratedBindings
                     {"authPlayerName", authPlayerName},
                 });
         }
+
+        public async Task<Project.PlayerData> UpdateGameRecord(int newScore, int newSurviveTime)
+        {
+            return await k_Service.CallModuleEndpointAsync<Project.PlayerData>(
+                "Project",
+                "UpdateGameRecord",
+                new Dictionary<string, object>()
+                {
+                    {"newScore", newScore},
+                    {"newSurviveTime", newSurviveTime},
+                });
+        }
     }
 }

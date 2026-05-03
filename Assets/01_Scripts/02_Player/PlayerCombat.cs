@@ -1,4 +1,5 @@
 using GooglePlayGames.BasicApi;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -27,11 +28,13 @@ public class PlayerCombat : MonoBehaviour
     private float _targetTimer = 0f;
     private float _targetUpdateInterval = 0.1f;
 
+
+    public event Action<List<BulletController>> OnReload;
     public void Init(PlayerController player)
     {
         _player = player;
         isReloading = false;
-
+        _lastHomingShotTime = 0f;
         // 게임 시작 시 첫 장전
         Reload();
     }
@@ -119,7 +122,7 @@ public class PlayerCombat : MonoBehaviour
 
                 if (_player.Stat.isMultiShotEnabled && _player.Stat.multiShotCount.TotalValue > 1)
                 {
-                    float multiShotChance = Random.Range(0f, 100f);
+                    float multiShotChance = UnityEngine.Random.Range(0f, 100f);
                     if (multiShotChance <= _player.Stat.multiShotChance.TotalValue)
                     {
                         FireMultiShot(bullet, shootDir);
@@ -133,6 +136,9 @@ public class PlayerCombat : MonoBehaviour
                 {
                     bullet.Shot(shootDir, _bulletPos.position);
                 }
+
+
+                Managers.Event.PostEvent<List<BulletController>>(ActionEvent.PlayerShot, bullets);
                 _lastShotTime = Time.time;
             }
         }
@@ -141,26 +147,62 @@ public class PlayerCombat : MonoBehaviour
     private void HomingShot()
     {
         if (!_player.Stat.isHomingShotEnabled) return;
+        if (Managers.Game.activeMeteors.Count <= 0) return;
 
-        // 2. 부모 타입(BaseBulletStat)으로 가져온 뒤, 유도탄 전용 클래스(HomingBulletStat)로 형변환(as) 합니다.
-        // ※ 주의: 'HomingBulletStat' 부분은 유저님이 실제로 만들어두신 유도탄 런타임 스탯 클래스 이름으로 맞춰주세요!
         HomingBulletStat homingStat = Managers.Stat.GetBulletStat(Define.BulletType.HomingBullet) as HomingBulletStat;
-
-        // 안전장치: 캐스팅에 실패했거나 데이터가 없다면 에러 방지를 위해 리턴
         if (homingStat == null) return;
 
-        // 3. 유도탄 고유 스탯인 shotDelay를 가져와서 쿨타임 계산에 사용!
-        if (Time.time - _lastHomingShotTime >= homingStat.homingShotDelay.TotalValue)
+        _lastHomingShotTime += Time.deltaTime;
+
+        if (_lastHomingShotTime >= homingStat.homingShotDelay.TotalValue)
         {
-            // 프리팹 생성 및 발사 로직
+            Camera mainCam = Camera.main;
+
+            // ====================================================
+            // 핵심 변경: 0~3 중 랜덤한 숫자를 뽑아 스폰 방향 결정
+            // ====================================================
+            int randomSide = UnityEngine.Random.Range(0, 4);
+
+            Vector3 viewportPos = Vector3.zero;
+            Vector2 initialDir = Vector2.zero;
+
+            switch (randomSide)
+            {
+                case 0: // 위 (Top)
+                    viewportPos = new Vector3(UnityEngine.Random.Range(0.1f, 0.9f), 1.1f, 0);
+                    initialDir = Vector2.down;
+                    break;
+                case 1: // 아래 (Bottom)
+                    viewportPos = new Vector3(UnityEngine.Random.Range(0.1f, 0.9f), -0.1f, 0);
+                    initialDir = Vector2.up;
+                    break;
+                case 2: // 왼쪽 (Left)
+                    viewportPos = new Vector3(-0.1f, UnityEngine.Random.Range(0.1f, 0.9f), 0);
+                    initialDir = Vector2.right;
+                    break;
+                case 3: // 오른쪽 (Right)
+                    viewportPos = new Vector3(1.1f, UnityEngine.Random.Range(0.1f, 0.9f), 0);
+                    initialDir = Vector2.left;
+                    break;
+            }
+
+            // Z값은 카메라 깊이로 동일하게 맞춰줌
+            viewportPos.z = Mathf.Abs(mainCam.transform.position.z);
+            Vector2 outOfScreenPos = mainCam.ViewportToWorldPoint(viewportPos);
+
+            // ====================================================
+            // 프리팹 생성 및 발사
+            // ====================================================
             GameObject go = Managers.Resource.Instantiate(homingStat.originalPrefabs);
             BulletController bullet = go.GetComponent<BulletController>();
 
             bullet.SetBullet(homingStat);
-            bullet.Shot(transform.up, _bulletPos.position);
+
+            // 위에서 스위치문으로 결정된 방향(initialDir)과 위치(outOfScreenPos) 적용!
+            bullet.Shot(initialDir, outOfScreenPos);
 
             // 쿨타임 초기화
-            _lastHomingShotTime = Time.time;
+            _lastHomingShotTime = 0;
         }
     }
 
@@ -195,6 +237,7 @@ public class PlayerCombat : MonoBehaviour
                 bulletToFire.Shot(shotDir, _bulletPos.position);
             }
         }
+
     }
     #endregion
 
@@ -210,7 +253,6 @@ public class PlayerCombat : MonoBehaviour
 
         Reload();
 
-        Managers.Event.PostEvent(ActionEvent.ReloadEnd);
         _reloadCoroutine = null;
     }
 
@@ -245,6 +287,8 @@ public class PlayerCombat : MonoBehaviour
             bullet.SetBullet(stat);
             bullets.Add(bullet);
         }
+
+        Managers.Event.PostEvent(ActionEvent.ReloadEnd, bullets);
         isReloading = false;
     }
 

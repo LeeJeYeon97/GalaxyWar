@@ -39,6 +39,8 @@ public class BulletController : BaseController
         {
             Collider = Util.GetOrAddComponent<Collider2D>(gameObject);
         }
+        Rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
+        Collider.isTrigger = true;
 
         _particle = Util.GetOrAddComponent<BulletParticle>(gameObject);
     }
@@ -98,6 +100,7 @@ public class BulletController : BaseController
     {
         // 일시정지 중이면 연산 자체를 건너뜁니다.
         if (_isPhysicsPaused) return;
+        if (Stat.type == Define.BulletType.HomingBullet) return;
 
         // 관통탄(Trigger)일 때만 수동 튕기기 체크
         if (Collider.isTrigger)
@@ -122,7 +125,6 @@ public class BulletController : BaseController
 
                 // 5. 속도 재설정
                 Rb.linearVelocity = _shotDir * Stat.speed.TotalValue;
-
 
                 _particle?.SpawnHit(hit.point, Vector2.zero, Stat);
                 // 바운스 카운트 감소
@@ -166,44 +168,51 @@ public class BulletController : BaseController
         // 각 탄환별로 초기화 시 실행시킬 로직 실행
         Stat.behavior.OnInit(this);
     }
-    // 충돌
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        _particle?.SpawnHit(collision.contacts[0].point, collision.contacts[0].normal,Stat);
 
-        MeteorController meteor = collision.gameObject.GetComponent<MeteorController>();
-
-        // 바운스 횟수 까기
-        // 벽에 닿아도 깔건지 운석에만 맞았을 때 깔건지 고민좀 해볼것
-        DecreaseBounceCount();
-
-        if (meteor != null)
-        {
-            // 데미지 주기
-            meteor.OnDamage(Stat.damage.TotalValue);
-            // 가지고 있는 능력 실행
-
-            Stat.behavior.OnHit(this, collision.gameObject);
-        }
-
-    }
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        // 관통탄 or 관통 열려있을때 버스트탄
-
         MeteorController meteor = collision.gameObject.GetComponent<MeteorController>();
+        if (meteor == null) return;
 
-        if (meteor != null)
+        // 1. 공통 처리: 데미지 주고 파티클 생성
+        Vector2 hitPoint = collision.ClosestPoint(transform.position);
+        _particle?.SpawnHit(hitPoint, Vector2.zero, Stat);
+        meteor.OnDamage(CurDamage);
+        Stat.behavior.OnHit(this, collision.gameObject);
+
+        // 2. 능력치에 따른 분기 처리 (관통 -> 도탄 -> 소멸 순서)
+        if (currentPierceCount > 0)
         {
-            _particle?.SpawnHit(meteor.transform.position, Vector2.zero, Stat);
-            // 데미지 주고 관통횟수 감소
-            meteor.OnDamage(CurDamage);
-            DecreasePierceCount();
-            // 바운스 횟수는 WallBounce에서 까줌
-
-            // 가지고 있는 능력 실행
-            Stat.behavior.OnHit(this,collision.gameObject);
+            // [관통탄] 관통 횟수가 남아있다면 튕기지 않고 그냥 지나갑니다.
+            currentPierceCount--;
         }
+        else if (currentBounceCount > 0)
+        {
+            // [일반탄/도탄] 관통은 안 되는데 튕길 횟수가 남아있다면 튕겨 나갑니다.
+            ReflectFromMeteor(collision);
+            DecreaseBounceCount();
+        }
+        else
+        {
+            // [소멸] 관통도 안 되고 더 튕길 수도 없다면 삭제합니다.
+            Managers.Resource.Destroy(gameObject);
+        }
+    }
+
+    private void ReflectFromMeteor(Collider2D meteorCollider)
+    {
+        // 메테오의 중심에서 총알 위치로 향하는 방향을 법선(Normal)으로 사용합니다.
+        // (메테오가 원형에 가깝기 때문에 가장 자연스러운 반사각이 나옵니다.)
+        Vector2 normal = ((Vector2)transform.position - (Vector2)meteorCollider.transform.position).normalized;
+
+        // 유니티의 Reflect 함수를 이용해 반사 방향을 구합니다.
+        _shotDir = Vector2.Reflect(_shotDir.normalized, normal).normalized;
+
+        // 물리 엔진에 새로운 속도를 즉시 반영합니다.
+        Rb.linearVelocity = _shotDir * Stat.speed.TotalValue;
+
+        // 팁: 메테오 안으로 파고드는 것을 방지하기 위해 위치를 살짝 밀어줍니다.
+        transform.position = (Vector2)transform.position + (normal * 0.1f);
     }
     // 발사
     public void Shot(Vector2 dragVector, Vector2 shotPos)

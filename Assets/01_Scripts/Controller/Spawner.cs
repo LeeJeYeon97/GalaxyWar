@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UIElements;
 using static Define;
 
 public class Spawner : MonoBehaviour
@@ -118,6 +119,30 @@ public class Spawner : MonoBehaviour
         return targetInterval;
     }
 
+    public void SpawnDropItem(Vector3 position, ItemType type)
+    {
+        if(Managers.Data.ItemDataList.TryGetValue(type, out var itemData))
+        {
+            if(itemData.isDrop == false)
+            {
+                return;
+            }
+        }
+        else
+        {
+            return;
+        }
+
+        GameObject go = Managers.Resource.Instantiate(itemData.originalPrefab);
+        ItemController item = go.GetComponent<ItemController>();
+
+        if(item == null)
+        {
+            return;
+        }
+
+        item.Init(position, itemData);
+    }
 
     //IEnumerator CoSpawnItem()
     //{

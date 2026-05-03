@@ -20,6 +20,8 @@ public class ExplosionBulletBehavior : IBulletBehavior
             float radius = stat.explosionRange.TotalValue;
             float finalExplosionDmg = stat.damage.TotalValue * stat.explosionDamage.TotalValue;
 
+            Managers.Sound.Play(Define.SoundID.Sfx_Explosion_Hit);
+
             // --- 실제 범위 데미지 로직 ---
             int layerMask = 1 << LayerMask.NameToLayer("Meteor");
             Collider2D[] colliders = Physics2D.OverlapCircleAll(target.transform.position, radius, layerMask);

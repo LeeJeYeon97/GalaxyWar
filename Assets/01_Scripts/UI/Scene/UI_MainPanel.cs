@@ -16,16 +16,11 @@ public class UI_MainPanel : UI_Base
 
         Bind<Button>(typeof(Buttons));
 
-        GetButton((int)Buttons.Button_GameStart).onClick.AddListener(OnClickStartButton);
+        GetButton((int)Buttons.Button_GameStart).onClick.AddListener(() => Managers.Scene.LoadScene(Define.Scene.GameScene));
 
     }
     public override void Clear()
     {
         base.Clear();
-    }
-    private void OnClickStartButton()
-    {
-        Managers.Sound.Play(SoundID.Sfx_UIButtonClick);
-        Managers.Scene.LoadScene(Define.Scene.GameScene);
     }
 }

@@ -81,6 +81,7 @@ public class LightningChain : MonoBehaviour
                     MeteorController meteor = targetGo.GetComponent<MeteorController>();
                     if (meteor != null)
                     {
+                        Managers.Sound.Play(Define.SoundID.Sfx_Lightning_Hit);
                         // Âî¸´! µ¥¹ÌÁö ÁÖ±â
                         meteor.OnDamage(_damage);
 

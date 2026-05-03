@@ -7,6 +7,7 @@ using Unity.Services.CloudSave;
 using Unity.Services.CloudCode.GeneratedBindings;
 using Newtonsoft.Json;
 using Unity.Services.CloudCode.GeneratedBindings.Project;
+using System.Threading.Tasks;
 
 public class PlayerDataManager
 {
@@ -57,6 +58,28 @@ public class PlayerDataManager
         catch(CloudCodeException e)
         {
             Debug.LogException(e);
+        }
+    }
+    public async Task SavePlayerData()
+    {
+        // 2. 최고 기록(점수, 생존 시간) 저장 로직 추가!
+        try
+        {
+            int finalScore = Managers.Level.Score; 
+            int finalTime = Mathf.FloorToInt(Managers.Game.gamePlayTime);
+
+            // Cloud Code 바인딩을 통해 서버의 UpdateGameRecord 호출
+            var updatedData = await playerDataServiceBindings.UpdateGameRecord(finalScore, finalTime);
+
+            Debug.Log($"기록 저장 완료! 현재 최고 점수: {updatedData.MaxScore}");
+
+            // 필요하다면 Managers.Data 쪽의 클라이언트 메모리 데이터도 업데이트해 줍니다.
+            PlayerDataLocal = updatedData;
+            PlayerDataUpdated?.Invoke(PlayerDataLocal);
+        }
+        catch (System.Exception ex)
+        {
+            Debug.LogWarning($"기록 저장 실패: {ex.Message}");
         }
     }
     private void LogResponse(PlayerDataResponse response)

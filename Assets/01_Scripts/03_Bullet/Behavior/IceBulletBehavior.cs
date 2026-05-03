@@ -24,6 +24,8 @@ public class IceBulletBehavior : IBulletBehavior
 
         if(bullet.Stat is IceBulletStat stat)
         {
+            Managers.Sound.Play(Define.SoundID.Sfx_IceBullet_Hit);
+
             // 최대 레벨이면
             if (stat.curLevel >= 5)
             {

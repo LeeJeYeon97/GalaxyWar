@@ -13,57 +13,7 @@ MonoBehaviour:
   m_Name: SpeedUpAbility
   m_EditorClassIdentifier: Assembly-CSharp::PlayerSpeedUpAbilityDataSO
   type: 2
-  localizedName:
-    m_TableReference:
-      m_TableCollectionName: GUID:82c20406597040c4f8b1423cea141506
-    m_TableEntryReference:
-      m_KeyId: 25970716332032
-      m_Key: 
-    m_FallbackState: 0
-    m_WaitForCompletion: 0
-    m_LocalVariables: []
-  localizationDesc:
-  - m_TableReference:
-      m_TableCollectionName: GUID:82c20406597040c4f8b1423cea141506
-    m_TableEntryReference:
-      m_KeyId: 3639934759096320
-      m_Key: 
-    m_FallbackState: 0
-    m_WaitForCompletion: 0
-    m_LocalVariables: []
-  - m_TableReference:
-      m_TableCollectionName: GUID:82c20406597040c4f8b1423cea141506
-    m_TableEntryReference:
-      m_KeyId: 3639934759096320
-      m_Key: 
-    m_FallbackState: 0
-    m_WaitForCompletion: 0
-    m_LocalVariables: []
-  - m_TableReference:
-      m_TableCollectionName: GUID:82c20406597040c4f8b1423cea141506
-    m_TableEntryReference:
-      m_KeyId: 3639934759096320
-      m_Key: 
-    m_FallbackState: 0
-    m_WaitForCompletion: 0
-    m_LocalVariables: []
-  - m_TableReference:
-      m_TableCollectionName: GUID:82c20406597040c4f8b1423cea141506
-    m_TableEntryReference:
-      m_KeyId: 3639934759096320
-      m_Key: 
-    m_FallbackState: 0
-    m_WaitForCompletion: 0
-    m_LocalVariables: []
-  - m_TableReference:
-      m_TableCollectionName: GUID:82c20406597040c4f8b1423cea141506
-    m_TableEntryReference:
-      m_KeyId: 3639934759096320
-      m_Key: 
-    m_FallbackState: 0
-    m_WaitForCompletion: 0
-    m_LocalVariables: []
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: c328f4d55ba8d9a4f9a705cc817ec9b7, type: 3}
   maxLevel: 5
   _requiredAbility: 0
   speedIncreases:
@@ -72,6 +22,3 @@ MonoBehaviour:
   - 1
   - 1
   - 1
-  references:
-    version: 2
-    RefIds: []

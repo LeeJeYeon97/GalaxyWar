@@ -21,7 +21,7 @@ public class FireBulletAbilityDataSO : BulletAbilityDataSO
             return null;
         }
 
-        return new object[] { stats[nextLevel].fireDamageValue,stats[nextLevel].fireRemainTime };
+        return new object[] { stats[nextLevel].fireDamageValue, stats[nextLevel].fireRemainTime, stats[nextLevel].fireZoneDestroyTime };
     }
 
     // 뼈대(Base)에서 시킨 스탯 적용 함수를 내 입맛에 맞게 구현!

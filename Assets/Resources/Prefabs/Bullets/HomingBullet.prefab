@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5483124256325321936}
   - component: {fileID: 3516895019913103279}
   - component: {fileID: 6189431612930078442}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Sparks
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4868,7 +4868,7 @@ GameObject:
   - component: {fileID: 2546435224523273253}
   - component: {fileID: 6375277930916541814}
   - component: {fileID: 3847107875836528623}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Projectile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9777,7 +9777,7 @@ GameObject:
   - component: {fileID: 875742596496296190}
   - component: {fileID: 7571602827437928568}
   - component: {fileID: 8884643031505891500}
-  m_Layer: 6
+  m_Layer: 14
   m_Name: HomingBullet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9793,7 +9793,7 @@ Transform:
   m_GameObject: {fileID: 6416228612985485557}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.04771, y: -0.12334, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -9812,63 +9812,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 080142353ce7f1d4eb89f7f4a59ce3d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BulletController
-  _rb: {fileID: 875742596496296190}
-  _stat:
-    type: 8
-    originalPrefabs: {fileID: 0}
-    speed:
-      _baseValue: 0
-      _additionalValue: 0
-      _multiplier: 1
-    damage:
-      _baseValue: 0
-      _additionalValue: 0
-      _multiplier: 1
-    bounceCount:
-      _baseValue: 0
-      _additionalValue: 0
-      _multiplier: 1
-    chance:
-      _baseValue: 0
-      _additionalValue: 0
-      _multiplier: 1
-    isActivated: 0
-    explosionRadius:
-      _baseValue: 0
-      _additionalValue: 0
-      _multiplier: 1
-    maxExplosionRange: 0
-    lightningRange:
-      _baseValue: 0
-      _additionalValue: 0
-      _multiplier: 1
-    lightningCount:
-      _baseValue: 0
-      _additionalValue: 0
-      _multiplier: 1
-    pierceCount:
-      _baseValue: 0
-      _additionalValue: 0
-      _multiplier: 1
-    slowValue:
-      _baseValue: 0
-      _additionalValue: 0
-      _multiplier: 1
-    slowTime:
-      _baseValue: 0
-      _additionalValue: 0
-      _multiplier: 1
-    freezeChance:
-      _baseValue: 0
-      _additionalValue: 0
-      _multiplier: 1
-    freezeTime:
-      _baseValue: 0
-      _additionalValue: 0
-      _multiplier: 1
+  <Stat>k__BackingField:
+    rid: -2
+  <Collider>k__BackingField: {fileID: 0}
+  <Rb>k__BackingField: {fileID: 0}
   _shotDir: {x: 0, y: 0}
-  _collider: {fileID: 7571602827437928568}
-  _originalPrefab: {fileID: 0}
+  <currentBounceCount>k__BackingField: 0
+  <currentPierceCount>k__BackingField: 0
+  CurDamage: 0
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
 --- !u!114 &2843062729852211660
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9973,7 +9929,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3483394658460143050}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Visuals
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10008,7 +9964,7 @@ GameObject:
   - component: {fileID: 2640677863085121154}
   - component: {fileID: 4436618187777544106}
   - component: {fileID: 5061225050330864149}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Smoke
   m_TagString: Untagged
   m_Icon: {fileID: 0}

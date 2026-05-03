@@ -49,62 +49,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 080142353ce7f1d4eb89f7f4a59ce3d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BulletController
-  _rb: {fileID: 572718570877986116}
-  _stat:
-    type: 1
-    originalPrefabs: {fileID: 0}
-    speed:
-      _baseValue: 0
-      _additionalValue: 0
-      _multiplier: 1
-    damage:
-      _baseValue: 0
-      _additionalValue: 0
-      _multiplier: 1
-    bounceCount:
-      _baseValue: 0
-      _additionalValue: 0
-      _multiplier: 1
-    chance:
-      _baseValue: 0
-      _additionalValue: 0
-      _multiplier: 1
-    isActivated: 0
-    explosionRadius:
-      _baseValue: 0
-      _additionalValue: 0
-      _multiplier: 1
-    lightningRange:
-      _baseValue: 0
-      _additionalValue: 0
-      _multiplier: 1
-    lightningCount:
-      _baseValue: 0
-      _additionalValue: 0
-      _multiplier: 1
-    pierceCount:
-      _baseValue: 0
-      _additionalValue: 0
-      _multiplier: 1
-    slowValue:
-      _baseValue: 0
-      _additionalValue: 0
-      _multiplier: 1
-    slowTime:
-      _baseValue: 0
-      _additionalValue: 0
-      _multiplier: 1
-    freezeChance:
-      _baseValue: 0
-      _additionalValue: 0
-      _multiplier: 1
-    freezeTime:
-      _baseValue: 0
-      _additionalValue: 0
-      _multiplier: 1
+  <Stat>k__BackingField:
+    rid: -2
+  <Collider>k__BackingField: {fileID: 0}
+  <Rb>k__BackingField: {fileID: 0}
   _shotDir: {x: 0, y: 0}
-  _collider: {fileID: 8421521542203353189}
-  _originalPrefab: {fileID: 0}
+  <currentBounceCount>k__BackingField: 0
+  <currentPierceCount>k__BackingField: 0
+  CurDamage: 0
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
 --- !u!114 &329227445187604456
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -185,8 +142,8 @@ CapsuleCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: -0.02}
-  m_Size: {x: 0.1, y: 0.71}
+  m_Offset: {x: 0, y: -0.06}
+  m_Size: {x: 0.1, y: 0.45}
   m_Direction: 0
 --- !u!114 &2670710113641798865
 MonoBehaviour:
@@ -9993,8 +9950,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 196562734302771089}
   - {fileID: 1854636538270778831}

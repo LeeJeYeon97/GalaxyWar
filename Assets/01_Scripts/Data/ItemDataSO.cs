@@ -6,7 +6,10 @@ public class ItemDataSO : ScriptableObject
 {
     public Define.ItemType type;
     public string itemName;
-    public Sprite sprite;
-    public float value;
+    public bool isDrop;
 
+    public GameObject originalPrefab;
+
+    public int minValue;
+    public int maxValue;
 }

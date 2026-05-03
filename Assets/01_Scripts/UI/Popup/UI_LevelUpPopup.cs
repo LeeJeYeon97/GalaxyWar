@@ -109,13 +109,18 @@ public class UI_LevelUpPopup : UI_Popup
         Managers.UI.ClosePopupUI();
         _isSelecting = false;
 
+        if(Managers.Game.currentGameState == GameState.Pause)
+        {
+            Managers.Game.ChangeGameState(GameState.Resume);
+        }
+
         // 여기에 유저에게 보여줄 알림 팝업(예: UI_Toast)을 추가하면 더 좋습니다.
         Debug.LogWarning(message);
     }
 
     private void RefreshCards()
     {
-        // ★ 1. 안전장치: 카드가 세팅되고 날아오는 동안에는 절대 클릭 못하게 잠급니다!
+        // 1. 안전장치: 카드가 세팅되고 날아오는 동안에는 절대 클릭 못하게 잠급니다!
         _isSelecting = true;
 
         // 능력치 가져오기

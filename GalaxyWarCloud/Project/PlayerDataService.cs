@@ -206,5 +206,43 @@ public class PlayerDataService
             IsNewPlayer = true
         };
     }
+
+
+    [CloudCodeFunction("UpdateGameRecord")]
+    public async Task<PlayerData> UpdateGameRecord(IExecutionContext context, IGameApiClient gameApiClient, int newScore, int newSurviveTime)
+    {
+        // 1. 기존 서버에 저장된 내 데이터 불러오기
+        var (playerExists, playerData) = await TryGetPlayerData(context, gameApiClient);
+
+        if (!playerExists || playerData == null)
+        {
+            throw new Exception("플레이어 데이터를 찾을 수 없습니다.");
+        }
+
+        bool isUpdated = false;
+
+        // 2. 신기록 달성 체크! (기존 기록보다 높을 때만 갱신)
+        if (newScore > playerData.MaxScore)
+        {
+            playerData.MaxScore = newScore;
+            isUpdated = true;
+        }
+
+        if (newSurviveTime > playerData.MaxSurviveTime)
+        {
+            playerData.MaxSurviveTime = newSurviveTime;
+            isUpdated = true;
+        }
+
+        // 3. 기록이 갱신되었다면 서버에 덮어쓰기 (DB 저장)
+        if (isUpdated)
+        {
+            await SaveData(context, gameApiClient, ServerDefine.k_PlayerDataKey, playerData);
+            _logger.LogInformation($"Player {context.PlayerId} 신기록 달성! Score: {playerData.MaxScore}");
+        }
+
+        // 4. (갱신 여부와 상관없이) 최신 데이터를 클라로 반환
+        return playerData;
+    }
 }
 

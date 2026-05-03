@@ -327,6 +327,30 @@ MonoBehaviour:
     m_Key: Passive_SplitBullet_Desc_4
     m_Metadata:
       m_Items: []
+  - m_Id: 4216420096430080
+    m_Key: Passive_PlayerShield_Name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4216549994024960
+    m_Key: Passive_PlayerShield_Desc_0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4216584978714624
+    m_Key: Passive_PlayerShield_Desc_1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4216593409265664
+    m_Key: Passive_PlayerShield_Desc_2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4216600715743232
+    m_Key: Passive_PlayerShield_Desc_3
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4216608131272704
+    m_Key: Passive_PlayerShield_Desc_4
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

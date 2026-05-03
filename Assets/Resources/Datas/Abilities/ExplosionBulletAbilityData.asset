@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: ExplosionBulletAbilityData
   m_EditorClassIdentifier: Assembly-CSharp::ExplosionBulletAbilityDataSO
   type: 101
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: 8c603aa9cf565d14c94dfb12a07a7247, type: 3}
   maxLevel: 5
   _requiredAbility: 0
   bulletType: 2

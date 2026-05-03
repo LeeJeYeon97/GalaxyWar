@@ -13,28 +13,38 @@ MonoBehaviour:
   m_Name: PierceBulletAbilityData
   m_EditorClassIdentifier: Assembly-CSharp::PierceBulletAbilityDataSO
   type: 103
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: f484be61914418c4192a59c5beb70f78, type: 3}
   maxLevel: 5
   _requiredAbility: 0
   bulletType: 4
   baseStats:
-  - chance: 0
+  - CardIcon: {fileID: 0}
+    hudIcon: {fileID: 0}
+    chance: 0
     damage: 0
     speed: 0
     bounceCount: 0
-  - chance: 10
+  - CardIcon: {fileID: 0}
+    hudIcon: {fileID: 0}
+    chance: 10
     damage: 0
     speed: 0
     bounceCount: 0
-  - chance: 10
+  - CardIcon: {fileID: 0}
+    hudIcon: {fileID: 0}
+    chance: 10
     damage: 0
     speed: 0
     bounceCount: 0
-  - chance: 10
+  - CardIcon: {fileID: 0}
+    hudIcon: {fileID: 0}
+    chance: 10
     damage: 0
     speed: 0
     bounceCount: 0
-  - chance: 10
+  - CardIcon: {fileID: 0}
+    hudIcon: {fileID: 0}
+    chance: 10
     damage: 0
     speed: 0
     bounceCount: 0
@@ -47,5 +57,5 @@ MonoBehaviour:
     pierceDamageDecreaseValue: 0.1
   - pierceCount: 1
     pierceDamageDecreaseValue: 0.1
-  - pierceCount: 1
-    pierceDamageDecreaseValue: 0.1
+  - pierceCount: 9999
+    pierceDamageDecreaseValue: 0.3

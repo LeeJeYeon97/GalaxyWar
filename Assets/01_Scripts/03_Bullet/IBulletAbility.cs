@@ -1,5 +1,4 @@
 using DG.Tweening;
-using GLTFast.Schema;
 using System;
 using System.Collections.Generic;
 using UnityEngine;

@@ -12,6 +12,7 @@ public struct FireBulletStatData
 {
     public float fireDamageValue;
     public float fireRemainTime;        // 화상 지속 시간
+    public float fireZoneDestroyTime;
 }
 
 [CreateAssetMenu(fileName = "FireBulletData", menuName = "ScriptableObjects/BulletData/Fire")]

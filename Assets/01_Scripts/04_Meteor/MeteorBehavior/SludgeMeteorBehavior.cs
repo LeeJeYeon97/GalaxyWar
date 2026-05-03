@@ -10,7 +10,7 @@ public class SludgeMeteorBehavior : IMeteorBehavior
     public void OnDie(MeteorController meteor)
     {
         
-        SludgePuddle puddle = Managers.Resource.Instantiate("Object/SludgePuddle").GetComponent<SludgePuddle>();
+        SludgePuddle puddle = Managers.Resource.Instantiate(meteor.Stat.sludgePuddle).GetComponent<SludgePuddle>();
         if (puddle != null)
         {
             puddle.Init(meteor.transform.position);

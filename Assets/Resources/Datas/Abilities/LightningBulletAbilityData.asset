@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: LightningBulletAbilityData
   m_EditorClassIdentifier: Assembly-CSharp::LightningBulletAbilityDataSO
   type: 102
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: 80fc31152a1918e49a6c827b300a0527, type: 3}
   maxLevel: 5
   _requiredAbility: 0
   bulletType: 3
@@ -40,17 +40,12 @@ MonoBehaviour:
     bounceCount: 0
   stats:
   - lightningDamageValue: 0
-    lightningRange: 0
     lightningCount: 0
   - lightningDamageValue: 0.2
-    lightningRange: 0
     lightningCount: 1
   - lightningDamageValue: 0.2
-    lightningRange: 0
     lightningCount: 1
   - lightningDamageValue: 0.2
-    lightningRange: 0
     lightningCount: 1
   - lightningDamageValue: 0.2
-    lightningRange: 0
     lightningCount: 1

@@ -14,9 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::NormalBulletStatDataSO
   type: 0
   stats:
+    CardIcon: {fileID: 21300000, guid: 40862fdfdef35c0499df4dd0e2f9cc3d, type: 3}
+    hudIcon: {fileID: 21300000, guid: 40862fdfdef35c0499df4dd0e2f9cc3d, type: 3}
     chance: 100
     damage: 10
-    speed: 15
+    speed: 10
     bounceCount: 0
-  originalPrefab: {fileID: 7551283248292453691, guid: c1b265a41367a8648b6683ee4164953e, type: 3}
+  originalPrefab: {fileID: 5676908171982591740, guid: 0a044d58a10325a46b08543d8549e3d6, type: 3}
   isReload: 1

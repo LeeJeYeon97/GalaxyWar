@@ -42,7 +42,7 @@ public class MapManager
         rightWall = CreateWall("RightWall");
     }
 
-    // ★ 핵심: 카메라 사이즈가 변할 때마다 호출될 함수
+    //  핵심: 카메라 사이즈가 변할 때마다 호출될 함수
     public void UpdateMap()
     {
         CalculatePlayZone(); // 1. 좌표 재계산 (mainCam 사이즈 반영)

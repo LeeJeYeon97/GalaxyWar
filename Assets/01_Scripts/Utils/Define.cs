@@ -42,15 +42,18 @@ public class Define
         Bgm_Game,
         Sfx_UIButtonClick,
         Sfx_PlayerShot,
-        Sfx_NormalBulletHit,
-        Sfx_Explosion,
-        Sfx_Lightning,
+        Sfx_Explosion_Hit,
+        Sfx_Lightning_Hit,
         Sfx_Reloading,
         Sfx_Levelup,
-        Sfx_AbilityCardPick,
         Sfx_PlayerHit,
         Sfx_PlayerDie,
-        Sfx_PlayerShieldHit,
+        Sfx_FireBullet_Hit,
+        Sfx_IceBullet_Hit,
+        Sfx_homingTargeting,
+        Sfx_homing_Hit,
+        Sfx_PierceBullet_Hit,
+        Sfx_BurstModeOn
         
     }
     public enum UIEvent
@@ -84,6 +87,12 @@ public class Define
         Playing,
         Die,
     }
+    public enum EffectType
+    {
+        Screen_ShieldHit,
+        Screen_BurstMode,
+        Screen_PlayerHit,
+    }
     public enum AbilityType
     {
         Unknown = 0,
@@ -97,7 +106,7 @@ public class Define
         Passive_ReloadTimeDown = 4,         // 리로드 시간 감소
         Passive_ShotTimeDown = 5,           // 발사 딜레이 감소
         Passive_BurstMode = 6,              // 버스트 모드 활성화 및 충전 시간 감소
-        // TODO : 플레이어 쉴드
+        Passive_PlayerShield = 7,           // 플레이어 쉴드
 
         // 모든 총알
         Passive_AllBulletBounceCountUp = 10,// 모든 총알의 바운스(튕기는) 횟수 증가
@@ -192,6 +201,8 @@ public class Define
     {
         RecoveryHp,             // HP 회복
         RecoveryBurst,          // 버스트 게이지 회복
+        Exp,
+        Gold,
     }
     public enum DebuffType
     {
@@ -218,7 +229,8 @@ public class Define
         ReloadStart,                // 리로딩 시작
         ReloadEnd,                  // 리로딩 끝
         BulletBounceCountUp,        // 불릿 튕기는 횟수 증가
-        UpdateGameTime,                 // 게임 시간 업데이트
+        UpdateGameTime,             // 게임 시간 업데이트
+        PlayerShot,
         
     }
     public struct PlayerStatusEvent
@@ -226,7 +238,7 @@ public class Define
         public float hp;
         public float maxHp;
         public float shield;
-        public float maxShield;
+        public float shieldCooldownRatio;
         public float burst;
         public float maxBurst;
     }

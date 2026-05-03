@@ -13,57 +13,7 @@ MonoBehaviour:
   m_Name: MaxHpUpAbility
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMaxHpUpAbilityDataSO
   type: 1
-  localizedName:
-    m_TableReference:
-      m_TableCollectionName: GUID:82c20406597040c4f8b1423cea141506
-    m_TableEntryReference:
-      m_KeyId: 3640446824894464
-      m_Key: 
-    m_FallbackState: 0
-    m_WaitForCompletion: 0
-    m_LocalVariables: []
-  localizationDesc:
-  - m_TableReference:
-      m_TableCollectionName: GUID:82c20406597040c4f8b1423cea141506
-    m_TableEntryReference:
-      m_KeyId: 3640485651566592
-      m_Key: 
-    m_FallbackState: 0
-    m_WaitForCompletion: 0
-    m_LocalVariables: []
-  - m_TableReference:
-      m_TableCollectionName: GUID:82c20406597040c4f8b1423cea141506
-    m_TableEntryReference:
-      m_KeyId: 3640485651566592
-      m_Key: 
-    m_FallbackState: 0
-    m_WaitForCompletion: 0
-    m_LocalVariables: []
-  - m_TableReference:
-      m_TableCollectionName: GUID:82c20406597040c4f8b1423cea141506
-    m_TableEntryReference:
-      m_KeyId: 3640485651566592
-      m_Key: 
-    m_FallbackState: 0
-    m_WaitForCompletion: 0
-    m_LocalVariables: []
-  - m_TableReference:
-      m_TableCollectionName: GUID:82c20406597040c4f8b1423cea141506
-    m_TableEntryReference:
-      m_KeyId: 3640485651566592
-      m_Key: 
-    m_FallbackState: 0
-    m_WaitForCompletion: 0
-    m_LocalVariables: []
-  - m_TableReference:
-      m_TableCollectionName: GUID:82c20406597040c4f8b1423cea141506
-    m_TableEntryReference:
-      m_KeyId: 3640485651566592
-      m_Key: 
-    m_FallbackState: 0
-    m_WaitForCompletion: 0
-    m_LocalVariables: []
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: b404f23bace0ff541a4cd7334a953a19, type: 3}
   maxLevel: 5
   _requiredAbility: 0
   maxHpIncreases:
@@ -72,6 +22,3 @@ MonoBehaviour:
   - 50
   - 50
   - 50
-  references:
-    version: 2
-    RefIds: []

@@ -1,3 +1,4 @@
+using NUnit.Framework.Internal;
 using System;
 using TMPro;
 using UnityEngine;
@@ -38,12 +39,14 @@ public class Managers : MonoBehaviour
     private CoroutineHelper _coroutine;
     private LoginManager _login;
     private SettingManager _setting;
+    private EffectManager _effect;
 
     private PlayerDataManager _playerData;
     private PlayerEconomyManager _playerEconomy;
     private AdsManager _ad;
     private VirtualStoreManager _virtualStore;
     private IAPStoreManager _iapStore;
+    
     // ========================================================== //
     // 프로퍼티를 통해 외부에서 접근하도록 설정
     public static InitManager Initialize => Instance._init;
@@ -68,6 +71,7 @@ public class Managers : MonoBehaviour
     public static VirtualStoreManager VirtualStore => Instance._virtualStore;
     public static IAPStoreManager IAPStore => Instance._iapStore;
     public static SettingManager Setting => Instance._setting;
+    public static EffectManager Effect => Instance._effect;
     // ========================================================== //
 
     // 추가: 외부에서 Managers.Coroutine.StartCoroutine() 으로 접근할 수 있게 열어줍니다!
@@ -113,6 +117,7 @@ public class Managers : MonoBehaviour
             _instance._virtualStore = new VirtualStoreManager();
             _instance._iapStore = new IAPStoreManager();
             _instance._setting = new SettingManager();
+            _instance._effect = new EffectManager();
 
             // 컴포넌트 형태의 매니저들은 여기서 초기화하거나 자식으로 붙임
             _instance._game = Util.GetOrAddComponent<GameManager>(go);
@@ -136,6 +141,7 @@ public class Managers : MonoBehaviour
             Data.Init();
             Input.Init();
             Sound.Init();
+            Effect.Init();
             Scene.Init();
             UI.Init();
             Setting.Init();

@@ -25,5 +25,5 @@ AssetOrigin:
   productId: 177096
   packageName: Shooting Sound
   packageVersion: 1.0
-  assetPath: Assets/ShootingSound/machine_gun.wav
+  assetPath: Assets/Resources/Sounds/SFX/ShootingSound/machine_gun.wav
   uploadId: 385456

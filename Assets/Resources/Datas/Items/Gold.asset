@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 188c54a4195879741a7c060ae727c669, type: 3}
+  m_Name: Gold
+  m_EditorClassIdentifier: Assembly-CSharp::ItemDataSO
+  type: 3
+  itemName: "\uACE8\uB4DC"
+  isDrop: 1
+  originalPrefab: {fileID: 6888800886511787142, guid: 060181c330b982546aa8cb3d3b21a27b, type: 3}
+  minValue: 1
+  maxValue: 5

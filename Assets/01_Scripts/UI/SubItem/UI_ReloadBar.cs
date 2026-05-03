@@ -1,4 +1,6 @@
 using DG.Tweening;
+using NUnit.Framework;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -36,14 +38,14 @@ public class UI_ReloadBar : UI_Base
 
         // 이벤트 연결
         Managers.Event.Subscribe<float>(Define.ActionEvent.ReloadStart,ReloadStart);
-        Managers.Event.Subscribe(Define.ActionEvent.ReloadEnd,ReloadEnd);
+        Managers.Event.Subscribe<List<BulletController>>(Define.ActionEvent.ReloadEnd,ReloadEnd);
         // 꺼놓기
         gameObject.SetActive(false);
     }
     private void OnDestroy()
     {
         Managers.Event.UnSubscribe<float>(Define.ActionEvent.ReloadStart, ReloadStart);
-        Managers.Event.UnSubscribe(Define.ActionEvent.ReloadEnd, ReloadEnd);
+        Managers.Event.UnSubscribe<List<BulletController>>(Define.ActionEvent.ReloadEnd, ReloadEnd);
     }
     private void ReloadStart(float reloadTime)
     {
@@ -53,7 +55,7 @@ public class UI_ReloadBar : UI_Base
         _bar.fillAmount = 0.0f;
         _value.text = "0%";
 
-        // ★ 투명도 100%로 초기화 (이전에 깜빡이다가 꺼졌을 수 있으므로)
+        // 투명도 100%로 초기화 (이전에 깜빡이다가 꺼졌을 수 있으므로)
         Color color = _bar.color;
         color.a = 1f;
         _bar.color = color;
@@ -82,14 +84,14 @@ public class UI_ReloadBar : UI_Base
         _reloadText.DOFade(0.3f, 0.2f).SetLoops(-1, LoopType.Yoyo);
     }
 
-    private void ReloadEnd()
+    private void ReloadEnd(List<BulletController> data)
     {
         // 실행 중인 트윈(애니메이션) 정리 후 끄기
         _bar.DOKill();
         _value.DOKill();
         _reloadText.DOKill();
 
-        // ★ 투명도 원상 복구 (다음 장전 때 안 보일 수 있으니 1.0으로 되돌려놓음)
+        // 투명도 원상 복구 (다음 장전 때 안 보일 수 있으니 1.0으로 되돌려놓음)
         Color c = _bar.color;
         c.a = 1f;
         _bar.color = c;

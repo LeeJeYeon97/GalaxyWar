@@ -21,6 +21,8 @@ public class FireBulletBehavior : IBulletBehavior
 
         float tickTime = 0.5f;
 
+        Managers.Sound.Play(Define.SoundID.Sfx_FireBullet_Hit);
+
         if (bullet.Stat is FireBulletStat stat)
         {
             // 직접 맞았을 때의 화상 데미지 적용
@@ -41,10 +43,10 @@ public class FireBulletBehavior : IBulletBehavior
 
     public void OnShot(BulletController bullet)
     {
-        if(bullet.Stat.curLevel >= 5)
-        {
-            bullet.StartCoroutine(CoDropFireTrail(bullet));
-        }
+        //if(bullet.Stat.curLevel >= 5)
+        //{
+        bullet.StartCoroutine(CoDropFireTrail(bullet));
+        //}
     }
 
     public void OnUpdate(BulletController bullet)

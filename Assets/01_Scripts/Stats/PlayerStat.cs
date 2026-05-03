@@ -20,6 +20,9 @@ public class PlayerStat
     public Stat maxBurstGuage = new Stat();
     public Stat maxBurstFullChargeTime = new Stat();
 
+    public Stat maxShield = new Stat();
+    public Stat shieldChargeTime = new Stat();
+
     public float hitCooldown;       // ÇÇ°Ý µô·¹ÀÌ
 
     [Header("¸ÖÆ¼¼¦°ü·Ã")]
@@ -44,7 +47,9 @@ public class PlayerStat
         reloadTime.Init(data.statData.reloadTime);
         shotRange.Init(data.statData.shotRange);
         shotTime.Init(data.statData.shotTime);
+        maxShield.Init(data.statData.maxDefence);
 
+        shieldChargeTime.Init(data.statData.shieldChargeTime);
         enableBurst = data.statData.isBurstModeEnabled;
         maxBurstGuage.Init(data.statData.maxBurstGuage);
         maxBurstFullChargeTime.Init(data.statData.maxBurstFullChargeTime);

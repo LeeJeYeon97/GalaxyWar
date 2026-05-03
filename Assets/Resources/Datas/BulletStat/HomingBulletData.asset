@@ -14,13 +14,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::HomingBulletStatDataSO
   type: 8
   stats:
+    CardIcon: {fileID: 21300000, guid: 506ad5448d71fd04ab1ab8a19090e6dd, type: 3}
+    hudIcon: {fileID: 21300000, guid: 506ad5448d71fd04ab1ab8a19090e6dd, type: 3}
     chance: 30
     damage: 5
-    speed: 3
+    speed: 10
     bounceCount: 0
-  originalPrefab: {fileID: 6416228612985485557, guid: aa9496035f44cf64ba973983174a22e4, type: 3}
+  originalPrefab: {fileID: 4317400478341151153, guid: dc6b18b197f8c9c4b8dfdab987c59309, type: 3}
   isReload: 0
   homingBulletStat:
     homingShotDelay: 2
   trunSpeed: 500
-  homingRange: 10

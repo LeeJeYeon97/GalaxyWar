@@ -1,4 +1,5 @@
 using DG.Tweening;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -52,6 +53,8 @@ public class MeteorController : BaseController
 
     private Coroutine _flashCoroutine;
 
+    public event Action OnDieEvent;
+
     private void Awake()
     {
         _rb = Util.GetOrAddComponent<Rigidbody2D>(gameObject);
@@ -82,11 +85,11 @@ public class MeteorController : BaseController
         _moveDir = ((Vector2)Managers.Game._player.transform.position - pos).normalized;
 
         // 3. 랜덤으로 속도 뽑기
-        currentSpeed.Init(Random.Range(Stat.MinSpeed.TotalValue, Stat.MaxSpeed.TotalValue));
+        currentSpeed.Init(UnityEngine.Random.Range(Stat.MinSpeed.TotalValue, Stat.MaxSpeed.TotalValue));
 
         // 5. 랜덤한 회전 속도 부여 (초당 회전 각도)
         // -100 ~ 100 사이의 값을 주면 왼쪽 혹은 오른쪽으로 랜덤하게 돕니다.
-        _baseAngularVelocity = Random.Range(-100f, 100f);
+        _baseAngularVelocity = UnityEngine.Random.Range(-100f, 100f);
         _rb.simulated = true;
         UpdateVelocity();
 
@@ -183,12 +186,14 @@ public class MeteorController : BaseController
 
     public void OnDamage(float damage)
     {
-        if(damage > 0)
+        if (!gameObject.activeInHierarchy || _currentHp <= 0) return;
+
+        if (damage > 0)
         {
             _currentHp -= damage;
 
 
-            Vector3 textPos = transform.position + new Vector3(Random.Range(-0.5f, 0.5f), 0.5f, 0);
+            Vector3 textPos = transform.position + new Vector3(UnityEngine.Random.Range(-0.5f, 0.5f), 0.5f, 0);
 
             if (_flashCoroutine != null) StopCoroutine(_flashCoroutine);
             _flashCoroutine = StartCoroutine(CoHitFlash());
@@ -225,7 +230,25 @@ public class MeteorController : BaseController
 
         Managers.Level.AddScore(Mathf.FloorToInt(Stat.Score.TotalValue));
         Managers.Level.AddExp(Stat.Exp.TotalValue);
+
+        DropItem();
+        Managers.Game.AddKillCount();
         Managers.Resource.Destroy(gameObject);
+    }
+    private void DropItem()
+    {
+        foreach(var drop in Stat.dropTable)
+        {
+            // 0.0 ~ 1.0 사이의 랜덤 값을 뽑습니다.
+            float roll = UnityEngine.Random.value;
+
+            // 주사위 값이 설정된 확률보다 낮거나 같다면 당첨!
+            if (roll <= drop.dropRate)
+            {
+                // 스포너에게 생성을 요청합니다.
+                Managers.Game.spawner.SpawnDropItem(transform.position, drop.itemType);
+            }
+        }
     }
 
     #region 물리 연산
@@ -296,137 +319,6 @@ public class MeteorController : BaseController
     }
 
 
-    public void ApplySlow(float slowPercent, float duration)
-    {
-        if (!gameObject.activeInHierarchy) return;
-
-        // 이미 슬로우가 걸려있다면 기존 코루틴을 끄고 시간을 리셋!
-        if (_slowCoroutine != null)
-        {
-            StopCoroutine(_slowCoroutine);
-            // 주의: 코루틴을 강제로 끄기 전에 깎였던 스탯을 한 번 원상복구 해줘야 중첩 버그가 안 생깁니다!
-            currentSpeed.SubMultiplier(-slowPercent);
-            UpdateVelocity();
-        }
-
-        _slowCoroutine = StartCoroutine(CoSlowRoutine(slowPercent, duration));
-    }
-
-    // 슬로우 루틴
-    private IEnumerator CoSlowRoutine(float slowPercent, float duration)
-    {
-        // 1. 스탯 깎기 (예: 50% 슬로우면 multiplier에 -0.5를 더함)
-        currentSpeed.AddMultiplier(-slowPercent);
-
-        // 속도에 반영
-        UpdateVelocity();
-
-        // 시각적 효과 (파랗게 질림)
-        SetColor(new Color(0.5f, 0.8f, 1f));
-
-        // 2. 지정된 시간만큼 대기
-        yield return new WaitForGameTime(duration);
-
-        // 3. 스탯 완벽하게 원상 복구! (깎았던 만큼 다시 빼줌)
-        currentSpeed.SubMultiplier(-slowPercent);
-
-        ReturnColor();
-
-        _slowCoroutine = null;
-    }
-
-    // 완전 빙결(Freeze)도 똑같은 방식으로 창구를 열어줍니다.
-    public void ApplyFreeze(float freezeDuration, float slowPercent, float slowDuration)
-    {
-        if (!gameObject.activeInHierarchy) return;
-
-        // 이미 얼어있는 상태에서 또 맞았다면? -> 빙결 시간 리셋!
-        if (_freezeCoroutine != null)
-        {
-            StopCoroutine(_freezeCoroutine);
-            // 코루틴을 강제로 끄기 전에 스탯을 한 번 원상복구 해줘야 버그가 안 생깁니다.
-            currentSpeed.SetForceZero(false);
-            UpdateVelocity();
-        }
-
-        // 2. 코루틴에 슬로우 수치들도 같이 넘겨줍니다.   
-        _freezeCoroutine = StartCoroutine(CoFreezeRoutine(freezeDuration, slowPercent, slowDuration));
-    }
-    private IEnumerator CoFreezeRoutine(float duration, float slowPercent, float slowDuration)
-    {
-        // 1. 스탯 강제 0 스위치 ON!
-        currentSpeed.SetForceZero(true);
-        UpdateVelocity();
-
-        // 시각적 효과 (슬로우보다 조금 더 쨍하고 진한 얼음색!)
-        SetColor(new Color(0.2f, 0.8f, 1f));
-
-        // 2. 빙결 지속 시간(예: 1.5초) 동안 대기
-        yield return new WaitForGameTime(duration);
-
-        // 3. 해동! 스탯 강제 0 스위치 OFF!
-        currentSpeed.SetForceZero(false);
-        UpdateVelocity();
-        ReturnColor();
-
-        _freezeCoroutine = null;
-
-        //  4. 핵심: 빙결이 완전히 풀린 직후, 이미 만들어둔 ApplySlow를 호출해서 바통 터치!
-        // (운석이 살아있는지 체크는 ApplySlow 내부에 이미 있으니 안전합니다)
-        ApplySlow(slowPercent, slowDuration);
-    }
-
-    public void ApplyBurn(float burnDamage, float duration, float tickTime)
-    {
-        // 1. 핵심 방어: 운석이 죽어서 창고(Pool)에 들어갔다면 불을 붙이지 않습니다!
-        if (!gameObject.activeInHierarchy) return;
-
-        // 2. 이미 불타는 중인데 화염탄을 또 맞았다면?
-        if (_burnCoroutine != null)
-        {
-            StopCoroutine(_burnCoroutine); // 기존 불을 끄고
-            // (주의: 화상은 슬로우와 달리 스탯을 복구할 필요가 없으니 그냥 끄기만 하면 됩니다!)
-        }
-
-        // 3. 새로운 지속 시간으로 화상 코루틴 다시 시작!
-        _burnCoroutine = StartCoroutine(CoBurnRoutine(burnDamage, duration, tickTime));
-    }
-
-    private IEnumerator CoBurnRoutine(float tickDamage, float duration, float tickTime)
-    {
-        float timer = 0f;
-        float tickInterval = tickTime; // 0.5초마다 틱 데미지가 들어갑니다. (입맛에 맞게 조절하세요!)
-
-        // 시간이 다 되기 전까지, 그리고 운석이 살아있는 동안에만 반복!
-        while (timer < duration && gameObject.activeInHierarchy)
-        {
-            if (Managers.Game.currentGameState == GameState.Pause)
-            {
-                yield return null;
-                continue;
-            }
-            // ==========================================
-            // 1. 화상 시작 시: 붉은색으로 칠하기 (PropertyBlock 사용)
-            // ==========================================
-            SetColor(new Color(1f, 0.4f, 0f));
-
-            // ★ 데미지 적용
-            // 여기서 운석의 체력이 0이 되면 OnDamage 내부에서 스스로 Pool로 반납될 것입니다.
-            OnDamage(tickDamage);
-
-            // 0.5초를 기다립니다.
-            yield return new WaitForSeconds(tickInterval);
-            timer += tickInterval;
-            // (선택 사항) 여기에 불타는 데미지 텍스트 팝업이나 파티클을 띄워주면 타격감이 아주 좋습니다!
-            // Debug.Log($"운석에 화상 데미지 {tickDamage} 적중! 남은 시간: {duration - timer}초");
-        }
-
-        ReturnColor();
-
-        // 지속 시간이 다 끝나면 코루틴 변수 비우기
-        _burnCoroutine = null;
-    }
-
     private void RandomVisaul()
     {
         if (visuals == null || visuals.Count == 0)
@@ -492,6 +384,131 @@ public class MeteorController : BaseController
             }
         }
     }
+    public void ApplySlow(float slowPercent, float duration)
+    {
+        if (!gameObject.activeInHierarchy) return;
+
+        // 이미 슬로우가 걸려있다면 기존 코루틴을 끄고 시간을 리셋!
+        if (_slowCoroutine != null)
+        {
+            StopCoroutine(_slowCoroutine);
+            // 주의: 코루틴을 강제로 끄기 전에 깎였던 스탯을 한 번 원상복구 해줘야 중첩 버그가 안 생깁니다!
+            currentSpeed.SubMultiplier(-slowPercent);
+            UpdateVelocity();
+        }
+
+        _slowCoroutine = StartCoroutine(CoSlowRoutine(slowPercent, duration));
+    }
+
+    // 슬로우 루틴
+    private IEnumerator CoSlowRoutine(float slowPercent, float duration)
+    {
+        // 1. 스탯 깎기 (예: 50% 슬로우면 multiplier에 -0.5를 더함)
+        currentSpeed.AddMultiplier(-slowPercent);
+
+        // 속도에 반영
+        UpdateVelocity();
+
+        // 시각적 효과 (파랗게 질림)
+        SetColor(new Color(0.5f, 0.8f, 1f));
+
+        // 2. 지정된 시간만큼 대기
+        yield return new WaitForGameTime(duration);
+
+        // 3. 스탯 완벽하게 원상 복구! (깎았던 만큼 다시 빼줌)
+        currentSpeed.SubMultiplier(-slowPercent);
+        _slowCoroutine = null;
+        ReturnColor();
+    }
+
+    // 완전 빙결(Freeze)도 똑같은 방식으로 창구를 열어줍니다.
+    public void ApplyFreeze(float freezeDuration, float slowPercent, float slowDuration)
+    {
+        if (!gameObject.activeInHierarchy) return;
+
+        // 이미 얼어있는 상태에서 또 맞았다면? -> 빙결 시간 리셋!
+        if (_freezeCoroutine != null)
+        {
+            StopCoroutine(_freezeCoroutine);
+            // 코루틴을 강제로 끄기 전에 스탯을 한 번 원상복구 해줘야 버그가 안 생깁니다.
+            currentSpeed.SetForceZero(false);
+            UpdateVelocity();
+        }
+
+        // 2. 코루틴에 슬로우 수치들도 같이 넘겨줍니다.   
+        _freezeCoroutine = StartCoroutine(CoFreezeRoutine(freezeDuration, slowPercent, slowDuration));
+    }
+    private IEnumerator CoFreezeRoutine(float duration, float slowPercent, float slowDuration)
+    {
+        // 1. 스탯 강제 0 스위치 ON!
+        currentSpeed.SetForceZero(true);
+        UpdateVelocity();
+
+        // 시각적 효과 (슬로우보다 조금 더 쨍하고 진한 얼음색!)
+        SetColor(new Color(0.2f, 0.8f, 1f));
+
+        // 2. 빙결 지속 시간(예: 1.5초) 동안 대기
+        yield return new WaitForGameTime(duration);
+
+        // 3. 해동! 스탯 강제 0 스위치 OFF!
+        currentSpeed.SetForceZero(false);
+        UpdateVelocity();
+
+        _freezeCoroutine = null;
+        ReturnColor();
+
+        ApplySlow(slowPercent, slowDuration);
+    }
+
+    public void ApplyBurn(float burnDamage, float duration, float tickTime)
+    {
+        // 1. 핵심 방어: 운석이 죽어서 창고(Pool)에 들어갔다면 불을 붙이지 않습니다!
+        if (!gameObject.activeInHierarchy) return;
+
+        // 2. 이미 불타는 중인데 화염탄을 또 맞았다면?
+        if (_burnCoroutine != null)
+        {
+            StopCoroutine(_burnCoroutine); // 기존 불을 끄고
+            // (주의: 화상은 슬로우와 달리 스탯을 복구할 필요가 없으니 그냥 끄기만 하면 됩니다!)
+        }
+
+        // 3. 새로운 지속 시간으로 화상 코루틴 다시 시작!
+        _burnCoroutine = StartCoroutine(CoBurnRoutine(burnDamage, duration, tickTime));
+    }
+
+    private IEnumerator CoBurnRoutine(float tickDamage, float duration, float tickTime)
+    {
+        float timer = 0f;
+        float tickInterval = tickTime; // 0.5초마다 틱 데미지가 들어갑니다. (입맛에 맞게 조절하세요!)
+
+        // 시간이 다 되기 전까지, 그리고 운석이 살아있는 동안에만 반복!
+        while (timer < duration && gameObject.activeInHierarchy)
+        {
+            if (Managers.Game.currentGameState == GameState.Pause)
+            {
+                yield return null;
+                continue;
+            }
+            // ==========================================
+            // 1. 화상 시작 시: 붉은색으로 칠하기 (PropertyBlock 사용)
+            // ==========================================
+            SetColor(new Color(1f, 0.4f, 0f));
+
+            // ★ 데미지 적용
+            // 여기서 운석의 체력이 0이 되면 OnDamage 내부에서 스스로 Pool로 반납될 것입니다.
+            OnDamage(tickDamage);
+
+            // 0.5초를 기다립니다.
+            yield return new WaitForSeconds(tickInterval);
+            timer += tickInterval;
+            // (선택 사항) 여기에 불타는 데미지 텍스트 팝업이나 파티클을 띄워주면 타격감이 아주 좋습니다!
+            // Debug.Log($"운석에 화상 데미지 {tickDamage} 적중! 남은 시간: {duration - timer}초");
+        }
+
+        _burnCoroutine = null;
+        ReturnColor();
+    }
+
 
     private void SetColor(Color color)
     {
@@ -533,14 +550,19 @@ public class MeteorController : BaseController
 
     private Color GetCurrentStatusColor()
     {
-        // 만약 화상 코루틴 변수가 null이 아니라면? -> 불타는 색상 유지!
+        // 우선순위 1: 오라 버프 (가장 중요하게 보여야 한다면)
+        if (_hasAuraBuff) return Color.yellow;
+
+        // 우선순위 4: 화상 상태
         if (_burnCoroutine != null) return new Color(1f, 0.4f, 0f);
 
-        // 만약 빙결/슬로우 상태라면? -> 얼어있는 색상 유지!
-        // (얼음 코루틴 변수 이름이 _slowCoroutine이라고 가정했습니다)
-        // if (_slowCoroutine != null) return new Color(0.2f, 0.8f, 1f); 
+        // 우선순위 2: 완전 빙결 상태
+        if (_freezeCoroutine != null) return new Color(0.2f, 0.8f, 1f);
 
-        // 아무 상태 이상도 없다면 원래 색상인 흰색 반환
+        // 우선순위 3: 슬로우 상태
+        if (_slowCoroutine != null) return new Color(0.5f, 0.8f, 1f);
+
+        // 아무 상태 이상도 없다면 원래 색상인 흰색
         return Color.white;
     }
 }

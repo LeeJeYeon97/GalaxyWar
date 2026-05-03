@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 2330729326262593180}
   - component: {fileID: 1528430140977500726}
   - component: {fileID: 6978067031622826427}
+  - component: {fileID: 1208775663321123138}
   m_Layer: 6
   m_Name: FirePuddle
   m_TagString: Untagged
@@ -51,9 +52,9 @@ ParticleSystem:
   ringBufferMode: 0
   ringBufferLoopRange: {x: 0, y: 1}
   emitterVelocityMode: 0
-  looping: 1
+  looping: 0
   prewarm: 0
-  playOnAwake: 1
+  playOnAwake: 0
   useUnscaledTime: 0
   autoRandomSeed: 1
   startDelay:
@@ -4804,3 +4805,17 @@ CircleCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0.00042897463, y: 0.44834137}
   m_Radius: 0.7
+--- !u!114 &1208775663321123138
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 510771915904526276}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 591aac7f2a1e1e04db53e738a192da98, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EffectController
+  returnMode: 0
+  customTime: 2

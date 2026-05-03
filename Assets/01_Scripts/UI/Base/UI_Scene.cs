@@ -9,5 +9,7 @@ public class UI_Scene : UI_Base
     {
         base.Init();
         Managers.UI.SetCanvas(gameObject, false);
+
+        
     }
 }

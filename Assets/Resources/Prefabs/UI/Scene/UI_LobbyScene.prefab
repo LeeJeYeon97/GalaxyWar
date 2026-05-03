@@ -2607,6 +2607,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: UI_MainPanel
       objectReference: {fileID: 0}
+    - target: {fileID: 5727820162092300066, guid: a742f96667ef31f4bbf07771ec12a75d, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6328192267291554580, guid: a742f96667ef31f4bbf07771ec12a75d, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -2916,7 +2920,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 881027144187640413, guid: f5b0deb16236ce2438bc20f98d86020b, type: 3}
       propertyPath: m_Size
-      value: 0.59677345
+      value: 0.5967743
       objectReference: {fileID: 0}
     - target: {fileID: 962982274726214169, guid: f5b0deb16236ce2438bc20f98d86020b, type: 3}
       propertyPath: m_AnchorMax.y

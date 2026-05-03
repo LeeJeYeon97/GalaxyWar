@@ -9,7 +9,6 @@ public struct PlayerStatData
     public float maxHp;
     public float maxDefence;
     
-
     public float reloadCount;
     public float reloadTime;
 
@@ -17,6 +16,8 @@ public struct PlayerStatData
     public float shotTime;
 
     public float hitCooldown;       // 피격 딜레이
+
+    public float shieldChargeTime;
 
     [Header("버스트모드관련")]
     public bool isBurstModeEnabled;

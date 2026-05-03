@@ -13,62 +13,12 @@ MonoBehaviour:
   m_Name: SplitBulletAbility
   m_EditorClassIdentifier: Assembly-CSharp::PlayerSplitBulletAbilityDataSO
   type: 20
-  localizedName:
-    m_TableReference:
-      m_TableCollectionName: GUID:82c20406597040c4f8b1423cea141506
-    m_TableEntryReference:
-      m_KeyId: 3640669752152064
-      m_Key: 
-    m_FallbackState: 0
-    m_WaitForCompletion: 0
-    m_LocalVariables: []
-  localizationDesc:
-  - m_TableReference:
-      m_TableCollectionName: GUID:82c20406597040c4f8b1423cea141506
-    m_TableEntryReference:
-      m_KeyId: 3640693529661440
-      m_Key: 
-    m_FallbackState: 0
-    m_WaitForCompletion: 0
-    m_LocalVariables: []
-  - m_TableReference:
-      m_TableCollectionName: GUID:82c20406597040c4f8b1423cea141506
-    m_TableEntryReference:
-      m_KeyId: 3641336877174784
-      m_Key: 
-    m_FallbackState: 0
-    m_WaitForCompletion: 0
-    m_LocalVariables: []
-  - m_TableReference:
-      m_TableCollectionName: GUID:82c20406597040c4f8b1423cea141506
-    m_TableEntryReference:
-      m_KeyId: 3641336877174784
-      m_Key: 
-    m_FallbackState: 0
-    m_WaitForCompletion: 0
-    m_LocalVariables: []
-  - m_TableReference:
-      m_TableCollectionName: GUID:82c20406597040c4f8b1423cea141506
-    m_TableEntryReference:
-      m_KeyId: 3641336877174784
-      m_Key: 
-    m_FallbackState: 0
-    m_WaitForCompletion: 0
-    m_LocalVariables: []
-  - m_TableReference:
-      m_TableCollectionName: GUID:82c20406597040c4f8b1423cea141506
-    m_TableEntryReference:
-      m_KeyId: 3641336877174784
-      m_Key: 
-    m_FallbackState: 0
-    m_WaitForCompletion: 0
-    m_LocalVariables: []
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: 89f78f41ef69d6147a1a5ae4b9949936, type: 3}
   maxLevel: 5
   _requiredAbility: 0
   splitIncreases:
-  - countIncrease: 0
-    chanceIncrease: 30
+  - countIncrease: 2
+    chanceIncrease: 20
   - countIncrease: 2
     chanceIncrease: 10
   - countIncrease: 2
@@ -77,6 +27,3 @@ MonoBehaviour:
     chanceIncrease: 10
   - countIncrease: 2
     chanceIncrease: 10
-  references:
-    version: 2
-    RefIds: []

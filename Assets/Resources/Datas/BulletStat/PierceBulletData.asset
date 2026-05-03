@@ -14,9 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PierceBulletStatDataSO
   type: 4
   stats:
+    CardIcon: {fileID: 21300000, guid: f484be61914418c4192a59c5beb70f78, type: 3}
+    hudIcon: {fileID: 21300000, guid: 5a00c7db01b7a8e4eb76b4064287407d, type: 3}
     chance: 30
     damage: 10
-    speed: 18
+    speed: 10
     bounceCount: 0
   originalPrefab: {fileID: 8177002106139725670, guid: eefe11f61ecd3f447a526ae732865504, type: 3}
   isReload: 1

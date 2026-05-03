@@ -15,18 +15,19 @@ MonoBehaviour:
   statData:
     speed: 1
     maxHp: 100
-    maxDefence: 100
+    maxDefence: 0
     reloadCount: 7
     reloadTime: 2
     shotRange: 3
     shotTime: 1
     hitCooldown: 1
+    shieldChargeTime: 20
     isBurstModeEnabled: 0
     maxBurstGuage: 100
     maxBurstFullChargeTime: 60
     isMultiShotEnabled: 0
-    multiShotCount: 3
-    multiShotChance: 30
+    multiShotCount: 0
+    multiShotChance: 0
     multiShotAngle: 45
     isHomingShotEnabled: 0
     homingShotDelay: 1.5

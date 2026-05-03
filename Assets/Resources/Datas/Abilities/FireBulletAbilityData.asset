@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: FireBulletAbilityData
   m_EditorClassIdentifier: Assembly-CSharp::FireBulletAbilityDataSO
   type: 106
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: 00458c1e08a11164ab93be4697e826bb, type: 3}
   maxLevel: 5
   _requiredAbility: 0
   bulletType: 6

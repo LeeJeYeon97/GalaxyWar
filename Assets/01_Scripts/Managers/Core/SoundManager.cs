@@ -57,69 +57,94 @@ public class SoundManager
         }
     }
 
-    // ★ String 대신 SoundID(Enum)를 받는 깔끔한 Play 함수
+    // ==========================================================
+    // [추가 1] AudioClip을 직접 받는 Play 함수
+    // (ScriptableObject나 인스펙터에서 직접 할당한 클립을 재생할 때 사용)
+    // ==========================================================
+    public void Play(AudioClip clip, Sound type = Sound.Sfx, float pitch = 1.0f, float baseVolume = 1.0f)
+    {
+        if (clip == null) return;
+
+        if (type == Sound.Bgm)
+        {
+            float finalVolume = baseVolume * _bgmVolumeMultiplier;
+            AudioSource audioSource = _audioSources[(int)Sound.Bgm];
+
+            // 1. 만약 지금 틀려는 브금이 이미 재생 중인 브금과 똑같다면 무시!
+            if (audioSource.isPlaying && audioSource.clip == clip)
+                return;
+
+            // 2. 이전에 겹쳐서 실행 중이던 볼륨 애니메이션이 있다면 강제 종료
+            audioSource.DOKill();
+
+            // 3. 부드러운 전환 로직 (Fade Out -> Change -> Fade In)
+            if (audioSource.isPlaying)
+            {
+                audioSource.DOFade(0f, 0.5f).OnComplete(() =>
+                {
+                    audioSource.clip = clip;
+                    audioSource.pitch = pitch;
+                    audioSource.Play();
+                    audioSource.DOFade(finalVolume, 0.5f);
+                });
+            }
+            else
+            {
+                audioSource.volume = 0f;
+                audioSource.clip = clip;
+                audioSource.pitch = pitch;
+                audioSource.Play();
+                audioSource.DOFade(finalVolume, 1.0f);
+            }
+        }
+        else // SFX
+        {
+            float finalVolume = baseVolume * _sfxVolumeMultiplier;
+            AudioSource audioSource = _audioSources[(int)Sound.Sfx];
+
+            audioSource.pitch = pitch;
+            audioSource.PlayOneShot(clip, finalVolume);
+        }
+    }
+
+    // ==========================================================
+    // [추가 2] String(경로)을 직접 받는 Play 함수
+    // ("SFX/Explosion" 처럼 리소스 폴더 경로를 통해 재생할 때 사용)
+    // ==========================================================
+    public void Play(string path, Sound type = Sound.Sfx, float pitch = 1.0f, float baseVolume = 1.0f)
+    {
+        if (string.IsNullOrEmpty(path)) return;
+
+        // Managers.Resource를 통해 AudioClip을 로드해옵니다. 
+        // (주의: Resource 로더의 캐싱 기능이 없다면, 자주 쓰이는 효과음은 매번 Load되어 무거울 수 있습니다.)
+        AudioClip clip = Managers.Resource.Load<AudioClip>(path);
+
+        if (clip != null)
+        {
+            // 로드에 성공했다면 위에 만들어둔 AudioClip 전용 Play 함수로 넘겨줍니다.
+            Play(clip, type, pitch, baseVolume);
+        }
+        else
+        {
+            Debug.LogWarning($"사운드 파일을 찾을 수 없습니다: {path}");
+        }
+    }
+
     public void Play(SoundID id, Sound type = Sound.Sfx, float pitch = 1.0f)
     {
         if (id == SoundID.None) return;
 
         if (_audioClips.TryGetValue(id, out AudioClip clip))
         {
-
+            // 딕셔너리에서 클립과 기본 볼륨을 찾은 뒤, AudioClip 전용 Play 함수로 토스!
             float baseVolume = _soundInfo[id].volume;
-
-            if (type == Sound.Bgm)
-            {
-                float finalVolume = baseVolume * _bgmVolumeMultiplier;
-                AudioSource audioSource = _audioSources[(int)Sound.Bgm];
-
-                // 1. 만약 지금 틀려는 브금이 이미 재생 중인 브금과 똑같다면 무시! (씬 전환 시 노래 끊김 방지)
-                if (audioSource.isPlaying && audioSource.clip == clip)
-                    return;
-
-                // 2. 이전에 겹쳐서 실행 중이던 볼륨 애니메이션이 있다면 강제 종료
-                audioSource.DOKill();
-
-                // 3. 부드러운 전환 로직 (Fade Out -> Change -> Fade In)
-                if (audioSource.isPlaying)
-                {
-                    // 기존 노래 볼륨을 0.5초 동안 0으로 스르륵 줄임
-                    audioSource.DOFade(0f, 0.5f).OnComplete(() =>
-                    {
-                        // 노래가 완전히 작아지면, 새로운 노래로 갈아끼우고 재생
-                        audioSource.clip = clip;
-                        audioSource.pitch = pitch;
-                        audioSource.Play();
-                        // 새로운 노래의 볼륨을 목표 볼륨(targetVolume)까지 0.5초 동안 스르륵 키움
-                        audioSource.DOFade(finalVolume, 0.5f); // 최종 볼륨 적용
-                    });
-                }
-                else
-                {
-                    // 기존에 재생 중인 노래가 없었다면 바로 노래 켜고 Fade In
-                    audioSource.volume = 0f;
-                    audioSource.clip = clip;
-                    audioSource.pitch = pitch;
-                    audioSource.Play();
-                    audioSource.DOFade(finalVolume, 1.0f); // 최종 볼륨 적용
-                }
-            }
-            else
-            {
-                // 효과음 최종 볼륨 적용
-                float finalVolume = baseVolume * _sfxVolumeMultiplier;
-                AudioSource audioSource = _audioSources[(int)Sound.Sfx];
-                audioSource.pitch = pitch;
-                audioSource.PlayOneShot(clip, finalVolume);
-            }
+            Play(clip, type, pitch, baseVolume);
         }
         else
         {
-            Debug.LogWarning($"사운드를 찾을 수 없습니다: {id}");
+            Debug.LogWarning($"사운드 ID를 찾을 수 없습니다: {id}");
         }
     }
-
-
-    // --- [설정 연동 함수들] ---
 
     // 배경음 볼륨 설정 (SettingManager에서 호출)
     public void SetBGMVolume(float volume)
@@ -159,11 +184,11 @@ public class SoundManager
 
     public void Clear()
     {
-        //foreach (AudioSource audioSource in _audioSources)
-        //{
-        //    audioSource.clip = null;
-        //    audioSource.Stop();
-        //}
+        foreach (AudioSource audioSource in _audioSources)
+        {
+            audioSource.clip = null;
+            audioSource.Stop();
+        }
         // 씬 전환 시 SO 데이터는 계속 쓸 거라면 _audioClips.Clear()는 안 하셔도 됩니다.
     }
 }

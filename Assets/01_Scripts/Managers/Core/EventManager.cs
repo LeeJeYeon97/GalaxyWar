@@ -44,6 +44,16 @@ public class EventManager
             action?.Invoke(data);
         }
     }
+    // 매개변수가 없는 이벤트를 위한 PostEvent
+    public void PostEvent(Define.ActionEvent eventType)
+    {
+        if (_events.TryGetValue(eventType, out Delegate del))
+        {
+            // Action<T>가 아닌 Action으로 캐스팅
+            Action action = del as Action;
+            action?.Invoke();
+        }
+    }
 
     // 매개변수가 없는 이벤트를 위한 Subscribe
     public void Subscribe(Define.ActionEvent eventType, Action listener)
@@ -65,14 +75,5 @@ public class EventManager
         }
     }
 
-    // 매개변수가 없는 이벤트를 위한 PostEvent
-    public void PostEvent(Define.ActionEvent eventType)
-    {
-        if (_events.TryGetValue(eventType, out Delegate del))
-        {
-            // Action<T>가 아닌 Action으로 캐스팅
-            Action action = del as Action;
-            action?.Invoke();
-        }
-    }
+    
 }

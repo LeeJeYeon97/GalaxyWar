@@ -16,14 +16,19 @@ public class GameManager : MonoBehaviour
     public PlayerController _player;
     public Spawner spawner;
 
-    public float gamePlayTime;
     public PhaseType currentPhase;
 
     public int reviveCount { get; set; } // 광고 봤을 때 사용가능한 살아나기 횟수
+    public int killCount { get; set; }
+    public float gamePlayTime;
+    public int currentSessionGold;
+    
     public void Init()
     {
         currentPhase = PhaseType.Phase1;
         gamePlayTime = 0f;
+        currentSessionGold = 0;
+        killCount = 0;
         ChangeGameState(GameState.Pause);
 
         // UI 생성
@@ -224,5 +229,8 @@ public class GameManager : MonoBehaviour
 
         Managers.UI.ShowPopupUI<UI_GameTestPopup>();
     }
-    
+    public void AddKillCount()
+    {
+        killCount++;
+    }
 }

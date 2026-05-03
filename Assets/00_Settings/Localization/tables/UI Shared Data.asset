@@ -131,6 +131,10 @@ MonoBehaviour:
     m_Key: PausePopup_Title
     m_Metadata:
       m_Items: []
+  - m_Id: 1401619523719168
+    m_Key: SettingPopup_LanguageText
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

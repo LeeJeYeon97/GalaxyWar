@@ -3,6 +3,7 @@ using NUnit.Framework;
 using System.Collections.Generic;
 using TMPro;
 using Unity.Services.CloudCode.GeneratedBindings.Project;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 using static Define;
@@ -35,9 +36,30 @@ public class UI_LobbyScene : UI_Scene
     private float _slideDistance = 1080f;
 
     private Buttons _currentTabButton = Buttons.Button_MainPanel;
+
+    public GameObject _LobbyObject;
+
     public override void Init()
     {
         base.Init();
+
+        // 1. 이 UI에 붙어있는 Canvas 컴포넌트를 가져옵니다.
+        Canvas canvas = GetComponent<Canvas>();
+        if (canvas != null)
+        {
+            // 2. 렌더 모드를 Screen Space - Camera로 변경합니다.
+            canvas.renderMode = RenderMode.ScreenSpaceCamera;
+
+            // 3. 현재 씬의 메인 카메라를 찾아서 캔버스에 꽂아줍니다.
+            // (Camera.main은 태그가 "MainCamera"로 설정된 카메라를 자동으로 찾아옵니다)
+            canvas.worldCamera = Camera.main;
+
+            // 4. 카메라와 UI 사이의 거리(Plane Distance)를 설정합니다.
+            // 이 공간 사이에 파티클이 들어가서 터져야 하므로 넉넉하게 10~50 정도를 줍니다.
+            canvas.planeDistance = 20f;
+        }
+        _LobbyObject = GameObject.Find("_LobbyObject");
+        _LobbyObject.SetActive(false);
 
         Bind<Button>(typeof(Buttons));
         Bind<GameObject>(typeof(Panels));
@@ -68,7 +90,7 @@ public class UI_LobbyScene : UI_Scene
         // 1. 이미 띄워져 있는 패널의 버튼을 또 누르면 무시!
         if (_currentPanel == targetPanel) return;
 
-        // ★ 2. 방향 계산하기 (핵심 로직)
+        //  2. 방향 계산하기 (핵심 로직)
         int currentIndex = (int)_currentPanel;
         int targetIndex = (int)targetPanel;
 
@@ -90,18 +112,31 @@ public class UI_LobbyScene : UI_Scene
 
         // --- [현재 패널 퇴장 연출] ---
         // 타겟이 오른쪽(1)에 있다면, 나는 왼쪽(-1920)으로 비켜줘야 합니다. (-_slideDistance * dir)
+
+        if(_currentPanel == Panels.UI_MainPanel)
+            _LobbyObject.SetActive(false);
+
         currentRect.DOAnchorPosX(-_slideDistance * dir, 0.4f)
             .SetEase(Ease.OutQuart)
-            .OnComplete(() => currentGo.SetActive(false));
+            .OnComplete(() =>
+            {
+                currentGo.SetActive(false);
+            });
 
         // --- [새로운 패널 입장 연출] ---
         targetGo.SetActive(true);
 
+        
         // 타겟이 오른쪽(1)에 있다면, 오른쪽(1920)에서 출발해서 0으로 들어와야 합니다.
         targetRect.anchoredPosition = new Vector2(_slideDistance * dir, 0f);
 
         targetRect.DOAnchorPosX(0f, 0.4f)
-            .SetEase(Ease.OutQuart);
+            .SetEase(Ease.OutQuart)
+            .OnComplete(()=>
+            { 
+                if (targetPanel == Panels.UI_MainPanel) 
+                    _LobbyObject.SetActive(true);
+            });
 
         // 하단 탭 버튼 크기 애니메이션 로직
         Buttons targetButton = GetTabButtonByPanel(targetPanel);
@@ -132,10 +167,11 @@ public class UI_LobbyScene : UI_Scene
             {
                 PanelList.Add(panelGo);
 
-                // ★ 초기 세팅: Main 패널 빼고는 다 끄고 시작!
+                // 초기 세팅: Main 패널 빼고는 다 끄고 시작!
                 if (panel == _currentPanel)
                 {
                     panelGo.SetActive(true);
+                    _LobbyObject.SetActive(true);
                     panelGo.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
                 }
                 else

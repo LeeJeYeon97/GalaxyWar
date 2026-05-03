@@ -10,6 +10,7 @@ public class HomingBulletBehavior : IBulletBehavior
 {
     public void OnHit(BulletController bullet, GameObject target)
     {
+        Managers.Sound.Play(Define.SoundID.Sfx_homing_Hit);
     }
 
     public void OnInit(BulletController bullet)
@@ -63,32 +64,55 @@ public class HomingBulletBehavior : IBulletBehavior
     private IEnumerator CoHomingRoutine(BulletController bullet)
     {
         MeteorController target = null;
-        
+        bool isLocked = false;
+
         // bullet의 Stat에서 속도 등을 가져오기 위해 캐스팅
         if (!(bullet.Stat is HomingBulletStat homingStat)) yield break;
 
-        // BulletController에 있는 Rigidbody2D 가져오기 (public 프로퍼티가 있다면 bullet.Rb 도 가능)
+        // BulletController에 있는 Rigidbody2D 가져오기
         Rigidbody2D rb = bullet.Rb;
 
-        yield return new WaitForSeconds(0.2f);
+        // =========================================================
+        // 핵심 변경 1: 기존의 0.2초 대기(WaitForSeconds) 삭제
+        // 생성되자마자 즉시 타겟을 찾습니다.
+        // =========================================================
+        target = FindClosestTarget(bullet); // 이Behavior 안에 있는 함수
 
-        // gameObject 대신 bullet.gameObject 사용!
+        // =========================================================
+        // 핵심 변경 2: 타겟이 있으면 즉시 그 방향으로 초기 속도 설정
+        // =========================================================
+        if (target != null)
+        {
+            isLocked = true;
+
+            // 타겟을 향한 초기 방향 계산
+            Vector2 directionToTarget = ((Vector2)target.transform.position - (Vector2)bullet.transform.position).normalized;
+
+            // Rigidbody 속도 즉시 설정 (HomingShot에서 준 기본 방향 무시)
+            rb.linearVelocity = directionToTarget * homingStat.speed.TotalValue;
+
+            // 이미지 회전 즉시 설정
+            float faceAngle = Mathf.Atan2(directionToTarget.y, directionToTarget.x) * Mathf.Rad2Deg;
+            bullet.transform.rotation = Quaternion.Euler(0, 0, faceAngle - 90f);
+        }
+        else
+        {
+            // 주변에 적이 아예 없으면 Shot()에서 준 기본 방향으로 날아갑니다.
+        }
+
         while (bullet != null && bullet.gameObject.activeSelf)
         {
-            //  코루틴 방어 로직: 일시정지나 광고 중이면 계산을 아예 건너뛰고 멍때립니다.
-            // (만약 Managers.Game.IsPaused 프로퍼티를 만드셨다면 if(Managers.Game.IsPaused) 로 쓰시면 훨씬 깔끔합니다!)
+            // 코루틴 방어 로직: 일시정지 중이면 대기
             if (Managers.Game.currentGameState == GameState.Pause)
             {
                 yield return null;
                 continue;
             }
 
-            if (target == null || !target.gameObject.activeSelf)
-            {
-                target = FindClosestTarget(bullet);
-            }
-
-            if (target != null)
+            // =========================================================
+            // 2. 유도 로직: 타겟이 '살아있을 때만' 방향을 꺾으며 쫓아갑니다.
+            // =========================================================
+            if (isLocked && target != null && target.gameObject.activeSelf)
             {
                 Vector2 directionToTarget = ((Vector2)target.transform.position - (Vector2)bullet.transform.position).normalized;
                 Vector2 currentVelocity = rb.linearVelocity;
@@ -96,7 +120,6 @@ public class HomingBulletBehavior : IBulletBehavior
                 float rotateAmount = Mathf.Clamp(angle, -homingStat.turnSpeed * Time.fixedDeltaTime, homingStat.turnSpeed * Time.fixedDeltaTime);
 
                 currentVelocity = Quaternion.Euler(0, 0, rotateAmount) * currentVelocity;
-
                 rb.linearVelocity = currentVelocity.normalized * homingStat.speed.TotalValue;
 
                 float faceAngle = Mathf.Atan2(rb.linearVelocity.y, rb.linearVelocity.x) * Mathf.Rad2Deg;

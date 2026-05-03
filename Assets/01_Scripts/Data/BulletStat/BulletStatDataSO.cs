@@ -6,6 +6,8 @@ using UnityEngine.Localization;
 [Serializable]
 public struct BaseBulletStatData
 {
+    public Sprite CardIcon;
+    public Sprite hudIcon;
     public float chance;
     public float damage;
     public float speed;

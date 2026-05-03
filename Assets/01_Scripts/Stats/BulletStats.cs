@@ -7,6 +7,8 @@ public abstract class BaseBulletStat
     public Define.BulletType type;
     public IBulletBehavior behavior;
     public GameObject originalPrefabs;
+    public Sprite CardIcon;
+    public Sprite hudIcon;
 
     public Stat speed = new Stat();
     public Stat damage = new Stat();
@@ -22,6 +24,9 @@ public abstract class BaseBulletStat
     {
         type = data.type;
         originalPrefabs = data.originalPrefab;
+
+        CardIcon = data.stats.CardIcon;
+        hudIcon = data.stats.hudIcon;
 
         speed.Init(data.stats.speed);
         damage.Init(data.stats.damage);
@@ -96,7 +101,6 @@ public class LightningBulletStat : BaseBulletStat
 
         if (data is LightningBulletStatDataSO da)
         {
-            // 3. È­¿°Åº Àü¿ë ½ºÅÈÀ» ¼¼ÆÃÇÕ´Ï´Ù!
             lightningDamageValue.Init(da.lightningStat.lightningDamageValue);
             lightningRange.Init(da.lightningRange);
             lightningCount.Init(da.lightningStat.lightningCount);
@@ -109,7 +113,7 @@ public class FireBulletStat : BaseBulletStat //»ó¼Ó!
 {
     public Stat fireRemainTime = new Stat();
     public Stat fireDamageValue = new Stat();
-
+    public Stat fireZoneDestroyTime = new Stat();
     // ºÎ¸ðÀÇ ¼¼ÆÃ ÇÔ¼ö¸¦ µ¤¾î¾º¿ó´Ï´Ù(override).
     public override void Init(BulletStatDataSO data)
     {
@@ -122,6 +126,7 @@ public class FireBulletStat : BaseBulletStat //»ó¼Ó!
             // 3. È­¿°Åº Àü¿ë ½ºÅÈÀ» ¼¼ÆÃÇÕ´Ï´Ù!
             fireRemainTime.Init(fireData.fireStat.fireRemainTime);
             fireDamageValue.Init(fireData.fireStat.fireDamageValue);
+            fireZoneDestroyTime.Init(fireData.fireStat.fireZoneDestroyTime);
         }
     }
 }

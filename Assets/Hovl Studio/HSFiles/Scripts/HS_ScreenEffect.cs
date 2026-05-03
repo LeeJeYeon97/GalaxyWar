@@ -30,39 +30,56 @@ namespace Hovl
             if (sourceCamera == null)
                 sourceCamera = Camera.main;
 
-            UpdateSize();
-        }
-
-        void Start()
-        {
-            // Only snap when entering Play mode
-            if (!Application.isPlaying)
-                return;
-
-            if (!snapOnStart)
-                return;
-
-            Camera cam = sourceCamera != null ? sourceCamera : Camera.main;
-            if (cam == null)
-                return;
-
-            // Place the effect directly in front of the camera at the configured distance
-            transform.position = cam.transform.position + cam.transform.forward * fallbackDistance;
-
-            // Optionally keep the effect facing the camera by matching rotation (comment out if not desired)
-            // transform.rotation = cam.transform.rotation;
-
-            // Parent to camera so the effect follows it
-            if (parentToCameraOnStart)
+            //  Start()에 있던 '카메라에 맞추는 로직'을 OnEnable로 가져왔습니다! (풀링 대응)
+            if (Application.isPlaying && snapOnStart)
             {
-                // Make the camera the parent and set a local offset forward at fallbackDistance
-                transform.SetParent(cam.transform, true);
-                transform.localPosition = Vector3.forward * fallbackDistance;
-                transform.localRotation = Quaternion.identity;
+                Camera cam = sourceCamera != null ? sourceCamera : Camera.main;
+                if (cam != null)
+                {
+                    transform.position = cam.transform.position + cam.transform.forward * fallbackDistance;
+
+                    if (parentToCameraOnStart)
+                    {
+                        transform.SetParent(cam.transform, true);
+                        transform.localPosition = Vector3.forward * fallbackDistance;
+                        transform.localRotation = Quaternion.identity;
+                    }
+                }
             }
 
             UpdateSize();
         }
+
+        //void Start()
+        //{
+        //    // Only snap when entering Play mode
+        //    if (!Application.isPlaying)
+        //        return;
+
+        //    if (!snapOnStart)
+        //        return;
+
+        //    Camera cam = sourceCamera != null ? sourceCamera : Camera.main;
+        //    if (cam == null)
+        //        return;
+
+        //    // Place the effect directly in front of the camera at the configured distance
+        //    transform.position = cam.transform.position + cam.transform.forward * fallbackDistance;
+
+        //    // Optionally keep the effect facing the camera by matching rotation (comment out if not desired)
+        //    // transform.rotation = cam.transform.rotation;
+
+        //    // Parent to camera so the effect follows it
+        //    if (parentToCameraOnStart)
+        //    {
+        //        // Make the camera the parent and set a local offset forward at fallbackDistance
+        //        transform.SetParent(cam.transform, true);
+        //        transform.localPosition = Vector3.forward * fallbackDistance;
+        //        transform.localRotation = Quaternion.identity;
+        //    }
+
+        //    UpdateSize();
+        //}
 
         void LateUpdate()
         {
