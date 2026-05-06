@@ -135,6 +135,38 @@ MonoBehaviour:
     m_Key: SettingPopup_LanguageText
     m_Metadata:
       m_Items: []
+  - m_Id: 6452062700326912
+    m_Key: GameOverPopup_ScoreText
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6452147148443648
+    m_Key: GameOverPopup_TimeText
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6452206539788288
+    m_Key: GameOverPopup_KillText
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6452246775746560
+    m_Key: GameOverPopup_GoldText
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6452400358576128
+    m_Key: GameOverPopup_Title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6544627181178880
+    m_Key: ProfilePopup_Record
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6544876058595328
+    m_Key: ProfilePopup_TopScore
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6544904554696704
+    m_Key: ProfilePopup_TopSurviveTime
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

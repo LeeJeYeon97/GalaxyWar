@@ -12,17 +12,22 @@ public class AuraBuffMeteorBehavior : IMeteorBehavior
 
     public void OnInit(MeteorController meteor)
     {
+        // 1. 혹시라도 예전에 돌던 코루틴이 남아있다면 끕니다.
         if (meteor.ActionCoroutine != null)
-            Managers.Coroutine?.StopCoroutine(meteor.ActionCoroutine);
+        {
+            meteor.StopCoroutine(meteor.ActionCoroutine);
+        }
 
-        meteor.ActionCoroutine = Managers.Coroutine.StartCoroutine(CoAuraPulse(meteor));
+        // 2. 핵심! 매니저가 아닌 'meteor' 본체에게 코루틴 실행을 맡깁니다.
+        meteor.ActionCoroutine = meteor.StartCoroutine(CoAuraPulse(meteor));
     }
 
     public void OnRelease(MeteorController meteor)
     {
+        // 풀에 반환되거나 비활성화될 때 코루틴을 안전하게 정지합니다.
         if (meteor.ActionCoroutine != null)
         {
-            Managers.Coroutine?.StopCoroutine(meteor.ActionCoroutine);
+            meteor.StopCoroutine(meteor.ActionCoroutine);
             meteor.ActionCoroutine = null;
         }
     }
@@ -54,7 +59,7 @@ public class AuraBuffMeteorBehavior : IMeteorBehavior
                 // 나 자신은 제외하고, 다른 운석들에게만 0.3초짜리 버프를 쏴줍니다!
                 if (otherMeteor != null && otherMeteor != meteor)
                 {
-                    otherMeteor.ReceiveAuraBuff(0.3f);
+                    otherMeteor.Status.ReceiveAuraBuff(0.3f);
                 }
             }
         }

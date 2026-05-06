@@ -30,12 +30,12 @@ public class IceBulletBehavior : IBulletBehavior
             if (stat.curLevel >= 5)
             {
                 // 스탯에 직접 접근(target.Stat.speed.SetForceZero)하지 않고, 함수를 통해 정중하게 명령만 내립니다.
-                meteor.ApplyFreeze(stat.freezeTime.TotalValue, stat.slowValue.TotalValue, stat.slowTime.TotalValue);
+                meteor.Status.ApplyFreeze(stat.freezeTime.TotalValue, stat.slowValue.TotalValue, stat.slowTime.TotalValue);
             }
             else
             {
                 // 50% 슬로우를 2초간 부여
-                meteor.ApplySlow(stat.slowValue.TotalValue, stat.slowTime.TotalValue);
+                meteor.Status.ApplySlow(stat.slowValue.TotalValue, stat.slowTime.TotalValue);
             }
         }
     }

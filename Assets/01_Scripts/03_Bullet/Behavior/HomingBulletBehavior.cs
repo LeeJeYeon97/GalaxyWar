@@ -47,7 +47,7 @@ public class HomingBulletBehavior : IBulletBehavior
         List<MeteorController> validMeteors = new List<MeteorController>();
         foreach (var m in meteors)
         {
-            if (m != null && m._hasEnteredView == true)
+            if (m != null && m.Movement._hasEnteredView == true)
             {
                 validMeteors.Add(m);
             }

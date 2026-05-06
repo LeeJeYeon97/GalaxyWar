@@ -12,4 +12,6 @@ public class ItemDataSO : ScriptableObject
 
     public int minValue;
     public int maxValue;
+
+    public AudioClip getSoundClip;
 }

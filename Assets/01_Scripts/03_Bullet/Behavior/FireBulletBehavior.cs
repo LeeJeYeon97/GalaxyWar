@@ -29,7 +29,7 @@ public class FireBulletBehavior : IBulletBehavior
             float totalBurnDamage = stat.damage.TotalValue * stat.fireDamageValue.TotalValue;
 
             float actualTickDamage = totalBurnDamage * tickTime;
-            meteor.ApplyBurn(actualTickDamage, stat.fireRemainTime.TotalValue, tickTime);
+            meteor.Status.ApplyBurn(actualTickDamage, stat.fireRemainTime.TotalValue, tickTime);
         }
     }
 

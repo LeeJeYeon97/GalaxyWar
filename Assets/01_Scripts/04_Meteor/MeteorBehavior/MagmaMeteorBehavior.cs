@@ -6,13 +6,15 @@ public class MagmaMeteorBehavior : IMeteorBehavior
 {
     public void OnInit(MeteorController meteor)
     {
-        // 뇌 안에 코루틴을 저장하지 않고, 메테오 몸통의 변수에 저장시킵니다!
+        // 1. 혹시라도 예전에 돌던 코루틴이 남아있다면 끕니다.
         if (meteor.ActionCoroutine != null)
-            Managers.Coroutine?.StopCoroutine(meteor.ActionCoroutine);
+        {
+            meteor.StopCoroutine(meteor.ActionCoroutine);
+        }
 
-        meteor.ActionCoroutine = Managers.Coroutine.StartCoroutine(CoDropMagma(meteor));
+        // 2. 핵심! 매니저가 아닌 'meteor' 본체에게 코루틴 실행을 맡깁니다.
+        meteor.ActionCoroutine = meteor.StartCoroutine(CoDropMagma(meteor));
     }
-
     private IEnumerator CoDropMagma(MeteorController meteor)
     {
         //  1. 생명주기 안전장치: 운석이 씬에 살아있을 때만 무한 반복합니다.
@@ -28,7 +30,8 @@ public class MagmaMeteorBehavior : IMeteorBehavior
             }
 
             // 안전 검사 통과 시 마그마 소환!
-            GameObject go = Managers.Resource.Instantiate("Object/MagmaPuddle");
+            GameObject magma = meteor.Stat.magmaPuddle;
+            GameObject go = Managers.Resource.Instantiate(magma);
             if (go != null)
             {
                 MagmaPuddle puddle = go.GetComponent<MagmaPuddle>();
@@ -46,11 +49,10 @@ public class MagmaMeteorBehavior : IMeteorBehavior
 
     public void OnRelease(MeteorController meteor)
     {
-
-        // 몸통에 저장된 코루틴을 꺼줍니다.
+        // 풀에 반환되거나 비활성화될 때 코루틴을 안전하게 정지합니다.
         if (meteor.ActionCoroutine != null)
         {
-            Managers.Coroutine?.StopCoroutine(meteor.ActionCoroutine);
+            meteor.StopCoroutine(meteor.ActionCoroutine);
             meteor.ActionCoroutine = null;
         }
     }

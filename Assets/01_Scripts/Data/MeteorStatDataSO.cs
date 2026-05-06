@@ -40,6 +40,9 @@ public class MeteorStatDataSO : ScriptableObject
     [Header("Sludge Meteor Setting")]
     public GameObject sludgePuddle;
 
+    [Header("Fracture Meteor Setting")]
+    public GameObject fragmentMeteor;
+
     [Header("Aura Meteor Setting")]
     // 오라버프
     public float auraRadius;

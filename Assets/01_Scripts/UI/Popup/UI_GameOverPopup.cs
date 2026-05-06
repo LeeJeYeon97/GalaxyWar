@@ -17,6 +17,10 @@ public class UI_GameOverPopup : UI_Popup
     enum Texts
     {
         RewardCountText,
+        Text_Score,
+        Text_Time,
+        Text_KillCount,
+        Text_Gold
     }
 
     private Button _btnReviveAd;
@@ -37,6 +41,7 @@ public class UI_GameOverPopup : UI_Popup
         _btnReviveAd = GetButton((int)Buttons.Btn_RewardAD);
         _btnReviveAd.onClick.AddListener(OnClickRewardADButton);
 
+        RewardTextSetting();
         RefreshRewardCountText();
     }
     //유니티 눈치 안 보고 내가 원할 때 직접 번역본을 가져오는 마법의 함수!
@@ -76,6 +81,21 @@ public class UI_GameOverPopup : UI_Popup
         }
     }
 
+    private void RewardTextSetting()
+    {
+        GetTMP((int)Texts.Text_Score).text = Managers.Level.Score.ToString("N0");
+
+        float time = Managers.Game.gamePlayTime;
+        int minutes = Mathf.FloorToInt(time / 60f); // 60으로 나눠서 '분' 계산 (내림)
+        int seconds = Mathf.FloorToInt(time % 60f); // 60으로 나눈 나머지로 '초' 계산
+        // "00:00" 형식으로 출력 (예: 12:05)
+        GetTMP((int)Texts.Text_Time).text = $"{minutes:00}:{seconds:00}";
+
+        GetTMP((int)Texts.Text_KillCount).text = $"{Managers.Game.killCount.ToString("N0")} Kill";
+
+        // 4. 골드 (천 단위 콤마 추가)
+        GetTMP((int)Texts.Text_Gold).text = $"{Managers.Game.currentSessionGold.ToString("N0")} G";
+    }
     private async void OnClickRestartButton()
     {
         // 1. 중복 클릭 방지를 위해 버튼 비활성화
@@ -84,8 +104,14 @@ public class UI_GameOverPopup : UI_Popup
         // 2. 서버 데이터 저장 완료까지 대기
         await SaveSessionData();
 
+        // 로비로 돌아가기
         // 현재 씬(GameScene)을 다시 로드! (가장 깔끔한 초기화)
-        Managers.Scene.LoadScene(Define.Scene.GameScene);
+        Managers.AD.ShowInterstitialAd(() =>
+        {
+            // 이 중괄호 안의 코드는 유저가 광고를 [X] 버튼으로 닫거나, 
+            // 쿨타임 등으로 광고가 스킵되었을 때만 실행됩니다!
+            Managers.Scene.LoadScene(Define.Scene.GameScene);
+        });
     }
     private async void OnClickQuitLobbyButton()
     {
@@ -97,9 +123,12 @@ public class UI_GameOverPopup : UI_Popup
 
         // 로비로 돌아가기
         // 현재 씬(GameScene)을 다시 로드! (가장 깔끔한 초기화)
-        Managers.AD.ShowInterstitialAd();
-
-        Managers.Scene.LoadScene(Define.Scene.LobbyScene);
+        Managers.AD.ShowInterstitialAd(() =>
+        {
+            // 이 중괄호 안의 코드는 유저가 광고를 [X] 버튼으로 닫거나, 
+            // 쿨타임 등으로 광고가 스킵되었을 때만 실행됩니다!
+            Managers.Scene.LoadScene(Define.Scene.LobbyScene);
+        });
     }
     private void OnClickRewardADButton()
     {

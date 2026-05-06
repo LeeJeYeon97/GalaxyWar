@@ -21,11 +21,14 @@ MonoBehaviour:
   Damage: 10
   Score: 100
   Exp: 10
-  spawnPhase: 0
+  spawnPhase: 1
   dropTable:
-  - itemType: 3
+  - itemType: 2
     dropRate: 0.02
+  - itemType: 3
+    dropRate: 1
   magmaTick: 0
   magmaPuddle: {fileID: 0}
   sludgePuddle: {fileID: 0}
+  fragmentMeteor: {fileID: 0}
   auraRadius: 0

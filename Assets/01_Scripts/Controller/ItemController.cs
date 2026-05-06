@@ -20,11 +20,10 @@ public class ItemController : MonoBehaviour
         _rb = GetComponent<Rigidbody2D>();
     }
 
-    public void Init(Vector2 pos, ItemDataSO data)
+    public void Init(Vector2 pos, ItemDataSO data, int customValue = 0)
     {
         // 데이터 설정
         if (data == null) return;
-
 
         _data = data;
         // 1.위치 설정
@@ -32,7 +31,14 @@ public class ItemController : MonoBehaviour
 
         _hasEnteredView = false;
 
-        value = Random.Range(data.minValue, data.maxValue);
+        if (customValue != 0)
+        {
+            value = customValue;
+        }
+        else
+        {
+            value = Random.Range(data.minValue, data.maxValue);
+        }
 
         // 메테오가 떨구는게 아닌 맵에 랜덤으로 스폰되는 아이템의 경우
         if (data.isDrop == false)
@@ -68,10 +74,14 @@ public class ItemController : MonoBehaviour
             case Define.ItemType.Gold:
                 Managers.Game.currentSessionGold += value;
                 break;
+            case Define.ItemType.Exp:
+                Managers.Level.AddExp(value);
+                break;
             default:
                 break;
         }
 
+        Managers.Sound.Play(_data.getSoundClip);
         Managers.Resource.Destroy(this.gameObject);
     }
 

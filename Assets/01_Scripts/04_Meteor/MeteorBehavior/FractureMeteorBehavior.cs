@@ -11,12 +11,13 @@ public class FractureMeteorBehavior : IMeteorBehavior
 
         for (int i = 0; i < fragmentCount; i++)
         {
-            ////MeteorController fragment = Managers.Pool.Get(meteor.stat);
-            //if (fragment != null)
-            //{
-            //    // 현재 죽은 위치에서, Fragment 타입으로, 사방으로 튀게 Init!
-            //    fragment.Init(meteor.transform.position, Managers.Stat.GetMeteorStat(MeteorType.FragmentMeteor));
-            //}
+            GameObject go = Managers.Resource.Instantiate(meteor.Stat.fragment);
+            if (go != null)
+            {
+                MeteorController fragment = go.GetComponent<MeteorController>();
+                // 현재 죽은 위치에서, Fragment 타입으로, 사방으로 튀게 Init!
+                fragment.Init(meteor.transform.position, Managers.Stat.GetMeteorStat(MeteorType.FragmentMeteor));
+            }
         }
     }
 

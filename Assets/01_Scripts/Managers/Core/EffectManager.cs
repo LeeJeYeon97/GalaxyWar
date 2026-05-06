@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using static Define;
 
-public class EffectManager : MonoBehaviour
+public class EffectManager
 {
     // Dictionary로 빠른 검색을 지원합니다.
     private Dictionary<EffectType, GameObject> _effectDict = new Dictionary<EffectType, GameObject>();

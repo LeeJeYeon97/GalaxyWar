@@ -92,7 +92,7 @@ public class AdsManager
 
     // 전면 광고 쿨타임 (예: 180초 = 3분)
     private float _rewardAdCooldownSeconds = 5f;
-    private float _interstitialAdCooldownSeconds = 180f;
+    private float _interstitialAdCooldownSeconds = 180f; // 10분
 
     // 레벨플레이 광고 객체
     private LevelPlayBannerAd bannerAd;
@@ -106,6 +106,8 @@ public class AdsManager
     public event Action<bool> AdSuccessfullyCompleted;
     public event Action<bool> AdAvailable;
 
+    // 전면 광고가 끝났을 때 실행할 함수를 담아둘 변수 추가
+    private Action _onInterstitialAdClosedCallback;
     // 1. 현재 실행해야 할 콜백 함수를 저장할 변수 추가
     private Action<bool> _onCurrentAdCompletedCallback;
 
@@ -258,29 +260,38 @@ public class AdsManager
         interstitialAd.LoadAd();
         Debug.Log("interstitalAd Loaded");
     }
-    public void ShowInterstitialAd()
+    // 2. Action 콜백을 받을 수 있도록 매개변수 추가
+    public void ShowInterstitialAd(Action onCompleted = null)
     {
-        // 1. 결제 유저면 아예 광고 로직 자체를 무시!
+        // 1. 결제 유저면 광고 없이 즉시 다음 할 일(씬 로드 등) 실행!
         if (IsAdsRemoved)
         {
             Debug.Log("광고 제거 결제 유저이므로 전면 광고를 스킵합니다.");
+            onCompleted?.Invoke();
             return;
         }
 
-        // 1. 마지막으로 광고를 본 지 180초가 지났는지 확인
+        // 2. 쿨타임 체크
         if (Time.time - _lastInterstitialAdTime >= _interstitialAdCooldownSeconds)
         {
             if (interstitialAd.IsAdReady())
             {
+                // 광고가 준비되었다면, 끝났을 때 실행할 함수를 저장하고 띄움
+                _onInterstitialAdClosedCallback = onCompleted;
                 interstitialAd.ShowAd();
-                // 2. 광고를 띄웠으니 쿨타임 초기화
                 _lastInterstitialAdTime = Time.time;
+            }
+            else
+            {
+                // 광고 준비가 안 됐으면, 막히지 않게 즉시 다음 할 일 실행
+                Debug.LogWarning("전면 광고가 아직 로드되지 않아 스킵합니다.");
+                onCompleted?.Invoke();
             }
         }
         else
         {
-            Debug.Log($"아직 쿨타임입니다. 남은 시간: {_interstitialAdCooldownSeconds - (Time.time - _lastInterstitialAdTime)}초");
-            // 쿨타임 중이면 광고 없이 그냥 조용히 넘어갑니다!
+            Debug.Log($"아직 쿨타임입니다. 광고 없이 넘어갑니다.");
+            onCompleted?.Invoke();
         }
     }
     void InterstitialOnAdLoadedEvent(LevelPlayAdInfo adInfo) { }
@@ -289,13 +300,24 @@ public class AdsManager
         LoadInterstitialAd();
     }
     void InterstitialOnAdDisplayedEvent(LevelPlayAdInfo adInfo) { }
-    void InterstitialOnAdDisplayFailedEvent(LevelPlayAdInfo adInfo, LevelPlayAdError error) { }
-    void InterstitialOnAdClickedEvent(LevelPlayAdInfo adInfo) { }
-    async void InterstitialOnAdClosedEvent(LevelPlayAdInfo adInfo) 
+    void InterstitialOnAdDisplayFailedEvent(LevelPlayAdInfo adInfo, LevelPlayAdError error) 
     {
-        Debug.LogWarning("No ads to show, will retry");
-        await Task.Delay(5000); // 5000밀리초(5초) 대기
-        LoadInterstitialAd(); 
+        Debug.LogError($"전면 광고 표시 실패: {error}");
+        // 3. 표시를 실패했을 때도 게임이 멈추면 안 되므로 콜백 실행
+        _onInterstitialAdClosedCallback?.Invoke();
+        _onInterstitialAdClosedCallback = null;
+    }
+    void InterstitialOnAdClickedEvent(LevelPlayAdInfo adInfo) { }
+    void InterstitialOnAdClosedEvent(LevelPlayAdInfo adInfo)
+    {
+        Debug.Log("전면 광고를 닫았습니다.");
+
+        // 다음을 위해 미리 로드
+        LoadInterstitialAd();
+
+        // 아까 저장해둔 콜백(씬 로드)을 여기서 실행!
+        _onInterstitialAdClosedCallback?.Invoke();
+        _onInterstitialAdClosedCallback = null;
     }
     void InterstitialOnAdInfoChangedEvent(LevelPlayAdInfo adInfo) { }
     #endregion

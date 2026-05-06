@@ -54,6 +54,9 @@ GameObject:
   - component: {fileID: 1934906739772371106}
   - component: {fileID: 7992666610410687526}
   - component: {fileID: 1188643473008936867}
+  - component: {fileID: -6167231940959947004}
+  - component: {fileID: -4536323944372638811}
+  - component: {fileID: 2581412912446768269}
   m_Layer: 7
   m_Name: NormalMeteor
   m_TagString: Meteor
@@ -89,26 +92,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e8873b1b8e7fb04dae63d44e5c8c7fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MeteorController
-  _hpBar: {fileID: 0}
   _currentHp: 0
   _maxHp: 0
-  _rb: {fileID: 0}
-  _hasEnteredView: 0
-  currentSpeed:
-    _baseValue: 0
-    _additionalValue: 0
-    _multiplier: 1
-  visuals:
-  - {fileID: 8375661037851616558}
-  - {fileID: 4564234206967637228}
-  - {fileID: 4723833928400860946}
-  - {fileID: 2814914106470192210}
-  - {fileID: 2528914863780790706}
-  - {fileID: 3288021624734204046}
-  - {fileID: 2434311697657977621}
-  - {fileID: 2187433539917224327}
-  - {fileID: 4483476929513622281}
-  - {fileID: 8547345024689767124}
+  _showGizmo: 0
+  _gizmoRadius: 3
+  _gizmoColor: {r: 0, g: 1, b: 0, a: 1}
 --- !u!50 &1934906739772371106
 Rigidbody2D:
   serializedVersion: 5
@@ -185,6 +173,59 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Poolable
   IsUsing: 0
+--- !u!114 &-6167231940959947004
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7634854350376040158}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ffc48ac81d36a29489a65722ad9683da, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MeteorMovement
+  currentSpeed:
+    _baseValue: 0
+    _additionalValue: 0
+    _multiplier: 1
+  _hasEnteredView: 0
+--- !u!114 &-4536323944372638811
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7634854350376040158}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aaa49deacd67842459894086255a0a9a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MeteorStatus
+  auraBuffEffectPrefab: {fileID: 7185266531788639084, guid: 5380baab2bde6fc4badbce3ca08e5c1d, type: 3}
+--- !u!114 &2581412912446768269
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7634854350376040158}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ca2b04bdcfad444a8c14138775b5b8a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MeteorVisual
+  visuals:
+  - {fileID: 8375661037851616558}
+  - {fileID: 4564234206967637228}
+  - {fileID: 4723833928400860946}
+  - {fileID: 2814914106470192210}
+  - {fileID: 2528914863780790706}
+  - {fileID: 3288021624734204046}
+  - {fileID: 2434311697657977621}
+  - {fileID: 2187433539917224327}
+  - {fileID: 4483476929513622281}
+  - {fileID: 8547345024689767124}
 --- !u!1001 &1634626565136103176
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -266,7 +307,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2754276747828594168, guid: d93f07757bb75c24183b7443aa273d83, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3274953345621647170, guid: d93f07757bb75c24183b7443aa273d83, type: 3}
       propertyPath: m_LocalPosition.x
@@ -377,7 +418,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8067951697155118292, guid: d65002d55bb96134090b14e0a7bf4f2e, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -448,7 +489,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8928819106035574441, guid: 5035fb2106ead11478d4b0fcff83cf6e, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -479,7 +520,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8200313019648717671, guid: 9b61868f1326ad3479f0ea33c71af3eb, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8828899778207967709, guid: 9b61868f1326ad3479f0ea33c71af3eb, type: 3}
       propertyPath: m_LocalPosition.x
@@ -550,7 +591,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4698508154162016810, guid: d862618bff1993249ae9a90d107b9d54, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5368190602115164304, guid: d862618bff1993249ae9a90d107b9d54, type: 3}
       propertyPath: m_LocalPosition.x
@@ -661,7 +702,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5758300077210860871, guid: b35a013490cf90d4c97d735ed8cb753c, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -732,7 +773,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5623106726090643649, guid: 0811c187884e57249a08199a32f30be9, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -763,7 +804,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7460675121194171873, guid: e6af31a04e90ca14e9069510940dc4a9, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7836954747238033243, guid: e6af31a04e90ca14e9069510940dc4a9, type: 3}
       propertyPath: m_LocalPosition.x
@@ -874,7 +915,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6486478992878732598, guid: f154bad35f10d5640b5b46343d116bfd, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

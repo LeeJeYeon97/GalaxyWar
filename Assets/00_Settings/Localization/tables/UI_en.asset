@@ -138,6 +138,38 @@ MonoBehaviour:
     m_Localized: English
     m_Metadata:
       m_Items: []
+  - m_Id: 6452206539788288
+    m_Localized: Kill
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6452246775746560
+    m_Localized: Gold
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6452147148443648
+    m_Localized: Survive Time
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6452062700326912
+    m_Localized: Score
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6452400358576128
+    m_Localized: RESULT
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6544627181178880
+    m_Localized: TOP RECORD
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6544876058595328
+    m_Localized: Top Score
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6544904554696704
+    m_Localized: Top SurviveTime
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

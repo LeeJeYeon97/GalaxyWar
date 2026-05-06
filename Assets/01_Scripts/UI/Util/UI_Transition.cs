@@ -50,4 +50,12 @@ public class UI_Transition : MonoBehaviour
                 onComplete.Invoke();
         });
     }
+    private void OnDestroy()
+    {
+        // 이 스크립트(또는 이미지)에 걸려있는 모든 DOTween 애니메이션을 즉시 정지 및 삭제
+        fadeImage.DOKill();
+
+        // 또는 transform 기준으로 걸려있는 모든 트윈을 끌 수도 있습니다.
+        // transform.DOKill();
+    }
 }

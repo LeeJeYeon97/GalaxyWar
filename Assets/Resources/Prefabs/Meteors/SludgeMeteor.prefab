@@ -45,6 +45,9 @@ GameObject:
   - component: {fileID: 857427975361777009}
   - component: {fileID: 3613663912094172107}
   - component: {fileID: 2362222744754818111}
+  - component: {fileID: 8771793930337793301}
+  - component: {fileID: -6748349336695377044}
+  - component: {fileID: 7868911789033399860}
   m_Layer: 7
   m_Name: SludgeMeteor
   m_TagString: Meteor
@@ -82,15 +85,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MeteorController
   _currentHp: 0
   _maxHp: 0
-  _rb: {fileID: 0}
-  _hasEnteredView: 0
-  currentSpeed:
-    _baseValue: 0
-    _additionalValue: 0
-    _multiplier: 1
-  visuals:
-  - {fileID: 3403830244813003850}
-  _meshRenderer: {fileID: 0}
+  _showGizmo: 0
+  _gizmoRadius: 3
+  _gizmoColor: {r: 0, g: 1, b: 0, a: 1}
 --- !u!50 &857427975361777009
 Rigidbody2D:
   serializedVersion: 5
@@ -167,6 +164,50 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Poolable
   IsUsing: 0
+--- !u!114 &8771793930337793301
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6013582365609022052}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ffc48ac81d36a29489a65722ad9683da, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MeteorMovement
+  currentSpeed:
+    _baseValue: 0
+    _additionalValue: 0
+    _multiplier: 1
+  _hasEnteredView: 0
+--- !u!114 &-6748349336695377044
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6013582365609022052}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aaa49deacd67842459894086255a0a9a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MeteorStatus
+  auraBuffEffectPrefab: {fileID: 7185266531788639084, guid: 5380baab2bde6fc4badbce3ca08e5c1d, type: 3}
+--- !u!114 &7868911789033399860
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6013582365609022052}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ca2b04bdcfad444a8c14138775b5b8a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MeteorVisual
+  visuals:
+  - {fileID: 3403830244813003850}
 --- !u!1001 &843948228567521787
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -178,6 +219,10 @@ PrefabInstance:
     - target: {fileID: 2633088333782779313, guid: c35847f289e77804fa89fb74c0bb71d2, type: 3}
       propertyPath: m_Name
       value: Planet_PurpleRock
+      objectReference: {fileID: 0}
+    - target: {fileID: 2633088333782779313, guid: c35847f289e77804fa89fb74c0bb71d2, type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 3441114393363439371, guid: c35847f289e77804fa89fb74c0bb71d2, type: 3}
       propertyPath: m_LocalPosition.x
@@ -219,8 +264,7 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 1114166953, guid: c35847f289e77804fa89fb74c0bb71d2, type: 3}
+    m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []

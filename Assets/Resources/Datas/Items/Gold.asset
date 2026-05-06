@@ -12,9 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 188c54a4195879741a7c060ae727c669, type: 3}
   m_Name: Gold
   m_EditorClassIdentifier: Assembly-CSharp::ItemDataSO
-  type: 3
+  type: 2
   itemName: "\uACE8\uB4DC"
   isDrop: 1
   originalPrefab: {fileID: 6888800886511787142, guid: 060181c330b982546aa8cb3d3b21a27b, type: 3}
   minValue: 1
   maxValue: 5
+  getSoundClip: {fileID: 8300000, guid: 74b38292e944b3a4c9e93fce6b826880, type: 3}

@@ -201,8 +201,8 @@ public class Define
     {
         RecoveryHp,             // HP 회복
         RecoveryBurst,          // 버스트 게이지 회복
-        Exp,
         Gold,
+        Exp,
     }
     public enum DebuffType
     {

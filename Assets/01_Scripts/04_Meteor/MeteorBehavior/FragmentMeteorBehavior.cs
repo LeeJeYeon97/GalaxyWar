@@ -10,7 +10,7 @@ public class FragmentMeteorBehavior : IMeteorBehavior
     {
         Vector2 scatterDir = UnityEngine.Random.insideUnitCircle.normalized;
         float speed = UnityEngine.Random.Range(meteor.Stat.MinSpeed.TotalValue, meteor.Stat.MaxSpeed.TotalValue);
-        meteor._rb.linearVelocity = scatterDir * speed;
+        meteor.Movement._rb.linearVelocity = scatterDir * speed;
     }
 
     public void OnRelease(MeteorController meteor)

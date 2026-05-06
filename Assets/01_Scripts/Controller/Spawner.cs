@@ -119,7 +119,7 @@ public class Spawner : MonoBehaviour
         return targetInterval;
     }
 
-    public void SpawnDropItem(Vector3 position, ItemType type)
+    public void SpawnDropItem(Vector3 position, ItemType type, int customValue = 0)
     {
         if(Managers.Data.ItemDataList.TryGetValue(type, out var itemData))
         {
@@ -141,7 +141,7 @@ public class Spawner : MonoBehaviour
             return;
         }
 
-        item.Init(position, itemData);
+        item.Init(position, itemData, customValue);
     }
 
     //IEnumerator CoSpawnItem()

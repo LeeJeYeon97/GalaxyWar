@@ -29,6 +29,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children:
+  - {fileID: 3434949963269584979}
   - {fileID: 737714584907026769}
   m_Father: {fileID: 2302975497856975219}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -41,10 +42,13 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2302975497856975219}
-  - component: {fileID: 4176808917851483581}
   - component: {fileID: 8249477486588867892}
   - component: {fileID: 273716099057414102}
   - component: {fileID: 1707361187095468963}
+  - component: {fileID: 4176808917851483581}
+  - component: {fileID: 2855474578959593384}
+  - component: {fileID: 5603657356391572754}
+  - component: {fileID: -2028907524862791351}
   m_Layer: 7
   m_Name: AuraBuffMeteor
   m_TagString: Meteor
@@ -68,29 +72,6 @@ Transform:
   - {fileID: 2550096139020752225}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &4176808917851483581
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5089178002345023113}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0e8873b1b8e7fb04dae63d44e5c8c7fd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::MeteorController
-  _currentHp: 0
-  _maxHp: 0
-  _rb: {fileID: 0}
-  _hasEnteredView: 0
-  currentSpeed:
-    _baseValue: 0
-    _additionalValue: 0
-    _multiplier: 1
-  visuals:
-  - {fileID: 105609385601027051}
-  _meshRenderer: {fileID: 0}
 --- !u!50 &8249477486588867892
 Rigidbody2D:
   serializedVersion: 5
@@ -167,6 +148,129 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Poolable
   IsUsing: 0
+--- !u!114 &4176808917851483581
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5089178002345023113}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0e8873b1b8e7fb04dae63d44e5c8c7fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MeteorController
+  _currentHp: 0
+  _maxHp: 0
+  _showGizmo: 0
+  _gizmoRadius: 2
+  _gizmoColor: {r: 0, g: 1, b: 0, a: 1}
+--- !u!114 &2855474578959593384
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5089178002345023113}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ffc48ac81d36a29489a65722ad9683da, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MeteorMovement
+  currentSpeed:
+    _baseValue: 0
+    _additionalValue: 0
+    _multiplier: 1
+  _hasEnteredView: 0
+--- !u!114 &5603657356391572754
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5089178002345023113}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aaa49deacd67842459894086255a0a9a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MeteorStatus
+  auraBuffEffectPrefab: {fileID: 7185266531788639084, guid: 5380baab2bde6fc4badbce3ca08e5c1d, type: 3}
+--- !u!114 &-2028907524862791351
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5089178002345023113}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ca2b04bdcfad444a8c14138775b5b8a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MeteorVisual
+  visuals:
+  - {fileID: 105609385601027051}
+--- !u!1001 &3434949963269448407
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 2550096139020752225}
+    m_Modifications:
+    - target: {fileID: 100004, guid: 869a6fc2dd1fce44880c4802fabda775, type: 3}
+      propertyPath: m_Name
+      value: HolyEffect3
+      objectReference: {fileID: 0}
+    - target: {fileID: 400004, guid: 869a6fc2dd1fce44880c4802fabda775, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400004, guid: 869a6fc2dd1fce44880c4802fabda775, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400004, guid: 869a6fc2dd1fce44880c4802fabda775, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -6
+      objectReference: {fileID: 0}
+    - target: {fileID: 400004, guid: 869a6fc2dd1fce44880c4802fabda775, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 400004, guid: 869a6fc2dd1fce44880c4802fabda775, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400004, guid: 869a6fc2dd1fce44880c4802fabda775, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400004, guid: 869a6fc2dd1fce44880c4802fabda775, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400004, guid: 869a6fc2dd1fce44880c4802fabda775, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400004, guid: 869a6fc2dd1fce44880c4802fabda775, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400004, guid: 869a6fc2dd1fce44880c4802fabda775, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 869a6fc2dd1fce44880c4802fabda775, type: 3}
+--- !u!4 &3434949963269584979 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 400004, guid: 869a6fc2dd1fce44880c4802fabda775, type: 3}
+  m_PrefabInstance: {fileID: 3434949963269448407}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &8487893655905787880
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -178,6 +282,10 @@ PrefabInstance:
     - target: {fileID: 8411665695443260419, guid: 9defef7cbe9160c449f243047cf39e0a, type: 3}
       propertyPath: m_Name
       value: Planet_CosmicSphere_Light
+      objectReference: {fileID: 0}
+    - target: {fileID: 8411665695443260419, guid: 9defef7cbe9160c449f243047cf39e0a, type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 9221100233374322361, guid: 9defef7cbe9160c449f243047cf39e0a, type: 3}
       propertyPath: m_LocalPosition.x

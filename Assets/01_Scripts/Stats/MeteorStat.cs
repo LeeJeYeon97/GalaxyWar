@@ -31,7 +31,7 @@ public class MeteorStat
 
     public GameObject sludgePuddle;
     public GameObject magmaPuddle;
-
+    public GameObject fragment;
 
     public void Init(MeteorStatDataSO data)
     {
@@ -54,7 +54,7 @@ public class MeteorStat
 
         magmaPuddle = data.magmaPuddle;
         sludgePuddle = data.sludgePuddle;
-
+        fragment = data.fragmentMeteor;
         // ... Ω∫≈» √ ±‚»≠ ...
         Behavior = CreateBehavior(data);
     }

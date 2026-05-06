@@ -22,7 +22,9 @@ MonoBehaviour:
   Score: 400
   Exp: 40
   spawnPhase: 3
+  dropTable: []
   magmaTick: 0
   magmaPuddle: {fileID: 0}
   sludgePuddle: {fileID: 0}
+  fragmentMeteor: {fileID: 7634854350376040158, guid: 1e5eb75550d976748ae4687059bad26c, type: 3}
   auraRadius: 0

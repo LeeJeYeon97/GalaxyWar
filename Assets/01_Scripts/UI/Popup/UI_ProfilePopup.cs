@@ -15,6 +15,8 @@ public class UI_ProfilePopup : UI_Popup
     {
         Text_NickName,
         Text_PlayerID,
+        Text_Score,
+        Text_Time,
     }
     public override void Init()
     {
@@ -30,7 +32,9 @@ public class UI_ProfilePopup : UI_Popup
 
         TextSetting();
         RefreshLinkButton();
+
     }
+    
     private void TextSetting()
     {
         // 1. 유니티 인증 서비스에서 정보 가져오기
@@ -50,6 +54,17 @@ public class UI_ProfilePopup : UI_Popup
 
         // 3. PlayerID 텍스트 설정
         GetTMP((int)Texts.Text_PlayerID).text = $"{playerId}";
+
+
+        // 4. 최고 점수 설정
+        GetTMP((int)Texts.Text_Score).text = $"{Managers.PlayerData.PlayerDataLocal.MaxScore}";
+
+
+        float time = Managers.PlayerData.PlayerDataLocal.MaxSurviveTime;
+        int minutes = Mathf.FloorToInt(time / 60f); // 60으로 나눠서 '분' 계산 (내림)
+        int seconds = Mathf.FloorToInt(time % 60f); // 60으로 나눈 나머지로 '초' 계산
+        // "00:00" 형식으로 출력 (예: 12:05)
+        GetTMP((int)Texts.Text_Time).text = $"{minutes:00}:{seconds:00}";
     }
 
     //구글 연동 상태를 체크하고 버튼 UI를 업데이트하는 함수

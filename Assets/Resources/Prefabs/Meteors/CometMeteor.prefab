@@ -13,6 +13,9 @@ GameObject:
   - component: {fileID: 4455987964203915340}
   - component: {fileID: 8528079896700198928}
   - component: {fileID: 8169920525052300598}
+  - component: {fileID: -2995413647680657699}
+  - component: {fileID: 8849146311528093349}
+  - component: {fileID: 435918100740628539}
   m_Layer: 7
   m_Name: CometMeteor
   m_TagString: Meteor
@@ -50,23 +53,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MeteorController
   _currentHp: 0
   _maxHp: 0
-  _rb: {fileID: 0}
-  _hasEnteredView: 0
-  currentSpeed:
-    _baseValue: 0
-    _additionalValue: 0
-    _multiplier: 1
-  visuals:
-  - {fileID: 5509306187143186792}
-  - {fileID: 1611576607383619413}
-  - {fileID: 5368313857001966168}
-  - {fileID: 982678245167403312}
-  - {fileID: 7867680102521492295}
-  - {fileID: 954144911972182526}
-  - {fileID: 790534191793580955}
-  - {fileID: 4280348921385081617}
-  - {fileID: 8860600554781198828}
-  - {fileID: 4179570398418458562}
+  _showGizmo: 0
+  _gizmoRadius: 3
+  _gizmoColor: {r: 0, g: 1, b: 0, a: 1}
 --- !u!50 &4455987964203915340
 Rigidbody2D:
   serializedVersion: 5
@@ -143,6 +132,59 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Poolable
   IsUsing: 0
+--- !u!114 &-2995413647680657699
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 74111783754478293}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ffc48ac81d36a29489a65722ad9683da, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MeteorMovement
+  currentSpeed:
+    _baseValue: 0
+    _additionalValue: 0
+    _multiplier: 1
+  _hasEnteredView: 0
+--- !u!114 &8849146311528093349
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 74111783754478293}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aaa49deacd67842459894086255a0a9a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MeteorStatus
+  auraBuffEffectPrefab: {fileID: 7185266531788639084, guid: 5380baab2bde6fc4badbce3ca08e5c1d, type: 3}
+--- !u!114 &435918100740628539
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 74111783754478293}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ca2b04bdcfad444a8c14138775b5b8a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MeteorVisual
+  visuals:
+  - {fileID: 5509306187143186792}
+  - {fileID: 1611576607383619413}
+  - {fileID: 5368313857001966168}
+  - {fileID: 982678245167403312}
+  - {fileID: 7867680102521492295}
+  - {fileID: 954144911972182526}
+  - {fileID: 790534191793580955}
+  - {fileID: 4280348921385081617}
+  - {fileID: 8860600554781198828}
+  - {fileID: 4179570398418458562}
 --- !u!1 &5372946204183545081
 GameObject:
   m_ObjectHideFlags: 0
