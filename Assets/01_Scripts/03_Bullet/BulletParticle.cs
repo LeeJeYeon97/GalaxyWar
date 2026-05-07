@@ -111,7 +111,7 @@ public class BulletParticle : MonoBehaviour
             // hitNormal이 0이 아닐 때만 회전 (Trigger 관통탄은 허공에서 터지므로 제외)
             if (hitNormal != Vector2.zero)
             {
-                // ★ 핵심: 파티클의 발사구(Z축)를 벽의 법선(hitNormal) 방향으로 딱 맞춰줍니다!
+                // 핵심: 파티클의 발사구(Z축)를 벽의 법선(hitNormal) 방향으로 딱 맞춰줍니다!
                 // 이렇게 하면 왼쪽 벽에 맞으면 오른쪽으로, 바닥에 맞으면 위쪽으로 파티클이 뿜어집니다.
                 hitGo.transform.rotation = Quaternion.LookRotation(hitNormal);
             }

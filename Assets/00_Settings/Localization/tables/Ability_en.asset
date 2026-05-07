@@ -17,7 +17,488 @@ MonoBehaviour:
   m_SharedData: {fileID: 11400000, guid: d4a4c3d15f95cdd41a8b8a7c070f3423, type: 2}
   m_Metadata:
     m_Items: []
-  m_TableData: []
+  m_TableData:
+  - m_Id: 23063803613184
+    m_Localized: Explosive Bullet
+    m_Metadata:
+      m_Items: []
+  - m_Id: 23272088555520
+    m_Localized: Acquire an explosive bullet that deals area damage.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 25023952867328
+    m_Localized: 'Explosion range increased by {0}%
+
+      Explosion damage increased
+      by {1}%'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 25036602888192
+    m_Localized: 'Explosion range increased by {0}%
+
+      Explosion damage increased
+      by {1}%'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 55748592816128
+    m_Localized: 'Explosion range increased by {0}%
+
+      Explosion damage increased
+      by {1}%'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 55756159340544
+    m_Localized: 'Explosion range increased by {0}%
+
+      Explosion damage increased
+      by {1}%'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 263820665835520
+    m_Localized: Fire Bullet
+    m_Metadata:
+      m_Items: []
+  - m_Id: 264332530307072
+    m_Localized: Acquire a fire bullet that deals burn damage.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 264443956187136
+    m_Localized: 'Burn damage increased by {0}%
+
+      Burn duration increased by
+      {1} sec'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 264466446045184
+    m_Localized: 'Burn damage increased by {0}%
+
+      Burn duration increased by
+      {1} sec'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 264477992964096
+    m_Localized: 'Burn damage increased by {0}%
+
+      Burn duration increased by
+      {1} sec'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 264491070803968
+    m_Localized: 'Burn damage increased by {0}%
+
+      Burn duration increased by
+      {1} sec
+
+      Creates a fire trail lasting {2} sec on the path'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 266949843111936
+    m_Localized: Homing Bullet
+    m_Metadata:
+      m_Items: []
+  - m_Id: 267081904967680
+    m_Localized: Fires a laser that automatically tracks enemies.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 267193100161024
+    m_Localized: 'Firing interval decreased by {0}%
+
+      Bullet speed increased
+      by {1}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 267238239260672
+    m_Localized: 'Firing interval decreased by {0}%
+
+      Bullet speed increased
+      by {1}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 267249375137792
+    m_Localized: 'Firing interval decreased by {0}%
+
+      Bullet speed increased
+      by {1}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 267258866847744
+    m_Localized: 'Firing interval decreased by {0}%
+
+      Bullet speed increased
+      by {1}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 267286981267456
+    m_Localized: Ice Bullet
+    m_Metadata:
+      m_Items: []
+  - m_Id: 267351657435136
+    m_Localized: Acquire an ice bullet that applies a slow effect.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 267459581071360
+    m_Localized: 'Slow intensity increased by {0}%
+
+      Slow duration increased
+      by {1} sec'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 267478228946944
+    m_Localized: 'Slow intensity increased by {0}%
+
+      Slow duration increased
+      by {1} sec'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 267487561273344
+    m_Localized: 'Slow intensity increased by {0}%
+
+      Slow duration increased
+      by {1} sec'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 267497313030144
+    m_Localized: 'Slow intensity increased by {0}%
+
+      Slow duration increased
+      by {1} sec
+
+      Applies freeze effect on hit'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 267505852633088
+    m_Localized: Lightning Bullet
+    m_Metadata:
+      m_Items: []
+  - m_Id: 267586194526208
+    m_Localized: Acquire a lightning bullet that chains damage to nearby enemies.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 267727802617856
+    m_Localized: 'Chain count increased by {0}
+
+      Chain damage increased by {1}%'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 267739085295616
+    m_Localized: 'Chain count increased by {0}
+
+      Chain damage increased by {1}%'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 267747926888448
+    m_Localized: 'Chain count increased by {0}
+
+      Chain damage increased by {1}%'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 267757171134464
+    m_Localized: 'Chain count increased by {0}
+
+      Chain damage increased by {1}%'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 267773084323840
+    m_Localized: Piercing Bullet
+    m_Metadata:
+      m_Items: []
+  - m_Id: 267842340671488
+    m_Localized: Acquire a piercing bullet that penetrates enemies.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 267914377842688
+    m_Localized: 'Pierce count increased by {0}
+
+      Pierce damage reduction decreased
+      by {0}%'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 267927917056000
+    m_Localized: 'Pierce count increased by {0}
+
+      Pierce damage reduction decreased
+      by {0}%'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 267935852679168
+    m_Localized: 'Pierce count increased by {0}
+
+      Pierce damage reduction decreased
+      by {0}%'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 267944186761216
+    m_Localized: 'Pierce count becomes infinite
+
+      Pierce damage reduction removed'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 267964784988160
+    m_Localized: Ricochet
+    m_Metadata:
+      m_Items: []
+  - m_Id: 268049589620736
+    m_Localized: Bullet bounce count increased by {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 268269366956032
+    m_Localized: Bullet bounce count increased by {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 269374268264448
+    m_Localized: Bullet bounce count increased by {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 269386888925184
+    m_Localized: Bullet bounce count increased by {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 269395420139520
+    m_Localized: Bullet bounce count increased by {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 269650681286656
+    m_Localized: Health Enhancement
+    m_Metadata:
+      m_Items: []
+  - m_Id: 269735200706560
+    m_Localized: Max HP increased by {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 269846412677120
+    m_Localized: Max HP increased by {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 269864649510912
+    m_Localized: Max HP increased by {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 269872622882816
+    m_Localized: Max HP increased by {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 269881896488960
+    m_Localized: Max HP increased by {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 269916713406464
+    m_Localized: Magazine Expansion
+    m_Metadata:
+      m_Items: []
+  - m_Id: 269998854656000
+    m_Localized: Magazine capacity increased by {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 270024410550272
+    m_Localized: Magazine capacity increased by {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 270033000484864
+    m_Localized: Magazine capacity increased by {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 270042446057472
+    m_Localized: Magazine capacity increased by {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 270049979027456
+    m_Localized: Magazine capacity increased by {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 270065971908608
+    m_Localized: Quick Reload
+    m_Metadata:
+      m_Items: []
+  - m_Id: 270153293123584
+    m_Localized: Reload time decreased by {0} sec
+    m_Metadata:
+      m_Items: []
+  - m_Id: 270178177929216
+    m_Localized: Reload time decreased by {0} sec
+    m_Metadata:
+      m_Items: []
+  - m_Id: 270190672760832
+    m_Localized: Reload time decreased by {0} sec
+    m_Metadata:
+      m_Items: []
+  - m_Id: 270199589851136
+    m_Localized: Reload time decreased by {0} sec
+    m_Metadata:
+      m_Items: []
+  - m_Id: 270208154619904
+    m_Localized: Reload time decreased by {0} sec
+    m_Metadata:
+      m_Items: []
+  - m_Id: 270218028011520
+    m_Localized: Rapid Fire
+    m_Metadata:
+      m_Items: []
+  - m_Id: 270312206913536
+    m_Localized: Firing interval decreased by {0} sec
+    m_Metadata:
+      m_Items: []
+  - m_Id: 270330246615040
+    m_Localized: Firing interval decreased by {0} sec
+    m_Metadata:
+      m_Items: []
+  - m_Id: 270338085769216
+    m_Localized: Firing interval decreased by {0} sec
+    m_Metadata:
+      m_Items: []
+  - m_Id: 270345975255040
+    m_Localized: Firing interval decreased by {0} sec
+    m_Metadata:
+      m_Items: []
+  - m_Id: 270355588599808
+    m_Localized: Firing interval decreased by {0} sec
+    m_Metadata:
+      m_Items: []
+  - m_Id: 270372625862656
+    m_Localized: Thrust Enhancement
+    m_Metadata:
+      m_Items: []
+  - m_Id: 270443744481280
+    m_Localized: Movement speed increased by {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 270458177081344
+    m_Localized: Movement speed increased by {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 270466016235520
+    m_Localized: Movement speed increased by {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 270474325151744
+    m_Localized: Movement speed increased by {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 270482063642624
+    m_Localized: Movement speed increased by {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 270493530869760
+    m_Localized: Split Bullet
+    m_Metadata:
+      m_Items: []
+  - m_Id: 270574338330624
+    m_Localized: Bullets have a chance to split upon firing.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 270604319215616
+    m_Localized: 'Split probability increased by {0}
+
+      Bullet count increased
+      by {1}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 270612208701440
+    m_Localized: 'Split probability increased by {0}
+
+      Bullet count increased
+      by {1}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 270620307902464
+    m_Localized: 'Split probability increased by {0}
+
+      Bullet count increased
+      by {1}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 270627765374976
+    m_Localized: 'Split probability increased by {0}
+
+      Bullet count increased
+      by {1}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4216420096430080
+    m_Localized: Protect Shield
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4216549994024960
+    m_Localized: Acquire a shield that blocks 1 attack.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4216584978714624
+    m_Localized: Shield recharge time decreased by {0} sec
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4216593409265664
+    m_Localized: Shield recharge time decreased by {0} sec
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4216600715743232
+    m_Localized: Shield recharge time decreased by {0} sec
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4216608131272704
+    m_Localized: Burst Mode
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7572682628550656
+    m_Localized: Activates Burst Mode, enhancing player stats and changing bullets
+      to special bullets.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7572809183285248
+    m_Localized: Burst Mode charge time decreased by {0} sec
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7572816569454592
+    m_Localized: Burst Mode charge time decreased by {0} sec
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7572823326478336
+    m_Localized: Burst Mode charge time decreased by {0} sec
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7572829601157120
+    m_Localized: Burst Mode charge time decreased by {0} sec
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7631028014436352
+    m_Localized: Deadly Bullet
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7631117898371072
+    m_Localized: 'Critical hits are applied.
+
+      Base Critical Chance {0}%
+
+      Base
+      Critical Damage {1}%'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7631172965388288
+    m_Localized: 'Critical Chance increased by {0}%
+
+      Critical Damage increased
+      by {1}%'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7631184944320512
+    m_Localized: 'Critical Chance increased by {0}%
+
+      Critical Damage increased
+      by {1}%'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7631194809323520
+    m_Localized: 'Critical Chance increased by {0}%
+
+      Critical Damage increased
+      by {1}%'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7631202963050496
+    m_Localized: 'Critical Chance increased by {0}%
+
+      Critical Damage increased
+      by {1}%'
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

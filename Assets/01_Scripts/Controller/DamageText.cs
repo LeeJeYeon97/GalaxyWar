@@ -14,7 +14,7 @@ public class DamageText : MonoBehaviour
     // 메테오가 맞았을 때 외부에서 호출해 줄 초기화 함수
     public void Init(Vector3 spawnPos, int damage, bool isCritical = false)
     {
-        // ★ 아주 중요: 풀링으로 재사용하기 때문에, 이전에 실행 중이던 애니메이션을 확실히 꺼줘야 합니다!
+        // 아주 중요: 풀링으로 재사용하기 때문에, 이전에 실행 중이던 애니메이션을 확실히 꺼줘야 합니다!
         transform.DOKill();
         _textMesh.DOKill();
 

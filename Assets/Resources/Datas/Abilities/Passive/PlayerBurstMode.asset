@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b33e00e2702862546a0c8c619d662188, type: 3}
+  m_Name: PlayerBurstMode
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerBurstModeAblityDataSO
+  type: 6
+  icon: {fileID: 21300000, guid: 4fa83e931ac3a3c468c2e1e9d20c3ab7, type: 3}
+  maxLevel: 5
+  _requiredAbility: 0
+  levels:
+  - 0
+  - 7.5
+  - 7.5
+  - 7.5
+  - 7.5

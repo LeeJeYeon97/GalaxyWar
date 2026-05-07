@@ -9,11 +9,11 @@ using UnityEngine;
 public class NormalBulletBehavior : IBulletBehavior
 {
 
-    public void OnHit(BulletController bullet, GameObject target)
+    public void OnHit(BulletController bullet, GameObject target, BaseBulletStat activeStat)
     {
     }
 
-    public void OnInit(BulletController bullet)
+    public void OnInit(BulletController bullet, BaseBulletStat activeStat)
     {
     }
 

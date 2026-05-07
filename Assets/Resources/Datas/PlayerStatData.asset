@@ -20,6 +20,8 @@ MonoBehaviour:
     reloadTime: 2
     shotRange: 3
     shotTime: 1
+    criticalChance: 0
+    criticalDamageRate: 0
     hitCooldown: 1
     shieldChargeTime: 20
     isBurstModeEnabled: 0

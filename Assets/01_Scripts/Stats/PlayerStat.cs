@@ -23,6 +23,9 @@ public class PlayerStat
     public Stat maxShield = new Stat();
     public Stat shieldChargeTime = new Stat();
 
+    public Stat criticalChance = new Stat();
+    public Stat criticalDamageRate = new Stat();
+
     public float hitCooldown;       // ÇÇ°Ý µô·¹ÀÌ
 
     [Header("¸ÖÆ¼¼¦°ü·Ã")]

@@ -8,12 +8,13 @@ using UnityEngine;
 using static Define;
 public class HomingBulletBehavior : IBulletBehavior
 {
-    public void OnHit(BulletController bullet, GameObject target)
+    public void OnHit(BulletController bullet, GameObject target, BaseBulletStat activeStat)
     {
         Managers.Sound.Play(Define.SoundID.Sfx_homing_Hit);
+
     }
 
-    public void OnInit(BulletController bullet)
+    public void OnInit(BulletController bullet, BaseBulletStat activeStat)
     {
     }
 

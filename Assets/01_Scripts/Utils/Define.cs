@@ -53,8 +53,8 @@ public class Define
         Sfx_homingTargeting,
         Sfx_homing_Hit,
         Sfx_PierceBullet_Hit,
-        Sfx_BurstModeOn
-        
+        Sfx_BurstModeOn,
+        Sfx_BurstModeOff,
     }
     public enum UIEvent
     {
@@ -107,6 +107,7 @@ public class Define
         Passive_ShotTimeDown = 5,           // 발사 딜레이 감소
         Passive_BurstMode = 6,              // 버스트 모드 활성화 및 충전 시간 감소
         Passive_PlayerShield = 7,           // 플레이어 쉴드
+        Passive_PlayerCritical = 8,
 
         // 모든 총알
         Passive_AllBulletBounceCountUp = 10,// 모든 총알의 바운스(튕기는) 횟수 증가

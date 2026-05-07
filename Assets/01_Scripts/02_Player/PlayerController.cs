@@ -285,21 +285,24 @@ public class PlayerController : BaseController
         if (currentBurst >= Stat.maxBurstGuage.TotalValue)
         {
             _isBurst = true;
-            Debug.Log("BURST MODE ACTIVATED!");
-
+            Managers.Sound.Play(Define.SoundID.Sfx_BurstModeOn);
+            
             StartCoroutine(BurstRoutine());
         }
         else
         {
-            Debug.Log("BURST MODE 게이지 부족");
         }
     }
     private IEnumerator BurstRoutine()
     {
-        Debug.Log("버스트 모드 시작");
-        mainCam.DOOrthoSize(12.0f, 0.3f).SetEase(Ease.OutCubic).SetUpdate(true).OnUpdate(() => Managers.Map.UpdateMap());
-
-        Managers.Effect.Play(EffectType.Screen_BurstMode, Vector3.zero);
+        mainCam.DOOrthoSize(15.0f, 0.3f)
+            .SetEase(Ease.OutCubic)
+            .SetUpdate(true)
+            .OnUpdate(() =>
+            {
+                Managers.Map.UpdateMap();
+                Managers.Effect.Play(EffectType.Screen_BurstMode, Vector3.zero);
+            });
 
         Stat.speed.AddMultiplier(1.0f);
         Stat.reloadTime.SetForceZero(true);
@@ -331,7 +334,10 @@ public class PlayerController : BaseController
         currentBurst = 0;
         _isBurst = false;
 
-        mainCam.DOOrthoSize(9.6f, 0.3f).SetEase(Ease.OutCubic).SetUpdate(true).OnUpdate(() => Managers.Map.UpdateMap());
+        mainCam.DOOrthoSize(12f, 0.3f)
+            .SetEase(Ease.OutCubic)
+            .SetUpdate(true)
+            .OnUpdate(() => Managers.Map.UpdateMap());
 
         // 버스트 종료 시 재장전 복구
         if (Combat != null)
@@ -340,8 +346,6 @@ public class PlayerController : BaseController
             Combat.isReloading = true;
             Combat.Reload();
         }
-
-        Debug.Log("버스트 모드 해제");
     }
     #endregion
 

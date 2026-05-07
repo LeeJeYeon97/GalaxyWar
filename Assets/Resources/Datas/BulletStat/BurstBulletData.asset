@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6aa2f84d487d44d4998c5d19d9ea44a8, type: 3}
+  m_Name: BurstBulletData
+  m_EditorClassIdentifier: Assembly-CSharp::BurstBulletStatDataSO
+  type: 5
+  stats:
+    CardIcon: {fileID: 21300000, guid: 8c603aa9cf565d14c94dfb12a07a7247, type: 3}
+    hudIcon: {fileID: 21300000, guid: 02ee53b758c07d7468ea1a7a821a7b48, type: 3}
+    chance: 100
+    damage: 30
+    speed: 10
+    bounceCount: 0
+  originalPrefab: {fileID: 2022579044585835378, guid: b6680ad1dd1594944b9144adc303a1c2, type: 3}
+  isReload: 0

@@ -13,20 +13,32 @@ public class LightningChain : MonoBehaviour
     public GameObject hitEffect;
     private HashSet<GameObject> _visitedTargets = new HashSet<GameObject>();
     private LayerMask _targetLayer;
+    private bool _isMaxLevel; // 클래스 상단에 변수 추가
 
-    // 총알(Ability)이 이 녀석을 소환하면서 정보를 꽉꽉 채워서 넘겨줍니다.
-    public void Init(Vector3 startPos, GameObject firstTarget, float damage, float range, int count)
+    public void Init(Vector3 startPos, GameObject firstTarget, float damage, float range, int count,bool maxLevel = false)
     {
         transform.position = startPos;
         _damage = damage;
         _range = range;
         _remainCount = count;
+        _isMaxLevel = maxLevel;
         _targetLayer = LayerMask.GetMask("Meteor");
 
         _visitedTargets.Clear();
         // 첫 번째 맞은 놈은 방금 총알한테 맞았으니(혹은 여기서 중복으로 안 때리기 위해) 제외 목록에 추가
-        if (firstTarget != null) _visitedTargets.Add(firstTarget);
+        if (firstTarget != null)
+        {
+            _visitedTargets.Add(firstTarget);
+        }
 
+        if (_isMaxLevel && firstTarget != null)
+        {
+            MeteorController firstMeteor = firstTarget.GetComponent<MeteorController>();
+            if (firstMeteor != null)
+            {
+                firstMeteor.Status.ApplyShock();
+            }
+        }
         // 번개 전이 시작!
         StartCoroutine(CoChainProcess());
     }
@@ -75,18 +87,23 @@ public class LightningChain : MonoBehaviour
                 transform.position = Vector3.MoveTowards(transform.position, targetGo.transform.position, _speed * Time.deltaTime);
 
                 // 적에게 거의 다다랐다면? (충돌 판정)
-                //if (Vector3.Distance(transform.position, targetGo.transform.position) < 0.1f)
                 if ((transform.position - targetGo.transform.position).sqrMagnitude < 0.01f)
                 {
                     MeteorController meteor = targetGo.GetComponent<MeteorController>();
                     if (meteor != null)
                     {
-                        Managers.Sound.Play(Define.SoundID.Sfx_Lightning_Hit);
                         // 찌릿! 데미지 주기
                         meteor.OnDamage(_damage);
 
-                        // TODO: 여기서 찌릿! 하는 타격 사운드나 조그만 불꽃 파티클을 스폰하면 아주 좋습니다.
+                        // 데미지가 들어간 직후에 감전 주기
+                        if (_isMaxLevel)
+                        {
+                            meteor.Status.ApplyShock();
+                        }
+
+                        Managers.Sound.Play(Define.SoundID.Sfx_Lightning_Hit);
                         GameObject hitGo = Managers.Resource.Instantiate(hitEffect);
+
                         if(hitGo != null)
                         {
                             hitGo.transform.position = meteor.transform.position;

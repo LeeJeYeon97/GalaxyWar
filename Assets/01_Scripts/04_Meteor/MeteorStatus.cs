@@ -15,6 +15,12 @@ public class MeteorStatus : MonoBehaviour
 
     public GameObject auraBuffEffectPrefab;
     private GameObject auraBuff;
+    public GameObject shockDeBuffEffectPrefab;
+    private GameObject shockDeBuffEffect;
+    public bool HasShockDebuff { get; private set; } = false;
+
+    // 1. 감전 묻히기
+    
     private void Awake()
     {
         _controller = GetComponent<MeteorController>();
@@ -22,16 +28,31 @@ public class MeteorStatus : MonoBehaviour
         if (auraBuffEffectPrefab != null)
         {
             auraBuff = Managers.Resource.Instantiate(auraBuffEffectPrefab);
-            auraBuff.transform.SetParent(this.transform);
-            auraBuff.transform.position = new Vector3(0, 0, -3);
+            auraBuff.transform.SetParent(this.transform, false);
+
+            // 수정: 부모의 정중앙을 기준으로 Z축만 -3 당깁니다.
+            auraBuff.transform.localPosition = new Vector3(0, 0, -3);
             auraBuff.SetActive(false);
+        }
+        if (shockDeBuffEffectPrefab != null)
+        {
+            shockDeBuffEffect = Managers.Resource.Instantiate(shockDeBuffEffectPrefab);
+            //  핵심: false 옵션 추가
+            shockDeBuffEffect.transform.SetParent(this.transform, false);
+
+            //  수정: localPosition 사용
+            shockDeBuffEffect.transform.localPosition = new Vector3(0, 0, -3);
+            shockDeBuffEffect.SetActive(false);
         }
     }
 
     public void Init()
     {
         HasAuraBuff = false;
+        HasShockDebuff = false;
+
         _auraBuffEndTime = 0f;
+
         if (_freezeCoroutine != null) StopCoroutine(_freezeCoroutine);
         if (_slowCoroutine != null) StopCoroutine(_slowCoroutine);
         if (_burnCoroutine != null) StopCoroutine(_burnCoroutine);
@@ -62,6 +83,39 @@ public class MeteorStatus : MonoBehaviour
             }
         }
     }
+
+    #region 감전
+    public void ApplyShock()
+    {
+        if (!gameObject.activeInHierarchy) return;
+
+        HasShockDebuff = true;
+        if (shockDeBuffEffect != null)
+        {
+            shockDeBuffEffect.SetActive(true);
+        }
+        // 시각적 효과 (예: 찌릿찌릿한 보라색/자주색 느낌)
+        //_controller.Visual.SetColor(new Color(0.8f, 0.2f, 1f));
+    }
+    // 2. 감전 터트리기
+    // 감전 상태였다면 상태를 지우고 true를 반환, 아니면 false 반환
+    public bool ConsumeShock()
+    {
+        if (HasShockDebuff)
+        {
+            HasShockDebuff = false;
+            if (shockDeBuffEffect != null)
+            {
+                shockDeBuffEffect.SetActive(false);
+            }
+            //_controller.Visual.ReturnColor(); // 원래 색상으로 복구
+            return true;
+        }
+        return false;
+    }
+    #endregion
+
+    #region 슬로우/빙결
 
     public void ApplySlow(float slowPercent, float duration)
     {
@@ -115,7 +169,9 @@ public class MeteorStatus : MonoBehaviour
 
         ApplySlow(slowPercent, slowDuration);
     }
+    #endregion
 
+    #region 화상
     public void ApplyBurn(float burnDamage, float duration, float tickTime)
     {
         if (!gameObject.activeInHierarchy) return;
@@ -143,6 +199,7 @@ public class MeteorStatus : MonoBehaviour
         _burnCoroutine = null;
         _controller.Visual.ReturnColor();
     }
+    #endregion
 
     public Color GetCurrentStatusColor()
     {

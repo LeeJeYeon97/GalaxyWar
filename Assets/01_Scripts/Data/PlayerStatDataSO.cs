@@ -15,6 +15,9 @@ public struct PlayerStatData
     public float shotRange;
     public float shotTime;
 
+    public float criticalChance;
+    public float criticalDamageRate;
+
     public float hitCooldown;       // ««∞› µÙ∑π¿Ã
 
     public float shieldChargeTime;

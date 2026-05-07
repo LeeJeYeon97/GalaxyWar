@@ -21,7 +21,7 @@ MonoBehaviour:
   Damage: 10
   Score: 250
   Exp: 25
-  spawnPhase: 4
+  spawnPhase: 2
   dropTable: []
   magmaTick: 0
   magmaPuddle: {fileID: 0}

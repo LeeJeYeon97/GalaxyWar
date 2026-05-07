@@ -9,7 +9,7 @@ using UnityEngine;
 public class IceBulletBehavior : IBulletBehavior
 {
 
-    public void OnHit(BulletController bullet, GameObject target)
+    public void OnHit(BulletController bullet, GameObject target, BaseBulletStat activeStat)
     {
         if (target == null)
         {
@@ -22,7 +22,7 @@ public class IceBulletBehavior : IBulletBehavior
             return;
         }
 
-        if(bullet.Stat is IceBulletStat stat)
+        if(activeStat is IceBulletStat stat)
         {
             Managers.Sound.Play(Define.SoundID.Sfx_IceBullet_Hit);
 
@@ -40,7 +40,7 @@ public class IceBulletBehavior : IBulletBehavior
         }
     }
 
-    public void OnInit(BulletController bullet)
+    public void OnInit(BulletController bullet, BaseBulletStat activeStat)
     {
     }
 

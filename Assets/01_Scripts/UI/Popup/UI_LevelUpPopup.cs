@@ -43,6 +43,7 @@ public class UI_LevelUpPopup : UI_Popup
 
         GetButton((int)Buttons.ReloadButton_Coin).onClick.AddListener(OnCardReloadButtonCoinAsync);
 
+        UpdateReloadButtonState(); //  팝업이 켜질 때 코인 버튼 상태 체크!
         RefreshCards();
     }
     private void OnCardReloadButtonAd()
@@ -69,9 +70,16 @@ public class UI_LevelUpPopup : UI_Popup
     }
     private async void OnCardReloadButtonCoinAsync()
     {
-        // 
+        
         // 1. 연속 클릭 방지 및 로딩 표시
         if (_isSelecting) return;
+
+        if (Managers.PlayerEconomy.Gold < 100)
+        {
+            HandleCoinReloadFailed("코인이 부족합니다.");
+            return;
+        }
+
         _isSelecting = true;
 
         // 유저에게 "처리 중..."임을 알리기 위해 로딩 팝업을 띄웁니다.
@@ -90,6 +98,8 @@ public class UI_LevelUpPopup : UI_Popup
 
                 // 로딩 팝업 닫고 카드 리프레시
                 Managers.UI.ClosePopupUI();
+                //  코인을 썼으니 버튼이 비활성화되어야 하는지 다시 검사!
+                UpdateReloadButtonState();
                 RefreshCards();
             }
             else
@@ -116,8 +126,28 @@ public class UI_LevelUpPopup : UI_Popup
 
         // 여기에 유저에게 보여줄 알림 팝업(예: UI_Toast)을 추가하면 더 좋습니다.
         Debug.LogWarning(message);
+        UpdateReloadButtonState();
     }
 
+    private void UpdateReloadButtonState()
+    {
+        Button coinButton = GetButton((int)Buttons.ReloadButton_Coin);
+        if (coinButton == null) return;
+
+        // 현재 플레이어가 가진 코인을 확인합니다.
+        // (주의: Managers.PlayerEconomy.CurrentGold 등 대표님 프로젝트의 실제 잔액 변수로 변경해 주세요!)
+        int currentCoin = Managers.PlayerEconomy.Gold;
+
+        // 100원 이상 있으면 클릭 가능(true), 아니면 클릭 불가(false)
+        if (currentCoin >= 100)
+        {
+            coinButton.interactable = true;
+        }
+        else
+        {
+            coinButton.interactable = false;
+        }
+    }
     private void RefreshCards()
     {
         // 1. 안전장치: 카드가 세팅되고 날아오는 동안에는 절대 클릭 못하게 잠급니다!
@@ -171,12 +201,13 @@ public class UI_LevelUpPopup : UI_Popup
             .SetUpdate(true)        // 약간 튕기면서 멈추는 찰진 효과
             .SetDelay(i * 0.15f);   // 0번 카드 -> 0.15초 뒤 1번 -> 타다닥 연출!
 
-            // ★ 3. 핵심 방어 로직: 마지막 카드(3번째)가 도착했을 때 비로소 잠금을 풉니다!
+            // 3. 핵심 방어 로직: 마지막 카드(3번째)가 도착했을 때 비로소 잠금을 풉니다!
             if (i == abilities.Count - 1)
             {
                 moveTween.OnComplete(() =>
                 {
                     _isSelecting = false; // 이제 마음껏 고르세요!
+                    UpdateReloadButtonState();// 카드가 다 날아와서 선택 가능한 상태가 되었을 때, 코인 버튼도 다시 체크해줍니다.
                     Debug.Log("모든 카드 도착 완료! 선택 가능 상태로 전환.");
                 });
             }

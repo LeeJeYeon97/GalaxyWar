@@ -188,3 +188,18 @@ public class HomingBulletStat : BaseBulletStat
         }
     }
 }
+
+[Serializable]
+public class BurstBulletStat : BaseBulletStat
+{
+    public override void Init(BulletStatDataSO data)
+    {
+        // 1. 일단 부모(Base)한테 기본 공통 스탯 세팅을 맡깁니다.
+        base.Init(data);
+
+        if (data is BurstBulletStatDataSO da)
+        {
+           //
+        }
+    }
+}

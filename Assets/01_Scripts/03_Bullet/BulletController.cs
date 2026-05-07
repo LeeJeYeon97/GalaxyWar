@@ -17,7 +17,7 @@ public class BulletController : BaseController
 
     [SerializeField] private Vector2 _shotDir;
 
-    private BulletParticle _particle;
+    public BulletParticle BulletParticle { get; private set; }
 
 
     //  2. 물리 정지 상태를 기억할 변수들
@@ -42,7 +42,7 @@ public class BulletController : BaseController
         Rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
         Collider.isTrigger = true;
 
-        _particle = Util.GetOrAddComponent<BulletParticle>(gameObject);
+        BulletParticle = Util.GetOrAddComponent<BulletParticle>(gameObject);
     }
 
     private void OnEnable()
@@ -126,7 +126,7 @@ public class BulletController : BaseController
                 // 5. 속도 재설정
                 Rb.linearVelocity = _shotDir * Stat.speed.TotalValue;
 
-                _particle?.SpawnHit(hit.point, Vector2.zero, Stat);
+                BulletParticle?.SpawnHit(hit.point, Vector2.zero, Stat);
                 // 바운스 카운트 감소
                 DecreaseBounceCount();
             }
@@ -166,7 +166,7 @@ public class BulletController : BaseController
         SetPhysicsState(true); // 대기 중엔 물리 끄기
         
         // 각 탄환별로 초기화 시 실행시킬 로직 실행
-        Stat.behavior.OnInit(this);
+        Stat.behavior.OnInit(this,Stat);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -176,9 +176,10 @@ public class BulletController : BaseController
 
         // 1. 공통 처리: 데미지 주고 파티클 생성
         Vector2 hitPoint = collision.ClosestPoint(transform.position);
-        _particle?.SpawnHit(hitPoint, Vector2.zero, Stat);
-        meteor.OnDamage(CurDamage);
-        Stat.behavior.OnHit(this, collision.gameObject);
+        BulletParticle?.SpawnHit(hitPoint, Vector2.zero, Stat);
+
+        CalculateDamage(meteor , CurDamage);
+        Stat.behavior.OnHit(this, collision.gameObject, Stat);
 
         // 2. 능력치에 따른 분기 처리 (관통 -> 도탄 -> 소멸 순서)
         if (currentPierceCount > 0)
@@ -199,6 +200,21 @@ public class BulletController : BaseController
         }
     }
 
+    public void CalculateDamage(MeteorController targetMeteor, float baseDamage)
+    {
+        if (targetMeteor == null || baseDamage <= 0) return;
+
+        // 1. 플레이어 스탯 가져오기
+        float critChance = Managers.Game._player.Stat.criticalChance.TotalValue;
+        float critDamageMultiplier = Managers.Game._player.Stat.criticalDamageRate.TotalValue;
+
+        // 2. 주사위 굴리기 (여기서 개별 타격마다 크리티컬이 톡톡 터짐!)
+        bool isCrit = UnityEngine.Random.value <= critChance;
+        float finalDmg = isCrit ? (baseDamage * critDamageMultiplier) : baseDamage;
+
+        // 3. 계산된 최종 데미지와 크리티컬 여부를 메테오에게 전달
+        targetMeteor.OnDamage(finalDmg, isCrit);
+    }
     private void ReflectFromMeteor(Collider2D meteorCollider)
     {
         // 메테오의 중심에서 총알 위치로 향하는 방향을 법선(Normal)으로 사용합니다.
@@ -229,7 +245,7 @@ public class BulletController : BaseController
         Rb.AddForce(_shotDir, ForceMode2D.Impulse);
 
         currentBounceCount = Mathf.FloorToInt(Stat.bounceCount.TotalValue);
-        _particle.SpawnShot(dragVector,shotPos);
+        BulletParticle.SpawnShot(dragVector,shotPos);
         Stat.behavior.OnShot(this);
     }
     

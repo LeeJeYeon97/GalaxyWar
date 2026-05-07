@@ -11,7 +11,7 @@ using static Define;
 public class FireBulletBehavior : IBulletBehavior
 {
 
-    public void OnHit(BulletController bullet, GameObject target)
+    public void OnHit(BulletController bullet, GameObject target, BaseBulletStat activeStat)
     {
         if (target == null) return;
 
@@ -23,7 +23,7 @@ public class FireBulletBehavior : IBulletBehavior
 
         Managers.Sound.Play(Define.SoundID.Sfx_FireBullet_Hit);
 
-        if (bullet.Stat is FireBulletStat stat)
+        if (activeStat is FireBulletStat stat)
         {
             // 직접 맞았을 때의 화상 데미지 적용
             float totalBurnDamage = stat.damage.TotalValue * stat.fireDamageValue.TotalValue;
@@ -33,7 +33,7 @@ public class FireBulletBehavior : IBulletBehavior
         }
     }
 
-    public void OnInit(BulletController bullet)
+    public void OnInit(BulletController bullet, BaseBulletStat activeStat)
     {
     }
 
@@ -43,10 +43,10 @@ public class FireBulletBehavior : IBulletBehavior
 
     public void OnShot(BulletController bullet)
     {
-        //if(bullet.Stat.curLevel >= 5)
-        //{
-        bullet.StartCoroutine(CoDropFireTrail(bullet));
-        //}
+        if(bullet.Stat.curLevel >= 5)
+        {
+            bullet.StartCoroutine(CoDropFireTrail(bullet));
+        }
     }
 
     public void OnUpdate(BulletController bullet)

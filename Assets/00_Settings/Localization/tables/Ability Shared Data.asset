@@ -348,7 +348,51 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 4216608131272704
-    m_Key: Passive_PlayerShield_Desc_4
+    m_Key: Passive_BurstMode_Name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7572682628550656
+    m_Key: Passive_BurstMode_Desc_0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7572809183285248
+    m_Key: Passive_BurstMode_Desc_1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7572816569454592
+    m_Key: Passive_BurstMode_Desc_2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7572823326478336
+    m_Key: Passive_BurstMode_Desc_3
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7572829601157120
+    m_Key: Passive_BurstMode_Desc_4
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7631028014436352
+    m_Key: Passive_PlayerCritical_Name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7631117898371072
+    m_Key: Passive_PlayerCritical_Desc_0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7631172965388288
+    m_Key: Passive_PlayerCritical_Desc_1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7631184944320512
+    m_Key: Passive_PlayerCritical_Desc_2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7631194809323520
+    m_Key: Passive_PlayerCritical_Desc_3
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7631202963050496
+    m_Key: Passive_PlayerCritical_Desc_4
     m_Metadata:
       m_Items: []
   m_Metadata:

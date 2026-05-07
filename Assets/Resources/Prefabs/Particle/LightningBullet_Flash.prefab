@@ -9852,6 +9852,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 591aac7f2a1e1e04db53e738a192da98, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ParticleAutoRelease
+  returnMode: 0
+  customTime: 2
 --- !u!1 &1561218639847732
 GameObject:
   m_ObjectHideFlags: 0

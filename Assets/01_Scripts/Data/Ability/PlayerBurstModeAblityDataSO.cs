@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UnityEngine;
 
 
+[CreateAssetMenu(fileName = "PlayerBurstMode", menuName = "ScriptableObjects/Ability/Player/PlayerBurstMode")]
 public class PlayerBurstModeAblityDataSO : PlayerAbilityDataSO
 {
     public List<float> levels = new List<float>();
@@ -24,7 +26,11 @@ public class PlayerBurstModeAblityDataSO : PlayerAbilityDataSO
     {
         if (level < 0 || level > levels.Count) return;
 
-        targetStat.enableBurst = true; // 버스트모드 활성화!
+        if(targetStat.enableBurst == false)
+        {
+            Managers.Event.PostEvent(Define.ActionEvent.EnableBurstMode);
+        }
+        
         targetStat.maxBurstFullChargeTime.SubValue(levels[level]);
     }
 }

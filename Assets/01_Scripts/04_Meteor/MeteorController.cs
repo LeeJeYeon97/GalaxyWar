@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.InputSystem.XR;
 using UnityEngine.UI;
 using static Define;
 using static UnityEngine.Rendering.DebugUI;
@@ -99,26 +100,33 @@ public class MeteorController : BaseController
         Stat.Behavior?.OnUpdate(this);
     }
 
-    public void OnDamage(float damage)
+    public void OnDamage(float damage, bool isCritical = false)
     {
         if (!gameObject.activeInHierarchy || _currentHp <= 0) return;
 
         if (damage > 0)
         {
-            _currentHp -= damage;
-
-
-            Vector3 textPos = transform.position + new Vector3(UnityEngine.Random.Range(-0.5f, 0.5f), 0.5f, 0);
-
-            Visual.PlayHitFlash();
-
             // 핵심: Stat 원본을 수정하지 않고, 들어온 damage 변수값만 즉석에서 반토막 냅니다!
             if (Status.HasAuraBuff)
             {
                 damage *= 0.5f; // 오라를 받고 있다면 데미지 50% 감소
             }
+            // [추가된 부분] 감전(Shock) 디버프가 있다면 터트리고 데미지 증폭!
+            if (Status.ConsumeShock())
+            {
+                damage *= 1.5f;
 
-            ShowDamageText(damage);
+                // 파티클 터트리기
+                GameObject go = Managers.Resource.Instantiate("Particle/LightningChain_Hit1");
+                Managers.Sound.Play(Define.SoundID.Sfx_Lightning_Hit);
+
+                go.transform.position = transform.position;
+            }
+
+            _currentHp -= damage;
+            ShowDamageText(damage, isCritical);
+            Visual.PlayHitFlash();
+
             if (_currentHp <= 0)
             {
                 Die();
@@ -132,14 +140,14 @@ public class MeteorController : BaseController
             }
         }
     }
-    private void ShowDamageText(float damage)
+    private void ShowDamageText(float damage, bool isCritical = false)
     {
         Vector3 textPos = transform.position + new Vector3(UnityEngine.Random.Range(-0.5f, 0.5f), 0.5f, 0);
         GameObject go = Managers.Resource.Instantiate("DamageText");
         DamageText damageText = go.GetOrAddComponent<DamageText>();
         if (damageText != null)
         {
-            damageText.Init(textPos, Mathf.FloorToInt(damage));
+            damageText.Init(textPos, Mathf.FloorToInt(damage),isCritical);
         }
     }
     private void Die()

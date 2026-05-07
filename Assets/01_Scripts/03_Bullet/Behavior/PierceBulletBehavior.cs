@@ -8,22 +8,20 @@ using UnityEngine;
 public class PierceBulletBehavior : IBulletBehavior
 {
 
-    public void OnHit(BulletController bullet, GameObject target)
+    public void OnHit(BulletController bullet, GameObject target, BaseBulletStat activeStat)
     {
         if (bullet == null) return;
 
         Managers.Sound.Play(Define.SoundID.Sfx_PierceBullet_Hit);
-        if (bullet.Stat is PierceBulletStat stat)
+        if (activeStat is PierceBulletStat stat)
         {
             bullet.CurDamage = bullet.CurDamage * stat.pierceDamageDecreaseValue.TotalValue;
         }
     }
 
-    public void OnInit(BulletController bullet)
+    public void OnInit(BulletController bullet, BaseBulletStat activeStat)
     {
-        bullet.Collider.isTrigger = true;
-
-        if (bullet.Stat is PierceBulletStat stat)
+        if (activeStat is PierceBulletStat stat)
         {
             bullet.currentPierceCount = Mathf.FloorToInt(stat.pierceCount.TotalValue);
         }
@@ -31,7 +29,6 @@ public class PierceBulletBehavior : IBulletBehavior
 
     public void OnRelease(BulletController bullet)
     {
-        bullet.Collider.isTrigger = false;
     }
 
     public void OnShot(BulletController bullet)
