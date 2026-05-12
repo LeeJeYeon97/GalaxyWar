@@ -17,8 +17,8 @@ MonoBehaviour:
   maxLevel: 5
   _requiredAbility: 0
   speedIncreases:
-  - 1
-  - 1
-  - 1
-  - 1
-  - 1
+  - 10
+  - 10
+  - 10
+  - 10
+  - 10

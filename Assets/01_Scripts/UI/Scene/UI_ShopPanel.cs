@@ -99,6 +99,7 @@ public class UI_ShopPanel : UI_Base
         // 1번 방식(이름 규칙화) 적용
         Sprite icon = Managers.Resource.Load<Sprite>($"Sprites/{data.Id}");
 
+        Debug.Log("광고 제거 상품 아이템 세팅 시작");
         item.SetInfo(data, icon);
     }
 

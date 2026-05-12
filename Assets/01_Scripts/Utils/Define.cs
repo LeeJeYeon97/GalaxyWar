@@ -55,6 +55,7 @@ public class Define
         Sfx_PierceBullet_Hit,
         Sfx_BurstModeOn,
         Sfx_BurstModeOff,
+       
     }
     public enum UIEvent
     {
@@ -107,9 +108,8 @@ public class Define
         Passive_ShotTimeDown = 5,           // 발사 딜레이 감소
         Passive_BurstMode = 6,              // 버스트 모드 활성화 및 충전 시간 감소
         Passive_PlayerShield = 7,           // 플레이어 쉴드
-        Passive_PlayerCritical = 8,
-
-        // 모든 총알
+        Passive_PlayerCritical = 8,         // 플레이어 크리티컬
+        Passive_PlayerDamageUp = 9,         // 플레이어 데미지 업
         Passive_AllBulletBounceCountUp = 10,// 모든 총알의 바운스(튕기는) 횟수 증가
         
         // 특수 기능
@@ -232,6 +232,7 @@ public class Define
         BulletBounceCountUp,        // 불릿 튕기는 횟수 증가
         UpdateGameTime,             // 게임 시간 업데이트
         PlayerShot,
+        BulletDamageUp,             // 불릿 데미지 업
         
     }
     public struct PlayerStatusEvent

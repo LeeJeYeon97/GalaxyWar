@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 1861658706690365719}
   - component: {fileID: 2912057829797143992}
   - component: {fileID: 7499143106373595288}
+  - component: {fileID: -7107666978892716257}
   m_Layer: 10
   m_Name: Exp
   m_TagString: Item
@@ -31,7 +32,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
+  m_LocalScale: {x: 0.5, y: 0.49999994, z: 0.5}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
@@ -85,7 +86,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 21300000, guid: 428b9f822bdaae14fbd967ddda5791f8, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 7124c1d9a76c4a849aa0331b8123646c, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -172,7 +173,7 @@ CircleCollider2D:
   m_CompositeOperation: 0
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
-  m_Radius: 0.23
+  m_Radius: 1.5
 --- !u!114 &7499143106373595288
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -186,3 +187,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Poolable
   IsUsing: 0
+--- !u!114 &-7107666978892716257
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1634824601132012678}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8a5d39f720a9b64e87431d4cc752c78, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ItemAnimation
+  _useBobbing: 1
+  _useRotation: 0
+  _bobbingSpeed: 3
+  _bobbingHeight: 0.1
+  _rotationSpeed: 100

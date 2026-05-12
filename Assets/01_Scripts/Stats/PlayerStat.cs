@@ -26,6 +26,8 @@ public class PlayerStat
     public Stat criticalChance = new Stat();
     public Stat criticalDamageRate = new Stat();
 
+    public Stat itemGetRange = new Stat();
+
     public float hitCooldown;       // ÇÇ°Ý µô·¹ÀÌ
 
     [Header("¸ÖÆ¼¼¦°ü·Ã")]
@@ -57,6 +59,7 @@ public class PlayerStat
         maxBurstGuage.Init(data.statData.maxBurstGuage);
         maxBurstFullChargeTime.Init(data.statData.maxBurstFullChargeTime);
         hitCooldown = data.statData.hitCooldown;
+        itemGetRange.Init(data.statData.itemGetRange);
 
         isMultiShotEnabled = data.statData.isMultiShotEnabled;
         multiShotCount.Init(data.statData.multiShotCount);

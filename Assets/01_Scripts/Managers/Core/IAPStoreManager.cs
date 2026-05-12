@@ -296,7 +296,41 @@ public class IAPStoreManager
             // 주의: 현재 모든 상품을 '소모성(Consumable)'으로 박아두었습니다. (아래 개선점 참고)
             // 4. UGS 데이터를 Unity IAP가 알아먹을 수 있는 규격(ProductDefinition)으로 포장합니다.
             // "상품 ID는 이거고, 소모성(Consumable) 아이템이야!" 라고 이름표를 붙이는 과정입니다.
-            var def = new ProductDefinition(id: purchase.Id, type: ProductType.Consumable);
+            // 1. 유니티 내부용 대문자 아이디 (예: IAP_REMOVE_AD)
+            string baseId = purchase.Id;
+
+            // 2. 구글 플레이용 소문자 아이디를 담을 변수 (일단 기본 아이디로 초기화)
+            string storeSpecificId = baseId;
+
+            //  [핵심] 대시보드에 적어둔 "Store identifiers"를 여기서 꺼내옵니다!
+            // 안드로이드 기기일 경우, "GooglePlay" 키값에 해당하는 소문자 아이디를 찾아옵니다.
+            if (purchase.StoreIdentifiers != null)
+            {
+                if (Application.platform == RuntimePlatform.Android)
+                {
+                    // 구글 플레이용 아이디가 비어있지 않다면 적용
+                    if (!string.IsNullOrEmpty(purchase.StoreIdentifiers.GooglePlayStore))
+                    {
+                        storeSpecificId = purchase.StoreIdentifiers.GooglePlayStore;
+                    }
+                }
+                else if (Application.platform == RuntimePlatform.IPhonePlayer)
+                {
+                    // 애플 앱스토어용 아이디가 비어있지 않다면 적용
+                    if (!string.IsNullOrEmpty(purchase.StoreIdentifiers.AppleAppStore))
+                    {
+                        storeSpecificId = purchase.StoreIdentifiers.AppleAppStore;
+                    }
+                }
+            }
+
+            // 3. 상품 타입 지정 (광고 제거는 1번만 사는 거니까 비소모성(NonConsumable)이어야 합니다!)
+            ProductType pType = (baseId == Define.k_IAP_RemoveAd) ? ProductType.NonConsumable : ProductType.Consumable;
+
+            // 4. [핵심] 생성자에 baseId와 storeSpecificId를 둘 다 넣어줍니다!
+            // 이렇게 해야 IAP가 "내부에서는 IAP_REMOVE_AD로 부르고, 구글한테는 iap_remove_ad로 물어봐야지!" 라고 똑똑하게 작동합니다.
+            var def = new ProductDefinition(id: baseId, storeSpecificId: storeSpecificId, type: pType);
+
             productDefinitions.Add(def);
         }
 
@@ -406,9 +440,17 @@ public class IAPStoreManager
 
     public string GetLocalizedPrice(string productId)
     {
+
+        Debug.Log("광고 제거 상품 가져오기");
+        Debug.Log($"{productId}");
         var product = _storeController?.GetProductById(productId);
+        if(product == null)
+        {
+            Debug.Log("Product null!");
+        }
         if (product != null)
         {
+            Debug.Log("Product not null");
             // 스토어가 주는 "1,500" 같은 문자열을 그대로 반환
             return product.metadata.localizedPriceString;
         }

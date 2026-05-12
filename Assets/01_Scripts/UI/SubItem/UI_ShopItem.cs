@@ -59,10 +59,14 @@ public class UI_ShopItem : UI_Base
     }
     public void SetInfo(RealMoneyPurchaseDefinition data, Sprite icon)
     {
+        Debug.Log("SetInfo");
         _purchaseId = data.Id;
         GetTMP((int)Texts.Text_Name).text = data.Name;
 
         // 핵심: 스토어에서 현지화된 가격 문자열 가져오기
+
+
+        Debug.Log("광고 제거 상품 아이템 세팅 시작2");
         string price = Managers.IAPStore.GetLocalizedPrice(data.Id);
         GetTMP((int)Texts.Text_Price).text = price;
 

@@ -1,9 +1,13 @@
+using DG.Tweening;
+using System.Collections;
 using UnityEngine;
 
 public class ItemController : MonoBehaviour
 {
 
     private Rigidbody2D _rb;
+    private Collider2D _collider;
+    ItemAnimation _anim;
 
     [SerializeField]
     private float minSpeed = 0.5f;
@@ -15,9 +19,18 @@ public class ItemController : MonoBehaviour
 
     private ItemDataSO _data;
     public int value;
+
+    // 획득 연출 중복 실행 방지용 플래그
+    private bool _isCollecting = false;
+
+    private Vector2 myScale;
+
     private void Awake()
     {
         _rb = GetComponent<Rigidbody2D>();
+        _collider = GetComponent<Collider2D>();
+        _anim = GetComponent<ItemAnimation>();
+        myScale = transform.localScale;
     }
 
     public void Init(Vector2 pos, ItemDataSO data, int customValue = 0)
@@ -31,6 +44,22 @@ public class ItemController : MonoBehaviour
 
         _hasEnteredView = false;
 
+        // ==========================================================
+        // [추가] 오브젝트 풀링을 위해 껐던 것들 완벽하게 초기화 (원상복구)
+        // ==========================================================
+        _isCollecting = false;
+        _rb.simulated = true;
+        _collider.enabled = true;
+        transform.localScale = myScale; // 두트윈으로 바뀔 크기 초기화
+
+        // 끄고 놔뒀던 통통 튀기 애니메이션 다시 켜기
+
+        //통통 튀기 스크립트 끄기!
+        if (_anim != null)
+        {
+            _anim.enabled = true;
+            _anim.SetStartPosition(pos); // "이제부터 네 고향은 여기(pos)야!"
+        }
         if (customValue != 0)
         {
             value = customValue;
@@ -60,16 +89,108 @@ public class ItemController : MonoBehaviour
     }
     private void Update()
     {
-        CheckBoundaries();
+        // 획득 연출 중에는 경계 체크를 하지 않습니다.
+        if (!_isCollecting)
+        {
+            CheckBoundaries();
+        }
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        //  이미 획득 연출이 시작되었다면 무시
+        if (_isCollecting) return;
+
         // 아이템 획득
         PlayerController player = collision.GetComponent<PlayerController>();
         if (player == null) return;
 
+        //  1. 획득 시작: 물리 연산 끄기 및 콜라이더 비활성화
+        _isCollecting = true;
 
-        switch(_data.type)
+        _rb.simulated = false;
+
+        _rb.linearVelocity = Vector2.zero;
+        _rb.angularVelocity = 0f;
+        _collider.enabled = false; // 중복 충돌 완벽 방지
+
+        //통통 튀기 스크립트 끄기!
+        if (_anim != null)
+        {
+            _anim.enabled = false; // "이제 그만 통통 튀고 플레이어한테 끌려가!"
+        }
+        //  2. 연출 코루틴 시작//
+        //  DOTween 쫀득 연출 시작!
+        DoCollectTween(player);
+
+    }
+
+    // ==========================================================
+    //  DOTween 쫀득 애니메이션 로직
+    // ==========================================================
+    private void DoCollectTween(PlayerController player)
+    {
+        Vector2 startPos = transform.position;
+        Vector2 bounceDir = ((Vector2)transform.position - (Vector2)player.transform.position).normalized;
+        Vector2 bounceTarget = startPos + bounceDir * 1.2f; // 뒤로 밀려날 목표 지점
+
+        // DOTween 시퀀스 생성 (연속 동작)
+        Sequence seq = DOTween.Sequence();
+
+        // [동작 1] 뒤로 튕겨나가기 (OutCubic: 처음에 팍! 밀려나고 끝에서 부드럽게 감속)
+        seq.Append(transform.DOMove(bounceTarget, 0.25f).SetEase(Ease.OutCubic));
+
+        // [동작 2] 튕겨나갈 때 크기가 1.5배로 '팝(Pop)' 하고 커지기 (Join은 앞 동작과 동시에 실행)
+        seq.Join(transform.DOScale(myScale * 1.3f, 0.15f).SetEase(Ease.OutQuad));
+
+        // [동작 3] 커졌던 크기를 다시 원래대로 쫀득하게 줄이기
+        seq.Append(transform.DOScale(myScale, 0.1f).SetEase(Ease.InQuad));
+
+        // 튕기는 연출이 모두 끝나면? -> 맹추격 코루틴 시작!
+        seq.OnComplete(() =>
+        {
+            StartCoroutine(CoCollectAnimation(player));
+        });
+    }
+
+    private IEnumerator CoCollectAnimation(PlayerController player)
+    {
+        //// --- [페이즈 1] 뒤로 튕기기 (Vector2 유지) ---
+        //Vector2 startPos = transform.position;
+        //Vector2 bounceDir = ((Vector2)transform.position - (Vector2)player.transform.position).normalized;
+
+        //float bounceDuration = 0.2f;
+        //float bounceDistance = 1.0f;
+        //Vector2 bounceTarget = startPos + bounceDir * bounceDistance;
+
+        //float time = 0;
+        //while (time < bounceDuration)
+        //{
+        //    time += Time.deltaTime;
+        //    float t = time / bounceDuration;
+        //    transform.position = Vector2.Lerp(startPos, bounceTarget, Mathf.Sin(t * Mathf.PI * 0.5f));
+        //    yield return null;
+        //}
+
+        float chaseSpeed = 0f;    // 잠깐 멈칫! 했다가 출발하는 느낌을 위해 0부터 시작
+        float acceleration = 40f; // 엄청난 가속도로 빨려 들어감
+
+        while (player != null && player.gameObject.activeSelf)
+        {
+            float distance = Vector2.Distance(transform.position, player.transform.position);
+            // 2D 픽셀 게임에 맞게 도달 판정 거리를 다시 0.5f로 좁혔습니다!
+            if (distance < 0.5f)
+            {
+                break;
+            }
+            chaseSpeed += acceleration * Time.deltaTime;
+
+            // 순수 Vector2.MoveTowards 사용
+            transform.position = Vector2.MoveTowards(transform.position, player.transform.position, chaseSpeed * Time.deltaTime);
+            yield return null;
+        }
+
+        // --- [페이즈 3] 획득 및 파괴 ---
+        switch (_data.type)
         {
             case Define.ItemType.Gold:
                 Managers.Game.currentSessionGold += value;
@@ -77,14 +198,11 @@ public class ItemController : MonoBehaviour
             case Define.ItemType.Exp:
                 Managers.Level.AddExp(value);
                 break;
-            default:
-                break;
         }
 
         Managers.Sound.Play(_data.getSoundClip);
         Managers.Resource.Destroy(this.gameObject);
     }
-
     void CheckBoundaries()
     {
         if (_data.isDrop == false) return;

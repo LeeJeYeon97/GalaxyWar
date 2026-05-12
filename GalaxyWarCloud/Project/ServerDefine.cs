@@ -18,6 +18,7 @@ public class ServerDefine
 
     // IAP
     public const string k_goldPurchase100Id = "GOLD_PURCHASE_100";
+    public const string k_removeAd = "IAP_REMOVE_AD";
 
     // VP
     public const string placementShopGoldAd = "Shop_Gold";

@@ -116,14 +116,14 @@ public class PlayerEconomyManager
 
             // 만약 배너 광고가 켜져있다면 여기서 꺼줍니다.
             // Managers.AD.HideBanner();
+            return;
         }
         else
         {
             Managers.AD.IsAdsRemoved = false;
             Debug.Log("일반 유저입니다. (광고 제거 아이템 없음)");
+            return;
         }
-
-        Managers.AD.IsAdsRemoved = false;
     }
 
     // [8] 재화 조회 유틸리티 함수

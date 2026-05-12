@@ -16,13 +16,17 @@ MonoBehaviour:
   originalPrefabs: {fileID: 74111783754478293, guid: 83512e056c4680b44ac9be521d59f8eb, type: 3}
   isExclude: 0
   MaxHp: 10
-  MaxSpeed: 1.8
-  MinSpeed: 1.2
+  MaxSpeed: 2
+  MinSpeed: 1.5
   Damage: 5
   Score: 150
   Exp: 15
   spawnPhase: 1
+  dropTable:
+  - itemType: 3
+    dropRate: 1
   magmaTick: 0
   magmaPuddle: {fileID: 0}
   sludgePuddle: {fileID: 0}
+  fragmentMeteor: {fileID: 0}
   auraRadius: 0

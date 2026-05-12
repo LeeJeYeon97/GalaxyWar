@@ -499,6 +499,30 @@ MonoBehaviour:
       by {1}%'
     m_Metadata:
       m_Items: []
+  - m_Id: 9360967159926784
+    m_Localized: Upgrade Bullet Damage
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9361073007382528
+    m_Localized: Damage increased by {0}%
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9361120788893696
+    m_Localized: Damage increased by {0}%
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9361132142874624
+    m_Localized: Damage increased by {0}%
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9361141294845952
+    m_Localized: Damage increased by {0}%
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9361193904001024
+    m_Localized: Damage increased by {0}%
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

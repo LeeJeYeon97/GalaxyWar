@@ -30,7 +30,7 @@ public class PlayerSpeedUpAbilityDataSO : PlayerAbilityDataSO
 
         // 타겟(플레이어)의 스피드 스탯에 바로 더해줍니다!
         float amount = speedIncreases[level];
-        targetStat.speed.AddValue(amount);
+        targetStat.speed.AddMultiplier(amount);
 
     }
 }

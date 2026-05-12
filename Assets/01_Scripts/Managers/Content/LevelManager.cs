@@ -26,29 +26,32 @@ public class LevelManager
 
     public float GetMaxExp()
     {
-        // 새로운 메테오 경험치(최소 10 ~ 최대 70)에 맞춰 스케일업된 공식!
+        // n은 레벨업을 위한 가중치 역할 (1레벨일 땐 n=0)
         int n = CurrentLevel - 1;
 
-        // 1. 기본 요구량 (기존 5 -> 20으로 상향)
-        // n(n+1)/2 공식에 15를 곱해서 초반 레벨업 템포를 기가 막히게 조절합니다.
-        float baseRequired = 20 + ((n * (n + 1)) / 2f) * 15;
+        // 1. 기본 요구량 (2차 함수의 가파름을 줄이고, 선형 증가 비중을 높였습니다)
+        // 초반 레벨업이 훨씬 부드러워지며, 20레벨까지 기분 좋게 성장합니다.
+        float baseRequired = 20 + (n * 20) + (n * n * 2.5f);
 
-        // 2. 초반 (1~10레벨): Phase 1~2 구간. 공식을 그대로 씁니다.
-        if (CurrentLevel <= 10)
+        // 2. 초반~중반 (1~20레벨): 도파민 분비 구간! (페널티 없음)
+        // 15~20레벨까지는 수월하게 빌드업할 수 있도록 기본 공식만 적용합니다.
+        if (CurrentLevel <= 20)
         {
             return baseRequired;
         }
-        // 3. 중반 (11~20레벨): Phase 3~4 구간. 운석이 0.5초마다 쏟아지므로 페널티를 확 늘립니다.
-        else if (CurrentLevel <= 20)
+        // 3. 중후반 (21~30레벨): 운석이 쏟아지는 구간 (페널티 시작)
+        // 플레이어가 강해졌으므로, 21레벨부터는 레벨당 요구량이 눈에 띄게 증가합니다.
+        else if (CurrentLevel <= 30)
         {
-            float midStep = CurrentLevel - 10;
-            return baseRequired + (midStep * 150); // 기존 20 -> 150으로 페널티 강화
+            float midStep = CurrentLevel - 20;
+            return baseRequired + (midStep * 100);
         }
-        // 4. 후반 (21레벨 이상): Phase 5 구간. 오라, 분열 메테오가 50~70씩 주므로 억제기를 켭니다!
+        // 4. 극후반 (31레벨 이상): 억제기 풀가동!
+        // 오라, 분열 메테오 등 고가치(50~70) 메테오를 잡아야만 렙업이 가능하게 꽉 묶습니다.
         else
         {
-            float lateStep = CurrentLevel - 20;
-            return baseRequired + 1500 + (lateStep * 400); // 후반용 폭발적 증가
+            float lateStep = CurrentLevel - 30;
+            return baseRequired + 1000 + (lateStep * 300);
         }
     }
     public void AddExp(float exp)

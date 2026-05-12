@@ -18,6 +18,8 @@ public struct PlayerStatData
     public float criticalChance;
     public float criticalDamageRate;
 
+    public float itemGetRange;
+
     public float hitCooldown;       // ««∞› µÙ∑π¿Ã
 
     public float shieldChargeTime;

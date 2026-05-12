@@ -17,8 +17,8 @@ MonoBehaviour:
   maxLevel: 5
   _requiredAbility: 0
   splitIncreases:
-  - countIncrease: 2
-    chanceIncrease: 20
+  - countIncrease: 3
+    chanceIncrease: 30
   - countIncrease: 2
     chanceIncrease: 10
   - countIncrease: 2

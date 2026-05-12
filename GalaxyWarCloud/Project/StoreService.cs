@@ -122,8 +122,10 @@ public class StoreService
     public async Task<PlayerEconomyData> ProcessRealMoneyPurchase(IExecutionContext context, IGameApiClient gameApiClient,
         string productId, string receipt, double localPrice, string currencyCode)
     {
+        _logger.LogInformation($"[결제 검증 시작] 들어온 productId: {productId ?? "NULL입니다!!"}");
         try
         {
+
             // 구매 자격 검증 로직 (1회 한정 등)
             await ValidatePlayerEligibility(context, gameApiClient, productId);
 
@@ -209,14 +211,21 @@ public class StoreService
         }
 
         // UGS 서버에 보낼 '구글 영수증 검증 요청서'를 만듭니다.
-        var googleRequest = new PlayerPurchaseGoogleplaystoreRequest
-        {
-            Id = productId,
-            PurchaseData = googleReceipt.json,
-            PurchaseDataSignature = googleReceipt.signature,
-            LocalCost = (int)(localCost* 100),
-            LocalCurrency = currencyCode,
-        };
+        //var googleRequest = new PlayerPurchaseGoogleplaystoreRequest
+        //{
+        //    Id = productId,
+        //    PurchaseData = googleReceipt.json,
+        //    PurchaseDataSignature = googleReceipt.signature,
+        //    LocalCost = (int)(localCost* 100),
+        //    LocalCurrency = currencyCode,
+        //};
+        var googleRequest = new PlayerPurchaseGoogleplaystoreRequest(
+            id: productId,
+            purchaseData: googleReceipt.json,
+            purchaseDataSignature: googleReceipt.signature,
+            localCost: (int)(localCost * 100),
+            localCurrency: currencyCode
+            );
 
         // 구글 검증 & UGS 자동 보상 지급
         // [핵심] UGS 서버야!구글 본사에 이거 진짜인지 물어보고, 진짜면 알아서 보상도 넣어줘!
@@ -277,14 +286,20 @@ public class StoreService
         }
 
         // 애플은 영수증이 하나로 통일되어 있어 훨씬 심플합니다.
-        var appleRequest = new PlayerPurchaseAppleappstoreRequest
-        {
-            Id = productId,
-            Receipt = applePayload,
-            LocalCost = (int)(localCost * 100),
-            LocalCurrency = currencyCode,
-        };
+        //var appleRequest = new PlayerPurchaseAppleappstoreRequest
+        //{
+        //    Id = productId,
+        //    Receipt = applePayload,
+        //    LocalCost = (int)(localCost * 100),
+        //    LocalCurrency = currencyCode,
+        //};
 
+        var appleRequest = new PlayerPurchaseAppleappstoreRequest(
+            id: productId,
+            receipt: applePayload,
+            localCost: (int)(localCost * 100),
+            localCurrency: currencyCode
+        );
         // UGS 서버야, 애플 본사에 물어보고 보상 지급해 줘!
         var purchaseResult = await gameApiClient.EconomyPurchases.RedeemAppleAppStorePurchaseAsync(
             context,
@@ -405,12 +420,12 @@ public class StoreService
         // 2. 구매하려는 상품 ID(스토어 기준)에 따라 검사할 증표를 짝지어줍니다.
         switch (productId)
         {
-            case "com.mygame.ad_removal": // 스토어에 등록된 '광고 제거' 상품 ID
-                checkItemKey = "AD_REMOVAL_TICKET";
+            case ServerDefine.k_removeAd: // 스토어에 등록된 '광고 제거' 상품 ID
+                checkItemKey = "REMOVE_AD_TICKET";
                 break;
-            case "com.mygame.starter_pack_01": // 스토어에 등록된 '초보자 패키지' 상품 ID
-                checkItemKey = "FLAG_STARTER_PACK_BOUGHT";
-                break;
+            //case "com.mygame.starter_pack_01": // 스토어에 등록된 '초보자 패키지' 상품 ID
+            //    checkItemKey = "FLAG_STARTER_PACK_BOUGHT";
+            //    break;
             default:
                 // 골드나 다이아처럼 무한정 살 수 있는 일반 상품이면 검사 없이 무사통과!
                 return;

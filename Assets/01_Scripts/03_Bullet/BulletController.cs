@@ -50,6 +50,8 @@ public class BulletController : BaseController
         Managers.Game.AddActiveObject(this);
 
         Managers.Event.Subscribe<int>(ActionEvent.BulletBounceCountUp,UpdateBounceCount);
+
+        Managers.Event.Subscribe(ActionEvent.BulletDamageUp, UpdateCurDamage);
     }
     private void OnDisable()
     {
@@ -58,6 +60,8 @@ public class BulletController : BaseController
             Stat.behavior.OnRelease(this);
         }
         Managers.Event.UnSubscribe<int>(ActionEvent.BulletBounceCountUp, UpdateBounceCount);
+        Managers.Event.UnSubscribe(ActionEvent.BulletDamageUp, UpdateCurDamage);
+
         Managers.Game.RemoveActiveObject(this);
 
     }
@@ -208,8 +212,9 @@ public class BulletController : BaseController
         float critChance = Managers.Game._player.Stat.criticalChance.TotalValue;
         float critDamageMultiplier = Managers.Game._player.Stat.criticalDamageRate.TotalValue;
 
-        // 2. 주사위 굴리기 (여기서 개별 타격마다 크리티컬이 톡톡 터짐!)
-        bool isCrit = UnityEngine.Random.value <= critChance;
+        // 2. 0~100 스케일 주사위 굴리기 
+        // UnityEngine.Random.Range(min, max)를 사용해서 0.0f부터 100.0f 사이의 난수를 뽑습니다.
+        bool isCrit = UnityEngine.Random.Range(0f, 100f) <= critChance;
         float finalDmg = isCrit ? (baseDamage * critDamageMultiplier) : baseDamage;
 
         // 3. 계산된 최종 데미지와 크리티컬 여부를 메테오에게 전달
@@ -290,5 +295,10 @@ public class BulletController : BaseController
             // 반납처리 필요
             Managers.Resource.Destroy(gameObject);
         }
+    }
+
+    private void UpdateCurDamage()
+    {
+        CurDamage = Managers.Stat.GetBulletStat(Stat.type).damage.TotalValue;
     }
 }

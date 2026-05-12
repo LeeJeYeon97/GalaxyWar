@@ -22,7 +22,9 @@ MonoBehaviour:
   Score: 250
   Exp: 25
   spawnPhase: 2
-  dropTable: []
+  dropTable:
+  - itemType: 3
+    dropRate: 1
   magmaTick: 0
   magmaPuddle: {fileID: 0}
   sludgePuddle: {fileID: 100008, guid: 2d61abf2c44f07148acd2df566dfccab, type: 3}

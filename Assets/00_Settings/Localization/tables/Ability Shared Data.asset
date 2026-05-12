@@ -395,6 +395,30 @@ MonoBehaviour:
     m_Key: Passive_PlayerCritical_Desc_4
     m_Metadata:
       m_Items: []
+  - m_Id: 9360967159926784
+    m_Key: Passive_PlayerDamageUp_Name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9361073007382528
+    m_Key: Passive_PlayerDamageUp_Desc_0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9361120788893696
+    m_Key: Passive_PlayerDamageUp_Desc_1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9361132142874624
+    m_Key: Passive_PlayerDamageUp_Desc_2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9361141294845952
+    m_Key: Passive_PlayerDamageUp_Desc_3
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9361193904001024
+    m_Key: Passive_PlayerDamageUp_Desc_4
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:
