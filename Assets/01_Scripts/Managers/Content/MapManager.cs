@@ -51,10 +51,26 @@ public class MapManager
 
     void CalculatePlayZone()
     {
-        // mainCam의 현재 orthographicSize를 기준으로 월드 좌표 계산
-        fullzoneMin = mainCam.ViewportToWorldPoint(new Vector3(0, bottomMargin, 10));
-        fullzoneMax = mainCam.ViewportToWorldPoint(new Vector3(1, 1 - topMargin, 10));
+        // 1. 카메라의 세로 크기 계산 (Orthographic Size의 2배)
+        float worldHeight = mainCam.orthographicSize * 2f;
 
+        // 2. [핵심] 가로 크기는 유니티 카메라에 묻지 않고 9:16 비율로 직접 계산!
+        float worldWidth = worldHeight * (9f / 19.5f);
+
+        // 3. 카메라의 현재 중심 위치 가져오기
+        Vector3 camPos = mainCam.transform.position;
+
+        // 4. 마진(여백)을 적용하여 완벽한 외곽선 좌표 구하기
+        float leftX = camPos.x - (worldWidth / 2f);
+        float rightX = camPos.x + (worldWidth / 2f);
+
+        float bottomY = camPos.y - mainCam.orthographicSize + (worldHeight * bottomMargin);
+        float topY = camPos.y + mainCam.orthographicSize - (worldHeight * topMargin);
+
+        fullzoneMin = new Vector3(leftX, bottomY, 0);
+        fullzoneMax = new Vector3(rightX, topY, 0);
+
+        // 5. 벽 두께만큼 안쪽으로 밀어넣어 실제 플레이 존(PlayZone) 설정
         PlayZoneMin = new Vector2(fullzoneMin.x + wallThickness, fullzoneMin.y + wallThickness);
         PlayZoneMax = new Vector2(fullzoneMax.x - wallThickness, fullzoneMax.y - wallThickness);
     }
@@ -66,18 +82,22 @@ public class MapManager
         Vector2 center = (PlayZoneMin + PlayZoneMax) / 2f;
         float half = wallThickness / 2f;
 
-        // 위치 및 스케일 업데이트
+        // 추가된 핵심: 어떤 스프라이트를 넣어도 1x1 단위로 맞추기 위한 마법의 보정값
+        float baseWidth = wallSprite.bounds.size.x;
+        float baseHeight = wallSprite.bounds.size.y;
+
+        // 스케일 계산 시 baseWidth/baseHeight로 나눠줍니다!
         topWall.position = new Vector2(center.x, PlayZoneMax.y + half);
-        topWall.localScale = new Vector3(screenWidth, wallThickness, 1f);
+        topWall.localScale = new Vector3(screenWidth / baseWidth, wallThickness / baseHeight, 1f);
 
         bottomWall.position = new Vector2(center.x, PlayZoneMin.y - half);
-        bottomWall.localScale = new Vector3(screenWidth, wallThickness, 1f);
+        bottomWall.localScale = new Vector3(screenWidth / baseWidth, wallThickness / baseHeight, 1f);
 
         leftWall.position = new Vector2(PlayZoneMin.x - half, center.y);
-        leftWall.localScale = new Vector3(wallThickness, screenHeight, 1f);
+        leftWall.localScale = new Vector3(wallThickness / baseWidth, screenHeight / baseHeight, 1f);
 
         rightWall.position = new Vector2(PlayZoneMax.x + half, center.y);
-        rightWall.localScale = new Vector3(wallThickness, screenHeight, 1f);
+        rightWall.localScale = new Vector3(wallThickness / baseWidth, screenHeight / baseHeight, 1f);
     }
 
     Transform CreateWall(string name)

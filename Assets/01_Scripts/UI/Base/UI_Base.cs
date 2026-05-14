@@ -14,6 +14,7 @@ public abstract class UI_Base : MonoBehaviour
 
     // 추가: 초기화 여부를 기억하는 변수
     protected bool _init = false;
+    public RenderMode canvasRenderMode = RenderMode.ScreenSpaceOverlay;
 
     public virtual void Init()
     {

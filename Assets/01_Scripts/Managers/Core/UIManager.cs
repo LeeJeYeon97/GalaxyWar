@@ -39,7 +39,27 @@ public class UIManager
     public void SetCanvas(GameObject go, bool sort = true)
     {
         Canvas canvas = Util.GetOrAddComponent<Canvas>(go);
-        canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+
+        //  1. UI 오브젝트에 붙어있는 스크립트(UI_Base)를 찾아서, 대표님이 설정한 모드를 알아냅니다.
+        UI_Base uiBase = go.GetComponent<UI_Base>();
+        RenderMode targetMode = RenderMode.ScreenSpaceCamera; // 기본값
+
+        if (uiBase != null)
+        {
+            targetMode = uiBase.canvasRenderMode; // 프리팹에서 설정한 값 가져오기
+        }
+
+        // 2. 유니티가 멋대로 바꿨든 말든, 우리가 원하는 모드로 강제 세팅해버립니다!
+        canvas.renderMode = targetMode;
+
+        //  3. Camera 모드라면 메인 카메라를 찰칵!
+        if (targetMode == RenderMode.ScreenSpaceCamera)
+        {
+            canvas.worldCamera = Camera.main;
+            if (canvas.worldCamera == null)
+                Debug.LogWarning($"[UI 매니저] {go.name}에 할당할 MainCamera를 찾을 수 없습니다.");
+        }
+
         canvas.overrideSorting = true;
 
         if (sort)

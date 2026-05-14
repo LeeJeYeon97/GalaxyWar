@@ -161,6 +161,7 @@ public class IAPStoreManager
             // v5 : products live in the order's cart (usually 1 item, but don't assume)
             var firstItem = pending.CartOrdered.Items().FirstOrDefault();
             var pid = firstItem?.Product?.definition?.id;
+            var receipt = pending.Info.Receipt;  // 1. 영수증(Receipt) 추출
 
             if (string.IsNullOrEmpty(pid))
             {
@@ -168,16 +169,15 @@ public class IAPStoreManager
                 PurchaseFailed?.Invoke("No product id in pending order");
                 return;
             }
+            Debug.Log($"[IAP] 처리 대기 중인 주문 발견 (복원 포함): {pid}");
             var product = _storeController?.GetProductById(pid);
+
             if (product == null)
             {
                 Debug.LogError($"[IAP] Product not found in controller : {pid}");
                 PurchaseFailed?.Invoke($"Product not found : {pid}");
                 return;
             }
-            // 1. 영수증(Receipt) 추출
-            var receipt = pending.Info.Receipt;
-
             // 2. 안드로이드라면 서버에 보내기 전에 클라이언트에서 1차로 가짜 영수증인지 검사합니다.
             // Optional Google validation (Apple handled internally in v5)
             if (!ValidateIfGoogle(receipt))
@@ -199,6 +199,9 @@ public class IAPStoreManager
 
             // 4. 보상이 잘 들어왔으니 내 지갑(로컬 데이터)을 최신화합니다.
             Managers.PlayerEconomy.HandleEconomyUpdate(updated);
+
+            // 인벤토리 티켓 로직 실행
+            ApplyPurchaseBenefit(pid);
 
             // 5. 서버 보상까지 완벽히 끝났으니, 스토어에 "결제 확정(Confirm)해 줘!" 라고 알립니다.
             // (이걸 안 부르면 며칠 뒤에 유저에게 환불 처리됩니다.)
@@ -326,6 +329,9 @@ public class IAPStoreManager
 
             // 3. 상품 타입 지정 (광고 제거는 1번만 사는 거니까 비소모성(NonConsumable)이어야 합니다!)
             ProductType pType = (baseId == Define.k_IAP_RemoveAd) ? ProductType.NonConsumable : ProductType.Consumable;
+
+            //// [임시 수정 코드] 구글 캐시를 날리기 위해 묻지도 따지지도 않고 전부 소모성으로 세팅!
+            //ProductType pType = ProductType.Consumable;
 
             // 4. [핵심] 생성자에 baseId와 storeSpecificId를 둘 다 넣어줍니다!
             // 이렇게 해야 IAP가 "내부에서는 IAP_REMOVE_AD로 부르고, 구글한테는 iap_remove_ad로 물어봐야지!" 라고 똑똑하게 작동합니다.
@@ -455,5 +461,44 @@ public class IAPStoreManager
             return product.metadata.localizedPriceString;
         }
         return "N/A"; // 아직 로드가 안 됐을 경우
+    }
+
+    // 결제/복원 성공 시 Economy 인벤토리에 아이템을 넣어주는 공통 함수
+    private void ApplyPurchaseBenefit(string productId)
+    {
+        if (productId == Define.k_IAP_RemoveAd)
+        {
+            // 1. [핵심] 게임 내 광고 송출 시스템 강제 종료 (대표님의 광고 매니저 호출)
+            // 예시: Managers.Ads.SetRemoveAdState(true);
+            Debug.Log("[IAP] 광고 제거 혜택이 게임에 적용되었습니다!");
+
+            Managers.AD.IsAdsRemoved = true;
+
+            // 3. [UI] 상점 UI 새로고침 (결제창에서 '보유 중'으로 버튼 변경)
+            // 예시: Managers.UI.FindPopup<UI_ShopPanel>()?.RefreshUI();
+        }
+        else if (productId == "gold_package_01")
+        {
+            // 만약 골드 패키지 같은 거라면?
+            // 서버가 이미 골드를 줬으니, 클라이언트는 "골드 획득 연출(파티클)"만 띄워주면 됩니다!
+        }
+    }
+
+    // 구매 복원 버튼 눌렀을 시
+    public void RestorePurchases()
+    {
+        if (_storeController == null)
+        {
+            Debug.LogError("[IAP] 스토어가 초기화되지 않았습니다.");
+            return;
+        }
+
+        Debug.Log("[IAP] 구매 복원 시작...");
+
+        // [핵심] v5 방식: 애플, 안드로이드 구분할 필요 없이 이 한 줄이면 끝납니다!
+        // 이 함수가 실행되면 스토어에서 과거 영수증을 찾아 OnPurchasePending 또는 OnPurchasesFetched 로 던져줍니다.
+        _storeController.FetchPurchases();
+
+        Debug.Log("[IAP] 스토어에 과거 결제 내역 조회를 요청했습니다.");
     }
 }

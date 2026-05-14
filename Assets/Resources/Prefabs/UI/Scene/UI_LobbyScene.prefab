@@ -1597,7 +1597,7 @@ MonoBehaviour:
   m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 1080, y: 1920}
+  m_ReferenceResolution: {x: 1080, y: 2340}
   m_ScreenMatchMode: 0
   m_MatchWidthOrHeight: 0
   m_PhysicalUnit: 3
@@ -1634,6 +1634,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4b2cba6191baa464192ec74178873f91, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UI_LobbyScene
+  canvasRenderMode: 1
   PanelList: []
   _LobbyObject: {fileID: 0}
 --- !u!1 &6239568660074979603
@@ -2733,11 +2734,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 881027144187640413, guid: f5b0deb16236ce2438bc20f98d86020b, type: 3}
       propertyPath: m_Size
-      value: 0.84090906
+      value: 0.902439
       objectReference: {fileID: 0}
     - target: {fileID: 881027144187640413, guid: f5b0deb16236ce2438bc20f98d86020b, type: 3}
       propertyPath: m_Value
-      value: 1.0000018
+      value: 1.0000061
       objectReference: {fileID: 0}
     - target: {fileID: 962982274726214169, guid: f5b0deb16236ce2438bc20f98d86020b, type: 3}
       propertyPath: m_AnchorMax.y

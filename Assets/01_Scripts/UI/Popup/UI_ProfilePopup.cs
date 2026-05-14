@@ -17,6 +17,7 @@ public class UI_ProfilePopup : UI_Popup
         Text_PlayerID,
         Text_Score,
         Text_Time,
+        Text_RemoveAd
     }
     public override void Init()
     {
@@ -55,7 +56,15 @@ public class UI_ProfilePopup : UI_Popup
         // 3. PlayerID 텍스트 설정
         GetTMP((int)Texts.Text_PlayerID).text = $"{playerId}";
 
-
+        
+        if(Managers.AD.IsAdsRemoved)
+        {
+            GetTMP((int)Texts.Text_RemoveAd).text = $"광고 제거 적용중";
+        }
+        else
+        {
+            GetTMP((int)Texts.Text_RemoveAd).text = $"광고 제거 적용x";
+        }
         // 4. 최고 점수 설정
         GetTMP((int)Texts.Text_Score).text = $"{Managers.PlayerData.PlayerDataLocal.MaxScore}";
 

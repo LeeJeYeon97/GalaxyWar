@@ -26,8 +26,6 @@ public class UI_LoginScene : UI_Scene
     Button backgroundButton;
     Slider loadingBar;
 
-    public string _tableName = "UITextTable";
-
     public override void Init()
     {
         base.Init();

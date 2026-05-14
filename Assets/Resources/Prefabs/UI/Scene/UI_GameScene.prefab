@@ -3045,6 +3045,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e21df3325c0213943ac9678f4af303b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UI_ReloadBar
+  canvasRenderMode: 0
 --- !u!1 &5546333386930434607
 GameObject:
   m_ObjectHideFlags: 0
@@ -3630,7 +3631,7 @@ MonoBehaviour:
   m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 1080, y: 1920}
+  m_ReferenceResolution: {x: 1080, y: 2340}
   m_ScreenMatchMode: 0
   m_MatchWidthOrHeight: 0
   m_PhysicalUnit: 3
@@ -3667,6 +3668,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0fd6bd8dcb3d3f642a9a957c21427acd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UI_GameScene
+  canvasRenderMode: 1
   _slotPositions:
   - {x: 0, y: 0}
   - {x: 0, y: 0}
