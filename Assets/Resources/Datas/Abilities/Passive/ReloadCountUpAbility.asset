@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: ReloadCountUpAbility
   m_EditorClassIdentifier: Assembly-CSharp::PlayerReloadCountUpAbilityDataSO
   type: 3
-  icon: {fileID: 21300000, guid: 8de98c1ee7d2eba45a6c365880ac48fc, type: 3}
+  icon: {fileID: 21300000, guid: afe10bb582200dc49aaa401b9571bf01, type: 3}
   maxLevel: 5
   _requiredAbility: 0
   reloadCountIncreases:

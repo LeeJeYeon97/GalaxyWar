@@ -57,10 +57,22 @@ public class UIManager
         {
             canvas.worldCamera = Camera.main;
             if (canvas.worldCamera == null)
+            {
                 Debug.LogWarning($"[UI 매니저] {go.name}에 할당할 MainCamera를 찾을 수 없습니다.");
+            }
+            else
+            {
+                
+                //[추가 1] 카메라가 할당되었다면, Plane Distance를 코드로 강제 고정! (메테오 뚫림 방지)
+                canvas.planeDistance = 1f;
+                
+            }
         }
 
         canvas.overrideSorting = true;
+        // [추가 2] 아까 만든 "UI" Sorting Layer를 기본값으로 강제 지정!
+        // (만약 유니티 에디터에서 "UI"라는 레이어를 안 만드셨다면 이 줄은 빼셔도 됩니다)
+        //canvas.sortingLayerName = "UI";
 
         if (sort)
         {

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: ReloadTimeDecreaseAbility
   m_EditorClassIdentifier: Assembly-CSharp::PlayerReloadTimeDecreaseAbilityDataSO
   type: 4
-  icon: {fileID: 21300000, guid: 5256ac3adc8407843b288fda763bb86f, type: 3}
+  icon: {fileID: 21300000, guid: fb02991f20eaf134d84bf6d891303f24, type: 3}
   maxLevel: 5
   _requiredAbility: 0
   reloadTimeDecreases:

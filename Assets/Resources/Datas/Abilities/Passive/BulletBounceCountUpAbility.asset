@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: BulletBounceCountUpAbility
   m_EditorClassIdentifier: Assembly-CSharp::PlayerAllBulletBounceCountUpAbilityDataSO
   type: 10
-  icon: {fileID: 21300000, guid: c7a578149cecb074396f79472b9a1919, type: 3}
+  icon: {fileID: 21300000, guid: 28194a534b3fdf54dbb59d7a9a212a04, type: 3}
   maxLevel: 5
   _requiredAbility: 0
   increases: 0100000001000000010000000100000001000000

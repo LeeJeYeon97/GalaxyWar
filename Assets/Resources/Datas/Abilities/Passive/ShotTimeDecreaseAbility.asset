@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: ShotTimeDecreaseAbility
   m_EditorClassIdentifier: Assembly-CSharp::PlayerShotTimeDecreaseAbilityDataSO
   type: 5
-  icon: {fileID: 21300000, guid: 6c1b69a48b29dae4abfcb88a8000a7e9, type: 3}
+  icon: {fileID: 21300000, guid: 5952ece58c5884549b532968dbdbfe89, type: 3}
   maxLevel: 5
   _requiredAbility: 0
   shotTimeDecreases:

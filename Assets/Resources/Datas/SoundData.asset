@@ -15,7 +15,7 @@ MonoBehaviour:
   soundList:
   - id: 1
     clip: {fileID: 8300000, guid: 046f3251321303a4dbd7eebee14020eb, type: 3}
-    volume: 1
+    volume: 0.621
   - id: 2
     clip: {fileID: 8300000, guid: 485a5d80a620ce04586400126840e0c9, type: 3}
     volume: 0.3
@@ -54,7 +54,7 @@ MonoBehaviour:
     volume: 1
   - id: 13
     clip: {fileID: 8300000, guid: a298c5eaec4f5484baf2037401f2ef7d, type: 3}
-    volume: 1
+    volume: 0.215
   - id: 14
     clip: {fileID: 0}
     volume: 1

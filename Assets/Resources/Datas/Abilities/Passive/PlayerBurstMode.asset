@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: PlayerBurstMode
   m_EditorClassIdentifier: Assembly-CSharp::PlayerBurstModeAblityDataSO
   type: 6
-  icon: {fileID: 21300000, guid: 4fa83e931ac3a3c468c2e1e9d20c3ab7, type: 3}
+  icon: {fileID: 21300000, guid: c0c4efa4dee24f54f9e10e550556260f, type: 3}
   maxLevel: 5
   _requiredAbility: 0
   levels:

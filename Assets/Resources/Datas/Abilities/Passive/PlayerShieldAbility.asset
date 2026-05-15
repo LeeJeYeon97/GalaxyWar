@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: PlayerShieldAbility
   m_EditorClassIdentifier: Assembly-CSharp::PlayerShieldAbilityDataSO
   type: 7
-  icon: {fileID: 21300000, guid: e7ce837574cb7ef48883710e912c3718, type: 3}
+  icon: {fileID: 21300000, guid: c1c0c4b7a30ce5c419b2a77dd669c87a, type: 3}
   maxLevel: 5
   _requiredAbility: 0
   increases: 0000000004000000040000000400000004000000

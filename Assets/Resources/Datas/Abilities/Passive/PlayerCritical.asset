@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: PlayerCritical
   m_EditorClassIdentifier: Assembly-CSharp::PlayerCriticalAbilityDataSO
   type: 8
-  icon: {fileID: 21300000, guid: 37c7faa38711a6044bf12b84912e0dd5, type: 3}
+  icon: {fileID: 21300000, guid: 26a123c92a8b96e43a76a2eaced194bf, type: 3}
   maxLevel: 5
   _requiredAbility: 0
   levels:

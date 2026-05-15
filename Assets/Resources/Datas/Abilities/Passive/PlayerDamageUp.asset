@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: PlayerDamageUp
   m_EditorClassIdentifier: Assembly-CSharp::PlayerDamageUpAbilityDataSO
   type: 9
-  icon: {fileID: 21300000, guid: f071dbf80bf74ca49be889a77a29bb24, type: 3}
+  icon: {fileID: 21300000, guid: f9319536cf7467a4bae7f214391749b1, type: 3}
   maxLevel: 5
   _requiredAbility: 0
   maxHpIncreases:

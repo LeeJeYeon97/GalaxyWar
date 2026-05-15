@@ -23,6 +23,9 @@ public class GameDataSO : ScriptableObject
 
     public int reviveCount;
 
+    [Header("´Ù½Ã»Ì±â °ñµå°ª")]
+    public int rerollGoldCost;
+
     [Header("GameTestMode")]
     public bool expZero;
     public bool playerGod;

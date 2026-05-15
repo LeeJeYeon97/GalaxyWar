@@ -2,6 +2,7 @@ using DG.Tweening;
 using NUnit.Framework;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
@@ -25,6 +26,10 @@ public class UI_LevelUpPopup : UI_Popup
         ReloadButton_AD,
         ReloadButton_Coin
     }
+    enum Texts
+    {
+        Text_ReRollCost
+    }
     private bool _isSelecting = false;
     // 3개의 카드를 담을 배열 생성
     public GameObject[] cards = new GameObject[3];
@@ -38,10 +43,13 @@ public class UI_LevelUpPopup : UI_Popup
         
         Bind<GameObject>(typeof(Cards));
         Bind<Button>(typeof(Buttons));
+        Bind<TMP_Text>(typeof(Texts));
 
         GetButton((int)Buttons.ReloadButton_AD).onClick.AddListener(OnCardReloadButtonAd);
 
         GetButton((int)Buttons.ReloadButton_Coin).onClick.AddListener(OnCardReloadButtonCoinAsync);
+
+        GetTMP((int)Texts.Text_ReRollCost).text = Managers.Data.GameData.rerollGoldCost.ToString("N0");
 
         UpdateReloadButtonState(); //  팝업이 켜질 때 코인 버튼 상태 체크!
         RefreshCards();
@@ -74,7 +82,7 @@ public class UI_LevelUpPopup : UI_Popup
         // 1. 연속 클릭 방지 및 로딩 표시
         if (_isSelecting) return;
 
-        if (Managers.PlayerEconomy.Gold < 100)
+        if (Managers.PlayerEconomy.Gold < Managers.Data.GameData.rerollGoldCost)
         {
             HandleCoinReloadFailed("코인이 부족합니다.");
             return;
@@ -90,7 +98,7 @@ public class UI_LevelUpPopup : UI_Popup
             // 2. 서버(Cloud Code)에 코인 소모 요청
             // (서버 함수 이름이 'SpendCurrency'이고, 인자로 재화 ID와 소모량을 보낸다고 가정)
             // 성공 시 업데이트된 경제 데이터(Currency 등)를 반환받습니다.
-            var spendCurrency = await Managers.PlayerEconomy.SpendGoldAsync(100);
+            var spendCurrency = await Managers.PlayerEconomy.SpendGoldAsync(Managers.Data.GameData.rerollGoldCost);
 
             if (spendCurrency == true)
             {
@@ -139,7 +147,7 @@ public class UI_LevelUpPopup : UI_Popup
         int currentCoin = Managers.PlayerEconomy.Gold;
 
         // 100원 이상 있으면 클릭 가능(true), 아니면 클릭 불가(false)
-        if (currentCoin >= 100)
+        if (currentCoin >= Managers.Data.GameData.rerollGoldCost)
         {
             coinButton.interactable = true;
         }
@@ -187,7 +195,7 @@ public class UI_LevelUpPopup : UI_Popup
             if (cardRect == null) continue;
 
             // 1. 애니메이션 시작 전: 카드를 껍데기(Slot) 기준 왼쪽 밖(-1500)으로 치워둡니다.
-            cardRect.anchoredPosition = new Vector2(-1500f, 0f);
+            cardRect.anchoredPosition3D = new Vector3(-1500f, 0f, 0f);
 
             // 1. 크기와 투명도 원래대로 복구
             cardRect.localScale = Vector3.one;
@@ -196,7 +204,7 @@ public class UI_LevelUpPopup : UI_Popup
             cardCanvas.alpha = 1f; // 투명도 100%로 복구
 
             // 2. DOTween 애니메이션: 오른쪽 밖에서 원래 자리(0,0)로 날아오기!                      
-            var moveTween = cardRect.DOAnchorPos(Vector2.zero, 0.5f)
+            var moveTween = cardRect.DOAnchorPos3D(Vector3.zero, 0.5f)
             .SetEase(Ease.OutBack)
             .SetUpdate(true)        // 약간 튕기면서 멈추는 찰진 효과
             .SetDelay(i * 0.15f);   // 0번 카드 -> 0.15초 뒤 1번 -> 타다닥 연출!
@@ -275,7 +283,7 @@ public class UI_LevelUpPopup : UI_Popup
                     
                     Managers.Ability.ApplyAbility(data);
 
-                    // ★ 2. 레벨업 횟수 차감 및 재확인 로직
+                    // 2. 레벨업 횟수 차감 및 재확인 로직
                     // (Managers.Game.PendingLevelUpCount에 접근한다고 가정)
                     Managers.Level.PendingLevelUpCount--;
 
