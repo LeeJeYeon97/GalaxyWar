@@ -60,7 +60,7 @@ public class PlayerDataManager
             Debug.LogException(e);
         }
     }
-    public async Task SavePlayerData()
+    public async Task SavePlayerData(bool isCleared)
     {
         // 2. 최고 기록(점수, 생존 시간) 저장 로직 추가!
         try
@@ -68,8 +68,12 @@ public class PlayerDataManager
             int finalScore = Managers.Level.Score; 
             int finalTime = Mathf.FloorToInt(Managers.Game.gamePlayTime);
 
+            //  핵심 방어 로직: 
+            // 클리어했을 때만 현재 스테이지 번호를 넘기고, 죽었을 때는 0(또는 -1)을 넘깁니다!
+            int clearStage = isCleared ? Managers.Stage.currentStageLevel : Managers.PlayerData.PlayerDataLocal.MaxClearStage;
+
             // Cloud Code 바인딩을 통해 서버의 UpdateGameRecord 호출
-            var updatedData = await playerDataServiceBindings.UpdateGameRecord(finalScore, finalTime);
+            var updatedData = await playerDataServiceBindings.UpdateGameRecord(finalScore, finalTime, clearStage);
 
             Debug.Log($"기록 저장 완료! 현재 최고 점수: {updatedData.MaxScore}");
 

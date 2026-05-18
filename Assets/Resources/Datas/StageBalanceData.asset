@@ -1,0 +1,41 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 24e9eebbc1607c840a8df92383bf778c, type: 3}
+  m_Name: StageBalanceData
+  m_EditorClassIdentifier: Assembly-CSharp::StageBalanceDataSO
+  baseSpawnDelay: 2
+  minSpawnDelay: 0.3
+  spawnDelayDecrease: 0.02
+  hpGrowthPerStage: 5
+  hpMultiplierPerStage: 1
+  speedGrowthPerStage: 0
+  waves:
+  - phaseType: 0
+    waveStartTime: 0
+    waveHpRate: 1
+    waveSpawnDelayRate: 1
+  - phaseType: 1
+    waveStartTime: 90
+    waveHpRate: 1.2
+    waveSpawnDelayRate: 0.7
+  - phaseType: 2
+    waveStartTime: 180
+    waveHpRate: 1.4
+    waveSpawnDelayRate: 0.5
+  - phaseType: 3
+    waveStartTime: 300
+    waveHpRate: 1.6
+    waveSpawnDelayRate: 0.3
+  - phaseType: 4
+    waveStartTime: 420
+    waveHpRate: 2
+    waveSpawnDelayRate: 0

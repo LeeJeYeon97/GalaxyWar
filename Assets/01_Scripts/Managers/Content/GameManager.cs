@@ -16,8 +16,6 @@ public class GameManager : MonoBehaviour
     public PlayerController _player;
     public Spawner spawner;
 
-    public PhaseType currentPhase;
-
     public int reviveCount { get; set; } // 광고 봤을 때 사용가능한 살아나기 횟수
     public int killCount { get; set; }
     public float gamePlayTime;
@@ -25,7 +23,6 @@ public class GameManager : MonoBehaviour
     
     public void Init()
     {
-        currentPhase = PhaseType.Phase1;
         gamePlayTime = 0f;
         currentSessionGold = 0;
         killCount = 0;
@@ -36,6 +33,8 @@ public class GameManager : MonoBehaviour
 
         // 맵 생성
         Managers.Map.Init();
+
+        Managers.Stage.CalculateStageBaseDifficulty();
         // 레벨
         Managers.Level.Init();
 
@@ -65,37 +64,7 @@ public class GameManager : MonoBehaviour
         {
             gamePlayTime += Time.deltaTime;
             Managers.Event.PostEvent(ActionEvent.UpdateGameTime, gamePlayTime);
-            UpdatePhase();
-        }
-    }
-    private void UpdatePhase()
-    {
-        // 데이터가 없으면 리턴
-        var phaseList = Managers.Data.GameData.phases;
-        if (phaseList == null || phaseList.Count == 0) return;
-
-        Define.PhaseType targetPhase = currentPhase;
-
-        // 리스트를 순회하며 현재 플레이 타임보다 작거나 같은 가장 높은 페이즈를 찾습니다.
-        // 보통 시간이 낮은 순서(Phase1 -> 2 -> 3)로 등록하므로, 순차적으로 체크합니다.
-        foreach (var info in phaseList)
-        {
-            if (gamePlayTime >= info.startTime)
-            {
-                targetPhase = info.phaseType;
-            }
-            else
-            {
-                // 리스트가 시간 순서대로 정렬되어 있다면, 
-                // 현재 타임보다 큰 시간을 만나면 더 이상 뒤는 볼 필요 없습니다.
-                break;
-            }
-        }
-
-        // 페이즈가 변경되었을 때만 처리
-        if (currentPhase != targetPhase)
-        {
-            currentPhase = targetPhase;
+            Managers.Stage.UpdateWaveTimeline(gamePlayTime);
         }
     }
     public void AddActiveObject<T>(T item)
@@ -232,5 +201,6 @@ public class GameManager : MonoBehaviour
     public void AddKillCount()
     {
         killCount++;
+        Managers.Event.PostEvent(Define.ActionEvent.MeteorDie);
     }
 }

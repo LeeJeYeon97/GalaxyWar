@@ -170,6 +170,18 @@ MonoBehaviour:
     m_Localized: Top SurviveTime
     m_Metadata:
       m_Items: []
+  - m_Id: 11638247705956352
+    m_Localized: QUIT
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11638124963844096
+    m_Localized: Reward 2x!!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11638196908740608
+    m_Localized: NEXT STAGE
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

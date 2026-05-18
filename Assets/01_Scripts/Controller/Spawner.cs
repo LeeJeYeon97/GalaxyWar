@@ -39,7 +39,7 @@ public class Spawner : MonoBehaviour
                 continue;
             }
 
-            float currentInterval = GetSpawnIntervalByTime(Managers.Game.gamePlayTime);
+            float currentInterval = Managers.Stage.CurrentSpawnDelay;
 
             // 3. 마법의 타이머 적용! (알아서 Pause 상태면 시간이 안 흐릅니다)
             yield return new WaitForGameTime(currentInterval);
@@ -89,36 +89,6 @@ public class Spawner : MonoBehaviour
             }
         }
     }
-    private float GetSpawnIntervalByTime(float time)
-    {
-        // 안전장치: 혹시라도 리스트가 비어있다면 기본 스폰 간격을 반환합니다.
-        float defaultInterval = 1.5f;
-        var phaseList = Managers.Data.GameData.phases;
-
-        if (phaseList == null || phaseList.Count == 0)
-            return defaultInterval;
-
-        float targetInterval = defaultInterval;
-
-        // 리스트를 순회하며 현재 플레이 타임(time)보다 작거나 같은 페이즈를 찾습니다.
-        foreach (var info in phaseList)
-        {
-            if (time >= info.startTime)
-            {
-                // 조건을 만족할 때마다 targetInterval을 해당 페이즈의 스폰 주기로 덮어씌웁니다.
-                targetInterval = info.meteorSpawnInterval;
-            }
-            else
-            {
-                // 시간 순서대로 정렬되어 있다고 가정하므로, 
-                // 현재 시간을 초과하는 페이즈를 만나면 순회를 멈춥니다.
-                break;
-            }
-        }
-
-        return targetInterval;
-    }
-
     public void SpawnDropItem(Vector3 position, ItemType type, int customValue = 0)
     {
         if(Managers.Data.ItemDataList.TryGetValue(type, out var itemData))

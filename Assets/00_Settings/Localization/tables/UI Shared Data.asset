@@ -167,6 +167,18 @@ MonoBehaviour:
     m_Key: ProfilePopup_TopSurviveTime
     m_Metadata:
       m_Items: []
+  - m_Id: 11638124963844096
+    m_Key: GameClearPopup_Reward
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11638196908740608
+    m_Key: GameClearPopup_NextStage
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11638247705956352
+    m_Key: GameClearPopup_Quit
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

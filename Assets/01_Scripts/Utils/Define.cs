@@ -233,6 +233,8 @@ public class Define
         UpdateGameTime,             // 게임 시간 업데이트
         PlayerShot,
         BulletDamageUp,             // 불릿 데미지 업
+        GetGold,
+        MeteorDie,              
         
     }
     public struct PlayerStatusEvent

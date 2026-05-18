@@ -20,6 +20,9 @@ public class PlayerData
 
     [JsonProperty("maxScore")]
     public int MaxScore { get; set; }
+
+    [JsonProperty("maxClearStage")]
+    public int MaxClearStage { get; set; }
 }
 public class PlayerEconomyData
 {

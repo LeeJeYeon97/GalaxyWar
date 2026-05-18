@@ -103,7 +103,7 @@ public class StatManager
         // 1. 뽑을 수 있는(유효한) 스탯들만 모아둘 '빈 바구니(List)'를 준비합니다.
         List<MeteorStat> validStats = new List<MeteorStat>();
 
-        Define.PhaseType currentPhase = Managers.Game.currentPhase;
+        Define.PhaseType currentPhase = Managers.Stage.CurrentPhase;
 
         // 2. 딕셔너리에 있는 모든 항목(Key-Value)을 하나씩 꺼내서 살펴봅니다.
         foreach (var stat in meteorStatDict.Values)

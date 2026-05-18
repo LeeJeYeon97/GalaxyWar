@@ -194,6 +194,7 @@ public class ItemController : MonoBehaviour
         {
             case Define.ItemType.Gold:
                 Managers.Game.currentSessionGold += value;
+                Managers.Event.PostEvent(Define.ActionEvent.GetGold);
                 break;
             case Define.ItemType.Exp:
                 Managers.Level.AddExp(value);

@@ -24,7 +24,7 @@ namespace Unity.Services.CloudCode.GeneratedBindings
                 });
         }
 
-        public async Task<Project.PlayerData> UpdateGameRecord(int newScore, int newSurviveTime)
+        public async Task<Project.PlayerData> UpdateGameRecord(int newScore, int newSurviveTime, int clearStageLevel)
         {
             return await k_Service.CallModuleEndpointAsync<Project.PlayerData>(
                 "Project",
@@ -33,6 +33,7 @@ namespace Unity.Services.CloudCode.GeneratedBindings
                 {
                     {"newScore", newScore},
                     {"newSurviveTime", newSurviveTime},
+                    {"clearStageLevel", clearStageLevel},
                 });
         }
     }

@@ -191,6 +191,6 @@ public class UI_GameOverPopup : UI_Popup
         Debug.Log("서버에 플레이어 기록 저장을 요청합니다...");
 
         // PlayerDataManager에 만들어둔 저장 함수를 호출하고 끝날 때까지 기다립니다.
-        await Managers.PlayerData.SavePlayerData();
+        await Managers.PlayerData.SavePlayerData(false);
     }
 }

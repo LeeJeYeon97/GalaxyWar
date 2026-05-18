@@ -40,6 +40,7 @@ public class Managers : MonoBehaviour
     private LoginManager _login;
     private SettingManager _setting;
     private EffectManager _effect;
+    private StageManager _stage;
 
     private PlayerDataManager _playerData;
     private PlayerEconomyManager _playerEconomy;
@@ -72,6 +73,8 @@ public class Managers : MonoBehaviour
     public static IAPStoreManager IAPStore => Instance._iapStore;
     public static SettingManager Setting => Instance._setting;
     public static EffectManager Effect => Instance._effect;
+
+    public static StageManager Stage => Instance._stage;
     // ========================================================== //
 
     // 추가: 외부에서 Managers.Coroutine.StartCoroutine() 으로 접근할 수 있게 열어줍니다!
@@ -118,6 +121,7 @@ public class Managers : MonoBehaviour
             _instance._iapStore = new IAPStoreManager();
             _instance._setting = new SettingManager();
             _instance._effect = new EffectManager();
+            _instance._stage = new StageManager();
 
             // 컴포넌트 형태의 매니저들은 여기서 초기화하거나 자식으로 붙임
             _instance._game = Util.GetOrAddComponent<GameManager>(go);
@@ -139,6 +143,7 @@ public class Managers : MonoBehaviour
             AD.Init();
             Pool.Init();
             Data.Init();
+            Stage.Init();
             Input.Init();
             Sound.Init();
             Effect.Init();
@@ -149,6 +154,10 @@ public class Managers : MonoBehaviour
             Application.targetFrameRate = 60; // 60프레임 고정 (부드러운 화면)
 
         }
+    }
+    private void Update()
+    {
+        // 다른 매니저들 업데이트 돌리기
     }
     public void Clear()
     {

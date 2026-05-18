@@ -19,6 +19,7 @@ public class DataManager
     public Dictionary<Define.MeteorType, MeteorStatDataSO> MeteorStatDataDict {  get; private set; }
     public SoundDataSO SoundData { get; private set; }
     public EffectDataSO EffectData { get; private set; }
+    public StageBalanceDataSO StageData { get; private set; }
 
     public void Init()
     {
@@ -51,6 +52,12 @@ public class DataManager
         if (EffectData == null)
         {
             Debug.LogError("EffectData Null");
+        }
+
+        StageData = Managers.Resource.Load<StageBalanceDataSO>("Datas/StageBalanceData");
+        if (StageData == null)
+        {
+            Debug.LogError("StageData Null");
         }
 
         ItemDataList = LoadDataToDict<Define.ItemType, ItemDataSO>("Items",data => data.type);

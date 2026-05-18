@@ -37,7 +37,6 @@ public class UI_LobbyScene : UI_Scene
 
     private Buttons _currentTabButton = Buttons.Button_MainPanel;
 
-    public GameObject _LobbyObject;
 
     public override void Init()
     {
@@ -58,8 +57,6 @@ public class UI_LobbyScene : UI_Scene
             // 이 공간 사이에 파티클이 들어가서 터져야 하므로 넉넉하게 10~50 정도를 줍니다.
             canvas.planeDistance = 20f;
         }
-        _LobbyObject = GameObject.Find("_LobbyObject");
-        _LobbyObject.SetActive(false);
 
         Bind<Button>(typeof(Buttons));
         Bind<GameObject>(typeof(Panels));
@@ -113,9 +110,6 @@ public class UI_LobbyScene : UI_Scene
         // --- [현재 패널 퇴장 연출] ---
         // 타겟이 오른쪽(1)에 있다면, 나는 왼쪽(-1920)으로 비켜줘야 합니다. (-_slideDistance * dir)
 
-        if(_currentPanel == Panels.UI_MainPanel)
-            _LobbyObject.SetActive(false);
-
         currentRect.DOAnchorPosX(-_slideDistance * dir, 0.4f)
             .SetEase(Ease.OutQuart)
             .OnComplete(() =>
@@ -134,8 +128,6 @@ public class UI_LobbyScene : UI_Scene
             .SetEase(Ease.OutQuart)
             .OnComplete(()=>
             { 
-                if (targetPanel == Panels.UI_MainPanel) 
-                    _LobbyObject.SetActive(true);
             });
 
         // 하단 탭 버튼 크기 애니메이션 로직
@@ -171,7 +163,6 @@ public class UI_LobbyScene : UI_Scene
                 if (panel == _currentPanel)
                 {
                     panelGo.SetActive(true);
-                    _LobbyObject.SetActive(true);
                     panelGo.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
                 }
                 else

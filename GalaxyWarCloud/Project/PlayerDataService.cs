@@ -178,6 +178,7 @@ public class PlayerDataService
             Experience = 0,
             MaxSurviveTime = 0,
             MaxScore = 0,
+            MaxClearStage = 0,
         };
 
         PlayerEconomyData newEconomyData;
@@ -209,7 +210,7 @@ public class PlayerDataService
 
 
     [CloudCodeFunction("UpdateGameRecord")]
-    public async Task<PlayerData> UpdateGameRecord(IExecutionContext context, IGameApiClient gameApiClient, int newScore, int newSurviveTime)
+    public async Task<PlayerData> UpdateGameRecord(IExecutionContext context, IGameApiClient gameApiClient, int newScore, int newSurviveTime, int clearStageLevel)
     {
         // 1. 기존 서버에 저장된 내 데이터 불러오기
         var (playerExists, playerData) = await TryGetPlayerData(context, gameApiClient);
@@ -231,6 +232,12 @@ public class PlayerDataService
         if (newSurviveTime > playerData.MaxSurviveTime)
         {
             playerData.MaxSurviveTime = newSurviveTime;
+            isUpdated = true;
+        }
+
+        if (clearStageLevel > playerData.MaxClearStage)
+        {
+            playerData.MaxClearStage = clearStageLevel;
             isUpdated = true;
         }
 

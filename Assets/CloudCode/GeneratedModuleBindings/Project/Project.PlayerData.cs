@@ -10,6 +10,7 @@ namespace Unity.Services.CloudCode.GeneratedBindings.Project
         public int Experience;
         public int MaxSurviveTime;
         public int MaxScore;
+        public int MaxClearStage;
 
         [Preserve]
         public PlayerData ()

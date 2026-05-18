@@ -7,7 +7,7 @@ using static Define;
 public class AbilityManager 
 {
     // 이제 플레이어가 현재 보유한 능력에 대한 관리합니다. (나머지 정보는 SO에 다 있음)
-    private Dictionary<AbilityType, int> _abilityLevels = new Dictionary<AbilityType, int>();
+    public Dictionary<AbilityType, int> _abilityLevels = new Dictionary<AbilityType, int>();
     public void Init()
     {
         // 적용중인 능력치 초기화

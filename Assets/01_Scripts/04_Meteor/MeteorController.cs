@@ -47,10 +47,10 @@ public class MeteorController : BaseController
             return;
         }
         Stat = stat;
-        _maxHp = Stat.MaxHp.TotalValue;
+        _maxHp = Managers.Stage.GetCalculatedMeteorHp(Stat.MaxHp.TotalValue);
         _currentHp = _maxHp;
         // 1.위치 설정
-        
+
         Movement.Init(pos,Stat);
         Status.Init();
         Visual.Init();
@@ -155,6 +155,7 @@ public class MeteorController : BaseController
         Visual.ReturnColor();
         Stat.Behavior?.OnDie(this);
         Managers.Level.AddScore(Mathf.FloorToInt(Stat.Score.TotalValue));
+        
         DropItem();
         Managers.Game.AddKillCount();
         Managers.Resource.Destroy(gameObject);

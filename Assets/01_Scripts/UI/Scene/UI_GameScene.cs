@@ -12,7 +12,9 @@ public class UI_GameScene : UI_Scene
     enum Texts
     {
         LevelText,
-        ScoreText,
+        Text_Score,
+        Text_Kill,
+        Text_Gold,
         BurstModeText,
         TimeText
     }
@@ -56,6 +58,10 @@ public class UI_GameScene : UI_Scene
         Managers.Event.UnSubscribe<List<BulletController>>(ActionEvent.ReloadEnd, UpdateBulletSlots);
 
         Managers.Event.UnSubscribe<List<BulletController>>(ActionEvent.PlayerShot, ShootAndSlide);
+
+        Managers.Event.UnSubscribe(ActionEvent.GetGold, UpdateGoldText);
+
+        Managers.Event.UnSubscribe(ActionEvent.MeteorDie, UpdateKillText);
     }
     public override void Init()
     {
@@ -71,6 +77,9 @@ public class UI_GameScene : UI_Scene
 
         timeText = Get<TMP_Text>((int)Texts.TimeText);
 
+        GetTMP((int)Texts.Text_Kill).text = Managers.Game.killCount.ToString("N0");
+        GetTMP((int)Texts.Text_Gold).text = Managers.Game.currentSessionGold.ToString("N0");
+
         Canvas canvas = Util.GetOrAddComponent<Canvas>(this.gameObject);
         canvas.renderMode = RenderMode.ScreenSpaceCamera;
         canvas.worldCamera = Camera.main;
@@ -85,6 +94,11 @@ public class UI_GameScene : UI_Scene
 
         Managers.Event.Subscribe<List<BulletController>>(ActionEvent.PlayerShot, ShootAndSlide);
         Managers.Event.Subscribe<List<BulletController>>(ActionEvent.ReloadEnd, UpdateBulletSlots);
+
+
+        Managers.Event.Subscribe(ActionEvent.GetGold, UpdateGoldText);
+
+        Managers.Event.Subscribe(ActionEvent.MeteorDie, UpdateKillText);
 
         for (int i = 0; i < 4; i++)
         {
@@ -105,8 +119,8 @@ public class UI_GameScene : UI_Scene
     }
     private void BindingButtonClickListener()
     {
-        Button restartButton = GetButton((int)Buttons.RestartButton);
-        restartButton.onClick.AddListener(OnClickGameTestButton);
+        //Button restartButton = GetButton((int)Buttons.RestartButton);
+        //restartButton.onClick.AddListener(OnClickGameTestButton);
 
         Button BurstButton = GetButton((int)Buttons.BurstModeBar);
         BurstButton.onClick.AddListener(OnBurstButton);
@@ -163,10 +177,18 @@ public class UI_GameScene : UI_Scene
         string text = $"Lv.{level}";
         GetTMP((int)Texts.LevelText).text = text;
     }
+    public void UpdateKillText()
+    {
+        GetTMP((int)Texts.Text_Kill).text = Managers.Game.killCount.ToString("N0");
+    }
     public void UpdateScoreText(float Score)
     {
         string text = $"{Score}";
-        GetTMP((int)Texts.ScoreText).text = text;
+        GetTMP((int)Texts.Text_Score).text = text;
+    }
+    public void UpdateGoldText()
+    {
+        GetTMP((int)Texts.Text_Gold).text = Managers.Game.currentSessionGold.ToString("N0");
     }
     public void UpdateExpBar((float curExp, float maxExp) data)
     {
