@@ -70,8 +70,10 @@ public class BulletController : BaseController
         bool isPaused = (Managers.Game.currentGameState == GameState.Pause);
         bool isGameOver = (Managers.Game.currentGameState == GameState.GameOver);
 
+        bool isGameClear = (Managers.Game.currentGameState == GameState.GameClear);
+
         // [얼리기] 정지 또는 게임오버인데 아직 물리 스위치가 켜져 있다면
-        if ((isPaused || isGameOver) && !_isPhysicsPaused)
+        if ((isPaused || isGameOver || isGameClear) && !_isPhysicsPaused)
         {
             // 현재 날아가던 속도를 백업하고 물리 엔진을 끕니다.
             _savedVelocity = Rb.linearVelocity;
@@ -80,7 +82,7 @@ public class BulletController : BaseController
             _isPhysicsPaused = true;
         }
         // [녹이기]  수정된 부분: 정지도 아니고 게임오버도 아닐 때만 풀어줍니다.
-        else if (!isPaused && !isGameOver && _isPhysicsPaused)
+        else if (!isPaused && !isGameOver && !isGameClear && _isPhysicsPaused)
         {
             Rb.simulated = true;
             Rb.linearVelocity = _savedVelocity;
@@ -88,7 +90,7 @@ public class BulletController : BaseController
         }
 
         // 일시정지 중이면 아래 부모의 FixedUpdate 및 OnFixedUpdate(WallBounce, Rotate)를 실행하지 않습니다.
-        if (isPaused || isGameOver) return;
+        if (isPaused || isGameOver || isGameClear) return;
 
         base.FixedUpdate();
     }
@@ -175,14 +177,17 @@ public class BulletController : BaseController
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        MeteorController meteor = collision.gameObject.GetComponent<MeteorController>();
-        if (meteor == null) return;
+        // 상대가 누구든, '데미지를 받을 수 있는 녀석(IDamageable)'인지 한 번만 검사합니다!
+        IDamageable target = collision.gameObject.GetComponent<IDamageable>();
+
+        // 타겟이 아니면(벽, 아이템 등) 무시!
+        if (target == null) return;
 
         // 1. 공통 처리: 데미지 주고 파티클 생성
         Vector2 hitPoint = collision.ClosestPoint(transform.position);
         BulletParticle?.SpawnHit(hitPoint, Vector2.zero, Stat);
 
-        CalculateDamage(meteor , CurDamage);
+        CalculateDamage(target,CurDamage);
         Stat.behavior.OnHit(this, collision.gameObject, Stat);
 
         // 2. 능력치에 따른 분기 처리 (관통 -> 도탄 -> 소멸 순서)
@@ -204,9 +209,12 @@ public class BulletController : BaseController
         }
     }
 
-    public void CalculateDamage(MeteorController targetMeteor, float baseDamage)
+    public void CalculateDamage(IDamageable target, float baseDamage)
     {
-        if (targetMeteor == null || baseDamage <= 0) return;
+        if (target == null || baseDamage <= 0)
+        {
+            return;
+        }
 
         // 1. 플레이어 스탯 가져오기
         float critChance = Managers.Game._player.Stat.criticalChance.TotalValue;
@@ -217,8 +225,7 @@ public class BulletController : BaseController
         bool isCrit = UnityEngine.Random.Range(0f, 100f) <= critChance;
         float finalDmg = isCrit ? (baseDamage * critDamageMultiplier) : baseDamage;
 
-        // 3. 계산된 최종 데미지와 크리티컬 여부를 메테오에게 전달
-        targetMeteor.OnDamage(finalDmg, isCrit);
+        target.OnDamage(finalDmg, isCrit);
     }
     private void ReflectFromMeteor(Collider2D meteorCollider)
     {

@@ -10,7 +10,7 @@ using UnityEngine.UI;
 using static Define;
 using static UnityEngine.Rendering.DebugUI;
 
-public class MeteorController : BaseController
+public class MeteorController : BaseController, IDamageable
 {
 
     public MeteorStat Stat { get; private set; }

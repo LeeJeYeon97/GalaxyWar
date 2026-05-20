@@ -17,13 +17,15 @@ public class UI_HpBar : MonoBehaviour
     // 풀에서 꺼낼 때 초기화
     public void SetTarget(Transform target)
     {
+
+        _hpSlider.DOKill(); // 이전 애니메이션이 실행 중이면 중지
         _mainCam = Camera.main;
         _rectTransform = GetComponent<RectTransform>();
 
         Transform uiCanvas = GameObject.Find("UI_GameScene").transform;
         transform.SetParent(uiCanvas, false);
 
-        // ★ 추가 2: 부모를 설정했으니, 이제 그 부모(UI_GameScene)의 RectTransform을 기억해둡니다!
+        // 추가 2: 부모를 설정했으니, 이제 그 부모(UI_GameScene)의 RectTransform을 기억해둡니다!
         _parentCanvasRect = uiCanvas.GetComponent<RectTransform>();
 
         _target = target;
@@ -34,7 +36,7 @@ public class UI_HpBar : MonoBehaviour
     // 체력 갱신 (몬스터가 데미지를 입었을 때만 호출됨)
     public void UpdateHP(float currentHp, float maxHp)
     {
-        // ★ 한 대라도 맞으면 그때서야 화면에 보여줍니다.
+        //  한 대라도 맞으면 그때서야 화면에 보여줍니다.
         if (!_isVisible)
         {
             _isVisible = true;
@@ -79,5 +81,9 @@ public class UI_HpBar : MonoBehaviour
 
         // 3. 변환된 값을 적용
         _rectTransform.anchoredPosition = localPos;
+    }
+    private void OnDisable()
+    {
+        _hpSlider.DOKill(); // 이전 애니메이션이 실행 중이면 중지
     }
 }

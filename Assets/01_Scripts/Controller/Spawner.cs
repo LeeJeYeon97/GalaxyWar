@@ -89,6 +89,51 @@ public class Spawner : MonoBehaviour
             }
         }
     }
+    public void BossSpawn(BossStat stat)
+    {
+        if (stat == null) return;
+
+        // 1. 어느 방향(상, 하, 좌, 우)에서 생성할지 결정
+        int side = Random.Range(0, 4); // 0: 위, 1: 아래, 2: 왼쪽, 3: 오른쪽
+        Vector3 spawnPos = Vector3.zero;
+
+        //  보스는 덩치가 크므로 메테오(0.5f)보다 여유 공간을 더 줍니다! (예: 1.5f)
+        float offset = 1.5f;
+
+        float minX = Managers.Map.PlayZoneMin.x;
+        float maxX = Managers.Map.PlayZoneMax.x;
+        float minY = Managers.Map.PlayZoneMin.y;
+        float maxY = Managers.Map.PlayZoneMax.y;
+
+        switch (side)
+        {
+            case 0: // 위쪽 외곽
+                spawnPos = new Vector3(Random.Range(minX, maxX), maxY + offset, 0);
+                break;
+            case 1: // 아래쪽 외곽
+                spawnPos = new Vector3(Random.Range(minX, maxX), minY - offset, 0);
+                break;
+            case 2: // 왼쪽 외곽
+                spawnPos = new Vector3(minX - offset, Random.Range(minY, maxY), 0);
+                break;
+            case 3: // 오른쪽 외곽
+                spawnPos = new Vector3(maxX + offset, Random.Range(minY, maxY), 0);
+                break;
+        }
+
+        // 2. 보스 프리팹 생성 (스폰 위치 적용)
+        // ResourceManager의 Instantiate를 쓰면 풀링이 적용되어 있으면 풀링에서, 아니면 새로 생성됩니다.
+        GameObject bossGo = Managers.Resource.Instantiate(stat.originalPrefab);
+
+        // 3. 보스 컴포넌트 찾기 및 초기화 세팅
+        BossController boss = bossGo.GetComponent<BossController>();
+        if (boss != null)
+        {
+            boss.Init(stat, spawnPos, Managers.Game._player.gameObject);
+            
+            Debug.Log($"보스가 {side}번 방향({spawnPos})에서 스폰되었습니다!");
+        }
+    }
     public void SpawnDropItem(Vector3 position, ItemType type, int customValue = 0)
     {
         if(Managers.Data.ItemDataList.TryGetValue(type, out var itemData))

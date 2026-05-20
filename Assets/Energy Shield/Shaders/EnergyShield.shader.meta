@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 6230c69bfca11ab4892d5f224a78aa43
+ShaderImporter:
+  externalObjects: {}
+  defaultTextures: []
+  nonModifiableTextures: []
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 368490
+  packageName: Energy Shield (URP)
+  packageVersion: 1.0
+  assetPath: Assets/Energy Shield/Shaders/EnergyShield.shader
+  uploadId: 884510

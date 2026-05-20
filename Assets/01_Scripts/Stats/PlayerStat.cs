@@ -8,7 +8,9 @@ public class PlayerStat
     public Stat speed = new Stat();
 
     public Stat maxHp = new Stat();
-    public Stat maxDefence = new Stat();
+    public Stat maxDefenceCount = new Stat();
+    public Stat shieldChargeTime = new Stat();
+    public float maxDefenceGuage;
 
     public Stat reloadCount = new Stat();
     public Stat reloadTime = new Stat();
@@ -20,8 +22,6 @@ public class PlayerStat
     public Stat maxBurstGuage = new Stat();
     public Stat maxBurstFullChargeTime = new Stat();
 
-    public Stat maxShield = new Stat();
-    public Stat shieldChargeTime = new Stat();
 
     public Stat criticalChance = new Stat();
     public Stat criticalDamageRate = new Stat();
@@ -47,12 +47,12 @@ public class PlayerStat
 
         speed.Init(data.statData.speed);
         maxHp.Init(data.statData.maxHp);
-        maxDefence.Init(data.statData.maxDefence);
+        maxDefenceCount.Init(data.statData.maxDefenceCount);
         reloadCount.Init(data.statData.reloadCount);
         reloadTime.Init(data.statData.reloadTime);
         shotRange.Init(data.statData.shotRange);
         shotTime.Init(data.statData.shotTime);
-        maxShield.Init(data.statData.maxDefence);
+        maxDefenceGuage = data.statData.maxDefenceGuage;
 
         shieldChargeTime.Init(data.statData.shieldChargeTime);
         enableBurst = data.statData.isBurstModeEnabled;

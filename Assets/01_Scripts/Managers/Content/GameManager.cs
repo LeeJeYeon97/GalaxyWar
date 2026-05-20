@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -20,13 +21,29 @@ public class GameManager : MonoBehaviour
     public int killCount { get; set; }
     public float gamePlayTime;
     public int currentSessionGold;
-    
+
+    private bool _isTargetTimeReached = false; // 10분 도달 체크용 플래그
+    private bool _isWarningTimeReached = false; //  [추가] 5초 전 경고 체크용 플래그
+
+    private Camera mainCam;
+
     public void Init()
     {
         gamePlayTime = 0f;
         currentSessionGold = 0;
+        _isWarningTimeReached = false;
+        _isTargetTimeReached = false;
+
         killCount = 0;
         ChangeGameState(GameState.Pause);
+        mainCam = Camera.main;
+
+        mainCam.DOOrthoSize(Managers.Data.GameData.gamePlayeSize, 0.3f)
+            .SetEase(Ease.OutCubic)
+            .SetUpdate(true)
+            .OnUpdate(() =>
+            {
+            });
 
         // UI 생성
         UI_GameScene sceneUI = Managers.UI.ShowSceneUI<UI_GameScene>();
@@ -60,11 +77,80 @@ public class GameManager : MonoBehaviour
     }
     private void Update()
     {
-        if (Managers.Game.currentGameState == GameState.Playing)
+        if (Managers.Game.currentGameState != GameState.Playing) return;
+        
+        gamePlayTime += Time.deltaTime;
+        Managers.Event.PostEvent(ActionEvent.UpdateGameTime, gamePlayTime);
+        Managers.Stage.UpdateWaveTimeline(gamePlayTime);
+
+        //  [추가] 10분 도달 5초 전에 위험 팝업 실시간 체크
+        float warningTargetTime = Managers.Data.GameData.gameclearTime - 5f;
+        if (!_isWarningTimeReached && gamePlayTime >= warningTargetTime)
         {
-            gamePlayTime += Time.deltaTime;
-            Managers.Event.PostEvent(ActionEvent.UpdateGameTime, gamePlayTime);
-            Managers.Stage.UpdateWaveTimeline(gamePlayTime);
+            _isWarningTimeReached = true;
+            OnWarningTimeReached();
+        }
+
+        // 10분에 도달했는지 실시간 체크
+        if (!_isTargetTimeReached && gamePlayTime >= Managers.Data.GameData.gameclearTime)
+        {
+            _isTargetTimeReached = true;
+            OnTargetTimeReached();
+        }
+    }
+    /// <summary>
+    /// 10분(목표 시간)에 도달했을 때 실행되는 함수
+    /// </summary>
+    private void OnTargetTimeReached()
+    {
+        // StageManager에게 "여기 보스 스테이지야?" 라고 물어봅니다.
+        if (Managers.Stage.IsBossStage)
+        {
+            mainCam.DOOrthoSize(Managers.Data.GameData.bossStageSize, 0.3f)
+            .SetEase(Ease.OutCubic)
+            .SetUpdate(true)
+            .OnUpdate(() =>
+            {
+                Managers.Map.UpdateMap();
+            });
+            // [보스 스테이지인 경우]
+            Debug.Log("10분 도달! 잔몹 스폰을 중지하고 보스를 소환합니다.");
+
+            // 1. 일반 메테오 스폰 속도를 무한대로 늘리거나 스포너를 멈춤
+            spawner.StopSpawn(); // 혹은 스폰 딜레이를 9999로 변경
+
+            // 2. 보스 스폰 로직 호출 (StageManager가 들고 있는 프리팹과 HP 사용)
+            BossStat stat = Managers.Stat.GetRandomBossStat();
+            if(stat == null)
+            {
+                Debug.LogError("bossStat is null");
+                return;
+            }
+            spawner.BossSpawn(stat);
+        }
+        else
+        {
+            // [일반 스테이지인 경우]
+            Debug.Log("10분 생존 성공! 일반 스테이지 클리어 처리합니다.");
+            ChangeGameState(GameState.GameClear);
+        }
+    }
+
+    /// <summary>
+    ///  [추가] 목표 시간 5초 전에 실행되는 경고 함수
+    /// </summary>
+    private void OnWarningTimeReached()
+    {
+        // 보스 스테이지일 때만 위험 경고 팝업을 띄웁니다!
+        if (Managers.Stage.IsBossStage)
+        {
+            
+
+            // 프로젝트에 만들어두신 위험 팝업 클래스 이름을 넣으시면 됩니다! (예: UI_WarningPopup)
+            Managers.UI.ShowPopupUI<UI_BossWarningPopup>(); 
+
+            // 꿀팁: 사이렌 소리 같은 Sfx를 이때 같이 재생해주면 몰입감이 200% 증가합니다.
+            // Managers.Sound.Play(Define.SoundID.Sfx_Warning_Siren);
         }
     }
     public void AddActiveObject<T>(T item)
@@ -139,6 +225,11 @@ public class GameManager : MonoBehaviour
                 _player?.SetState(PlayerState.Die);
                 Managers.UI.ShowPopupUI<UI_GameOverPopup>();
                 // 게임 오버 이벤트
+                break;
+            case GameState.GameClear:
+                spawner.StopSpawn();
+                _player?.SetState(PlayerState.Idle);
+                Managers.UI.ShowPopupUI<UI_GameClearPopup>();
                 break;
             default:
                 break;

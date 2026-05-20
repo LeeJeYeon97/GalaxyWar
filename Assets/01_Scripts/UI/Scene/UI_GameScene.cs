@@ -15,8 +15,11 @@ public class UI_GameScene : UI_Scene
         Text_Score,
         Text_Kill,
         Text_Gold,
+        Text_Stage,
         BurstModeText,
-        TimeText
+        TimeText,
+        Text_Hp,
+        Text_Shield,
     }
     enum Sliders
     {
@@ -80,6 +83,8 @@ public class UI_GameScene : UI_Scene
         GetTMP((int)Texts.Text_Kill).text = Managers.Game.killCount.ToString("N0");
         GetTMP((int)Texts.Text_Gold).text = Managers.Game.currentSessionGold.ToString("N0");
 
+        GetTMP((int)Texts.Text_Stage).text = $"STAGE {Managers.Stage.currentStageLevel:D2}";
+
         Canvas canvas = Util.GetOrAddComponent<Canvas>(this.gameObject);
         canvas.renderMode = RenderMode.ScreenSpaceCamera;
         canvas.worldCamera = Camera.main;
@@ -142,9 +147,15 @@ public class UI_GameScene : UI_Scene
         hpSlider.DOKill();
         hpSlider.DOValue(data.hp / data.maxHp, 0.2f).SetEase(Ease.OutCubic);
 
+        GetTMP((int)Texts.Text_Hp).text = $"{data.hp} / {data.maxHp}";
+
         // 쉴드바 처음엔 0으로
         shieldSlider.DOKill();
-        shieldSlider.DOValue(data.shieldCooldownRatio, 0.2f).SetEase(Ease.OutCubic);
+        float value = data.currentShieldGuage/ data.maxShieldGuage;
+        shieldSlider.DOValue(value, 0.2f).SetEase(Ease.OutCubic);
+
+
+        GetTMP((int)Texts.Text_Shield).text = $"{data.currentShieldGuage} / {data.maxHp}";
 
         burstBar.DOKill();
         burstBar.DOFillAmount(data.burst / data.maxBurst, 0.2f).SetEase(Ease.OutCubic);

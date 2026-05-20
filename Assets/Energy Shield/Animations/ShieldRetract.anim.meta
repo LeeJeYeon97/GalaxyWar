@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 63b6393cbd399144ca17eb25394f96c6
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 7400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 368490
+  packageName: Energy Shield (URP)
+  packageVersion: 1.0
+  assetPath: Assets/Energy Shield/Animations/ShieldRetract.anim
+  uploadId: 884510

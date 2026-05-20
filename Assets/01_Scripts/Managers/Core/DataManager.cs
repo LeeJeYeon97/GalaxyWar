@@ -17,6 +17,7 @@ public class DataManager
     public Dictionary<Define.ItemType,ItemDataSO> ItemDataList { get; private set; }
 
     public Dictionary<Define.MeteorType, MeteorStatDataSO> MeteorStatDataDict {  get; private set; }
+    public Dictionary<Define.BossType, BossStatDataSO> BossStatDataDict { get; private set; }
     public SoundDataSO SoundData { get; private set; }
     public EffectDataSO EffectData { get; private set; }
     public StageBalanceDataSO StageData { get; private set; }
@@ -62,6 +63,8 @@ public class DataManager
 
         ItemDataList = LoadDataToDict<Define.ItemType, ItemDataSO>("Items",data => data.type);
         MeteorStatDataDict = LoadDataToDict<Define.MeteorType, MeteorStatDataSO>("Meteors", data => data.Type);
+
+        BossStatDataDict = LoadDataToDict<Define.BossType, BossStatDataSO>("Boss", data => data.Type);
     }
 
     /// <summary>
@@ -110,8 +113,6 @@ public class DataManager
         list = datas.ToList<T>();
         return list;
     }
-    
-
 
     // T로 들어온 스크립터블 오브젝트로 만든 모든 데이터들중에 이름으로 찾아주는 함수
     //public T GetData<T>(string name) where T : ScriptableObject

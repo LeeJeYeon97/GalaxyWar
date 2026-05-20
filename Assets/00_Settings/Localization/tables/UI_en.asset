@@ -182,6 +182,62 @@ MonoBehaviour:
     m_Localized: NEXT STAGE
     m_Metadata:
       m_Items: []
+  - m_Id: 11840956274987008
+    m_Localized: STAT
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11840995395260416
+    m_Localized: ABILITY
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11841093692968960
+    m_Localized: Damage
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11841158415273984
+    m_Localized: Critical Damage
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11841162471165952
+    m_Localized: Critical Chance
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11841206528135168
+    m_Localized: Max Hp
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11841228091052032
+    m_Localized: Speed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11841272550674432
+    m_Localized: Reload Time
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11841305333354496
+    m_Localized: Shot Time
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11841327819018240
+    m_Localized: BurstMode ChargeTime
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11841637996187648
+    m_Localized: Shield ChargeTime
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11841722486247424
+    m_Localized: Split Bullet Count
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11841812219187200
+    m_Localized: Bullet Bounce Count
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11841248320180224
+    m_Localized: Reload Count
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

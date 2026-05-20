@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::StageBalanceDataSO
   baseSpawnDelay: 2
   minSpawnDelay: 0.3
-  spawnDelayDecrease: 0.02
-  hpGrowthPerStage: 5
+  spawnDelayDecrease: 0.01
+  hpGrowthPerStage: 1
   hpMultiplierPerStage: 1
   speedGrowthPerStage: 0
   waves:
@@ -39,3 +39,6 @@ MonoBehaviour:
     waveStartTime: 420
     waveHpRate: 2
     waveSpawnDelayRate: 0
+  bossStageInterval: 5
+  bossPrefabs:
+  - {fileID: 0}

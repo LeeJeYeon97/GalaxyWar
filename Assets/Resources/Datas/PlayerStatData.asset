@@ -15,7 +15,7 @@ MonoBehaviour:
   statData:
     speed: 1.5
     maxHp: 100
-    maxDefence: 0
+    maxDefenceCount: 0
     reloadCount: 7
     reloadTime: 2
     shotRange: 3
@@ -25,6 +25,7 @@ MonoBehaviour:
     itemGetRange: 0
     hitCooldown: 1
     shieldChargeTime: 20
+    maxDefenceGuage: 100
     isBurstModeEnabled: 0
     maxBurstGuage: 100
     maxBurstFullChargeTime: 60

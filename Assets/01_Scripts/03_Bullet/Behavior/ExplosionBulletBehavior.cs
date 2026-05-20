@@ -13,95 +13,89 @@ public class ExplosionBulletBehavior : IBulletBehavior
     {
         if (target == null) return;
 
-
         if (activeStat is ExplosionBulletStat stat)
         {
             float radius = stat.explosionRange.TotalValue;
             float finalExplosionDmg = stat.damage.TotalValue * stat.explosionDamage.TotalValue;
 
-            int layerMask = 1 << LayerMask.NameToLayer("Meteor");
+            //  1. 레이어 마스크 업데이트: 적(보스, 엘리트)과 메테오 레이어를 모두 포함시킵니다!
+            // (유니티에 세팅하신 실제 레이어 이름들을 콤마로 연결해서 넣어주세요)
+            int layerMask = LayerMask.GetMask("Meteor", "Boss");
 
             // 핵심 1: 중복 데미지 및 무한 연쇄 폭발을 막기 위한 '블랙리스트'
-            HashSet<GameObject> damagedMeteors = new HashSet<GameObject>();
+            HashSet<GameObject> damagedTargets = new HashSet<GameObject>();
 
-            // 최초 타겟(직접 맞은 놈)은 총알 기본 데미지를 받았을 테니 명단에 미리 넣습니다.
-            damagedMeteors.Add(target);
+            // 최초 타겟(직접 맞은 놈) 명단에 미리 넣기
+            damagedTargets.Add(target);
 
             // ==========================================
             // 1. 1차 폭발 로직
             // ==========================================
             Collider2D[] primaryColliders = Physics2D.OverlapCircleAll(target.transform.position, radius, layerMask);
 
-            
-            // 2차 폭발의 '진원지'가 될 메테오들을 모아둘 리스트
-            List<MeteorController> secondaryTargets = new List<MeteorController>();
+            // 2. 2차 폭발의 '진원지' 역할을 할 위치(Transform)를 모아둘 리스트
+            // (IDamageable은 인터페이스라 transform 속성이 없으므로, Transform을 직접 저장하는 것이 깔끔합니다)
+            List<Transform> secondaryExplosionCenters = new List<Transform>();
             Managers.Sound.Play(Define.SoundID.Sfx_Explosion_Hit);
+
             foreach (var col in primaryColliders)
             {
                 // 이미 맞은 놈(최초 타겟 포함)은 제외
-                if (damagedMeteors.Contains(col.gameObject)) continue;
+                if (damagedTargets.Contains(col.gameObject)) continue;
 
-                MeteorController meteor = col.GetComponent<MeteorController>();
-                if (meteor)
+                // 3. 대상이 메테오인지 보스인지 묻지도 따지지도 않고 인터페이스만 추출!
+                IDamageable damageable = col.GetComponent<IDamageable>();
+
+                if (damageable != null)
                 {
-                    // (참고: 이전 단계에서 모듈화를 하셨다면 meteor.Health.OnDamage() 로 변경하세요!)
-                    bullet.CalculateDamage(meteor, finalExplosionDmg);
-
-                    damagedMeteors.Add(col.gameObject); // 맞았다고 명단에 기록
-                    secondaryTargets.Add(meteor);       // 2차 폭발 진원지로 등록
+                    // 인터페이스를 통해 공평하게 데미지를 입힙니다.
+                    // (만약 bullet.CalculateDamage를 계속 쓰고 싶으시다면 해당 함수의 매개변수도 IDamageable로 수정하시면 됩니다!)
+                    bullet.CalculateDamage(damageable, finalExplosionDmg);
+                    
+                    damagedTargets.Add(col.gameObject);         // 맞았다고 명단에 기록
+                    secondaryExplosionCenters.Add(col.transform); // 2차 폭발 진원지로 위치 등록
                 }
             }
 
             // ==========================================
             // 2. 2차 연쇄 폭발 로직 (5레벨 이상일 때 특수 능력!)
             // ==========================================
-            // 주의: Stat 스크립트에 Level 변수가 있다고 가정했습니다. 실제 쓰시는 변수명으로 바꿔주세요)
             if (stat.curLevel >= 5)
             {
-                foreach (var secTarget in secondaryTargets)
+                foreach (var secCenter in secondaryExplosionCenters)
                 {
-                    // secTarget이 1차 폭발 데미지로 죽었더라도, 그 '위치'에서는 폭발이 일어나야 합니다.
-                    Vector2 secExplosionPos = secTarget.transform.position;
+                    //  4. 진원지의 위치를 가져옵니다. 
+                    // (대상이 이미 죽어서 오브젝트가 파괴되었을 위험이 있으므로, 안전장치를 하나 걸어줍니다)
+                    if (secCenter == null) continue;
+                    Vector2 secExplosionPos = secCenter.position;
 
-                    // (선택 사항) 여기서 2차 폭발 전용 작은 파티클 이펙트를 터트려주면 타격감이 엄청납니다!
-                    bullet.BulletParticle.SpawnHit(secExplosionPos, Vector2.zero, stat);
+                    // 2차 폭발 파티클 및 사운드
+                    bullet.BulletParticle?.SpawnHit(secExplosionPos, Vector2.zero, stat);
                     Managers.Sound.Play(Define.SoundID.Sfx_Explosion_Hit);
-                    //Managers.Resource.Instantiate("SecondaryExplosionEffect", secExplosionPos);
 
                     Collider2D[] secondaryColliders = Physics2D.OverlapCircleAll(secExplosionPos, radius, layerMask);
 
                     foreach (var col in secondaryColliders)
                     {
                         // 1차 폭발 때 맞았거나, 다른 2차 폭발로 이미 맞은 놈은 또 맞지 않음!
-                        if (damagedMeteors.Contains(col.gameObject)) continue;
+                        if (damagedTargets.Contains(col.gameObject)) continue;
 
-                        MeteorController meteor = col.GetComponent<MeteorController>();
-                        if (meteor)
+                        IDamageable damageable = col.GetComponent<IDamageable>();
+                        if (damageable != null)
                         {
-                            // 2차 폭발 데미지 (밸런스를 위해 finalExplosionDmg * 0.5f 처럼 반감시켜도 좋습니다)
-                            meteor.OnDamage(finalExplosionDmg * 0.5f);
-
-                            damagedMeteors.Add(col.gameObject); // 명단에 추가
+                            // 2차 폭발 데미지 적용
+                            bullet.CalculateDamage(damageable, finalExplosionDmg * 0.5f);
+                            
+                            damagedTargets.Add(col.gameObject); // 명단에 추가
                         }
                     }
                 }
             }
         }
     }
-    public void OnInit(BulletController bullet, BaseBulletStat activeStat)
-    {
-        
-    }
-    public void OnRelease(BulletController bullet)
-    {
-        
-    }
-    public void OnShot(BulletController bullet)
-    {
-        
-    }
-    public void OnUpdate(BulletController bullet)
-    {
-        
-    }
+
+    public void OnInit(BulletController bullet, BaseBulletStat activeStat) { }
+    public void OnRelease(BulletController bullet) { }
+    public void OnShot(BulletController bullet) { }
+    public void OnUpdate(BulletController bullet) { }
 }

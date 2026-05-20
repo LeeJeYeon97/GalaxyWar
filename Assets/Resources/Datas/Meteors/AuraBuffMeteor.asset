@@ -15,7 +15,7 @@ MonoBehaviour:
   Type: 10
   originalPrefabs: {fileID: 5089178002345023113, guid: 5ce1e9a82d535aa44a2b59d3c356bcbc, type: 3}
   isExclude: 0
-  MaxHp: 40
+  MaxHp: 25
   MaxSpeed: 0.6
   MinSpeed: 0.4
   Damage: 10

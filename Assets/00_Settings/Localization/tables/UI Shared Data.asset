@@ -179,6 +179,62 @@ MonoBehaviour:
     m_Key: GameClearPopup_Quit
     m_Metadata:
       m_Items: []
+  - m_Id: 11840956274987008
+    m_Key: PausePopup_Stat
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11840995395260416
+    m_Key: PausePopup_Ability
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11841093692968960
+    m_Key: PausePopup_Damage
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11841158415273984
+    m_Key: PausePopup_CriticalDamage
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11841162471165952
+    m_Key: PausePopup_CriticalChance
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11841206528135168
+    m_Key: PausePopup_MaxHp
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11841228091052032
+    m_Key: PausePopup_Speed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11841248320180224
+    m_Key: PausePopup_ReloadCount
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11841272550674432
+    m_Key: PausePopup_ReloadTime
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11841305333354496
+    m_Key: PausePopup_ShotTime
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11841327819018240
+    m_Key: PausePopup_BurstModeChargeTime
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11841637996187648
+    m_Key: PausePopup_Shield ChargeTime
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11841722486247424
+    m_Key: PausePopup_Split Bullet Count
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11841812219187200
+    m_Key: PausePopup_Bullet Bounce Count
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

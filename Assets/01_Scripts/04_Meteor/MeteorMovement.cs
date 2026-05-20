@@ -45,8 +45,9 @@ public class MeteorMovement : MonoBehaviour
     {
         bool isPaused = (Managers.Game.currentGameState == GameState.Pause);
         bool isGameOver = (Managers.Game.currentGameState == GameState.GameOver);
+        bool isGameClear = (Managers.Game.currentGameState == GameState.GameClear);
 
-        if ((isPaused || isGameOver) && !_physicsFrozenByPause)
+        if ((isPaused || isGameOver || isGameClear) && !_physicsFrozenByPause)
         {
             _savedVelocity = _rb.linearVelocity;
             _savedAngularVelocity = _rb.angularVelocity;
@@ -55,7 +56,7 @@ public class MeteorMovement : MonoBehaviour
             _rb.simulated = false;
             _physicsFrozenByPause = true;
         }
-        else if (!isPaused && !isGameOver && _physicsFrozenByPause)
+        else if (!isPaused && !isGameOver && !isGameClear && _physicsFrozenByPause)
         {
             _rb.simulated = true;
             _rb.linearVelocity = _savedVelocity;
@@ -63,7 +64,7 @@ public class MeteorMovement : MonoBehaviour
             _physicsFrozenByPause = false;
         }
 
-        if (!isPaused && !isGameOver)
+        if (!isPaused && !isGameOver && !isGameClear)
         {
             CheckBoundaries();
         }

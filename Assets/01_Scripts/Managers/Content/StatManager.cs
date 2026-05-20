@@ -14,6 +14,8 @@ public class StatManager
     public Dictionary<BulletType, BaseBulletStat> bulletStatDict = new Dictionary<BulletType, BaseBulletStat>();
     [SerializeField]
     public Dictionary<MeteorType, MeteorStat> meteorStatDict = new Dictionary<MeteorType, MeteorStat>();
+    [SerializeField]
+    public Dictionary<BossType, BossStat> bossStatDict = new Dictionary<BossType, BossStat>();
 
     // 둔화 코루틴 상태를 기억할 변수들
     private Coroutine _playerSlowCoroutine;
@@ -39,6 +41,12 @@ public class StatManager
             MeteorStat stat = new MeteorStat();
             stat.Init(data.Value);
             meteorStatDict.Add(data.Value.Type, stat);
+        }
+        foreach (var data in Managers.Data.BossStatDataDict)
+        {
+            BossStat stat = new BossStat();
+            stat.Init(data.Value);
+            bossStatDict.Add(data.Value.Type, stat);
         }
     }
     public void Clear()
@@ -126,6 +134,8 @@ public class StatManager
         return validStats[randIdx];
 
     }
+
+
     public MeteorStat GetMeteorStat(MeteorType type)
     {
         if (meteorStatDict.TryGetValue(type, out var stat))
@@ -134,6 +144,31 @@ public class StatManager
         }
         Debug.LogWarning($"{type.ToString()}에 해당하는 스탯이 없습니다!");
         return null;
+    }
+
+    public BossStat GetRandomBossStat()
+    {
+        // 딕셔너리가 비어있으면 null 반환
+        if (bossStatDict.Count <= 0) return null;
+
+        // 1. 뽑을 수 있는(유효한) 스탯들만 모아둘 '빈 바구니(List)'를 준비합니다.
+        List<BossStat> validStats = new List<BossStat>();
+
+
+        // 2. 딕셔너리에 있는 모든 항목(Key-Value)을 하나씩 꺼내서 살펴봅니다.
+        foreach (var stat in bossStatDict.Values)
+        {
+            
+            validStats.Add(stat);
+        }
+        // 만약 다 걸러져서 바구니에 남은 게 하나도 없다면 null 반환
+        if (validStats.Count == 0) return null;
+
+        // 5. 안전하게 모인 바구니 안에서 랜덤으로 하나를 뽑습니다.
+        int randIdx = UnityEngine.Random.Range(0, validStats.Count);
+
+        return validStats[randIdx];
+
     }
 
     public void ApplyPlayerDebuff(DebuffType type, float value, float time)
@@ -174,5 +209,7 @@ public class StatManager
         _isSlowed = false;
         _playerSlowCoroutine = null;
     }
+
+
 
 }

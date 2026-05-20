@@ -55,6 +55,9 @@ public class Define
         Sfx_PierceBullet_Hit,
         Sfx_BurstModeOn,
         Sfx_BurstModeOff,
+        Sfx_ShieldHit,
+        Sfx_BossDie,
+        Sfx_BossWarning,
        
     }
     public enum UIEvent
@@ -81,6 +84,7 @@ public class Define
         Pause,
         Resume,
         GameOver,
+        GameClear,
     }
     public enum PlayerState
     {
@@ -198,6 +202,13 @@ public class Define
         FragmentMeteor = 9,     // 분열하는 메테오에서 나오는 파편
         AuraBuffMeteor = 10,    // 메테오들한테 장판 버프 주는 메테오
     }
+    public enum BossType
+    {
+        Boss1, 
+        Boss2, 
+        Boss3, 
+        Boss4,
+    }
     public enum ItemType
     {
         RecoveryHp,             // HP 회복
@@ -241,8 +252,9 @@ public class Define
     {
         public float hp;
         public float maxHp;
-        public float shield;
-        public float shieldCooldownRatio;
+        public float shieldCount;
+        public float maxShieldGuage;
+        public float currentShieldGuage;
         public float burst;
         public float maxBurst;
     }

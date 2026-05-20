@@ -20,6 +20,9 @@ public class StageBalanceDataSO : ScriptableObject
 
     [Header("4. 10분 생존 웨이브 배율 (Wave)")]
     public List<WaveMultiplier> waves;      // 시간대별로 쏟아지는 물량/체력 배율
+
+    [Header("보스 스테이지 지정 데이터 리스트")]
+    public int bossStageInterval = 5;          // 몇 스테이지마다 보스가 나올 것인가? (예: 5)
 }
 
 [System.Serializable]

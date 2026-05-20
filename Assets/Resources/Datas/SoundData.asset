@@ -64,3 +64,12 @@ MonoBehaviour:
   - id: 16
     clip: {fileID: 8300000, guid: d6599fb4a6bb6244dae1ce8b6124cdf0, type: 3}
     volume: 1
+  - id: 18
+    clip: {fileID: 8300000, guid: 47a624201330dfc42abc473944e28330, type: 3}
+    volume: 1
+  - id: 19
+    clip: {fileID: 8300000, guid: 47a624201330dfc42abc473944e28330, type: 3}
+    volume: 1
+  - id: 20
+    clip: {fileID: 8300000, guid: 47a624201330dfc42abc473944e28330, type: 3}
+    volume: 1

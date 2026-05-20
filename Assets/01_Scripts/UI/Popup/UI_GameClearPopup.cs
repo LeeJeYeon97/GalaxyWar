@@ -34,37 +34,35 @@ public class UI_GameClearPopup : UI_Popup
         GetButton((int)Buttons.Btn_NextStage).onClick.AddListener(OnClickNextStageButton);
         GetButton((int)Buttons.Btn_QuitLobby).onClick.AddListener(OnClickQuitLobbyButton);
 
+        RefreshText();
     }
-    
+    private void RefreshText()
+    {
+        GetTMP((int)Texts.Text_Score).text = Managers.Level.Score.ToString("N0");
+
+        float time = Managers.Game.gamePlayTime;
+        int minutes = Mathf.FloorToInt(time / 60f); // 60으로 나눠서 '분' 계산 (내림)
+        int seconds = Mathf.FloorToInt(time % 60f); // 60으로 나눈 나머지로 '초' 계산
+        // "00:00" 형식으로 출력 (예: 12:05)
+        GetTMP((int)Texts.Text_Time).text = $"{minutes:00}:{seconds:00}";
+
+        GetTMP((int)Texts.Text_KillCount).text = $"{Managers.Game.killCount.ToString("N0")} Kill";
+
+        // 4. 골드 (천 단위 콤마 추가)
+        GetTMP((int)Texts.Text_Gold).text = $"{Managers.Game.currentSessionGold.ToString("N0")} G";
+    }
     private async void OnClickNextStageButton()
     {
 
         GetButton((int)Buttons.Btn_NextStage).interactable = false;
-        //// 1. 중복 클릭 방지를 위해 버튼 비활성화
-        //GetButton((int)Buttons.Btn_Restart).interactable = false;
-        //
-        //// 2. 서버 데이터 저장 완료까지 대기
-        //await SaveSessionData();
-        //
-        //// 로비로 돌아가기
-        //// 현재 씬(GameScene)을 다시 로드! (가장 깔끔한 초기화)
-        //Managers.AD.ShowInterstitialAd(() =>
-        //{
-        //    // 이 중괄호 안의 코드는 유저가 광고를 [X] 버튼으로 닫거나, 
-        //    // 쿨타임 등으로 광고가 스킵되었을 때만 실행됩니다!
-        //    Managers.Scene.LoadScene(Define.Scene.GameScene);
-        //});
-
+        
+        // 2. 서버 데이터 저장 완료까지 대기
         await SaveSessionData();
 
-        // 다음 스테이지로 가기
-        // 현재 씬(GameScene)을 다시 로드! (가장 깔끔한 초기화)
-        Managers.AD.ShowInterstitialAd(() =>
-        {
-            // 이 중괄호 안의 코드는 유저가 광고를 [X] 버튼으로 닫거나, 
-            // 쿨타임 등으로 광고가 스킵되었을 때만 실행됩니다!
-            Managers.Scene.LoadScene(Define.Scene.LobbyScene);
-        });
+        // SaveSessionData를 완료하면 자동으로 스테이지 올라감
+
+        // 새로 로드되는 GameScene의 StageManager는 자동으로 다음 단계 난이도를 계산하게 됩니다!
+        Managers.Scene.LoadScene(Define.Scene.GameScene);
     }
     private async void OnClickQuitLobbyButton()
     {
@@ -130,6 +128,6 @@ public class UI_GameClearPopup : UI_Popup
         Debug.Log("서버에 플레이어 기록 저장을 요청합니다...");
 
         // PlayerDataManager에 만들어둔 저장 함수를 호출하고 끝날 때까지 기다립니다.
-        await Managers.PlayerData.SavePlayerData(false);
+        await Managers.PlayerData.SavePlayerData(true);
     }
 }

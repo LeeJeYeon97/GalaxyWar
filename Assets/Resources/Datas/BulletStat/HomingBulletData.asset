@@ -17,7 +17,7 @@ MonoBehaviour:
     CardIcon: {fileID: 21300000, guid: 506ad5448d71fd04ab1ab8a19090e6dd, type: 3}
     hudIcon: {fileID: 21300000, guid: 506ad5448d71fd04ab1ab8a19090e6dd, type: 3}
     chance: 30
-    damage: 5
+    damage: 10
     speed: 10
     bounceCount: 0
   originalPrefab: {fileID: 4317400478341151153, guid: dc6b18b197f8c9c4b8dfdab987c59309, type: 3}

@@ -6,8 +6,9 @@ using static Define;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 using System;
+using EnergyShield;
 
-public class PlayerController : BaseController
+public class PlayerController : BaseController, IDamageable
 {
     private Camera mainCam;
 
@@ -27,6 +28,7 @@ public class PlayerController : BaseController
     [Header("Stat")]    
     public float currentHp;
     public float currentDefence;
+    public float currentDefenceGuage;
     public float shieldCoolTime;
     public float currentBurst;
     
@@ -37,6 +39,14 @@ public class PlayerController : BaseController
 
     public SpriteRenderer sr;
 
+    public GameObject burstBoost_1;
+    public GameObject burstBoost_2;
+    public GameObject shield;
+    public float hitMaxStrength = 5f;
+    public float hitRadius = 2f;
+    public float hitLerpSpeed = 10f;
+    public bool shieldhit = false;
+
     public void Init()
     {
 
@@ -45,9 +55,10 @@ public class PlayerController : BaseController
         // 스탯 데이터 세팅
         Stat = Managers.Stat.playerStat;
         currentHp = Stat.maxHp.TotalValue;
-        currentDefence = Stat.maxDefence.TotalValue;
+        currentDefence = Stat.maxDefenceCount.TotalValue;
         currentBurst = 0f;
-
+        currentDefenceGuage = 0;
+        shieldhit = false;
         Movement = GetComponent<PlayerMovement>();
         if (Movement != null) Movement.Init(this);
 
@@ -56,7 +67,10 @@ public class PlayerController : BaseController
 
         // HUD업데이트 이벤트 발생
         OnStatusEvent();
-   
+
+        burstBoost_1.gameObject.SetActive(false);
+        burstBoost_2.gameObject.SetActive(false);
+        shield.gameObject.SetActive(false);
         // 씬에 있는 Global Volume을 찾아 효과 가져오기
         _volume = GameObject.FindFirstObjectByType<Volume>();
         if (_volume.profile.TryGet<ChromaticAberration>(out var ca))
@@ -87,7 +101,7 @@ public class PlayerController : BaseController
     public void AddShieldGauge()
     {
         // 1. 패시브를 안 배웠거나, 최대 방어막 횟수가 0 이하라면 작동 안 함 (무한 루프 버그 해결)
-        if (Managers.Ability.GetCurrentLevel(Define.AbilityType.Passive_PlayerShield) <= 0 || Stat.maxDefence.TotalValue <= 0)
+        if (Managers.Ability.GetCurrentLevel(Define.AbilityType.Passive_PlayerShield) <= 0 || Stat.maxDefenceCount.TotalValue <= 0)
         {
             return;
         }
@@ -101,11 +115,19 @@ public class PlayerController : BaseController
         // 3. 쿨타임 증가
         shieldCoolTime += Time.deltaTime;
 
+        // 핵심: 쿨타임 진행률(0.0 ~ 1.0)을 계산하여 100을 곱합니다.
+        float progress = Mathf.Clamp01(shieldCoolTime / Stat.shieldChargeTime.TotalValue);
+        currentDefenceGuage = progress * 100f;
+
         // 4. 충전 완료!
         if (shieldCoolTime >= Stat.shieldChargeTime.TotalValue)
         {
             // 방어막을 꽉 채워주고 쿨타임을 0으로 초기화합니다.
-            currentDefence = Stat.maxDefence.TotalValue;
+            currentDefence = Stat.maxDefenceCount.TotalValue;
+            currentDefenceGuage = Stat.maxDefenceGuage;
+
+            shield.gameObject.SetActive(true);
+            shieldhit = false;
             shieldCoolTime = 0f;
         }
 
@@ -120,19 +142,22 @@ public class PlayerController : BaseController
         // 2. 쉴드 최대 갯수 증가
         if (shieldCount > 0)
         {
-            Stat.maxDefence.AddValue(shieldCount);
+            Stat.maxDefenceCount.AddValue(shieldCount);
 
             // 최대치가 늘어났을 때 현재 쉴드가 없다면 즉시 채워줍니다.
             if (currentDefence <= 0)
             {
-                currentDefence = Stat.maxDefence.TotalValue;
+                currentDefence = Stat.maxDefenceCount.TotalValue;
+                currentDefenceGuage = Stat.maxDefenceGuage;
                 shieldCoolTime = 0f; // 쿨타임 초기화
+                shield.gameObject.SetActive(true);
+                shieldhit = false;
                 OnStatusEvent();
             }
         }
     }
     #region 피격 및 사망
-    public void OnDamage(float damage)
+    public void OnDamage(float damage, bool isCrit = false)
     {
 #if UNITY_EDITOR
         if(Managers.Data.GameData.playerGod)
@@ -147,10 +172,18 @@ public class PlayerController : BaseController
 
         if (currentState != PlayerState.Playing) return;
 
+        
         // 방어막이 있으면
         if (currentDefence > 0)
         {
             currentDefence--;
+            // Check if the object we hit has the shield pulse script
+            ShieldHitPulse shieldPulse = shield.GetComponent<ShieldHitPulse>();
+            if (shieldPulse != null)
+            {
+                shieldPulse.TriggerPulse(transform.position, hitMaxStrength, hitRadius, hitLerpSpeed);
+            }
+            shieldhit = true;
             // 방어막 히트 이벤트
             Managers.Effect.Play(EffectType.Screen_ShieldHit, Vector2.zero);
         }
@@ -233,6 +266,9 @@ public class PlayerController : BaseController
             sr.SetPropertyBlock(mpb);
         }
 
+        if(shieldhit)
+            shield.gameObject.SetActive(false);
+
         _isInvincible = false;
     }
 
@@ -286,7 +322,10 @@ public class PlayerController : BaseController
         {
             _isBurst = true;
             Managers.Sound.Play(Define.SoundID.Sfx_BurstModeOn);
-            
+
+            // 이펙트 켜기
+            burstBoost_1.gameObject.SetActive(true);
+            burstBoost_2.gameObject.SetActive(true);
             StartCoroutine(BurstRoutine());
         }
         else
@@ -295,7 +334,7 @@ public class PlayerController : BaseController
     }
     private IEnumerator BurstRoutine()
     {
-        mainCam.DOOrthoSize(15.0f, 0.3f)
+        mainCam.DOOrthoSize(Managers.Data.GameData.burstModeSize, 0.3f)
             .SetEase(Ease.OutCubic)
             .SetUpdate(true)
             .OnUpdate(() =>
@@ -304,7 +343,7 @@ public class PlayerController : BaseController
                 Managers.Effect.Play(EffectType.Screen_BurstMode, Vector3.zero);
             });
 
-        Stat.speed.AddMultiplier(1.0f);
+        Stat.speed.AddMultiplier(2.0f);
         Stat.reloadTime.SetForceZero(true);
         Stat.shotTime.AddMultiplier(-0.5f);
 
@@ -334,7 +373,11 @@ public class PlayerController : BaseController
         currentBurst = 0;
         _isBurst = false;
 
-        mainCam.DOOrthoSize(12f, 0.3f)
+
+        burstBoost_1.gameObject.SetActive(false);
+        burstBoost_2.gameObject.SetActive(false);
+
+        mainCam.DOOrthoSize(Managers.Data.GameData.gamePlayeSize, 0.3f)
             .SetEase(Ease.OutCubic)
             .SetUpdate(true)
             .OnUpdate(() => Managers.Map.UpdateMap());
@@ -353,30 +396,12 @@ public class PlayerController : BaseController
     {
         _curStatus.hp = currentHp;
         _curStatus.maxHp = Stat.maxHp.TotalValue;
-        _curStatus.shield = currentDefence;
+        _curStatus.shieldCount = currentDefence;
+        _curStatus.maxShieldGuage = Stat.maxDefenceGuage;
+        _curStatus.currentShieldGuage = currentDefenceGuage;
         _curStatus.burst = currentBurst;
         _curStatus.maxBurst = Stat.maxBurstGuage.TotalValue;
 
-        // 쉴드 쿨타임 비율 계산 (안전하게 Clamp01 적용)
-        if (Stat.maxDefence.TotalValue > 0)
-        {
-            if (currentDefence > 0)
-            {
-                // 방어막이 꽉 차 있으면 슬라이더도 100%(1.0f)로 고정
-                _curStatus.shieldCooldownRatio = 1.0f;
-            }
-            else
-            {
-                // 방어막이 없으면 쿨타임 비율 계산 (현재 쿨타임 / 최대 쿨타임)
-                // Mathf.Clamp01을 써서 만약의 경우에도 게이지가 100%를 넘지 않게 방어합니다.
-                _curStatus.shieldCooldownRatio = Mathf.Clamp01(shieldCoolTime / Stat.shieldChargeTime.TotalValue);
-            }
-        }
-        else
-        {
-            // 패시브가 없으면 게이지 0%
-            _curStatus.shieldCooldownRatio = 0f;
-        }
         // 3. 갱신된 방 통째로 신호를 보냅니다.
         Managers.Event.PostEvent<PlayerStatusEvent>(Define.ActionEvent.PlayerStatusChanged, _curStatus);
     }

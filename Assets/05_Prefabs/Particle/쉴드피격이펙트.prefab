@@ -4940,4 +4940,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EffectController
   returnMode: 1
-  customTime: 2
+  customTime: 1

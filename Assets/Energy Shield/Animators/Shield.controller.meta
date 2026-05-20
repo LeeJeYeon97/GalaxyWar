@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 90ec3bab40e4ef244acdd41cedcdc3af
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 9100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 368490
+  packageName: Energy Shield (URP)
+  packageVersion: 1.0
+  assetPath: Assets/Energy Shield/Animators/Shield.controller
+  uploadId: 884510

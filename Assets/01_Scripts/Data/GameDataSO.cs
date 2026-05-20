@@ -30,7 +30,11 @@ public class GameDataSO : ScriptableObject
     public bool expZero;
     public bool playerGod;
 
-    [Header("Phase Settings")]
-    [Tooltip("시간이 낮은 순서대로 넣어주세요 (Phase1: 0초, Phase2: 90초...)")]
-    public List<PhaseInfo> phases = new List<PhaseInfo>();
+    [Header("게임 종료시간")]
+    public float gameclearTime;
+
+    [Header("카메라 사이즈")]
+    public float gamePlayeSize;
+    public float burstModeSize;
+    public float bossStageSize;
 }

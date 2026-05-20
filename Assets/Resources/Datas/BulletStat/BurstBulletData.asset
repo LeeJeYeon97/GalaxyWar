@@ -18,7 +18,7 @@ MonoBehaviour:
     hudIcon: {fileID: 21300000, guid: 02ee53b758c07d7468ea1a7a821a7b48, type: 3}
     chance: 100
     damage: 30
-    speed: 10
+    speed: 20
     bounceCount: 0
   originalPrefab: {fileID: 2022579044585835378, guid: b6680ad1dd1594944b9144adc303a1c2, type: 3}
   isReload: 0

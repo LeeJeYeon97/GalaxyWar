@@ -26,6 +26,7 @@ public class StageManager
     private bool _isPhaseInit = false;
 
     // Managers.cs가 게임 시작 시 딱 한 번 불러줄 초기화 함수
+    public bool IsBossStage = false;
     public void Init()
     {
         if (balanceData == null)
@@ -37,7 +38,7 @@ public class StageManager
         Managers.PlayerData.PlayerDataUpdated += SetPlayerClearStage;
 
         _isPhaseInit = false; // 씬을 재시작하면 다시 초기화되도록 세팅
-
+        IsBossStage = false;
         // 플레이어 데이터 보고 최대 클리어한 스테이지 체크
         //SetPlayerClearStage(Managers.PlayerData.PlayerDataLocal);
     }
@@ -63,6 +64,7 @@ public class StageManager
         // 1스테이지일 때 곱하기가 0이 되도록(아무런 보너스가 없도록) 인덱스를 1 깎아줍니다.
         // 예: 1스테이지 = 0, 15스테이지 = 14
         int levelIndex = currentStageLevel - 1;
+        IsBossStage = (currentStageLevel % balanceData.bossStageInterval) == 0 ? true : false;
 
         // [스폰 속도 공식] (선형 감소)
         // 공식: 기본 2초 - (0.02초 * 스테이지 단계)
@@ -82,7 +84,7 @@ public class StageManager
         // 계산된 기본 스폰 간격을 현재 스폰 간격으로 확정 짓습니다.
         CurrentSpawnDelay = _stageBaseSpawnDelay;
 
-        Debug.Log($"[{currentStageLevel} 스테이지 세팅 완료] 기본 스폰간격: {_stageBaseSpawnDelay}초");
+        Debug.Log($"[{currentStageLevel} 스테이지 세팅 완료] 기본 스폰간격: {_stageBaseSpawnDelay}초 , 보스스테이지 : {IsBossStage}");
     }
     /// <summary>
     /// [매 프레임 호출] 

@@ -13,24 +13,16 @@ public class HomingBulletBehavior : IBulletBehavior
         Managers.Sound.Play(Define.SoundID.Sfx_homing_Hit);
 
     }
-    public void OnInit(BulletController bullet, BaseBulletStat activeStat)
-    {
-    }
+    public void OnInit(BulletController bullet, BaseBulletStat activeStat)    {    }
 
-    public void OnRelease(BulletController bullet)
-    {
-    }
+    public void OnRelease(BulletController bullet)    {    }
 
+    public void OnUpdate(BulletController bullet) { }
     public void OnShot(BulletController bullet)
     {
         // 저장할 필요 없이 그냥 실행만 시켜줍니다.
         bullet.StartCoroutine(CoHomingRoutine(bullet));
     }
-
-    public void OnUpdate(BulletController bullet)
-    {
-    }
-
     private MeteorController FindClosestTarget(BulletController bullet)
     {
         var meteors = Managers.Game.activeMeteors;
