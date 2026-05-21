@@ -18,7 +18,7 @@ MonoBehaviour:
     maxDefenceCount: 0
     reloadCount: 7
     reloadTime: 2
-    shotRange: 3
+    shotRange: 5
     shotTime: 1
     criticalChance: 0
     criticalDamageRate: 0

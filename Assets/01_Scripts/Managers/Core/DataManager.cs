@@ -21,11 +21,10 @@ public class DataManager
     public SoundDataSO SoundData { get; private set; }
     public EffectDataSO EffectData { get; private set; }
     public StageBalanceDataSO StageData { get; private set; }
+    public Dictionary<Define.ShopItemType, ShopItemDataSO> ShopItemDataDict { get; private set; }
 
     public void Init()
     {
-        // [사용 예시]
-        // 1. Bullets는 SO의 'name'을 키로 사용
         BulletDataDict = LoadDataToDict<Define.BulletType, BulletStatDataSO>("BulletStat", data => data.type);
 
         // 2. Abilities는 만약 내부에 'abilityID' 같은 별도 필드가 있다면 그것을 키로 사용
@@ -60,6 +59,7 @@ public class DataManager
         {
             Debug.LogError("StageData Null");
         }
+        ShopItemDataDict = LoadDataToDict<Define.ShopItemType, ShopItemDataSO>("ShopItems", data => data.type);
 
         ItemDataList = LoadDataToDict<Define.ItemType, ItemDataSO>("Items",data => data.type);
         MeteorStatDataDict = LoadDataToDict<Define.MeteorType, MeteorStatDataSO>("Meteors", data => data.Type);

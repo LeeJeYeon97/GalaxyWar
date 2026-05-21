@@ -23,7 +23,12 @@ public class PlayerData
 
     [JsonProperty("maxClearStage")]
     public int MaxClearStage { get; set; }
+
+    // [추가] 마지막 무료 보상 수령 날짜를 관리할 필드 추가!
+    [JsonProperty("lastDailyFreeGoldClaimDate")]
+    public string LastDailyFreeGoldClaimDate { get; set; } = string.Empty; // 기본값은 빈 문자열
 }
+
 public class PlayerEconomyData
 {
     [JsonProperty("currencies")]
@@ -44,6 +49,7 @@ public class PlayerDataResponse
 
     [JsonProperty("playerEconomyData")]
     public PlayerEconomyData PlayerEconomyData { get; set; } = new PlayerEconomyData();
+
 
     [JsonProperty("isNewPlayer")]
     public bool IsNewPlayer { get; set; }

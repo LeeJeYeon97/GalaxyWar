@@ -72,18 +72,29 @@ public class PlayerCombat : MonoBehaviour
         float minDistance = Mathf.Infinity;
         _target = null;
 
-        Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, _player.Stat.shotRange.TotalValue);
+        // 1. 추적할 레이어만 골라내기 (메테오와 적 레이어를 포함)
+        int layerMask = LayerMask.GetMask("Meteor", "Boss");
+
+        //  2. 레이어 마스크를 사용하여 오버랩 탐색 (최적화!)
+        Collider2D[] colliders = Physics2D.OverlapCircleAll(
+            transform.position,
+            _player.Stat.shotRange.TotalValue,
+            layerMask
+        );
 
         foreach (Collider2D col in colliders)
         {
-            MeteorController meteor = col.GetComponent<MeteorController>();
-            if (meteor != null && meteor.gameObject.activeInHierarchy)
+            // 3. 메테오인지 보스인지 묻지 말고, IDamageable 인터페이스만 확인!
+            IDamageable damageable = col.GetComponent<IDamageable>();
+
+            // 인터페이스가 있고, 활성화된 상태라면 타겟으로 고려
+            if (damageable != null && col.gameObject.activeInHierarchy)
             {
-                float distance = Vector2.Distance(transform.position, meteor.transform.position);
+                float distance = Vector2.Distance(transform.position, col.transform.position);
                 if (distance < minDistance)
                 {
                     minDistance = distance;
-                    _target = meteor.gameObject;
+                    _target = col.gameObject;
                 }
             }
         }

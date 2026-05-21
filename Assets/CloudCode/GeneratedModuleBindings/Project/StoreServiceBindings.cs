@@ -37,5 +37,16 @@ namespace Unity.Services.CloudCode.GeneratedBindings
                     {"currencyCode", currencyCode},
                 });
         }
+
+        public async Task<Project.PlayerEconomyData> ClaimDailyFreeReward(int amount)
+        {
+            return await k_Service.CallModuleEndpointAsync<Project.PlayerEconomyData>(
+                "Project",
+                "ClaimDailyFreeReward",
+                new Dictionary<string, object>()
+                {
+                    {"amount", amount},
+                });
+        }
     }
 }

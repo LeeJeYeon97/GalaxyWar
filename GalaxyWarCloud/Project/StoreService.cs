@@ -18,13 +18,15 @@ namespace Project;
 public class StoreService
 {
 
+    private PlayerDataService _playerDataService;
     private PlayerEconomyService _playerEconomyService;
     private readonly ILogger<StoreService> _logger;
 
-    public StoreService(ILogger<StoreService> logger, PlayerEconomyService playerEconomyService)
+    public StoreService(ILogger<StoreService> logger, PlayerEconomyService playerEconomyService, PlayerDataService playerDataService)
     {
         _logger = logger;
         _playerEconomyService = playerEconomyService;
+        _playerDataService = playerDataService;
     }
 
     #region Virtual Purchase (가상 결제)
@@ -443,5 +445,41 @@ public class StoreService
             // 이렇게 하면 아래에 있는 구글/애플 검증(ProcessStoreReceipt)으로 넘어가지 않게 됩니다.
             throw new InvalidOperationException($"Already purchased limited item: {productId}");
         }
+    }
+
+
+    [CloudCodeFunction("ClaimDailyFreeReward")]
+    public async Task<PlayerEconomyData> ClaimDailyFreeReward(IExecutionContext context, IGameApiClient gameApiClient, int amount)
+    {
+        // 1. 한국 시간(KST) 오늘 날짜 구하기
+        DateTime kstNow = DateTime.UtcNow.AddHours(9);
+        string todayStr = kstNow.ToString("yyyy-MM-dd");
+
+        // 2. 전체 PlayerData를 가져옵니다 (TryGetPlayerData 함수 활용)
+        var (playerExists, playerData) = await _playerDataService.TryGetPlayerData(context, gameApiClient);
+
+        if (!playerExists || playerData == null)
+        {
+            throw new InvalidOperationException("플레이어 데이터를 찾을 수 없습니다.");
+        }
+
+        // 3. 오늘 날짜와 마지막 수령 날짜 비교
+        if (playerData.LastDailyFreeGoldClaimDate == todayStr)
+        {
+            throw new InvalidOperationException("ALREADY_CLAIMED_TODAY");
+        }
+
+        // 4. 보안 통과! 객체 내부의 날짜를 갱신
+        playerData.LastDailyFreeGoldClaimDate = todayStr;
+
+        // 5.  PlayerData 전체를 다시 서버에 저장 (덮어쓰기)
+        await _playerDataService.SaveData(context, gameApiClient, ServerDefine.k_PlayerDataKey, playerData);
+
+        // 6. 골드 지급
+        await _playerEconomyService.AddCurrency(context, gameApiClient, ServerDefine.k_GoldCurrencyKey, amount);
+        _logger.LogInformation($"일일 무료 보상 지급 완료: {amount} 골드");
+
+        return await _playerEconomyService.GetPlayerEconomyData(context, gameApiClient)
+            ?? throw new InvalidOperationException("Failed to get player economy data");
     }
 }

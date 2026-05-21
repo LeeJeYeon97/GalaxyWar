@@ -11,6 +11,7 @@ namespace Unity.Services.CloudCode.GeneratedBindings.Project
         public int MaxSurviveTime;
         public int MaxScore;
         public int MaxClearStage;
+        public string LastDailyFreeGoldClaimDate;
 
         [Preserve]
         public PlayerData ()

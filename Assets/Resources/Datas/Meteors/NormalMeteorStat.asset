@@ -23,10 +23,10 @@ MonoBehaviour:
   Exp: 10
   spawnPhase: 0
   dropTable:
-  - itemType: 2
-    dropRate: 0.02
   - itemType: 3
     dropRate: 1
+  - itemType: 2
+    dropRate: 0.05
   magmaTick: 0
   magmaPuddle: {fileID: 0}
   sludgePuddle: {fileID: 0}

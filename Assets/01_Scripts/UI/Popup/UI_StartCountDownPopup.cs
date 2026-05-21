@@ -42,7 +42,7 @@ public class UI_StartCountDownPopup : UI_Popup
         {
             // 1. 텍스트를 현재 숫자(5, 4, 3, 2, 1)로 변경
             _text.text = i.ToString();
-
+            Managers.Sound.Play(SoundID.Sfx_CountDown);
             // 2. 텍스트 시작 위치를 왼쪽 화면 밖(-1200)으로 초기화
             textRect.anchoredPosition = new Vector2(-1200f, 0f);
 
@@ -69,6 +69,8 @@ public class UI_StartCountDownPopup : UI_Popup
         }
 
         _text.text = "GO!";
+
+        Managers.Sound.Play(SoundID.Sfx_GameStart);
         textRect.anchoredPosition = new Vector2(-1200f, 0f);
 
         Sequence goSeq = DOTween.Sequence();

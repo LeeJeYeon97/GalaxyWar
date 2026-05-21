@@ -3,6 +3,7 @@ using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Unity.Services.CloudCode;
 using Unity.Services.CloudCode.GeneratedBindings;
 using Unity.Services.CloudCode.GeneratedBindings.Project;
@@ -500,5 +501,47 @@ public class IAPStoreManager
         _storeController.FetchPurchases();
 
         Debug.Log("[IAP] 스토어에 과거 결제 내역 조회를 요청했습니다.");
+    }
+
+    // 매니저에 추가할 무료 보상 수령 함수 (비동기)
+    public async Task<bool> ClaimDailyFreeRewardAsync(int amount)
+    {
+        try
+        {
+            // 1. 서버의 ClaimDailyFreeReward 함수로 보낼 매개변수
+            var arguments = new Dictionary<string, object> { { "amount", amount } };
+
+            // 2. Cloud Code 엔드포인트 호출
+            // 호출 후 서버에서 최종 업데이트된 PlayerEconomyData를 반환받습니다.
+            // 바인딩해서 쓰지않고 바로 호출하기
+            //var updatedEconomy = await CloudCodeService.Instance.CallEndpointAsync<PlayerEconomyData>("ClaimDailyFreeReward", arguments);
+
+            var updatedEconomy = await _storeServiceBindings.ClaimDailyFreeReward(amount);
+
+            // 3. 서버에서 받은 최신 지갑 데이터로 로컬 데이터 갱신
+            Managers.PlayerEconomy.HandleEconomyUpdate(updatedEconomy);
+
+            Debug.Log($"[IAP] 일일 무료 보상 {amount} 골드 수령 완료!");
+            return true; // 성공
+        }
+        catch (CloudCodeException e)
+        {
+            // 서버에서 throw new InvalidOperationException("ALREADY_CLAIMED_TODAY")를 던지면 
+            // CloudCodeException으로 잡힙니다.
+            if (e.Message.Contains("ALREADY_CLAIMED_TODAY"))
+            {
+                Debug.LogWarning("[IAP] 오늘은 이미 무료 골드를 받았습니다.");
+            }
+            else
+            {
+                Debug.LogError($"[IAP] 무료 보상 수령 실패: {e.Message}");
+            }
+            return false;
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError($"[IAP] 알 수 없는 에러 발생: {ex.Message}");
+            return false;
+        }
     }
 }

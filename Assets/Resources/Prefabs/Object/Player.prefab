@@ -710,10 +710,15 @@ MonoBehaviour:
       _baseValue: 0
       _additionalValue: 0
       _multiplier: 1
-    maxDefence:
+    maxDefenceCount:
+      _baseValue: 0
+      _additionalValue: 0
+      _multiplier: 0
+    shieldChargeTime:
       _baseValue: 0
       _additionalValue: 0
       _multiplier: 1
+    maxDefenceGuage: 0
     reloadCount:
       _baseValue: 0
       _additionalValue: 0
@@ -736,14 +741,6 @@ MonoBehaviour:
       _additionalValue: 0
       _multiplier: 1
     maxBurstFullChargeTime:
-      _baseValue: 0
-      _additionalValue: 0
-      _multiplier: 1
-    maxShield:
-      _baseValue: 0
-      _additionalValue: 0
-      _multiplier: 1
-    shieldChargeTime:
       _baseValue: 0
       _additionalValue: 0
       _multiplier: 1
@@ -775,6 +772,7 @@ MonoBehaviour:
   _isInvincible: 0
   currentHp: 0
   currentDefence: 0
+  currentDefenceGuage: 0
   shieldCoolTime: 0
   currentBurst: 0
   sr: {fileID: 3996220759619256521}
@@ -784,6 +782,7 @@ MonoBehaviour:
   hitMaxStrength: 5
   hitRadius: 2
   hitLerpSpeed: 10
+  shieldhit: 0
 --- !u!114 &8348312529210621734
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -822,7 +821,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9189973218153365269}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fc5202a9d10fd4d408fecae394de9fdd, type: 3}
   m_Name: 

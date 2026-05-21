@@ -19,6 +19,6 @@ MonoBehaviour:
   expZero: 0
   playerGod: 0
   gameclearTime: 480
-  gamePlayeSize: 12
-  burstModeSize: 15
+  gamePlayeSize: 15
+  burstModeSize: 20
   bossStageSize: 20

@@ -58,6 +58,8 @@ public class Define
         Sfx_ShieldHit,
         Sfx_BossDie,
         Sfx_BossWarning,
+        Sfx_CountDown,
+        Sfx_GameStart,
        
     }
     public enum UIEvent
@@ -215,6 +217,20 @@ public class Define
         RecoveryBurst,          // 버스트 게이지 회복
         Gold,
         Exp,
+    }
+    public enum ShopItemType
+    {
+        IAP_REMOVE_AD_TICKET,
+        GOLD_FREE,
+        GOLD_AD,
+        IAP_GOLD_1000,
+    }
+    public enum ShopCategory
+    {
+        REMOVE_AD,
+        GOLD,
+        AD,
+        PACKAGE,
     }
     public enum DebuffType
     {

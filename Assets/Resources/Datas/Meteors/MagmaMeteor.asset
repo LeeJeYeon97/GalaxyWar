@@ -25,6 +25,8 @@ MonoBehaviour:
   dropTable:
   - itemType: 3
     dropRate: 1
+  - itemType: 2
+    dropRate: 0.05
   magmaTick: 0.5
   magmaPuddle: {fileID: 100008, guid: 235a720370e60d5498e4e2ec051e8c95, type: 3}
   sludgePuddle: {fileID: 0}

@@ -60,29 +60,6 @@ public class PlayerDataService
             throw new Exception($"Failed to save data for playerId {context.PlayerId}. Error: {ex.Message}");
         }
     }
-
-    private async Task<object> GetData(IExecutionContext context, IGameApiClient gameApiClient, string key)
-    {
-        try
-        {
-            var result = await gameApiClient.CloudSaveData.GetItemsAsync(
-                context,
-                context.AccessToken,
-                context.ProjectId,
-                context.PlayerId!,
-                new List<string> { key });
-
-            // if(result.Data.Results.Count == 0) return null;
-
-            return result.Data.Results.First().Value;
-        }
-        catch (ApiException ex)
-        {
-            _logger.LogError("Failed to get data. Error: {Error}", ex.Message);
-            throw new Exception($"Failed to get data for playerId {context.PlayerId}. Error: {ex.Message}");
-        }
-    }
-
     [CloudCodeFunction("HandlePlayerSignIn")]
     public async Task<PlayerDataResponse> HandlePlayerSignIn(IExecutionContext context, IGameApiClient gameApiClient, string authPlayerName)
     {
@@ -121,7 +98,7 @@ public class PlayerDataService
         };
     }
     // 플레이어 데이터 가져오기
-    private async Task<(bool playerExists, PlayerData? playerData)> TryGetPlayerData(IExecutionContext context, IGameApiClient gameApiClient)
+    public async Task<(bool playerExists, PlayerData? playerData)> TryGetPlayerData(IExecutionContext context, IGameApiClient gameApiClient)
     {
         try
         {
@@ -179,10 +156,12 @@ public class PlayerDataService
             MaxSurviveTime = 0,
             MaxScore = 0,
             MaxClearStage = 0,
+            LastDailyFreeGoldClaimDate = string.Empty
         };
 
         PlayerEconomyData newEconomyData;
 
+        
         try
         {
             // Save new Player Data

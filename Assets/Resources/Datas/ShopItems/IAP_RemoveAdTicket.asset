@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f367caaa73e8a604ca9832608f4bfc83, type: 3}
+  m_Name: IAP_RemoveAdTicket
+  m_EditorClassIdentifier: Assembly-CSharp::ShopItemDataSO
+  type: 0
+  category: 0
+  title: "\uAD11\uACE0 \uC81C\uAC70 \uD328\uD0A4\uC9C0"
+  amountText: 
+  mainIcon: {fileID: 21300000, guid: 3a9118b80cd83ee4f998fa0d0df16403, type: 3}
+  currencyIcon: {fileID: 0}
+  itemPrefab: {fileID: 2532717643829980529, guid: dcf7f20647daff449aebb596720e1644, type: 3}
+  sortOrder: 2
+  placementId: 
+  rewardCurrencyId: 
+  rewardAmount: 0
+  economyId: IAP_REMOVE_AD

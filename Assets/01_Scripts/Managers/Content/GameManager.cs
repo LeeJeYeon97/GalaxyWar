@@ -43,6 +43,8 @@ public class GameManager : MonoBehaviour
             .SetUpdate(true)
             .OnUpdate(() =>
             {
+
+                Managers.Map.UpdateMap();
             });
 
         // UI »ı¼º
