@@ -349,6 +349,16 @@ public class PlayerController : BaseController, IDamageable
             recoveryAmount = (Stat.maxBurstGuage.TotalValue / Stat.maxBurstFullChargeTime.TotalValue) * Time.deltaTime;
         }
         currentBurst = Mathf.Clamp(currentBurst + recoveryAmount, 0, Stat.maxBurstGuage.TotalValue);
+
+        // 4. 버스트 게이지 MAX 도달 시 1회성 이벤트 발동 (사운드 + UI 팝업)
+        if (currentBurst >= Stat.maxBurstGuage.TotalValue)
+        {
+            // 도파민 터지는 알람 사운드!
+            Managers.Sound.Play(SoundID.Sfx_BurstModeOnAlarm);
+
+            // 우측에서 촥! 날아오는 배너 팝업 띄우기!
+            Managers.UI.ShowPopupUI<UI_BurstOnPopup>();
+        }
         // hud업데이트 이벤트 발생
         OnStatusEvent();
     }

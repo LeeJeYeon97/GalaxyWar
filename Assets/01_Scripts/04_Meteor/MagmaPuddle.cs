@@ -36,7 +36,7 @@ public class MagmaPuddle : MonoBehaviour
             if (Time.time - _lastDamageTime >= damageTick)
             {
                 _lastDamageTime = Time.time;
-                PlayerController player = collision.GetComponent<PlayerController>();
+                PlayerController player = collision.GetComponentInParent<PlayerController>();
                 if (player != null)
                 {
                     player.OnDamage(damage);

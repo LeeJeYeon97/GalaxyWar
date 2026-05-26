@@ -18,23 +18,33 @@ MonoBehaviour:
   _requiredAbility: 0
   bulletType: 2
   baseStats:
-  - chance: 0
+  - CardIcon: {fileID: 0}
+    hudIcon: {fileID: 0}
+    chance: 0
     damage: 0
     speed: 0
     bounceCount: 0
-  - chance: 10
+  - CardIcon: {fileID: 0}
+    hudIcon: {fileID: 0}
+    chance: 10
     damage: 0
     speed: 0
     bounceCount: 0
-  - chance: 10
+  - CardIcon: {fileID: 0}
+    hudIcon: {fileID: 0}
+    chance: 10
     damage: 0
     speed: 0
     bounceCount: 0
-  - chance: 10
+  - CardIcon: {fileID: 0}
+    hudIcon: {fileID: 0}
+    chance: 10
     damage: 0
     speed: 0
     bounceCount: 0
-  - chance: 10
+  - CardIcon: {fileID: 0}
+    hudIcon: {fileID: 0}
+    chance: 10
     damage: 0
     speed: 0
     bounceCount: 0
@@ -42,10 +52,10 @@ MonoBehaviour:
   - explosionRange: 0
     explosionDamageValue: 0
   - explosionRange: 0.5
-    explosionDamageValue: 0.2
+    explosionDamageValue: 10
   - explosionRange: 0.5
-    explosionDamageValue: 0.2
+    explosionDamageValue: 10
   - explosionRange: 0.5
-    explosionDamageValue: 0.2
+    explosionDamageValue: 10
   - explosionRange: 0.5
-    explosionDamageValue: 0.2
+    explosionDamageValue: 10

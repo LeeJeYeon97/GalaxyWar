@@ -22,7 +22,7 @@ public class HomingBulletBehavior : IBulletBehavior
         bullet.StartCoroutine(CoHomingRoutine(bullet));
     }
 
-    // 🌟 1. 특정 몬스터 리스트에 의존하지 않고 Physics 레이더를 사용해 타겟을 찾습니다.
+    //  1. 특정 몬스터 리스트에 의존하지 않고 Physics 레이더를 사용해 타겟을 찾습니다.
     private Transform FindRandomTarget(BulletController bullet)
     {
         // 화면을 덮을 만큼 넉넉한 탐색 반경 (기획에 맞게 수치를 조절하세요!)

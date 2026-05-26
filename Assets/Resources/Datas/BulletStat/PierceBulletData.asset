@@ -24,4 +24,4 @@ MonoBehaviour:
   isReload: 1
   pierceBulletStat:
     pierceCount: 1
-    pierceDamageDecreaseValue: 0.6
+    pierceDamageDecreaseValue: 20

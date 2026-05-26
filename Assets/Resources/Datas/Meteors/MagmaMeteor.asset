@@ -21,7 +21,7 @@ MonoBehaviour:
   Damage: 15
   Score: 250
   Exp: 60
-  spawnPhase: 4
+  spawnPhase: 3
   dropTable:
   - itemType: 3
     dropRate: 1

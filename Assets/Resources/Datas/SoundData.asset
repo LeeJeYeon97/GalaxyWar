@@ -45,13 +45,13 @@ MonoBehaviour:
     volume: 1
   - id: 11
     clip: {fileID: 8300000, guid: 0803b9f175f55d944a984b7ef276c4b8, type: 3}
-    volume: 1
+    volume: 0.506
   - id: 12
     clip: {fileID: 8300000, guid: 6c8de7729fda291409473b016c2f01b4, type: 3}
-    volume: 1
+    volume: 0.68
   - id: 16
     clip: {fileID: 8300000, guid: 9758c6e00a135df47a864cc1f0c8fd69, type: 3}
-    volume: 1
+    volume: 0.749
   - id: 13
     clip: {fileID: 8300000, guid: a298c5eaec4f5484baf2037401f2ef7d, type: 3}
     volume: 0.215
@@ -60,10 +60,10 @@ MonoBehaviour:
     volume: 1
   - id: 15
     clip: {fileID: 8300000, guid: d6599fb4a6bb6244dae1ce8b6124cdf0, type: 3}
-    volume: 1
+    volume: 0.818
   - id: 18
     clip: {fileID: 8300000, guid: f2d8c81ae8d488b4e84b6d3451267e44, type: 3}
-    volume: 0.503
+    volume: 1
   - id: 19
     clip: {fileID: 8300000, guid: 47a624201330dfc42abc473944e28330, type: 3}
     volume: 1
@@ -76,3 +76,9 @@ MonoBehaviour:
   - id: 22
     clip: {fileID: 8300000, guid: 3d7bb1da87174514abb0a6f148abeab1, type: 3}
     volume: 1
+  - id: 23
+    clip: {fileID: 8300000, guid: a6fd519f27a59954c943efd5581e7246, type: 3}
+    volume: 1
+  - id: 24
+    clip: {fileID: 8300000, guid: c93478710441e6a4399cd8e3f20ca194, type: 3}
+    volume: 0.7

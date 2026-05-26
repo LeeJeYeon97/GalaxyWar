@@ -226,6 +226,10 @@ public class BulletController : BaseController
         bool isCrit = UnityEngine.Random.Range(0f, 100f) <= critChance;
         float finalDmg = isCrit ? (baseDamage * critDamageMultiplier) : baseDamage;
 
+        if(isCrit && Stat.type == BulletType.NormalBullet)
+        {
+            Managers.Sound.Play(Define.SoundID.Sfx_NormalBulletHit);
+        }
         target.OnDamage(finalDmg, isCrit);
     }
     private void ReflectFromMeteor(Collider2D meteorCollider)

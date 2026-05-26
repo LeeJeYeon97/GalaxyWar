@@ -52,10 +52,10 @@ MonoBehaviour:
   - pierceCount: 0
     pierceDamageDecreaseValue: 0
   - pierceCount: 1
-    pierceDamageDecreaseValue: 0.1
+    pierceDamageDecreaseValue: 5
   - pierceCount: 1
-    pierceDamageDecreaseValue: 0.1
+    pierceDamageDecreaseValue: 5
   - pierceCount: 1
-    pierceDamageDecreaseValue: 0.1
+    pierceDamageDecreaseValue: 5
   - pierceCount: 9999
-    pierceDamageDecreaseValue: 0.3
+    pierceDamageDecreaseValue: 5

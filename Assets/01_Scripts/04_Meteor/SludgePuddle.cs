@@ -25,7 +25,7 @@ public class SludgePuddle : MonoBehaviour
 
         if (collision.CompareTag("Player"))
         {
-            PlayerController player = collision.GetComponent<PlayerController>();
+            PlayerController player = collision.GetComponentInParent<PlayerController>();
             if (player != null)
             {
                 // 플레이어에게 "0.2초 동안 속도를 50%로 깎아라!" 라고 명령

@@ -35,7 +35,7 @@ public class PierceBulletAbilityDataSO : BulletAbilityDataSO
         if (targetStat is PierceBulletStat stat)
         {
             stat.pierceCount.AddValue(data.pierceCount);
-            stat.pierceDamageDecreaseValue.AddValue(data.pierceDamageDecreaseValue);
+            stat.pierceDamageDecreaseValue.SubValue(data.pierceDamageDecreaseValue);
         }
         base.ApplyLevelUp(level, targetStat);
     }

@@ -60,7 +60,8 @@ public class Define
         Sfx_BossWarning,
         Sfx_CountDown,
         Sfx_GameStart,
-       
+        Sfx_BurstModeOnAlarm,
+        Sfx_NormalBulletHit,
     }
     public enum UIEvent
     {

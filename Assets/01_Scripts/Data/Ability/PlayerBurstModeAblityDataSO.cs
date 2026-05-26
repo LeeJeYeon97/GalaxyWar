@@ -26,7 +26,7 @@ public class PlayerBurstModeAblityDataSO : PlayerAbilityDataSO
             return null;
         }
         // 폭발탄은 수치가 2개니까 2개만 배열로 묶어서 줍니다.
-        return new object[] { levels[nextLevel] };
+        return new object[] { levels[nextLevel].burstChargeTime };
     }
 
     public override void ApplyLevelUp(int level, PlayerStat targetStat)

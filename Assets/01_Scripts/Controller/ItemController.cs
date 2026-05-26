@@ -100,8 +100,10 @@ public class ItemController : MonoBehaviour
         //  이미 획득 연출이 시작되었다면 무시
         if (_isCollecting) return;
 
-        // 아이템 획득
-        PlayerController player = collision.GetComponent<PlayerController>();
+        // 아이템 획득// 수정된 코드 (콜라이더가 리지드바디에 붙어있지 않을 수도 있으므로 ? 연산자 사용)
+        //콜라이더를 지배하고 있는 리지드바디(부모)로 다이렉트로 접근해서 스크립트를 가져옵니다.
+        //PlayerController player = collision.GetComponentInParent<PlayerController>();
+        PlayerController player = collision.attachedRigidbody?.GetComponent<PlayerController>();
         if (player == null) return;
 
         //  1. 획득 시작: 물리 연산 끄기 및 콜라이더 비활성화

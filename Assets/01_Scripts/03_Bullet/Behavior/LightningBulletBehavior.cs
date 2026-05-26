@@ -33,7 +33,7 @@ public class LightningBulletBehavior : IBulletBehavior
                 chain.Init(
                     startPos: hitPos,
                     firstTarget: target,
-                    damage: stat.damage.TotalValue * stat.lightningDamageValue.TotalValue,
+                    damage: stat.damage.TotalValue * (stat.lightningDamageValue.TotalValue/ 100f),
                     range: stat.lightningRange.TotalValue,
                     count: Mathf.FloorToInt(stat.lightningCount.TotalValue),
                     stat.curLevel >= 5 ? true : false

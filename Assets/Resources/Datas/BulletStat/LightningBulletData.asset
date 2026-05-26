@@ -23,7 +23,7 @@ MonoBehaviour:
   originalPrefab: {fileID: 8103278171357427903, guid: a136c2fb288a206429d851fa388ab16f, type: 3}
   isReload: 1
   lightningStat:
-    lightningDamageValue: 0.3
+    lightningDamageValue: 60
     lightningCount: 1
   lightningRange: 5
   lightningChain: {fileID: 1758810356495374573, guid: 907563ff35d3ef141b2e6ab1117e146b, type: 3}

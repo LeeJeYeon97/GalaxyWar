@@ -24,4 +24,4 @@ MonoBehaviour:
   isReload: 1
   explosionStat:
     explosionRange: 1
-    explosionDamageValue: 0.5
+    explosionDamageValue: 60

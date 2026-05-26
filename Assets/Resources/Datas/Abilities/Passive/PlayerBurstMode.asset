@@ -18,27 +18,17 @@ MonoBehaviour:
   _requiredAbility: 0
   levels:
   - speed: 100
-    shieldChargeTime: 0
-    reloadTime: 0
     criticalDamageRate: 100
     burstChargeTime: 0
   - speed: 100
-    shieldChargeTime: 0
-    reloadTime: 0
     criticalDamageRate: 100
     burstChargeTime: 7.5
   - speed: 100
-    shieldChargeTime: 0
-    reloadTime: 0
     criticalDamageRate: 100
     burstChargeTime: 7.5
   - speed: 100
-    shieldChargeTime: 0
-    reloadTime: 0
-    criticalDamageRate: 0
+    criticalDamageRate: 100
     burstChargeTime: 7.5
   - speed: 100
-    shieldChargeTime: 0
-    reloadTime: 0
     criticalDamageRate: 100
     burstChargeTime: 7.5
