@@ -19,6 +19,7 @@ public class UI_HpBar : MonoBehaviour
     {
 
         _hpSlider.DOKill(); // 이전 애니메이션이 실행 중이면 중지
+        _hpSlider.fillAmount = 1.0f;
         _mainCam = Camera.main;
         _rectTransform = GetComponent<RectTransform>();
 
@@ -75,7 +76,7 @@ public class UI_HpBar : MonoBehaviour
         RectTransformUtility.ScreenPointToLocalPointInRectangle(
             _parentCanvasRect,
             screenPos,
-            uiCamera, // ★ 이제 null 대신 알아서 알맞은 카메라를 넣습니다!
+            uiCamera, // 이제 null 대신 알아서 알맞은 카메라를 넣습니다!
             out Vector2 localPos
         );
 

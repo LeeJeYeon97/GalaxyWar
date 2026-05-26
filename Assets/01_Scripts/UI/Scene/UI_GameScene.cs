@@ -47,6 +47,9 @@ public class UI_GameScene : UI_Scene
 
     private TMP_Text timeText;
 
+    //  [추가] 원래 색상 기억용 & 깜빡임 상태 체크용 변수
+    private Color _originBurstColor;
+    private bool _isBurstBlinking = false;
     public override void Clear()
     {
         Managers.Event.UnSubscribe<int>(ActionEvent.LevelUp, UpdateLevelText);
@@ -77,6 +80,9 @@ public class UI_GameScene : UI_Scene
 
         Get<TMP_Text>((int)Texts.BurstModeText).gameObject.SetActive(false);
         Get<Image>((int)Images.BurstModeLock).gameObject.SetActive(true);
+
+        // [추가] 인스펙터에 세팅된 버스트 바의 원래 색상을 저장해둡니다.
+        _originBurstColor = GetImage((int)Images.BurstModeBar).color;
 
         timeText = Get<TMP_Text>((int)Texts.TimeText);
 
@@ -137,8 +143,8 @@ public class UI_GameScene : UI_Scene
     {
         Slider hpSlider = GetSlider((int)Sliders.HpBar);
         Slider shieldSlider = GetSlider((int)Sliders.ShieldBar);
-        Image burstBar = GetImage((int)Images.BurstModeBar);
         Slider expSlider = GetSlider((int)Sliders.ExpBar);
+        Image burstBar = GetImage((int)Images.BurstModeBar);
 
         if (hpSlider == null || burstBar == null || expSlider == null || shieldSlider == null)
             return;
@@ -147,7 +153,7 @@ public class UI_GameScene : UI_Scene
         hpSlider.DOKill();
         hpSlider.DOValue(data.hp / data.maxHp, 0.2f).SetEase(Ease.OutCubic);
 
-        GetTMP((int)Texts.Text_Hp).text = $"{data.hp} / {data.maxHp}";
+        GetTMP((int)Texts.Text_Hp).text = $"{(int)data.hp} / {(int)data.maxHp}";
 
         // 쉴드바 처음엔 0으로
         shieldSlider.DOKill();
@@ -155,10 +161,38 @@ public class UI_GameScene : UI_Scene
         shieldSlider.DOValue(value, 0.2f).SetEase(Ease.OutCubic);
 
 
-        GetTMP((int)Texts.Text_Shield).text = $"{data.currentShieldGuage} / {data.maxHp}";
+        GetTMP((int)Texts.Text_Shield).text = $"{(int)data.currentShieldGuage} / {(int)data.maxShieldGuage}";
 
-        burstBar.DOKill();
-        burstBar.DOFillAmount(data.burst / data.maxBurst, 0.2f).SetEase(Ease.OutCubic);
+        // ======== [버스트 바 로직 수정] ========
+        float burstRatio = data.burst / data.maxBurst;
+
+        // 1. 게이지 차오르는 애니메이션 (Fill 전용 ID 부여)
+        DOTween.Kill(burstBar.GetInstanceID() + "Fill");
+        burstBar.DOFillAmount(burstRatio, 0.2f)
+                .SetEase(Ease.OutCubic)
+                .SetId(burstBar.GetInstanceID() + "Fill");
+
+        // 2. 100% 도달 시: 노란색으로 무한 깜빡임!
+        if (burstRatio >= 1.0f && !_isBurstBlinking)
+        {
+            _isBurstBlinking = true;
+
+            DOTween.Kill(burstBar.GetInstanceID() + "Color");
+            // Color.yellow 대신 원하는 색상 코드(new Color(...))를 넣으셔도 됩니다.
+            burstBar.DOColor(Color.yellow, 0.4f)
+                    .SetLoops(-1, LoopType.Yoyo) // -1은 무한반복, Yoyo는 왔다갔다 핑퐁
+                    .SetId(burstBar.GetInstanceID() + "Color");
+        }
+        // 3. 100% 미만일 때 (버스트 사용 후): 깜빡임 멈추고 원래 파란색으로 복구
+        else if (burstRatio < 1.0f && _isBurstBlinking)
+        {
+            _isBurstBlinking = false;
+
+            DOTween.Kill(burstBar.GetInstanceID() + "Color");
+            burstBar.DOColor(_originBurstColor, 0.2f)
+                    .SetId(burstBar.GetInstanceID() + "Color");
+        }
+        // =======================================
 
 
         // 4. 버스트 텍스트 업데이트

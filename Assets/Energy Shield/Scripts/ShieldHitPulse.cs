@@ -9,15 +9,18 @@ namespace EnergyShield
 		private float _currentStrength;
 		private float _lerpSpeed;
 
-		private void Start()
-		{
-			_renderer = GetComponent<Renderer>();
-			// Create an instance of the material so it doesn't modify the project asset
-			_shieldMaterial = _renderer.material;
-		}
+        private void Start()
+        {
+            _renderer = GetComponent<Renderer>();
+            _shieldMaterial = _renderer.material;
 
-		// Called by the bullet when it hits the shield
-		public void TriggerPulse(Vector3 hitPos, float maxStrength, float radius, float lerpSpeed)
+            //  [추가] 쉴드가 무조건 플레이어보다 앞에 그려지도록 렌더링 서열을 강제로 높여줍니다.
+            // 플레이어의 Order in Layer가 0이라면, 쉴드는 그보다 무조건 높게 설정하세요.
+            _renderer.sortingOrder = 10;
+        }
+
+        // Called by the bullet when it hits the shield
+        public void TriggerPulse(Vector3 hitPos, float maxStrength, float radius, float lerpSpeed)
 		{
 			if (_shieldMaterial == null) return;
 

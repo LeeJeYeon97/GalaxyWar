@@ -12,12 +12,15 @@ public class LevelManager
 
     public int PendingLevelUpCount = 0;
 
+    // [추가] 현재 팝업이 떠 있는지 추적하는 변수
+    public bool IsLevelUpPopupOpen { get; set; } = false;
     public float MaxExp => GetMaxExp();
     public void Init()
     {
         CurrentLevel = 1;
         CurrentExp = 0;
         Score = 0;
+        IsLevelUpPopupOpen = false;
 
         Managers.Event.PostEvent<(float, float)>(ActionEvent.ExpChanged, (CurrentExp, MaxExp));
         Managers.Event.PostEvent<int>(ActionEvent.LevelUp, CurrentLevel);
@@ -29,10 +32,9 @@ public class LevelManager
         // n은 레벨업을 위한 가중치 역할 (1레벨일 땐 n=0)
         int n = CurrentLevel - 1;
 
-        // 1. 기본 요구량 (2차 함수의 가파름을 줄이고, 선형 증가 비중을 높였습니다)
-        // 초반 레벨업이 훨씬 부드러워지며, 20레벨까지 기분 좋게 성장합니다.
-        float baseRequired = 20 + (n * 20) + (n * n * 2.5f);
-
+        // 1. 기본 요구량
+        float baseRequired = 10 + (n * 15) + (n * n * 1.2f);
+       
         // 2. 초반~중반 (1~20레벨): 도파민 분비 구간! (페널티 없음)
         // 15~20레벨까지는 수월하게 빌드업할 수 있도록 기본 공식만 적용합니다.
         if (CurrentLevel <= 20)
@@ -60,7 +62,8 @@ public class LevelManager
         {
             return;
         }
-        CurrentExp += exp;
+        float multiplier = Managers.Data.StageData.waves[(int)Managers.Stage.CurrentPhase].expRate;
+        CurrentExp += (exp * multiplier);
 
         // UI 업데이트를 위해 이벤트 호출
         Managers.Event.PostEvent<(float, float)>(ActionEvent.ExpChanged, (CurrentExp, MaxExp));
@@ -96,16 +99,14 @@ public class LevelManager
             Managers.Event.PostEvent<int>(ActionEvent.LevelUp, CurrentLevel);
         }
 
-        // 2. 팝업 띄우기 및 게임 정지 처리
-        if (PendingLevelUpCount > 0)
+        if (PendingLevelUpCount > 0 && !IsLevelUpPopupOpen)
         {
-            // 이미 Pause 상태가 아닐 때만 정지시킴 (이전 상태 덮어쓰기 방지)
             if (Managers.Game.currentGameState != Define.GameState.Pause)
             {
                 Managers.Game.ChangeGameState(Define.GameState.Pause);
             }
 
-            // 팝업 띄우기 (이미 떠있다면 알아서 무시되거나 최상단으로 올라옴)
+            IsLevelUpPopupOpen = true; // 열림 상태로 변경
             Managers.UI.ShowPopupUI<UI_LevelUpPopup>();
         }
         // UI 갱신

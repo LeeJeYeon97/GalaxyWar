@@ -172,6 +172,7 @@ public class UI_GameOverPopup : UI_Popup
     {
         int sessionGold = Managers.Game.currentSessionGold;
 
+        var popup = Managers.UI.ShowPopupUI<UI_LoadingPopup>();
         // 얻은 골드가 0보다 클 때만 서버에 요청을 보냅니다.
         if (sessionGold > 0)
         {
@@ -192,5 +193,6 @@ public class UI_GameOverPopup : UI_Popup
 
         // PlayerDataManager에 만들어둔 저장 함수를 호출하고 끝날 때까지 기다립니다.
         await Managers.PlayerData.SavePlayerData(false);
+        Managers.UI.ClosePopupUI(popup);
     }
 }

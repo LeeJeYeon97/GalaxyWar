@@ -15,6 +15,7 @@ public class PlayerController : BaseController, IDamageable
     [Header("Modules")]
     public PlayerMovement Movement { get; private set; } // 모듈 접근용 변수 추가
     public PlayerCombat Combat { get; private set; }
+    public AttackRangeIndicator AttackRangeIndicator { get; private set; }
 
 
     [Header("State")]
@@ -47,6 +48,7 @@ public class PlayerController : BaseController, IDamageable
     public float hitLerpSpeed = 10f;
     public bool shieldhit = false;
 
+    public UI_HpWarningPopup warningpopup;
     public void Init()
     {
 
@@ -76,6 +78,18 @@ public class PlayerController : BaseController, IDamageable
         if (_volume.profile.TryGet<ChromaticAberration>(out var ca))
         {
             _chromatic = ca;
+        }
+
+        AttackRangeIndicator = GetComponentInChildren<AttackRangeIndicator>();
+
+        // 찾은 모듈 세팅 실행
+        if (AttackRangeIndicator != null)
+        {
+            // 게임 플레이 모드일 때만 초기화 (에디터 모드에서는 OnValidate가 대신 그려줌)
+            if (Application.isPlaying)
+            {
+                AttackRangeIndicator.SetupLineRenderer();
+            }
         }
 
     }
@@ -186,13 +200,43 @@ public class PlayerController : BaseController, IDamageable
             shieldhit = true;
             // 방어막 히트 이벤트
             Managers.Effect.Play(EffectType.Screen_ShieldHit, Vector2.zero);
+            Managers.Sound.Play(SoundID.Sfx_ShieldHit);
         }
         // 방어막 없으면
         else
         {
             currentHp -= damage;
+            Managers.Sound.Play(SoundID.Sfx_PlayerHit);
             // 그냥 히트 이펙트
             //Managers.Effect.Play(EffectType.Screen_PlayerHit, Vector2.zero);
+        }
+
+
+        //  [추가/수정] 체력 30% 이하 경고 팝업 제어 로직
+        // (최대 체력 변수명은 대표님 프로젝트의 세팅에 맞게 Stat.maxHp.TotalValue 또는 MaxHp 등으로 맞춰주세요!)
+        float maxHp = Stat.maxHp.TotalValue;
+        float hpRatio = currentHp / maxHp;
+
+        if (hpRatio <= 0.3f && currentHp > 0)
+        {
+            // 체력이 30% 이하일 때: 팝업이 아직 생성되지 않았다면 띄우고 재생합니다.
+            if (warningpopup == null)
+            {
+                warningpopup = Managers.UI.ShowPopupUI<UI_HpWarningPopup>();
+            }
+
+            // 만약 체력별로 속도를 다르게 하고 싶다면 여기서 분기 처리를 하셔도 좋습니다!
+            // 예: 10% 이하면 더 빠르게 깜빡이도록 구현 가능
+            warningpopup.PlayWarning();
+        }
+        else
+        {
+            // 체력이 30%를 초과했거나 죽었을 때: 켜져 있는 팝업이 있다면 정지시킵니다.
+            if (warningpopup != null)
+            {
+                warningpopup.StopWarning();
+                warningpopup = null; // 참조를 비워주어야 다음에 다시 체력이 떨어질 때 새로 생성됩니다.
+            }
         }
 
         // hud업데이트 이벤트 발생
@@ -201,7 +245,6 @@ public class PlayerController : BaseController, IDamageable
         PlayGlitch();
         // 피격후에 짧은 무적시간
         StartCoroutine(CoInvincible());
-        Managers.Sound.Play(SoundID.Sfx_PlayerHit);
         if (currentHp <= 0)
         {
             Debug.Log("죽었습니다.");
@@ -328,9 +371,6 @@ public class PlayerController : BaseController, IDamageable
             burstBoost_2.gameObject.SetActive(true);
             StartCoroutine(BurstRoutine());
         }
-        else
-        {
-        }
     }
     private IEnumerator BurstRoutine()
     {
@@ -343,10 +383,8 @@ public class PlayerController : BaseController, IDamageable
                 Managers.Effect.Play(EffectType.Screen_BurstMode, Vector3.zero);
             });
 
-        Stat.speed.AddMultiplier(2.0f);
-        Stat.reloadTime.SetForceZero(true);
-        Stat.shotTime.AddMultiplier(-0.5f);
 
+        Stat.ApplyBurstBuff();
         //  핵심: Combat 모듈을 통해 강제 리로드 진행
         if (Combat != null)
         {
@@ -382,6 +420,8 @@ public class PlayerController : BaseController, IDamageable
             .SetUpdate(true)
             .OnUpdate(() => Managers.Map.UpdateMap());
 
+        Stat.RemoveBurstBuff();
+
         // 버스트 종료 시 재장전 복구
         if (Combat != null)
         {
@@ -412,15 +452,51 @@ public class PlayerController : BaseController, IDamageable
             return;
         }
         currentHp = Stat.maxHp.TotalValue;
+
+        if (warningpopup != null)
+        {
+            warningpopup.StopWarning();
+            warningpopup = null; // 참조를 비워주어야 다음에 다시 체력이 떨어질 때 새로 생성됩니다.
+        }
+
         OnStatusEvent();
     }
     public void UpdateMaxHp(float value)
     {
+        Stat.maxHp.AddValue(value);
         currentHp += value;
-        if(currentHp >= Stat.maxHp.TotalValue)
+
+        if (currentHp >= Stat.maxHp.TotalValue)
         {
             currentHp = Stat.maxHp.TotalValue;
         }
+
+        float maxHp = Stat.maxHp.TotalValue;
+        float hpRatio = currentHp / maxHp;
+
+        if (hpRatio <= 0.3f && currentHp > 0)
+        {
+            // 체력이 30% 이하일 때: 팝업이 아직 생성되지 않았다면 띄우고 재생합니다.
+            if (warningpopup == null)
+            {
+                warningpopup = Managers.UI.ShowPopupUI<UI_HpWarningPopup>();
+            }
+
+            // 만약 체력별로 속도를 다르게 하고 싶다면 여기서 분기 처리를 하셔도 좋습니다!
+            // 예: 10% 이하면 더 빠르게 깜빡이도록 구현 가능
+            warningpopup.PlayWarning();
+        }
+        else
+        {
+            // 체력이 30%를 초과했거나 죽었을 때: 켜져 있는 팝업이 있다면 정지시킵니다.
+            if (warningpopup != null)
+            {
+                warningpopup.StopWarning();
+                warningpopup = null; // 참조를 비워주어야 다음에 다시 체력이 떨어질 때 새로 생성됩니다.
+            }
+        }
+
+        OnStatusEvent();
     }
 
 }

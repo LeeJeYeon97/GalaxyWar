@@ -63,6 +63,12 @@ public class AbilityManager
             return level;
         return 0;
     }
+    public int GetMaxLevel(AbilityType type)
+    {
+        if (Managers.Data.AbilityDataDict.TryGetValue(type, out var value))
+            return value.maxLevel;
+        return 0;
+    }
     
     public void ApplyAbility(AbilityDataSO selectedData)
     {

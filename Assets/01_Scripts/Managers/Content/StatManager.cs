@@ -53,6 +53,7 @@ public class StatManager
     {
         bulletStatDict.Clear();
         meteorStatDict.Clear();
+        bossStatDict.Clear();
     }
     public BaseBulletStat GetRandomBulletStat()
     {

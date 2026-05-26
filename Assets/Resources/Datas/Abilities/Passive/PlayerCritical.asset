@@ -18,12 +18,12 @@ MonoBehaviour:
   _requiredAbility: 0
   levels:
   - CriticalChance: 20
-    CriticalDamageRate: 1.5
+    CriticalDamageRate: 150
   - CriticalChance: 12.5
-    CriticalDamageRate: 0.125
+    CriticalDamageRate: 12.5
   - CriticalChance: 12.5
-    CriticalDamageRate: 0.125
+    CriticalDamageRate: 12.5
   - CriticalChance: 12.5
-    CriticalDamageRate: 0.125
+    CriticalDamageRate: 12.5
   - CriticalChance: 12.5
-    CriticalDamageRate: 0.125
+    CriticalDamageRate: 12.5

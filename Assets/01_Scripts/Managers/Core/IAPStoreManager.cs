@@ -516,10 +516,12 @@ public class IAPStoreManager
             // 바인딩해서 쓰지않고 바로 호출하기
             //var updatedEconomy = await CloudCodeService.Instance.CallEndpointAsync<PlayerEconomyData>("ClaimDailyFreeReward", arguments);
 
-            var updatedEconomy = await _storeServiceBindings.ClaimDailyFreeReward(amount);
+            var response = await _storeServiceBindings.ClaimDailyFreeReward(amount);
 
             // 3. 서버에서 받은 최신 지갑 데이터로 로컬 데이터 갱신
-            Managers.PlayerEconomy.HandleEconomyUpdate(updatedEconomy);
+            //  서버가 주는 최신 데이터로 클라이언트 메모리를 완벽하게 동기화!
+            Managers.PlayerData.UpdatedPlayerData(response.PlayerData);
+            Managers.PlayerEconomy.HandleEconomyUpdate(response.PlayerEconomyData);
 
             Debug.Log($"[IAP] 일일 무료 보상 {amount} 골드 수령 완료!");
             return true; // 성공

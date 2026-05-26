@@ -29,6 +29,7 @@ public class GameDataSO : ScriptableObject
     [Header("GameTestMode")]
     public bool expZero;
     public bool playerGod;
+    public bool noAttack;
 
     [Header("게임 종료시간")]
     public float gameclearTime;

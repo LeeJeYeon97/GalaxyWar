@@ -449,37 +449,31 @@ public class StoreService
 
 
     [CloudCodeFunction("ClaimDailyFreeReward")]
-    public async Task<PlayerEconomyData> ClaimDailyFreeReward(IExecutionContext context, IGameApiClient gameApiClient, int amount)
+    // 리턴 타입을 PlayerEconomyData -> PlayerDataResponse 로 변경
+    public async Task<PlayerDataResponse> ClaimDailyFreeReward(IExecutionContext context, IGameApiClient gameApiClient, int amount)
     {
-        // 1. 한국 시간(KST) 오늘 날짜 구하기
         DateTime kstNow = DateTime.UtcNow.AddHours(9);
         string todayStr = kstNow.ToString("yyyy-MM-dd");
 
-        // 2. 전체 PlayerData를 가져옵니다 (TryGetPlayerData 함수 활용)
         var (playerExists, playerData) = await _playerDataService.TryGetPlayerData(context, gameApiClient);
 
-        if (!playerExists || playerData == null)
-        {
-            throw new InvalidOperationException("플레이어 데이터를 찾을 수 없습니다.");
-        }
+        if (!playerExists || playerData == null) throw new InvalidOperationException("PlayerData Not Found");
+        if (playerData.LastDailyFreeGoldClaimDate == todayStr) throw new InvalidOperationException("ALREADY_CLAIMED_TODAY");
 
-        // 3. 오늘 날짜와 마지막 수령 날짜 비교
-        if (playerData.LastDailyFreeGoldClaimDate == todayStr)
-        {
-            throw new InvalidOperationException("ALREADY_CLAIMED_TODAY");
-        }
-
-        // 4. 보안 통과! 객체 내부의 날짜를 갱신
+        // 데이터 갱신 및 저장
         playerData.LastDailyFreeGoldClaimDate = todayStr;
-
-        // 5.  PlayerData 전체를 다시 서버에 저장 (덮어쓰기)
         await _playerDataService.SaveData(context, gameApiClient, ServerDefine.k_PlayerDataKey, playerData);
 
-        // 6. 골드 지급
+        // 재화 지급
         await _playerEconomyService.AddCurrency(context, gameApiClient, ServerDefine.k_GoldCurrencyKey, amount);
-        _logger.LogInformation($"일일 무료 보상 지급 완료: {amount} 골드");
+        var economyData = await _playerEconomyService.GetPlayerEconomyData(context, gameApiClient);
 
-        return await _playerEconomyService.GetPlayerEconomyData(context, gameApiClient)
-            ?? throw new InvalidOperationException("Failed to get player economy data");
+        //  갱신된 플레이어 데이터와 지갑 데이터를 하나로 포장해서 클라이언트로 던져줍니다!
+        return new PlayerDataResponse
+        {
+            PlayerData = playerData,
+            PlayerEconomyData = economyData,
+            IsNewPlayer = false
+        };
     }
 }

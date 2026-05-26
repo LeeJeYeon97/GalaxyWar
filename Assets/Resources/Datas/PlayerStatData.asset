@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: PlayerStatData
   m_EditorClassIdentifier: Assembly-CSharp::PlayerStatDataSO
   statData:
-    speed: 1.5
+    speed: 2
     maxHp: 100
     maxDefenceCount: 0
     reloadCount: 7

@@ -25,7 +25,7 @@ public class UI_MainPanel : UI_Base
     private float cardOffset;
     private float hideOffsetY;
 
-    private int _maxUnlockedStage = 100; // 테스트용: 나중에 실제 저장 데이터로 교체
+    private int _maxUnlockedStage;
     private bool _isMoving = false;      // 애니메이션 중 광클 방지
 
     private RectTransform _activeCard;   // 현재 중앙에 있는 카드
@@ -38,6 +38,8 @@ public class UI_MainPanel : UI_Base
         // [추가된 핵심 로직] 현재 UI 패널의 '진짜 해상도 크기'를 자동으로 측정합니다.
         RectTransform panelRect = GetComponent<RectTransform>();
 
+        int myClearStage = Managers.PlayerData.PlayerDataLocal.MaxClearStage;
+        _maxUnlockedStage = myClearStage + 1;
         // 화면 너비(width)와 높이(height)를 가져와서, 혹시 모르니 안전하게 200픽셀 정도 더 멀리 보냅니다.
         cardOffset = panelRect.rect.width + 200f;
         hideOffsetY = panelRect.rect.height + 200f;
@@ -66,9 +68,17 @@ public class UI_MainPanel : UI_Base
 
         // 4. 첫 화면 데이터 갱신
         _activeCard.GetComponent<UI_StageCard>().SetCard(Managers.Stage.currentStageLevel);
+        RefreshUI();
     }
     void OnClickGameStart()
     {
+        // 2. [이중 방어 코드] 만약 어떻게든 뚫고 들어왔더라도 여기서 한 번 더 컷!
+        if (Managers.Stage.currentStageLevel > _maxUnlockedStage)
+        {
+            Debug.LogWarning($"[System] 잠긴 스테이지입니다! 현재 최대 진입 가능 스테이지: {_maxUnlockedStage}");
+            // (선택) 여기서 "아직 열리지 않은 스테이지입니다" 라는 안내 팝업을 띄우셔도 좋습니다.
+            return;
+        }
         //  여기서 게임 씬으로 넘어갈 때, Managers나 PlayerPrefs에 _currentStage를 넘겨주면 됩니다.
         // 예: Managers.Game.SelectedStage = _currentStage;
         Managers.Scene.LoadScene(Define.Scene.GameScene);
@@ -76,11 +86,21 @@ public class UI_MainPanel : UI_Base
 
     void OnClickNext()
     {
+        //  참고: 만약 유저가 '미래 스테이지를 구경'하는 것은 허용하고 싶다면 
+        // 여기서 _maxUnlockedStage 검사를 빼셔야 합니다!
+        // (예: if (_isMoving || Managers.Stage.currentStageLevel >= 100) return;)
+
         // 애니메이션 중이거나, 마지막 스테이지면 무시
-        if (_isMoving || Managers.Stage.currentStageLevel >= _maxUnlockedStage) return;
+        //if (_isMoving || Managers.Stage.currentStageLevel >= _maxUnlockedStage) return;
+
+        if (_isMoving || Managers.Stage.currentStageLevel >= Managers.Data.StageData.maxStage)
+        {
+            return;
+        }
 
         Managers.Stage.currentStageLevel++;
         Slide(Vector2.left); // 다음 스테이지니까 카드는 왼쪽으로 밀려야 함
+        RefreshUI();
     }
 
     void OnClickPrev()
@@ -90,6 +110,8 @@ public class UI_MainPanel : UI_Base
 
         Managers.Stage.currentStageLevel--;
         Slide(Vector2.right); // 이전 스테이지니까 카드는 오른쪽으로 밀려야 함
+
+        RefreshUI();
     }
 
     private void Slide(Vector2 direction)
@@ -115,6 +137,28 @@ public class UI_MainPanel : UI_Base
 
             _isMoving = false;
         });
+    }
+    private void RefreshUI()
+    {
+        Button startBtn = GetButton((int)Buttons.Button_GameStart);
+
+        // 현재 보고 있는 스테이지가 내가 입장할 수 있는 최대 스테이지보다 높다면?
+        if (Managers.Stage.currentStageLevel > _maxUnlockedStage)
+        {
+            // 게임 시작 버튼을 완전히 숨깁니다.
+            startBtn.gameObject.SetActive(false);
+
+            //  만약 버튼을 숨기는 것보다 회색으로 비활성화하는 게 낫다면 아래 코드를 쓰세요:
+            // startBtn.interactable = false;
+        }
+        else
+        {
+            // 입장 가능한 스테이지면 버튼을 다시 보여줍니다.
+            startBtn.gameObject.SetActive(true);
+
+            //  비활성화 방식을 썼다면:
+            // startBtn.interactable = true;
+        }
     }
 
     public override void Clear()

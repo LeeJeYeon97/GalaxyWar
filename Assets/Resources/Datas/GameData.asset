@@ -18,7 +18,8 @@ MonoBehaviour:
   rerollGoldCost: 0
   expZero: 0
   playerGod: 0
-  gameclearTime: 480
+  noAttack: 0
+  gameclearTime: 600
   gamePlayeSize: 15
   burstModeSize: 20
   bossStageSize: 20

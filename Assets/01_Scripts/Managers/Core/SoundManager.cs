@@ -18,6 +18,12 @@ public class SoundManager
     private float _bgmVolumeMultiplier = 1.0f;
     private float _sfxVolumeMultiplier = 1.0f;
 
+    // [추가] 각 사운드별 마지막 재생 시간을 기억하는 딕셔너리
+    private Dictionary<Define.SoundID, float> _lastPlayTimes = new Dictionary<Define.SoundID, float>();
+
+    // [추가] 같은 소리가 중복 재생되는 것을 막는 쿨타임 (0.05초 ~ 0.1초 권장)
+    private float _sfxCooldown = 0.05f;
+
     public void Init()
     {
         // 1. AudioSource 기본 세팅
@@ -99,6 +105,7 @@ public class SoundManager
         }
         else // SFX
         {
+
             float finalVolume = baseVolume * _sfxVolumeMultiplier;
             AudioSource audioSource = _audioSources[(int)Sound.Sfx];
 
@@ -133,6 +140,21 @@ public class SoundManager
     public void Play(SoundID id, Sound type = Sound.Sfx, float pitch = 1.0f)
     {
         if (id == SoundID.None) return;
+
+        // [추가] 쿨타임 방어막: SFX일 경우에만 체크하여 중복 재생(씹힘)을 막습니다.
+        if (type == Sound.Sfx)
+        {
+            if (_lastPlayTimes.TryGetValue(id, out float lastTime))
+            {
+                // 마지막 재생 시간으로부터 쿨타임(0.05초)이 지나지 않았다면 무시!
+                if (Time.time - lastTime < _sfxCooldown)
+                {
+                    return;
+                }
+            }
+            // 쿨타임 통과 시 현재 시간으로 갱신
+            _lastPlayTimes[id] = Time.time;
+        }
 
         if (_audioClips.TryGetValue(id, out AudioClip clip))
         {

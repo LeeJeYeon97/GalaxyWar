@@ -105,7 +105,7 @@ public class PlayerCombat : MonoBehaviour
     private void Shoot()
     {
         if (isReloading) return;
-
+        if (Managers.Data.GameData.noAttack) return;
         if (bullets.Count <= 0)
         {
             if (_reloadCoroutine == null)

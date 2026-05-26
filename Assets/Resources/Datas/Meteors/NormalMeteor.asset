@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ec4c77ead32a9764d887461a155fbfb8, type: 3}
-  m_Name: NormalMeteorStat
+  m_Name: NormalMeteor
   m_EditorClassIdentifier: Assembly-CSharp::MeteorStatDataSO
   Type: 0
   originalPrefabs: {fileID: 7634854350376040158, guid: 1e5eb75550d976748ae4687059bad26c, type: 3}

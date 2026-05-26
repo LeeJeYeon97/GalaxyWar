@@ -5,6 +5,7 @@ using UnityEngine;
 public class StageBalanceDataSO : ScriptableObject
 {
     [Header("1. 기본 스탯 (1스테이지 기준)")]
+    public int maxStage = 100;
     public float baseSpawnDelay = 2.0f;     // 초기 스폰 간격 (초)
     public float minSpawnDelay = 0.3f;      // 아무리 빨라져도 0.3초 밑으로는 안 내려감
 
@@ -33,4 +34,5 @@ public class WaveMultiplier
     public float waveStartTime;             // 발동 시간 (0초, 180초, 360초...)
     public float waveHpRate = 1f;           // 이 웨이브의 체력 배율 (후반부는 2배 등)
     public float waveSpawnDelayRate = 1f;   // 이 웨이브의 스폰 속도 배율 (후반부는 0.5배 등)
+    public float expRate = 1f;              // 웨이브마다 늘어날 경험치 배율
 }

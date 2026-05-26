@@ -38,9 +38,9 @@ namespace Unity.Services.CloudCode.GeneratedBindings
                 });
         }
 
-        public async Task<Project.PlayerEconomyData> ClaimDailyFreeReward(int amount)
+        public async Task<Project.PlayerDataResponse> ClaimDailyFreeReward(int amount)
         {
-            return await k_Service.CallModuleEndpointAsync<Project.PlayerEconomyData>(
+            return await k_Service.CallModuleEndpointAsync<Project.PlayerDataResponse>(
                 "Project",
                 "ClaimDailyFreeReward",
                 new Dictionary<string, object>()

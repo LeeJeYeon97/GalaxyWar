@@ -218,10 +218,11 @@ public class BulletController : BaseController
 
         // 1. 플레이어 스탯 가져오기
         float critChance = Managers.Game._player.Stat.criticalChance.TotalValue;
-        float critDamageMultiplier = Managers.Game._player.Stat.criticalDamageRate.TotalValue;
+
+        //  [수정됨] 데이터(150)를 가져와서 100으로 나눠 실제 배율(1.5f)로 만듭니다.
+        float critDamageMultiplier = Managers.Game._player.Stat.criticalDamageRate.TotalValue / 100f;
 
         // 2. 0~100 스케일 주사위 굴리기 
-        // UnityEngine.Random.Range(min, max)를 사용해서 0.0f부터 100.0f 사이의 난수를 뽑습니다.
         bool isCrit = UnityEngine.Random.Range(0f, 100f) <= critChance;
         float finalDmg = isCrit ? (baseDamage * critDamageMultiplier) : baseDamage;
 

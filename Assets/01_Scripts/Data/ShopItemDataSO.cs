@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Localization;
 
 [CreateAssetMenu(fileName = "ShopItemData", menuName = "Shop/ShopItemData")]
 public class ShopItemDataSO : ScriptableObject
@@ -6,7 +7,9 @@ public class ShopItemDataSO : ScriptableObject
     [Header("상품 정보")]
     public Define.ShopItemType type;     // 상품 타입
     public Define.ShopCategory category; // 어떤 카테고리인지
-    public string title;                 // 예: "무료 골드"
+    //public string title;                 // 예: "무료 골드"
+    // 기존: public string title;
+    public LocalizedString localizedTitle; //  변경: 다국어 지원 타이틀
     public string amountText;            // 예: "x50"
     public Sprite mainIcon;              // 예: 선물상자 아이콘
     public Sprite currencyIcon;          // 예: 골드 아이콘

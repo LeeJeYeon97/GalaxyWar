@@ -235,6 +235,46 @@ MonoBehaviour:
     m_Key: PausePopup_Bullet Bounce Count
     m_Metadata:
       m_Items: []
+  - m_Id: 12985753824022528
+    m_Key: ShopPanel_Title_RemoveAd
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12985830697226240
+    m_Key: ShopPanel_Title_Package_Ad
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12985869536481280
+    m_Key: ShopPanel_Title_Package_Gold
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12990919751127040
+    m_Key: ShopItem_Free
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12990956048633856
+    m_Key: ShopItem_Claimed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12991395339063296
+    m_Key: ShopItem_Title_FreeGold
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12991571617271808
+    m_Key: ShopItem_Title_200Gold
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12991762286137344
+    m_Key: ShopItem_Title_1000Gold
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12991837565505536
+    m_Key: ShopItem_Title_RemoveAd_Package
+    m_Metadata:
+      m_Items: []
+  - m_Id: 13008760156082176
+    m_Key: LevelupPopup_ReloadText
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

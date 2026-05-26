@@ -5,11 +5,18 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 
+[Serializable]
+public struct BurstModeStat
+{
+    public float speed;
+    public float criticalDamageRate;
+    public float burstChargeTime;
+}
 
 [CreateAssetMenu(fileName = "PlayerBurstMode", menuName = "ScriptableObjects/Ability/Player/PlayerBurstMode")]
 public class PlayerBurstModeAblityDataSO : PlayerAbilityDataSO
 {
-    public List<float> levels = new List<float>();
+    public List<BurstModeStat> levels = new List<BurstModeStat>();
     public override object[] GetUpgradeValues()
     {
         int nextLevel = Managers.Ability.GetCurrentLevel(type);
@@ -31,7 +38,9 @@ public class PlayerBurstModeAblityDataSO : PlayerAbilityDataSO
             Managers.Event.PostEvent(Define.ActionEvent.EnableBurstMode);
         }
         
-        targetStat.maxBurstFullChargeTime.SubValue(levels[level]);
+        targetStat.maxBurstFullChargeTime.SubValue(levels[level].burstChargeTime);
+
+        targetStat.currentBurstStat = levels[level];
     }
 }
 

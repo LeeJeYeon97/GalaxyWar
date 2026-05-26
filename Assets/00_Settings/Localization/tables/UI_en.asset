@@ -238,6 +238,46 @@ MonoBehaviour:
     m_Localized: Reload Count
     m_Metadata:
       m_Items: []
+  - m_Id: 12990919751127040
+    m_Localized: Free
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12991395339063296
+    m_Localized: FREE GOLD
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12991571617271808
+    m_Localized: 200 GOLD
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12991762286137344
+    m_Localized: 1000 GOLD
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12990956048633856
+    m_Localized: Claimed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12985869536481280
+    m_Localized: Gold Shop
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12985830697226240
+    m_Localized: Free Reward
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12991837565505536
+    m_Localized: Remove Ads Package
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12985753824022528
+    m_Localized: Special Shop
+    m_Metadata:
+      m_Items: []
+  - m_Id: 13008760156082176
+    m_Localized: Reroll
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

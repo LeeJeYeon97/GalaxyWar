@@ -1,4 +1,4 @@
-using DG.Tweening;
+ï»¿using DG.Tweening;
 using NUnit.Framework;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -31,16 +31,16 @@ public class UI_LevelUpPopup : UI_Popup
         Text_ReRollCost
     }
     private bool _isSelecting = false;
-    // 3°³ÀÇ Ä«µå¸¦ ´ãÀ» ¹è¿­ »ı¼º
-    public GameObject[] cards = new GameObject[3];
+Â  Â  // 3ê°œì˜ ì¹´ë“œë¥¼ ë‹´ì„ ë°°ì—´ ìƒì„±
+Â  Â  public GameObject[] cards = new GameObject[3];
 
-    // 3°³ÀÇ Ä«µå ºÙÀÌ±â
-    public override void Init()
+Â  Â  // 3ê°œì˜ ì¹´ë“œ ë¶™ì´ê¸°
+Â  Â  public override void Init()
     {
         base.Init();
 
         _isSelecting = false;
-        
+
         Bind<GameObject>(typeof(Cards));
         Bind<Button>(typeof(Buttons));
         Bind<TMP_Text>(typeof(Texts));
@@ -51,75 +51,89 @@ public class UI_LevelUpPopup : UI_Popup
 
         GetTMP((int)Texts.Text_ReRollCost).text = Managers.Data.GameData.rerollGoldCost.ToString("N0");
 
-        UpdateReloadButtonState(); //  ÆË¾÷ÀÌ ÄÑÁú ¶§ ÄÚÀÎ ¹öÆ° »óÅÂ Ã¼Å©!
-        RefreshCards();
+        UpdateReloadButtonState(); //Â  íŒì—…ì´ ì¼œì§ˆ ë•Œ ì½”ì¸ ë²„íŠ¼ ìƒíƒœ ì²´í¬!
+Â  Â  Â  Â  RefreshCards();
     }
+Â  Â  // [ì¶”ê°€] DOTween Null ì—ëŸ¬ ì™„ë²½ ë°©ì–´! UIê°€ íŒŒê´´ë  ë•Œ ëª¨ë“  ì• ë‹ˆë©”ì´ì…˜ ê°•ì œ ì¢…ë£Œ
+Â  Â  private void OnDestroy()
+    {
+        for (int i = 0; i < cards.Length; i++)
+        {
+            if (cards[i] != null)
+            {
+                cards[i].GetComponent<RectTransform>().DOKill();
+                CanvasGroup cg = cards[i].GetComponent<CanvasGroup>();
+                if (cg != null) cg.DOKill();
+            }
+        }
+        transform.DOKill(); // íŒì—…ì°½ ìì²´ì˜ íŠ¸ìœˆë„ ì œê±°
+Â  Â  }
     private void OnCardReloadButtonAd()
     {
         if (_isSelecting) return;
         _isSelecting = true;
 
-        // ±¤°íº¸°ÔÇÏ±â
-        // ÇÃ·¹ÀÌ½º¸ÕÆ®
-        // ±¤°í º¸±â (µÎ ¹øÂ° ÆÄ¶ó¹ÌÅÍ·Î Äİ¹é ÇÔ¼ö¸¦ È­»ìÇ¥ ÇÔ¼ö ÇüÅÂ·Î ³Ñ±é´Ï´Ù)
-        Managers.AD.ShowRewardedAd(placement_InGameCardReload, (success) =>
+Â  Â  Â  Â  // ê´‘ê³ ë³´ê²Œí•˜ê¸°
+Â  Â  Â  Â  // í”Œë ˆì´ìŠ¤ë¨¼íŠ¸
+Â  Â  Â  Â  // ê´‘ê³  ë³´ê¸° (ë‘ ë²ˆì§¸ íŒŒë¼ë¯¸í„°ë¡œ ì½œë°± í•¨ìˆ˜ë¥¼ í™”ì‚´í‘œ í•¨ìˆ˜ í˜•íƒœë¡œ ë„˜ê¹ë‹ˆë‹¤)
+Â  Â  Â  Â  Managers.AD.ShowRewardedAd(placement_InGameCardReload, (success) =>
         {
             if (success)
             {
-                Debug.Log("±¤°í ½ÃÃ» ¿Ï·á! Ä«µå¸¦ ¸®·ÑÇÕ´Ï´Ù.");
+                Debug.Log("ê´‘ê³  ì‹œì²­ ì™„ë£Œ! ì¹´ë“œë¥¼ ë¦¬ë¡¤í•©ë‹ˆë‹¤.");
                 RefreshCards();
             }
             else
             {
-                Debug.Log("±¤°í ½ÃÃ»¿¡ ½ÇÆĞÇß°Å³ª Ãë¼ÒÇß½À´Ï´Ù.");
-                // ÇÊ¿äÇÏ´Ù¸é À¯Àú¿¡°Ô "±¤°í ½ÃÃ» ½ÇÆĞ" ¾È³» ¸Ş½ÃÁö ¶ç¿ì±â
-            }
+                Debug.Log("ê´‘ê³  ì‹œì²­ì— ì‹¤íŒ¨í–ˆê±°ë‚˜ ì·¨ì†Œí–ˆìŠµë‹ˆë‹¤.");
+Â  Â  Â  Â  Â  Â  Â  Â  // í•„ìš”í•˜ë‹¤ë©´ ìœ ì €ì—ê²Œ "ê´‘ê³  ì‹œì²­ ì‹¤íŒ¨" ì•ˆë‚´ ë©”ì‹œì§€ ë„ìš°ê¸°
+Â  Â  Â  Â  Â  Â  }
         });
     }
     private async void OnCardReloadButtonCoinAsync()
     {
-        
-        // 1. ¿¬¼Ó Å¬¸¯ ¹æÁö ¹× ·Îµù Ç¥½Ã
+
+        // 1. ì—°ì† í´ë¦­ ë°©ì§€ ë° ë¡œë”© í‘œì‹œ
         if (_isSelecting) return;
 
         if (Managers.PlayerEconomy.Gold < Managers.Data.GameData.rerollGoldCost)
         {
-            HandleCoinReloadFailed("ÄÚÀÎÀÌ ºÎÁ·ÇÕ´Ï´Ù.");
+            HandleCoinReloadFailed("ì½”ì¸ì´ ë¶€ì¡±í•©ë‹ˆë‹¤.");
             return;
         }
 
         _isSelecting = true;
 
-        // À¯Àú¿¡°Ô "Ã³¸® Áß..."ÀÓÀ» ¾Ë¸®±â À§ÇØ ·Îµù ÆË¾÷À» ¶ç¿ó´Ï´Ù.
-        Managers.UI.ShowPopupUI<UI_LoadingPopup>();
+Â  Â  Â  Â  // ìœ ì €ì—ê²Œ "ì²˜ë¦¬ ì¤‘..."ì„ì„ ì•Œë¦¬ê¸° ìœ„í•´ ë¡œë”© íŒì—…ì„ ë„ì›ë‹ˆë‹¤.
+Â  Â  Â  Â  Managers.UI.ShowPopupUI<UI_LoadingPopup>();
 
         try
         {
-            // 2. ¼­¹ö(Cloud Code)¿¡ ÄÚÀÎ ¼Ò¸ğ ¿äÃ»
-            // (¼­¹ö ÇÔ¼ö ÀÌ¸§ÀÌ 'SpendCurrency'ÀÌ°í, ÀÎÀÚ·Î ÀçÈ­ ID¿Í ¼Ò¸ğ·®À» º¸³½´Ù°í °¡Á¤)
-            // ¼º°ø ½Ã ¾÷µ¥ÀÌÆ®µÈ °æÁ¦ µ¥ÀÌÅÍ(Currency µî)¸¦ ¹İÈ¯¹Ş½À´Ï´Ù.
-            var spendCurrency = await Managers.PlayerEconomy.SpendGoldAsync(Managers.Data.GameData.rerollGoldCost);
+Â  Â  Â  Â  Â  Â  // 2. ì„œë²„(Cloud Code)ì— ì½”ì¸ ì†Œëª¨ ìš”ì²­
+Â  Â  Â  Â  Â  Â  // (ì„œë²„ í•¨ìˆ˜ ì´ë¦„ì´ 'SpendCurrency'ì´ê³ , ì¸ìë¡œ ì¬í™” IDì™€ ì†Œëª¨ëŸ‰ì„ ë³´ë‚¸ë‹¤ê³  ê°€ì •)
+Â  Â  Â  Â  Â  Â  // ì„±ê³µ ì‹œ ì—…ë°ì´íŠ¸ëœ ê²½ì œ ë°ì´í„°(Currency ë“±)ë¥¼ ë°˜í™˜ë°›ìŠµë‹ˆë‹¤.
+Â  Â  Â  Â  Â  Â  var spendCurrency = await Managers.PlayerEconomy.SpendGoldAsync(Managers.Data.GameData.rerollGoldCost);
 
             if (spendCurrency == true)
             {
-                Debug.Log("ÄÚÀÎ ¼Ò¸ğ ¼º°ø! Ä«µå¸¦ ¸®·ÑÇÕ´Ï´Ù.");
+                Debug.Log("ì½”ì¸ ì†Œëª¨ ì„±ê³µ! ì¹´ë“œë¥¼ ë¦¬ë¡¤í•©ë‹ˆë‹¤.");
 
-                // ·Îµù ÆË¾÷ ´İ°í Ä«µå ¸®ÇÁ·¹½Ã
-                Managers.UI.ClosePopupUI();
-                //  ÄÚÀÎÀ» ½èÀ¸´Ï ¹öÆ°ÀÌ ºñÈ°¼ºÈ­µÇ¾î¾ß ÇÏ´ÂÁö ´Ù½Ã °Ë»ç!
-                UpdateReloadButtonState();
+Â  Â  Â  Â  Â  Â  Â  Â  // ë¡œë”© íŒì—… ë‹«ê³  ì¹´ë“œ ë¦¬í”„ë ˆì‹œ
+Â  Â  Â  Â  Â  Â  Â  Â  Managers.UI.ClosePopupUI();
+Â  Â  Â  Â  Â  Â  Â  Â  //Â  ì½”ì¸ì„ ì¼ìœ¼ë‹ˆ ë²„íŠ¼ì´ ë¹„í™œì„±í™”ë˜ì–´ì•¼ í•˜ëŠ”ì§€ ë‹¤ì‹œ ê²€ì‚¬!
+Â  Â  Â  Â  Â  Â  Â  Â  UpdateReloadButtonState();
                 RefreshCards();
             }
             else
             {
-                // ¼­¹ö °á°ú°¡ ½ÇÆĞ(ÄÚÀÎ ºÎÁ· µî)ÀÎ °æ¿ì
-                HandleCoinReloadFailed("ÄÚÀÎÀÌ ºÎÁ·ÇÕ´Ï´Ù.");
+Â  Â  Â  Â  Â  Â  Â  Â  // ì„œë²„ ê²°ê³¼ê°€ ì‹¤íŒ¨(ì½”ì¸ ë¶€ì¡± ë“±)ì¸ ê²½ìš°
+Â  Â  Â  Â  Â  Â  Â  Â  HandleCoinReloadFailed("ì½”ì¸ì´ ë¶€ì¡±í•©ë‹ˆë‹¤.");
             }
         }
         catch (System.Exception e)
         {
-            Debug.LogError($"ÄÚÀÎ ¸®·Ñ Áß ¼­¹ö ¿¡·¯ ¹ß»ı: {e.Message}");
-            HandleCoinReloadFailed("³×Æ®¿öÅ© Åë½Å¿¡ ½ÇÆĞÇß½À´Ï´Ù.");
+            Debug.LogError($"ì½”ì¸ ë¦¬ë¡¤ ì¤‘ ì„œë²„ ì—ëŸ¬ ë°œìƒ: {e.Message}");
+            HandleCoinReloadFailed("ë„¤íŠ¸ì›Œí¬ í†µì‹ ì— ì‹¤íŒ¨í–ˆìŠµë‹ˆë‹¤.");
         }
     }
     private void HandleCoinReloadFailed(string message)
@@ -127,13 +141,13 @@ public class UI_LevelUpPopup : UI_Popup
         Managers.UI.ClosePopupUI();
         _isSelecting = false;
 
-        if(Managers.Game.currentGameState == GameState.Pause)
+        if (Managers.Game.currentGameState == GameState.Pause)
         {
             Managers.Game.ChangeGameState(GameState.Resume);
         }
 
-        // ¿©±â¿¡ À¯Àú¿¡°Ô º¸¿©ÁÙ ¾Ë¸² ÆË¾÷(¿¹: UI_Toast)À» Ãß°¡ÇÏ¸é ´õ ÁÁ½À´Ï´Ù.
-        Debug.LogWarning(message);
+Â  Â  Â  Â  // ì—¬ê¸°ì— ìœ ì €ì—ê²Œ ë³´ì—¬ì¤„ ì•Œë¦¼ íŒì—…(ì˜ˆ: UI_Toast)ì„ ì¶”ê°€í•˜ë©´ ë” ì¢‹ìŠµë‹ˆë‹¤.
+Â  Â  Â  Â  Debug.LogWarning(message);
         UpdateReloadButtonState();
     }
 
@@ -142,12 +156,12 @@ public class UI_LevelUpPopup : UI_Popup
         Button coinButton = GetButton((int)Buttons.ReloadButton_Coin);
         if (coinButton == null) return;
 
-        // ÇöÀç ÇÃ·¹ÀÌ¾î°¡ °¡Áø ÄÚÀÎÀ» È®ÀÎÇÕ´Ï´Ù.
-        // (ÁÖÀÇ: Managers.PlayerEconomy.CurrentGold µî ´ëÇ¥´Ô ÇÁ·ÎÁ§Æ®ÀÇ ½ÇÁ¦ ÀÜ¾× º¯¼ö·Î º¯°æÇØ ÁÖ¼¼¿ä!)
-        int currentCoin = Managers.PlayerEconomy.Gold;
+Â  Â  Â  Â  // í˜„ì¬ í”Œë ˆì´ì–´ê°€ ê°€ì§„ ì½”ì¸ì„ í™•ì¸í•©ë‹ˆë‹¤.
+Â  Â  Â  Â  // (ì£¼ì˜: Managers.PlayerEconomy.CurrentGold ë“± ëŒ€í‘œë‹˜ í”„ë¡œì íŠ¸ì˜ ì‹¤ì œ ì”ì•¡ ë³€ìˆ˜ë¡œ ë³€ê²½í•´ ì£¼ì„¸ìš”!)
+Â  Â  Â  Â  int currentCoin = Managers.PlayerEconomy.Gold;
 
-        // 100¿ø ÀÌ»ó ÀÖÀ¸¸é Å¬¸¯ °¡´É(true), ¾Æ´Ï¸é Å¬¸¯ ºÒ°¡(false)
-        if (currentCoin >= Managers.Data.GameData.rerollGoldCost)
+Â  Â  Â  Â  // 100ì› ì´ìƒ ìˆìœ¼ë©´ í´ë¦­ ê°€ëŠ¥(true), ì•„ë‹ˆë©´ í´ë¦­ ë¶ˆê°€(false)
+Â  Â  Â  Â  if (currentCoin >= Managers.Data.GameData.rerollGoldCost)
         {
             coinButton.interactable = true;
         }
@@ -158,11 +172,11 @@ public class UI_LevelUpPopup : UI_Popup
     }
     private void RefreshCards()
     {
-        // 1. ¾ÈÀüÀåÄ¡: Ä«µå°¡ ¼¼ÆÃµÇ°í ³¯¾Æ¿À´Â µ¿¾È¿¡´Â Àı´ë Å¬¸¯ ¸øÇÏ°Ô Àá±Ş´Ï´Ù!
-        _isSelecting = true;
+Â  Â  Â  Â  // 1. ì•ˆì „ì¥ì¹˜: ì¹´ë“œê°€ ì„¸íŒ…ë˜ê³  ë‚ ì•„ì˜¤ëŠ” ë™ì•ˆì—ëŠ” ì ˆëŒ€ í´ë¦­ ëª»í•˜ê²Œ ì ê¸‰ë‹ˆë‹¤!
+Â  Â  Â  Â  _isSelecting = true;
 
-        // ´É·ÂÄ¡ °¡Á®¿À±â
-        List<AbilityDataSO> abilities = Managers.Ability.GetRandomAbility();
+Â  Â  Â  Â  // ëŠ¥ë ¥ì¹˜ ê°€ì ¸ì˜¤ê¸°
+Â  Â  Â  Â  List<AbilityDataSO> abilities = Managers.Ability.GetRandomAbility();
 
         if (abilities == null || abilities.Count != cards.Length)
         {
@@ -175,127 +189,128 @@ public class UI_LevelUpPopup : UI_Popup
             {
                 cards[i] = Get<GameObject>(i);
             }
-            // Ä«µå UI ¼¼ÆÃ
-            UI_AbilityCard card = Util.GetOrAddComponent<UI_AbilityCard>(cards[i]);
-            
+Â  Â  Â  Â  Â  Â  // ì¹´ë“œ UI ì„¸íŒ…
+Â  Â  Â  Â  Â  Â  UI_AbilityCard card = Util.GetOrAddComponent<UI_AbilityCard>(cards[i]);
+
             card.SetAbilityCard(abilities[i]);
 
             int capturedIndex = i;
 
-            // ¹öÆ° ¿¬°á
-            Button cardButton = card.GetComponent<Button>();
+Â  Â  Â  Â  Â  Â  // ë²„íŠ¼ ì—°ê²°
+Â  Â  Â  Â  Â  Â  Button cardButton = card.GetComponent<Button>();
             cardButton.onClick.RemoveAllListeners();
             cardButton.interactable = true;
             cardButton.onClick.AddListener(() => OnClickCard(capturedIndex));
 
-            // ÇÙ½É: ¹è¿­¿¡ µé¾îÀÖ´Â °ÔÀÓ ¿ÀºêÁ§Æ®¿¡¼­ RectTransformÀ» ²¨³»¿É´Ï´Ù.
-            RectTransform cardRect = card.GetComponent<RectTransform>();
+Â  Â  Â  Â  Â  Â  // í•µì‹¬: ë°°ì—´ì— ë“¤ì–´ìˆëŠ” ê²Œì„ ì˜¤ë¸Œì íŠ¸ì—ì„œ RectTransformì„ êº¼ë‚´ì˜µë‹ˆë‹¤.
+Â  Â  Â  Â  Â  Â  RectTransform cardRect = card.GetComponent<RectTransform>();
 
-            // È¤½Ã¶óµµ UI °´Ã¼°¡ ¾Æ´Ñ °Ô µé¾î¿ÔÀ» ¶§ ¿¡·¯°¡ ³ªÁö ¾Êµµ·Ï ¾ÈÀüÀåÄ¡¸¦ °É¾îÁİ´Ï´Ù.
-            if (cardRect == null) continue;
+Â  Â  Â  Â  Â  Â  // í˜¹ì‹œë¼ë„ UI ê°ì²´ê°€ ì•„ë‹Œ ê²Œ ë“¤ì–´ì™”ì„ ë•Œ ì—ëŸ¬ê°€ ë‚˜ì§€ ì•Šë„ë¡ ì•ˆì „ì¥ì¹˜ë¥¼ ê±¸ì–´ì¤ë‹ˆë‹¤.
+Â  Â  Â  Â  Â  Â  if (cardRect == null) continue;
 
-            // 1. ¾Ö´Ï¸ŞÀÌ¼Ç ½ÃÀÛ Àü: Ä«µå¸¦ ²®µ¥±â(Slot) ±âÁØ ¿ŞÂÊ ¹Û(-1500)À¸·Î Ä¡¿öµÓ´Ï´Ù.
-            cardRect.anchoredPosition3D = new Vector3(-1500f, 0f, 0f);
+Â  Â  Â  Â  Â  Â  // 1. ì• ë‹ˆë©”ì´ì…˜ ì‹œì‘ ì „: ì¹´ë“œë¥¼ ê»ë°ê¸°(Slot) ê¸°ì¤€ ì™¼ìª½ ë°–(-1500)ìœ¼ë¡œ ì¹˜ì›Œë‘¡ë‹ˆë‹¤.
+Â  Â  Â  Â  Â  Â  cardRect.anchoredPosition3D = new Vector3(-1500f, 0f, 0f);
 
-            // 1. Å©±â¿Í Åõ¸íµµ ¿ø·¡´ë·Î º¹±¸
-            cardRect.localScale = Vector3.one;
+Â  Â  Â  Â  Â  Â  // 1. í¬ê¸°ì™€ íˆ¬ëª…ë„ ì›ë˜ëŒ€ë¡œ ë³µêµ¬
+Â  Â  Â  Â  Â  Â  cardRect.localScale = Vector3.one;
 
             CanvasGroup cardCanvas = Util.GetOrAddComponent<CanvasGroup>(cards[i]);
-            cardCanvas.alpha = 1f; // Åõ¸íµµ 100%·Î º¹±¸
+            cardCanvas.alpha = 1f; // íˆ¬ëª…ë„ 100%ë¡œ ë³µêµ¬
 
-            // 2. DOTween ¾Ö´Ï¸ŞÀÌ¼Ç: ¿À¸¥ÂÊ ¹Û¿¡¼­ ¿ø·¡ ÀÚ¸®(0,0)·Î ³¯¾Æ¿À±â!                      
-            var moveTween = cardRect.DOAnchorPos3D(Vector3.zero, 0.5f)
-            .SetEase(Ease.OutBack)
-            .SetUpdate(true)        // ¾à°£ Æ¨±â¸é¼­ ¸ØÃß´Â ÂûÁø È¿°ú
-            .SetDelay(i * 0.15f);   // 0¹ø Ä«µå -> 0.15ÃÊ µÚ 1¹ø -> Å¸´Ù´Ú ¿¬Ãâ!
+Â  Â  Â  Â  Â  Â  // 2. DOTween ì• ë‹ˆë©”ì´ì…˜: ì˜¤ë¥¸ìª½ ë°–ì—ì„œ ì›ë˜ ìë¦¬(0,0)ë¡œ ë‚ ì•„ì˜¤ê¸°!Â  Â  Â  Â  Â  Â  Â  Â  Â  Â  Â Â 
+Â  Â  Â  Â  Â  Â  var moveTween = cardRect.DOAnchorPos3D(Vector3.zero, 0.5f)
+      .SetEase(Ease.OutBack)
+      .SetUpdate(true)Â  Â  Â  Â  // ì•½ê°„ íŠ•ê¸°ë©´ì„œ ë©ˆì¶”ëŠ” ì°°ì§„ íš¨ê³¼
+Â  Â  Â  Â  Â  Â  .SetDelay(i * 0.15f);Â  Â // 0ë²ˆ ì¹´ë“œ -> 0.15ì´ˆ ë’¤ 1ë²ˆ -> íƒ€ë‹¤ë‹¥ ì—°ì¶œ!
 
-            // 3. ÇÙ½É ¹æ¾î ·ÎÁ÷: ¸¶Áö¸· Ä«µå(3¹øÂ°)°¡ µµÂøÇßÀ» ¶§ ºñ·Î¼Ò Àá±İÀ» Ç±´Ï´Ù!
-            if (i == abilities.Count - 1)
+Â  Â  Â  Â  Â  Â  // 3. í•µì‹¬ ë°©ì–´ ë¡œì§: ë§ˆì§€ë§‰ ì¹´ë“œ(3ë²ˆì§¸)ê°€ ë„ì°©í–ˆì„ ë•Œ ë¹„ë¡œì†Œ ì ê¸ˆì„ í’‰ë‹ˆë‹¤!
+Â  Â  Â  Â  Â  Â  if (i == abilities.Count - 1)
             {
                 moveTween.OnComplete(() =>
                 {
-                    _isSelecting = false; // ÀÌÁ¦ ¸¶À½²¯ °í¸£¼¼¿ä!
-                    UpdateReloadButtonState();// Ä«µå°¡ ´Ù ³¯¾Æ¿Í¼­ ¼±ÅÃ °¡´ÉÇÑ »óÅÂ°¡ µÇ¾úÀ» ¶§, ÄÚÀÎ ¹öÆ°µµ ´Ù½Ã Ã¼Å©ÇØÁİ´Ï´Ù.
-                    Debug.Log("¸ğµç Ä«µå µµÂø ¿Ï·á! ¼±ÅÃ °¡´É »óÅÂ·Î ÀüÈ¯.");
+                    _isSelecting = false; // ì´ì œ ë§ˆìŒê» ê³ ë¥´ì„¸ìš”!
+Â  Â  Â  Â  Â  Â  Â  Â  Â  Â  UpdateReloadButtonState();// ì¹´ë“œê°€ ë‹¤ ë‚ ì•„ì™€ì„œ ì„ íƒ ê°€ëŠ¥í•œ ìƒíƒœê°€ ë˜ì—ˆì„ ë•Œ, ì½”ì¸ ë²„íŠ¼ë„ ë‹¤ì‹œ ì²´í¬í•´ì¤ë‹ˆë‹¤.
+Â  Â  Â  Â  Â  Â  Â  Â  Â  Â  Debug.Log("ëª¨ë“  ì¹´ë“œ ë„ì°© ì™„ë£Œ! ì„ íƒ ê°€ëŠ¥ ìƒíƒœë¡œ ì „í™˜.");
                 });
             }
         }
     }
-    // 2. Ä«µå Å¬¸¯ ½Ã ½ÇÇàµÉ ÇÔ¼ö (¹öÆ° OnClick ÀÌº¥Æ®¿¡ ¿¬°á!)
-    // ¸Å°³º¯¼ö·Î Å¬¸¯ÇÑ Ä«µå ÀÚ½ÅÀÇ ÀÎµ¦½º(0, 1, 2)¸¦ ³Ñ°Ü¹Ş¾Æ¾ß ÇÕ´Ï´Ù.
-    public void OnClickCard(int selectedIndex)
+Â  Â  // 2. ì¹´ë“œ í´ë¦­ ì‹œ ì‹¤í–‰ë  í•¨ìˆ˜ (ë²„íŠ¼ OnClick ì´ë²¤íŠ¸ì— ì—°ê²°!)
+Â  Â  // ë§¤ê°œë³€ìˆ˜ë¡œ í´ë¦­í•œ ì¹´ë“œ ìì‹ ì˜ ì¸ë±ìŠ¤(0, 1, 2)ë¥¼ ë„˜ê²¨ë°›ì•„ì•¼ í•©ë‹ˆë‹¤.
+Â  Â  public void OnClickCard(int selectedIndex)
     {
-        // 1. ÀÌ¹Ì ´Ù¸¥ Ä«µå°¡ ¿¬Ãâ ÁßÀÌ¸é ¹«½Ã (´õºí Å¬¸¯ ¹æÁö)
-        if (_isSelecting) return;
+Â  Â  Â  Â  // 1. ì´ë¯¸ ë‹¤ë¥¸ ì¹´ë“œê°€ ì—°ì¶œ ì¤‘ì´ë©´ ë¬´ì‹œ (ë”ë¸” í´ë¦­ ë°©ì§€)
+Â  Â  Â  Â  if (_isSelecting) return;
         _isSelecting = true;
 
         for (int i = 0; i < cards.Length; i++)
         {
-            // UI °´Ã¼µéÀÇ À§Ä¡¿Í Åõ¸íµµ¸¦ Á¦¾îÇÏ±â À§ÇØ ÄÄÆ÷³ÍÆ® °¡Á®¿À±â
-            RectTransform cardRect = cards[i].GetComponent<RectTransform>();
+Â  Â  Â  Â  Â  Â  // UI ê°ì²´ë“¤ì˜ ìœ„ì¹˜ì™€ íˆ¬ëª…ë„ë¥¼ ì œì–´í•˜ê¸° ìœ„í•´ ì»´í¬ë„ŒíŠ¸ ê°€ì ¸ì˜¤ê¸°
+Â  Â  Â  Â  Â  Â  RectTransform cardRect = cards[i].GetComponent<RectTransform>();
             CanvasGroup cardCanvas = cards[i].GetComponent<CanvasGroup>();
 
-            //ÇÊ¼ö È®ÀÎ: Ä«µå ÃÖ»óÀ§¿¡ 'CanvasGroup' ÄÄÆ÷³ÍÆ®°¡ ºÙ¾î ÀÖ¾î¾ß ½º¸£¸¤(Fade) »ç¶óÁı´Ï´Ù!
-            if (cardCanvas == null) 
+Â  Â  Â  Â  Â  Â  //í•„ìˆ˜ í™•ì¸: ì¹´ë“œ ìµœìƒìœ„ì— 'CanvasGroup' ì»´í¬ë„ŒíŠ¸ê°€ ë¶™ì–´ ìˆì–´ì•¼ ìŠ¤ë¥´ë¥µ(Fade) ì‚¬ë¼ì§‘ë‹ˆë‹¤!
+Â  Â  Â  Â  Â  Â  if (cardCanvas == null)
                 cardCanvas = cards[i].AddComponent<CanvasGroup>();
 
-            //  3. ¼±ÅÃ¹ŞÁö ¸øÇÑ ´Ù¸¥ Ä«µåµé ¿¬Ãâ
-            if (i != selectedIndex)
+Â  Â  Â  Â  Â  Â  //Â  3. ì„ íƒë°›ì§€ ëª»í•œ ë‹¤ë¥¸ ì¹´ë“œë“¤ ì—°ì¶œ
+Â  Â  Â  Â  Â  Â  if (i != selectedIndex)
             {
-                // Áï½Ã ¹İÀÀ: 0.2ÃÊ µ¿¾È Åõ¸íÇØÁö¸é¼­ ½º¸£¸¤ »ç¶óÁü
-                cardCanvas.DOFade(0f, 0.2f).SetEase(Ease.OutCubic).SetUpdate(true);
+Â  Â  Â  Â  Â  Â  Â  Â  // ì¦‰ì‹œ ë°˜ì‘: 0.2ì´ˆ ë™ì•ˆ íˆ¬ëª…í•´ì§€ë©´ì„œ ìŠ¤ë¥´ë¥µ ì‚¬ë¼ì§
+Â  Â  Â  Â  Â  Â  Â  Â  cardCanvas.DOFade(0f, 0.2f).SetEase(Ease.OutCubic).SetUpdate(true);
 
-                // (¼±ÅÃ) »ìÂ¦ ¾Æ·¡·Î °¡¶ó¾ÉÀ¸¸é¼­ »ç¶óÁö¸é ´õ ¿¹»Ş´Ï´Ù.
-                cardRect.DOAnchorPosY(-100f, 0.2f).SetEase(Ease.OutCubic).SetUpdate(true);
+Â  Â  Â  Â  Â  Â  Â  Â  // (ì„ íƒ) ì‚´ì§ ì•„ë˜ë¡œ ê°€ë¼ì•‰ìœ¼ë©´ì„œ ì‚¬ë¼ì§€ë©´ ë” ì˜ˆì©ë‹ˆë‹¤.
+Â  Â  Â  Â  Â  Â  Â  Â  cardRect.DOAnchorPosY(-100f, 0.2f).SetEase(Ease.OutCubic).SetUpdate(true);
 
-                // ¹öÆ° ±â´Éµµ Áï½Ã ²ü´Ï´Ù.
-                cards[i].GetComponent<Button>().interactable = false;
+Â  Â  Â  Â  Â  Â  Â  Â  // ë²„íŠ¼ ê¸°ëŠ¥ë„ ì¦‰ì‹œ ë•ë‹ˆë‹¤.
+Â  Â  Â  Â  Â  Â  Â  Â  cards[i].GetComponent<Button>().interactable = false;
             }
-            //  4. ¼±ÅÃ¹ŞÀº Ä«µå ¿¬Ãâ (½ÃÄö½º ÄŞº¸!)
-            else
+Â  Â  Â  Â  Â  Â  //Â  4. ì„ íƒë°›ì€ ì¹´ë“œ ì—°ì¶œ (ì‹œí€€ìŠ¤ ì½¤ë³´!)
+Â  Â  Â  Â  Â  Â  else
             {
-                // ¹öÆ° ±â´É Áï½Ã ²ô±â
-                cards[i].GetComponent<Button>().interactable = false;
+Â  Â  Â  Â  Â  Â  Â  Â  // ë²„íŠ¼ ê¸°ëŠ¥ ì¦‰ì‹œ ë„ê¸°
+Â  Â  Â  Â  Â  Â  Â  Â  cards[i].GetComponent<Button>().interactable = false;
 
-                // ½ÃÄö½º »ı¼º (Å¸ÀÓ¶óÀÎ)
-                DG.Tweening.Sequence seq = DOTween.Sequence();
+Â  Â  Â  Â  Â  Â  Â  Â  // ì‹œí€€ìŠ¤ ìƒì„± (íƒ€ì„ë¼ì¸)
+Â  Â  Â  Â  Â  Â  Â  Â  DG.Tweening.Sequence seq = DOTween.Sequence();
                 seq.SetUpdate(true);
-                // ÄŞº¸ 1: ¹à°Ô ºû³ª¸é¼­ Åë! Æ¢±â (Å©±â 1.0 -> 1.2·Î Ä¿Áö±â)
-                // ( ¹à°Ô ºû³ª´Â °Ç ½¦ÀÌ´õ°¡ ÇÊ¿äÇÏ¹Ç·Î, ¿©±â¼­´Â Å©±â ÇÇµå¹éÀ¸·Î ´ëÃ¼ÇÕ´Ï´Ù.)
-                seq.Append(cardRect.DOScale(1.2f, 0.15f).SetEase(Ease.OutCubic));
-                
-                // ÄŞº¸ 2: 0.1ÃÊ Àá±ñ ´ë±â (°­Á¶ È¿°ú)
+Â  Â  Â  Â  Â  Â  Â  Â  // ì½¤ë³´ 1: ë°ê²Œ ë¹›ë‚˜ë©´ì„œ í†µ! íŠ€ê¸° (í¬ê¸° 1.0 -> 1.2ë¡œ ì»¤ì§€ê¸°)
+Â  Â  Â  Â  Â  Â  Â  Â  // ( ë°ê²Œ ë¹›ë‚˜ëŠ” ê±´ ì‰ì´ë”ê°€ í•„ìš”í•˜ë¯€ë¡œ, ì—¬ê¸°ì„œëŠ” í¬ê¸° í”¼ë“œë°±ìœ¼ë¡œ ëŒ€ì²´í•©ë‹ˆë‹¤.)
+Â  Â  Â  Â  Â  Â  Â  Â  seq.Append(cardRect.DOScale(1.2f, 0.15f).SetEase(Ease.OutCubic));
+
+                // ì½¤ë³´ 2: 0.1ì´ˆ ì ê¹ ëŒ€ê¸° (ê°•ì¡° íš¨ê³¼)
                 seq.AppendInterval(0.1f);
 
-                // ÄŞº¸ 3: ¼ø½Ä°£¿¡ 0À¸·Î ÀÛ¾ÆÁö¸é¼­ »ç¶óÁö±â! (µ¿½Ã¿¡ ÀÏ¾î³ª°Ô Join »ç¿ë)
-                seq.Append(cardRect.DOScale(0f, 0.2f).SetEase(Ease.InBack)); // Åë! ÇÏ°í ¹Ú»ì ³ª´Â ´À³¦
-                seq.Join(cardCanvas.DOFade(0f, 0.15f)); // Åõ¸íÇØÁö±â
+Â  Â  Â  Â  Â  Â  Â  Â  // ì½¤ë³´ 3: ìˆœì‹ê°„ì— 0ìœ¼ë¡œ ì‘ì•„ì§€ë©´ì„œ ì‚¬ë¼ì§€ê¸°! (ë™ì‹œì— ì¼ì–´ë‚˜ê²Œ Join ì‚¬ìš©)
+Â  Â  Â  Â  Â  Â  Â  Â  seq.Append(cardRect.DOScale(0f, 0.2f).SetEase(Ease.InBack)); // í†µ! í•˜ê³  ë°•ì‚´ ë‚˜ëŠ” ëŠë‚Œ
+Â  Â  Â  Â  Â  Â  Â  Â  seq.Join(cardCanvas.DOFade(0f, 0.15f)); // íˆ¬ëª…í•´ì§€ê¸°
 
-                // ÄŞº¸ 4: ¾Ö´Ï¸ŞÀÌ¼ÇÀÌ ¸ğµÎ ³¡³­ µÚ¿¡ ÇÒ ÀÏ (ºÎÈ°, ÆË¾÷ ²ô±â µî)
-                seq.OnComplete(() =>
+Â  Â  Â  Â  Â  Â  Â  Â  // ì½¤ë³´ 4: ì• ë‹ˆë©”ì´ì…˜ì´ ëª¨ë‘ ëë‚œ ë’¤ì— í•  ì¼ (ë¶€í™œ, íŒì—… ë„ê¸° ë“±)
+Â  Â  Â  Â  Â  Â  Â  Â  seq.OnComplete(() =>
                 {
-                    // ´É·Â ºÎ¿©
-                    AbilityDataSO data = cards[selectedIndex].GetComponent<UI_AbilityCard>()._data;
-                    if(data == null)
+Â  Â  Â  Â  Â  Â  Â  Â  Â  Â  // ëŠ¥ë ¥ ë¶€ì—¬
+Â  Â  Â  Â  Â  Â  Â  Â  Â  Â  AbilityDataSO data = cards[selectedIndex].GetComponent<UI_AbilityCard>()._data;
+                    if (data == null)
                     {
                         Debug.LogError("Data null");
                     }
-                    
+
                     Managers.Ability.ApplyAbility(data);
 
-                    // 2. ·¹º§¾÷ È½¼ö Â÷°¨ ¹× ÀçÈ®ÀÎ ·ÎÁ÷
-                    // (Managers.Game.PendingLevelUpCount¿¡ Á¢±ÙÇÑ´Ù°í °¡Á¤)
-                    Managers.Level.PendingLevelUpCount--;
+Â  Â  Â  Â  Â  Â  Â  Â  Â  Â  // 2. ë ˆë²¨ì—… íšŸìˆ˜ ì°¨ê° ë° ì¬í™•ì¸ ë¡œì§
+Â  Â  Â  Â  Â  Â  Â  Â  Â  Â  // (Managers.Game.PendingLevelUpCountì— ì ‘ê·¼í•œë‹¤ê³  ê°€ì •)
+Â  Â  Â  Â  Â  Â  Â  Â  Â  Â  Managers.Level.PendingLevelUpCount--;
 
                     if (Managers.Level.PendingLevelUpCount > 0)
                     {
-                        // È½¼ö°¡ ³²¾Ò´Ù¸é ÆË¾÷À» ²ôÁö ¾Ê°í Ä«µå¸¸ ¸®ÇÊ!
-                        RefreshCards();
+Â  Â  Â  Â  Â  Â  Â  Â  Â  Â  Â  Â  // íšŸìˆ˜ê°€ ë‚¨ì•˜ë‹¤ë©´ íŒì—…ì„ ë„ì§€ ì•Šê³  ì¹´ë“œë§Œ ë¦¬í•„!
+Â  Â  Â  Â  Â  Â  Â  Â  Â  Â  Â  Â  RefreshCards();
                     }
                     else
                     {
-                        // ¸ğµÎ ³¡³µ´Ù¸é °ÔÀÓ Àç°³ ¹× ÆË¾÷ ´İ±â
-                        Managers.Game.ChangeGameState(GameState.Resume);
+                        Managers.Level.IsLevelUpPopupOpen = false;
+Â  Â  Â  Â  Â  Â  Â  Â  Â  Â  Â  Â  // ëª¨ë‘ ëë‚¬ë‹¤ë©´ ê²Œì„ ì¬ê°œ ë° íŒì—… ë‹«ê¸°
+Â  Â  Â  Â  Â  Â  Â  Â  Â  Â  Â  Â  Managers.Game.ChangeGameState(GameState.Resume);
                         Managers.UI.ClosePopupUI();
                     }
                 });

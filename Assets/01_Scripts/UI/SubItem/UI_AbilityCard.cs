@@ -18,11 +18,13 @@ public class UI_AbilityCard : UI_Base
     {
         AbilityNameText,
         AbilityDescription,
+        AbilityLevel,
     }
     public AbilityDataSO _data;
 
     public TMP_Text nameText;
     public TMP_Text descText;
+    public TMP_Text levelText;
 
     public UI_MarqueeText descMarquee;
     public override void Init()
@@ -38,7 +40,7 @@ public class UI_AbilityCard : UI_Base
 
         nameText = GetTMP((int)Texts.AbilityNameText);
         descText = GetTMP((int)Texts.AbilityDescription);
-
+        levelText = GetTMP((int)Texts.AbilityLevel);
     }
     public void SetAbilityCard(AbilityDataSO data)
     {
@@ -56,14 +58,38 @@ public class UI_AbilityCard : UI_Base
         GetImage((int)Images.AbilityImage).sprite = data.icon;
 
 
-        // 1. 플레이어가 현재 이 능력을 몇 레벨 가지고 있는지 확인합니다.
-        // 현재 레벨 처음이면 0
+        // 2. 현재 레벨 및 다음 레벨 계산
         int currentLevel = Managers.Ability.GetCurrentLevel(_data.type);
+        int nextLevel = currentLevel + 1; // 다음 레벨
 
+        //  2. 이름 뒤에 레벨업 텍스트를 붙여서 출력합니다.
         string nameKey = $"{data.type}_Name";
-        nameText.text = Util.GetLocalizeString("Ability", nameKey);
+        string localizedName = Util.GetLocalizeString("Ability", nameKey);
 
-        
+        // 완성된 이름 문자열을 담을 변수
+        string finalNameText = $"{localizedName}";
+
+        //if (nextLevel >= Managers.Ability.GetMaxLevel(_data.type))
+        //{
+        //    finalNameText = $"{localizedName} <size=80%>(Lv. {currentLevel} -> MAX)</size>";
+        //}
+        //else
+        //{
+        //    finalNameText = $"{localizedName} <size=80%>(Lv. {currentLevel} -> Lv. {nextLevel})</size>";
+        //}
+
+        // 4. 마키(Marquee) 컴포넌트를 가져와서 완성된 텍스트를 넘겨줍니다!
+        UI_MarqueeText nameMarquee = nameText.GetComponent<UI_MarqueeText>();
+        if (nameMarquee != null)
+        {
+            nameMarquee.PlayMarquee(finalNameText);
+        }
+        else
+        {
+            // 마키 스크립트가 없다면 그냥 텍스트만 띄움 (방어 코드)
+            nameText.text = finalNameText;
+        }
+
         string descKey = $"{data.type}_Desc_{currentLevel}";
 
         // 0레벨이면 "범위 공격을 주는 폭발탄을 획득합니다."가 그대로 출력됨
@@ -81,6 +107,15 @@ public class UI_AbilityCard : UI_Base
         {
             // 레벨 1 이상: 수치가 존재하므로 string.Format으로 {0}, {1} 자리에 끼워 넣음
             descText.text = string.Format(localizedFormat, upgradeValues);
+        }
+
+        if (nextLevel >= Managers.Ability.GetMaxLevel(_data.type))
+        {
+            levelText.text = $"Lv. {currentLevel} -> Lv. MAX";
+        }
+        else
+        {
+            levelText.text = $"Lv. {currentLevel} -> Lv. {nextLevel}";
         }
     }
 }

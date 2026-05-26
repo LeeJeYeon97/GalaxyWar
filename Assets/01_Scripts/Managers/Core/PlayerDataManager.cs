@@ -60,6 +60,11 @@ public class PlayerDataManager
             Debug.LogException(e);
         }
     }
+    public void UpdatedPlayerData(PlayerData data)
+    {
+        PlayerDataLocal = data;
+        PlayerDataUpdated?.Invoke(PlayerDataLocal);
+    }
     public async Task SavePlayerData(bool isCleared)
     {
         // 2. 최고 기록(점수, 생존 시간) 저장 로직 추가!

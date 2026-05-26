@@ -52,6 +52,10 @@ public class MeteorStatus : MonoBehaviour
         HasShockDebuff = false;
 
         _auraBuffEndTime = 0f;
+        auraBuff.SetActive(false);
+        shockDeBuffEffect.SetActive(false);
+
+        _controller.Visual.ReturnColor();
 
         if (_freezeCoroutine != null) StopCoroutine(_freezeCoroutine);
         if (_slowCoroutine != null) StopCoroutine(_slowCoroutine);
@@ -203,7 +207,7 @@ public class MeteorStatus : MonoBehaviour
 
     public Color GetCurrentStatusColor()
     {
-        if (HasAuraBuff) return Color.yellow;
+        //if (HasAuraBuff) return Color.yellow;
         if (_burnCoroutine != null) return new Color(1f, 0.4f, 0f);
         if (_freezeCoroutine != null) return new Color(0.2f, 0.8f, 1f);
         if (_slowCoroutine != null) return new Color(0.5f, 0.8f, 1f);

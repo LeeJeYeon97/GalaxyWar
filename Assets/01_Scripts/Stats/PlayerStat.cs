@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using System;
 using System.Reflection;
 using UnityEngine;
@@ -38,6 +39,9 @@ public class PlayerStat
 
     [Header("유도탄 관련")]
     public bool isHomingShotEnabled;
+
+    // 현재 적용받고 있는 버스트 모드 상세 스탯 기억용
+    public BurstModeStat currentBurstStat;
     public void SetStat(PlayerStatDataSO data)
     {
         if(data == null)
@@ -68,6 +72,29 @@ public class PlayerStat
 
         isHomingShotEnabled = data.statData.isHomingShotEnabled;
 
+    }
+    //  [추가] 버스트 스탯 적용 함수
+    public void ApplyBurstBuff()
+    {
+        speed.AddMultiplier(currentBurstStat.speed);
+        criticalDamageRate.AddMultiplier(currentBurstStat.criticalDamageRate);
+
+        reloadTime.SetForceZero(true);
+        shotTime.SetForceValue(true, 0.1f);
+        criticalChance.SetForceValue(true,100.0f);
+        multiShotChance.SetForceValue(true, 100.0f);
+    }
+
+    //  [추가] 버스트 스탯 해제 함수
+    public void RemoveBurstBuff()
+    {
+        speed.SubMultiplier(currentBurstStat.speed);
+        criticalDamageRate.SubMultiplier(currentBurstStat.criticalDamageRate);
+
+        reloadTime.SetForceZero(false);
+        shotTime.SetForceValue(false);
+        criticalChance.SetForceValue(false);
+        multiShotChance.SetForceValue(false);
     }
     private void AutoInitStats()
     {

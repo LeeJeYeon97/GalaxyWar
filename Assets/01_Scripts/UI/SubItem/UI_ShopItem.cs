@@ -1,9 +1,12 @@
+using System;
 using System.Collections.Generic;
 using TMPro;
 using Unity.Services.CloudCode;
 using Unity.Services.CloudCode.GeneratedBindings.Project;
 using Unity.Services.Economy.Model;
 using UnityEngine;
+using UnityEngine.Localization;
+using UnityEngine.Localization.Settings;
 using UnityEngine.Purchasing;
 using UnityEngine.UI;
 using static Define;
@@ -29,6 +32,13 @@ public class UI_ShopItem : UI_Base
 
     private string _purchaseId;
 
+    // 팁: 테이블 이름이 바뀌면 여기서 한 번만 수정하면 됩니다.
+    private const string UI_TABLE_NAME = "UI";
+    private ShopItemDataSO _localData;
+    private VirtualPurchaseDefinition _vData;
+    private RealMoneyPurchaseDefinition _rData;
+
+
     public override void Init()
     {
         Bind<TMP_Text>(typeof(Texts));
@@ -36,123 +46,311 @@ public class UI_ShopItem : UI_Base
         Bind<Button>(typeof(Buttons));
 
     }
+
+    // [추가] 오브젝트가 활성화될 때 유니티 로컬라이제이션의 '언어 변경 이벤트'를 구독합니다.
+    private void OnEnable()
+    {
+        LocalizationSettings.SelectedLocaleChanged -= OnLocaleChanged;
+        LocalizationSettings.SelectedLocaleChanged += OnLocaleChanged;
+    }
+
+    //  [추가] 오브젝트가 비활성화되거나 파괴될 때 메모리 누수 방지를 위해 구독을 해제합니다.
+    private void OnDisable()
+    {
+        LocalizationSettings.SelectedLocaleChanged -= OnLocaleChanged;
+    }
+    // [추가] 유저가 기기나 설정창에서 언어를 바꾸면 유니티가 이 함수를 자동으로 실행해 줍니다.
+    private void OnLocaleChanged(Locale locale)
+    {
+        if (_localData == null) return;
+
+        Debug.Log($"[ShopUI] 언어가 {locale.Identifier.Code}로 변경되어 상점 텍스트를 재갱신합니다.");
+        // 언어가 바뀔 때 유저가 그 사이에 보상을 받았을 수도 있으니 상태를 먼저 체크합니다.
+        RefreshItemState();
+        UpdateLocalizationTexts();
+    }
+    //public void SetInfo(ShopItemDataSO localData, VirtualPurchaseDefinition vData = null, RealMoneyPurchaseDefinition rData = null)
+    //{
+    //    // 1. 공통 시각적 데이터 세팅 (클라이언트 SO 기준)
+    //    GetTMP((int)Texts.Text_Name).text = localData.localizedTitle.GetLocalizedString();
+    //    GetImage((int)Images.Image_Icon).sprite = localData.mainIcon;
+    //    if(localData.currencyIcon != null)
+    //    {
+    //        GetImage((int)Images.Image_CurrencyIcon).sprite = localData.currencyIcon;
+    //    }
+        
+    //    if (string.IsNullOrEmpty(localData.amountText))
+    //    {
+    //        GetTMP((int)Texts.Text_Amount).gameObject.SetActive(false);
+    //    }
+    //    else
+    //    {
+
+    //        GetTMP((int)Texts.Text_Amount).text = $"x{localData.amountText}";
+    //    }
+    //    // 버튼 리스너 초기화(재사용 풀링 시 중복 클릭 방지)
+    //    Button btn = GetButton((int)Buttons.Button_Purchase);
+    //    btn.onClick.RemoveAllListeners();
+
+    //    // 2. 결제 타입에 따른 동적 세팅 (우선순위 분기)
+    //    if (rData != null)
+    //    {
+    //        // [현금 결제 상품]
+    //        _purchaseId = rData.Id;
+
+    //        // 스토어에서 현지화된 가격 문자열 가져오기 (예: 1,500)
+    //        string price = Managers.IAPStore.GetLocalizedPrice(rData.Id);
+    //        GetTMP((int)Texts.Text_Price).text = price;
+
+    //        // 현금 결제는 재화 아이콘 숨김 처리
+    //        GetImage((int)Images.Image_CurrencyIcon).gameObject.SetActive(false);
+
+    //        if (rData.Rewards.Count > 0)
+    //        {
+    //            GetTMP((int)Texts.Text_Amount).text = $"x{rData.Rewards[0].Amount}";
+    //        }
+    //        // 현금 결제 이벤트 연결
+    //        btn.onClick.AddListener(() => Managers.IAPStore.PurchaseRealMoneyProduct(_purchaseId));
+    //    }
+    //    else if (vData != null)
+    //    {
+    //        // [가상 재화 결제 상품]
+    //        _purchaseId = vData.Id;
+
+    //        // 가격 정보 세팅 (Costs 리스트의 첫 번째 항목 기준)
+    //        var cost = vData.Costs[0];
+    //        GetTMP((int)Texts.Text_Price).text = cost.Amount.ToString("N0");
+
+    //        GetTMP((int)Texts.Text_Amount).text = $"x{vData.Rewards[0].Amount}";
+    //        // 재화 아이콘 활성화 및 세팅
+    //        GetImage((int)Images.Image_CurrencyIcon).gameObject.SetActive(true);
+    //        GetImage((int)Images.Image_CurrencyIcon).sprite = localData.currencyIcon;
+
+    //        // 가상 결제 이벤트 연결
+    //        btn.onClick.AddListener(() => Managers.VirtualStore.PurchaseVirtualItem(_purchaseId));
+    //    }
+    //    else
+    //    {
+    //        // [서버 데이터가 없는 로컬 상품] (무료 or 광고)
+    //        // 이때 대표님이 만들어두신 localData.type (Define.ShopItemType)을 활용합니다!
+    //        if (localData.type == Define.ShopItemType.GOLD_AD)
+    //        {
+    //            GetImage((int)Images.Image_CurrencyIcon).gameObject.SetActive(true);
+    //            GetTMP((int)Texts.Text_Price).gameObject.SetActive(false);
+
+    //            // 광고버튼 연결 (바깥쪽 async는 불필요하므로 제거)
+    //            btn.onClick.AddListener(() =>
+    //            {
+    //                // SO에 세팅해둔 placementId를 그대로 사용합니다!
+    //                Managers.AD.ShowRewardedAd(localData.placementId, (success) =>
+    //                {
+    //                    if (success)
+    //                    {
+    //                    }
+    //                    else
+    //                    {
+    //                        // 부활 -> 상점 골드로 로그 수정
+    //                        Debug.Log("상점 골드 광고 시청 실패 또는 취소.");
+    //                    }
+    //                });
+    //            });
+    //        }
+    //        else if (localData.type == Define.ShopItemType.GOLD_FREE)
+    //        {
+    //            GetImage((int)Images.Image_CurrencyIcon).gameObject.SetActive(false);
+    //            //GetTMP((int)Texts.Text_Price).text = "무료";
+    //            // "무료" 텍스트를 로컬라이제이션 테이블에서 키값으로 가져옵니다.
+    //            GetTMP((int)Texts.Text_Price).text = LocalizationSettings.StringDatabase.GetLocalizedString(UI_TABLE_NAME, "ShopItem_Free");
+    //            btn.onClick.AddListener(async () =>
+    //            {
+    //                // 1. 중복 클릭을 막기 위해 버튼을 즉시 잠급니다. (따닥 방지)
+    //                btn.interactable = false;
+
+    //                Managers.UI.ShowPopupUI<UI_LoadingPopup>();
+    //                // 2. 매니저에게 "보상 줘!" 라고 요청하고 결과를 기다립니다.
+    //                bool isSuccess = await Managers.IAPStore.ClaimDailyFreeRewardAsync(localData.rewardAmount);
+
+                    
+    //                // 3. 결과에 따른 UI 연출 처리
+    //                if (isSuccess)
+    //                {
+    //                    // 성공적으로 받았을 때
+    //                    GetTMP((int)Texts.Text_Price).text = LocalizationSettings.StringDatabase.GetLocalizedString(UI_TABLE_NAME, "ShopItem_Claimed");
+    //                    Managers.UI.ClosePopupUI();
+    //                }
+    //                else
+    //                {
+    //                    // 이미 받았거나 통신에 실패했을 때
+    //                    //GetTMP((int)Texts.Text_Price).text = "수령 완료";
+    //                    // 만약 단순 인터넷 오류로 실패한 거라면 유저가 다시 누를 수 있게 풀어줘야 합니다.
+    //                    btn.interactable = true; 
+    //                    Managers.UI.ClosePopupUI();
+    //                }
+    //            });
+    //        }
+    //    }
+    //}
+
     public void SetInfo(ShopItemDataSO localData, VirtualPurchaseDefinition vData = null, RealMoneyPurchaseDefinition rData = null)
     {
-        // 1. 공통 시각적 데이터 세팅 (클라이언트 SO 기준)
-        GetTMP((int)Texts.Text_Name).text = localData.title;
+        // 데이터 캐싱 (기억해두기)
+        _localData = localData;
+        _vData = vData;
+        _rData = rData;
+
+        // 1. 시각적 이미지 데이터 세팅 (이미지는 언어와 무관하므로 기존대로 처리)
         GetImage((int)Images.Image_Icon).sprite = localData.mainIcon;
-        if(localData.currencyIcon != null)
+        if (localData.currencyIcon != null)
         {
             GetImage((int)Images.Image_CurrencyIcon).sprite = localData.currencyIcon;
         }
-        
-        if (string.IsNullOrEmpty(localData.amountText))
+
+        // 버튼 리스너 초기화 및 연결
+        Button btn = GetButton((int)Buttons.Button_Purchase);
+        btn.onClick.RemoveAllListeners();
+
+        // 일일보상 받았으면 버튼 비활성화 및 텍스트 설정
+
+
+        // 결제 타입 분기 및 ID 세팅
+        if (rData != null)
+        {
+            _purchaseId = rData.Id;
+            btn.onClick.AddListener(() => Managers.IAPStore.PurchaseRealMoneyProduct(_purchaseId));
+        }
+        else if (vData != null)
+        {
+            _purchaseId = vData.Id;
+            btn.onClick.AddListener(() => Managers.VirtualStore.PurchaseVirtualItem(_purchaseId));
+        }
+        else
+        {
+            if (localData.type == Define.ShopItemType.GOLD_AD)
+            {
+                btn.onClick.AddListener(() =>
+                {
+                    Managers.AD.ShowRewardedAd(localData.placementId, (success) => { });
+                });
+            }
+            else if (localData.type == Define.ShopItemType.GOLD_FREE)
+            {
+                btn.onClick.AddListener(async () =>
+                {
+                    btn.interactable = false;
+                    Managers.UI.ShowPopupUI<UI_LoadingPopup>();
+                    bool isSuccess = await Managers.IAPStore.ClaimDailyFreeRewardAsync(localData.rewardAmount);
+
+                    Managers.UI.ClosePopupUI();
+                    if (isSuccess)
+                    {
+
+                        // 상태와 텍스트를 즉시 새로고침
+                        RefreshItemState();
+                        UpdateLocalizationTexts();
+                    }
+                    else
+                    {
+                        btn.interactable = true;
+                    }
+                });
+            }
+        }
+
+        // 2. [순서 핵심] 현재 아이템의 구매 상태(버튼 interactable)를 먼저 갱신합니다.
+        RefreshItemState();
+
+        // 2. 실제 언어의 영향을 받는 텍스트들만 따로 모아서 그려줍니다.
+        UpdateLocalizationTexts();
+    }
+
+    //  [추가] 오직 '다국어 번역'이 필요한 텍스트 컴포넌트들만 실시간으로 새로고침하는 핵심 메서드
+    private void UpdateLocalizationTexts()
+    {
+        if (_localData == null) return;
+
+        // 1) 아이템 타이틀 다국어 반영
+        GetTMP((int)Texts.Text_Name).text = _localData.localizedTitle.GetLocalizedString();
+
+        // 2) 수량 텍스트 처리
+        if (string.IsNullOrEmpty(_localData.amountText))
         {
             GetTMP((int)Texts.Text_Amount).gameObject.SetActive(false);
         }
         else
         {
-            GetTMP((int)Texts.Text_Amount).text = localData.amountText;
+            GetTMP((int)Texts.Text_Amount).gameObject.SetActive(true);
+            GetTMP((int)Texts.Text_Amount).text = $"x{_localData.amountText}";
         }
-        // 버튼 리스너 초기화(재사용 풀링 시 중복 클릭 방지)
-        Button btn = GetButton((int)Buttons.Button_Purchase);
-        btn.onClick.RemoveAllListeners();
 
-        // 2. 결제 타입에 따른 동적 세팅 (우선순위 분기)
-        if (rData != null)
+        // 3) 가격 및 버튼 상태 텍스트 다국어 반영
+        if (_rData != null)
         {
-            // [현금 결제 상품]
-            _purchaseId = rData.Id;
-
-            // 스토어에서 현지화된 가격 문자열 가져오기 (예: 1,500)
-            string price = Managers.IAPStore.GetLocalizedPrice(rData.Id);
+            // 현금 상품 현지화 가격 (스토어가 알아서 통화 기호를 맞춰줌)
+            string price = Managers.IAPStore.GetLocalizedPrice(_rData.Id);
             GetTMP((int)Texts.Text_Price).text = price;
-
-            // 현금 결제는 재화 아이콘 숨김 처리
             GetImage((int)Images.Image_CurrencyIcon).gameObject.SetActive(false);
 
-            if (rData.Rewards.Count > 0)
+            if (_rData.Rewards.Count > 0)
             {
-                GetTMP((int)Texts.Text_Amount).text = $"x{rData.Rewards[0].Amount}";
+                GetTMP((int)Texts.Text_Amount).text = $"x{_rData.Rewards[0].Amount}";
             }
-            // 현금 결제 이벤트 연결
-            btn.onClick.AddListener(() => Managers.IAPStore.PurchaseRealMoneyProduct(_purchaseId));
         }
-        else if (vData != null)
+        else if (_vData != null)
         {
-            // [가상 재화 결제 상품]
-            _purchaseId = vData.Id;
-
-            // 가격 정보 세팅 (Costs 리스트의 첫 번째 항목 기준)
-            var cost = vData.Costs[0];
+            // 가상 재화 상품 가격
+            var cost = _vData.Costs[0];
             GetTMP((int)Texts.Text_Price).text = cost.Amount.ToString("N0");
-
-            GetTMP((int)Texts.Text_Amount).text = $"x{vData.Rewards[0].Amount}";
-            // 재화 아이콘 활성화 및 세팅
             GetImage((int)Images.Image_CurrencyIcon).gameObject.SetActive(true);
-            GetImage((int)Images.Image_CurrencyIcon).sprite = localData.currencyIcon;
-
-            // 가상 결제 이벤트 연결
-            btn.onClick.AddListener(() => Managers.VirtualStore.PurchaseVirtualItem(_purchaseId));
+            if(_vData.Rewards.Count > 0)
+            {
+                GetTMP((int)Texts.Text_Amount).text = $"x{_vData.Rewards[0].Amount}";
+            }
         }
         else
         {
-            // [서버 데이터가 없는 로컬 상품] (무료 or 광고)
-            // 이때 대표님이 만들어두신 localData.type (Define.ShopItemType)을 활용합니다!
-            if (localData.type == Define.ShopItemType.GOLD_AD)
+            // 로컬 전용 상품 (무료 / 광고)
+            if (_localData.type == Define.ShopItemType.GOLD_AD)
             {
                 GetImage((int)Images.Image_CurrencyIcon).gameObject.SetActive(true);
                 GetTMP((int)Texts.Text_Price).gameObject.SetActive(false);
-
-                // 광고버튼 연결 (바깥쪽 async는 불필요하므로 제거)
-                btn.onClick.AddListener(() =>
-                {
-                    // SO에 세팅해둔 placementId를 그대로 사용합니다!
-                    Managers.AD.ShowRewardedAd(localData.placementId, (success) =>
-                    {
-                        if (success)
-                        {
-                        }
-                        else
-                        {
-                            // 부활 -> 상점 골드로 로그 수정
-                            Debug.Log("상점 골드 광고 시청 실패 또는 취소.");
-                        }
-                    });
-                });
             }
-            else if (localData.type == Define.ShopItemType.GOLD_FREE)
+            else if (_localData.type == Define.ShopItemType.GOLD_FREE)
             {
                 GetImage((int)Images.Image_CurrencyIcon).gameObject.SetActive(false);
-                GetTMP((int)Texts.Text_Price).text = "무료";
 
-                btn.onClick.AddListener(async () =>
-                {
-                    // 1. 중복 클릭을 막기 위해 버튼을 즉시 잠급니다. (따닥 방지)
-                    btn.interactable = false;
+                // 현재 버튼이 비활성화 상태(이미 받음)라면 '수령 완료' 번역을, 아니면 '무료' 번역을 유연하게 출력합니다.
+                Button btn = GetButton((int)Buttons.Button_Purchase);
+                string textKey = btn.interactable ? "ShopItem_Free" : "ShopItem_Claimed";
 
-                    Managers.UI.ShowPopupUI<UI_LoadingPopup>();
-                    // 2. 매니저에게 "보상 줘!" 라고 요청하고 결과를 기다립니다.
-                    bool isSuccess = await Managers.IAPStore.ClaimDailyFreeRewardAsync(localData.rewardAmount);
-
-                    
-                    // 3. 결과에 따른 UI 연출 처리
-                    if (isSuccess)
-                    {
-                        // 성공적으로 받았을 때
-                        GetTMP((int)Texts.Text_Price).text = "수령 완료";
-                        Managers.UI.ClosePopupUI();
-                    }
-                    else
-                    {
-                        // 이미 받았거나 통신에 실패했을 때
-                        //GetTMP((int)Texts.Text_Price).text = "수령 완료";
-                        // 만약 단순 인터넷 오류로 실패한 거라면 유저가 다시 누를 수 있게 풀어줘야 합니다.
-                        btn.interactable = true; 
-                        Managers.UI.ClosePopupUI();
-                    }
-                });
+                GetTMP((int)Texts.Text_Price).text = LocalizationSettings.StringDatabase.GetLocalizedString(UI_TABLE_NAME, textKey);
             }
+        }
+    }
+    // [추가] 오늘 이미 무료 상품을 수령했는지 체크하여 버튼의 활성 상태를 제어하는 함수
+    private void RefreshItemState()
+    {
+        if (_localData == null) return;
+
+        Button btn = GetButton((int)Buttons.Button_Purchase);
+
+        if (_localData.type == Define.ShopItemType.GOLD_FREE)
+        {
+            // 1. 한국 시간(KST) 오늘 날짜 구하기
+            DateTime kstNow = DateTime.UtcNow.AddHours(9);
+            string todayStr = kstNow.ToString("yyyy-MM-dd");
+
+            // 2. 로그인할 때 받아와서 클라 메모리에 들고 있는 최신 PlayerData를 참조합니다.
+            // (주의: 대표님의 클라이언트 Managers 구조 중 PlayerData 객체 접근 경로로 수정해 주세요!)
+            string lastClaimDate = Managers.PlayerData.PlayerDataLocal.LastDailyFreeGoldClaimDate;
+
+            // 3. 오늘 이미 받았다면 버튼을 잠그고(false), 안 받았다면 열어줍니다(true).
+            bool isAlreadyClaimed = (lastClaimDate == todayStr);
+            btn.interactable = !isAlreadyClaimed;
+        }
+        else
+        {
+            // 무료 상품이 아니거나 일회성 패키지가 아니라면 기본적으로 버튼 활성화
+            btn.interactable = true;
         }
     }
 }
