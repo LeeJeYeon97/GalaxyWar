@@ -56,6 +56,10 @@ public abstract class BaseBulletStat
 [Serializable]
 public class NormalBulletStat : BaseBulletStat
 {
+    [Header("PierceBullet Stat Settings")]
+    public Stat pierceCount = new Stat();
+    public Stat pierceDamageDecreaseValue = new Stat();
+
     public override void Init(BulletStatDataSO data)
     {
         // 1. 일단 부모(Base)한테 기본 공통 스탯 세팅을 맡깁니다.
@@ -63,7 +67,8 @@ public class NormalBulletStat : BaseBulletStat
 
         if (data is NormalBulletStatDataSO da)
         {
-            //
+            pierceCount.Init(da.pierceBulletStat.pierceCount);
+            pierceDamageDecreaseValue.Init(da.pierceBulletStat.pierceDamageDecreaseValue);
         }
     }
 }

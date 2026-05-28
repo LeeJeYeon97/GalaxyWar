@@ -109,13 +109,19 @@ public class UI_AbilityCard : UI_Base
             descText.text = string.Format(localizedFormat, upgradeValues);
         }
 
-        if (nextLevel >= Managers.Ability.GetMaxLevel(_data.type))
+        if(data.type == AbilityType.Passive_PlayerHeal)
+        {
+            levelText.gameObject.SetActive(false);
+        }
+        else if (nextLevel >= Managers.Ability.GetMaxLevel(_data.type))
         {
             levelText.text = $"Lv. {currentLevel} -> Lv. MAX";
+            levelText.gameObject.SetActive(true);
         }
         else
         {
             levelText.text = $"Lv. {currentLevel} -> Lv. {nextLevel}";
+            levelText.gameObject.SetActive(true);
         }
     }
 }

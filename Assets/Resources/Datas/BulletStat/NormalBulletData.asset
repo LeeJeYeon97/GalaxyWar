@@ -22,3 +22,6 @@ MonoBehaviour:
     bounceCount: 0
   originalPrefab: {fileID: 5676908171982591740, guid: 0a044d58a10325a46b08543d8549e3d6, type: 3}
   isReload: 1
+  pierceBulletStat:
+    pierceCount: 0
+    pierceDamageDecreaseValue: 20

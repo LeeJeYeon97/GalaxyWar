@@ -104,7 +104,7 @@ public class StatManager
         Debug.LogWarning($"{type.ToString()}에 해당하는 스탯이 없습니다!");
         return null;
     }
-    public MeteorStat GetRandomMeteorStat()
+    public MeteorStat GetRandomSpawnMeteorStat()
     {
         // 딕셔너리가 비어있으면 null 반환
         if (meteorStatDict.Count <= 0) return null;
@@ -123,6 +123,7 @@ public class StatManager
             }
 
             if ((int)currentPhase < (int)stat.spawnPhase) continue;
+            
 
             validStats.Add(stat);
         }
@@ -210,7 +211,4 @@ public class StatManager
         _isSlowed = false;
         _playerSlowCoroutine = null;
     }
-
-
-
 }

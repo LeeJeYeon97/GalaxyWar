@@ -4927,6 +4927,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Poolable
   IsUsing: 0
+  IsPooled: 1
 --- !u!114 &4692495200284779264
 MonoBehaviour:
   m_ObjectHideFlags: 0

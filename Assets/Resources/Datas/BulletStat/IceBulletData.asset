@@ -17,12 +17,12 @@ MonoBehaviour:
     CardIcon: {fileID: 21300000, guid: 1bcbd2d9465d8d44aa7988ab24e20051, type: 3}
     hudIcon: {fileID: 21300000, guid: 8eea7e0ed90894b46a526df7493717a4, type: 3}
     chance: 30
-    damage: 5
+    damage: 10
     speed: 10
     bounceCount: 0
   originalPrefab: {fileID: 495375208572652426, guid: 564273c4e0c174442ae68524cb8adb82, type: 3}
   isReload: 1
   iceBulletStat:
-    slowValue: 0.3
+    slowValue: 20
     slowTime: 1.5
     freezeTime: 2

@@ -26,7 +26,7 @@ public class PlayerSplitBulletAbilityDataSO : PlayerAbilityDataSO
             return null;
         }
         // 폭발탄은 수치가 2개니까 2개만 배열로 묶어서 줍니다.
-        return new object[] { splitIncreases[nextLevel].chanceIncrease, splitIncreases[nextLevel].countIncrease };
+        return new object[] { splitIncreases[nextLevel].countIncrease };
     }
     public override void ApplyLevelUp(int level, PlayerStat targetStat)
     {

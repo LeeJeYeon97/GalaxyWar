@@ -30,6 +30,11 @@ public class MeteorController : BaseController, IDamageable
     [SerializeField] private float _gizmoRadius = 3f;    // 씬 창에서 눈으로 볼 테스트용 반경
     [SerializeField] private Color _gizmoColor = Color.green; // 기즈모 선 색상
 
+    [Header("밀어내기 및 데미지 설정")]
+    public float pushForce = 5f;
+    public float damageCooldown = 0.5f; // 메테오가 플레이어를 지질 때의 데미지 간격
+    private float _currentDamageTimer = 0f;
+
     // MeteorController.cs 내부
     public Coroutine ActionCoroutine; // 행동(패턴) 코루틴을 저장할 변수
 
@@ -66,15 +71,46 @@ public class MeteorController : BaseController, IDamageable
             _myHpBar.SetTarget(this.transform); // 나를 따라다니라고 설정
         }
     }
-
-    public void OnCollisionEnter2D(Collision2D collision)
+    //  닿는 순간 즉시 1번 데미지를 줍니다.
+    private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.CompareTag("Player"))
+        if (collision.CompareTag("Player"))
         {
-            PlayerController player = collision.gameObject.GetComponent<PlayerController>();
-            if (player == null) return;
+            //  TryGetComponent 대신 GetComponentInParent를 사용하고 null인지 체크합니다.
+            PlayerController player = collision.GetComponentInParent<PlayerController>();
+            if (player != null)
+            {
+                player.OnDamage(Stat.Damage.TotalValue);
+                _currentDamageTimer = 0f; // 데미지를 줬으니 타이머 초기화
+            }
+        }
+    }
+    // 닿아있는 동안에는 '계속 밀어내기' + '주기적으로 데미지 주기'를 수행합니다.
+    public void OnTriggerStay2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Player"))
+        {
+            // 1. 밀어내기는 매 프레임 부드럽게 실행
+            Rigidbody2D playerRb = collision.attachedRigidbody;
+            if (playerRb != null)
+            {
+                Vector2 pushDirection = (collision.transform.position - transform.position).normalized;
+                playerRb.AddForce(pushDirection * pushForce, ForceMode2D.Force);
+            }
 
-            player.OnDamage(Stat.Damage.TotalValue);
+            // 2. 데미지는 Time.fixedDeltaTime을 더해가며 쿨타임이 찼을 때만 실행
+            _currentDamageTimer += Time.fixedDeltaTime;
+            if (_currentDamageTimer >= damageCooldown)
+            {
+                _currentDamageTimer = 0f; // 타이머 리셋
+
+                //  여기서도 부모까지 탐색하도록 변경합니다.
+                PlayerController player = collision.GetComponentInParent<PlayerController>();
+                if (player != null)
+                {
+                    player.OnDamage(Stat.Damage.TotalValue);
+                }
+            }
         }
     }
     private void OnEnable()
@@ -117,10 +153,8 @@ public class MeteorController : BaseController, IDamageable
                 damage *= 1.5f;
 
                 // 파티클 터트리기
-                GameObject go = Managers.Resource.Instantiate("Particle/LightningChain_Hit1");
+                Managers.Effect.Play(EffectType.Meteor_ShockHit, transform.position);
                 Managers.Sound.Play(Define.SoundID.Sfx_Lightning_Hit);
-
-                go.transform.position = transform.position;
             }
 
             _currentHp -= damage;
@@ -186,7 +220,9 @@ public class MeteorController : BaseController, IDamageable
     // 오브젝트가 선택되었을 때만 그리고 싶다면 OnDrawGizmos 대신 OnDrawGizmosSelected를 사용하셔도 좋습니다.
     private void OnDrawGizmos()
     {
-        // 1. 인스펙터에서 스위치를 껐다면 그리지 않음
+        if (!Application.isPlaying) return;
+
+            // 1. 인스펙터에서 스위치를 껐다면 그리지 않음
         if (!_showGizmo) return;
 
         // 2. 에디터(인스펙터)에서 설정한 테스트용 기즈모 그리기 (게임 플레이 전에도 보임!)

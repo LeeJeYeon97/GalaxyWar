@@ -5,71 +5,46 @@ using UnityEngine;
 public class MeteorVisual : MonoBehaviour
 {
     private MeteorController _controller;
-    public List<GameObject> visuals = new List<GameObject>();
-    private MeshRenderer _meshRenderer;
+    // 1. MeshRenderer 대신 SpriteRenderer로 교체합니다.
+    private SpriteRenderer _spriteRenderer;
     private Coroutine _flashCoroutine;
+
+    //  MPB를 캐싱해두고 재사용하기 위한 변수
+    private MaterialPropertyBlock _mpb;
+
+    // Shader.PropertyToID를 쓰면 문자열 연산을 매번 하지 않아 성능이 더 좋습니다.
+    private static readonly int FlashColorID = Shader.PropertyToID("_FlashColor");
 
     private void Awake()
     {
         _controller = GetComponent<MeteorController>();
+
+        // 메테오 이미지(Sprite)가 부모에 있는지 자식에 있는지에 따라 맞춰줍니다.
+        // 만약 자식 오브젝트에 이미지가 있다면 GetComponentInChildren<SpriteRenderer>()를 쓰세요!
+        _spriteRenderer = GetComponent<SpriteRenderer>();
+
+        // Awake에서 딱 한 번만 할당합니다.
+        _mpb = new MaterialPropertyBlock();
     }
 
     public void Init()
     {
-        if (visuals == null || visuals.Count == 0) return;
-
-        int randomIndex = UnityEngine.Random.Range(0, visuals.Count);
-        _meshRenderer = visuals[randomIndex].GetComponent<MeshRenderer>();
-
-        for (int i = 0; i < visuals.Count; i++)
-        {
-            if (visuals[i] != null) visuals[i].SetActive(i == randomIndex);
-        }
-
-        SetupCollider(randomIndex);
-    }
-
-    private void SetupCollider(int index)
-    {
-        MeshFilter meshFilter = visuals[index].GetComponent<MeshFilter>();
-        if (meshFilter == null || meshFilter.sharedMesh == null) return;
-
-        Vector3 meshSize = meshFilter.sharedMesh.bounds.size;
-        Vector2 finalSize = new Vector2(
-            meshSize.x * visuals[index].transform.localScale.x,
-            meshSize.y * visuals[index].transform.localScale.y
-        );
-        Vector3 center = meshFilter.sharedMesh.bounds.center;
-
-        BoxCollider2D boxCol = GetComponent<BoxCollider2D>();
-        if (boxCol != null)
-        {
-            boxCol.size = finalSize;
-            boxCol.offset = new Vector2(center.x, center.y);
-        }
-
-        CircleCollider2D circleCol = GetComponent<CircleCollider2D>();
-        if (circleCol != null)
-        {
-            circleCol.radius = Mathf.Max(finalSize.x, finalSize.y) / 2f;
-            circleCol.offset = new Vector2(center.x, center.y);
-        }
+        // 오브젝트 풀에서 꺼낼 때 혹시 하얗게 남아있을지 모르는 플래시를 초기화
+        ResetFlashColor();
+        ReturnColor();
     }
 
     public void SetColor(Color color)
     {
-        if (_meshRenderer != null)
+        // 2. 복잡한 MaterialPropertyBlock 없이 직관적으로 색상을 바꿉니다.
+        if (_spriteRenderer != null)
         {
-            MaterialPropertyBlock mpb = new MaterialPropertyBlock();
-            _meshRenderer.GetPropertyBlock(mpb);
-            mpb.SetColor("_BaseColorTint", color);
-            _meshRenderer.SetPropertyBlock(mpb);
+            _spriteRenderer.color = color;
         }
     }
-
     public void ReturnColor()
     {
-        if (_meshRenderer != null && _controller.Status != null)
+        if (_spriteRenderer != null && _controller.Status != null)
         {
             SetColor(_controller.Status.GetCurrentStatusColor());
         }
@@ -78,14 +53,37 @@ public class MeteorVisual : MonoBehaviour
     public void PlayHitFlash()
     {
         if (_flashCoroutine != null) StopCoroutine(_flashCoroutine);
-        _flashCoroutine = StartCoroutine(CoHitFlash());
+
+        // 풀링 과정에서 오브젝트가 꺼져있을 때 코루틴이 돌면 에러가 날 수 있으므로 방어 코드 추가
+        if (gameObject.activeInHierarchy)
+        {
+            _flashCoroutine = StartCoroutine(CoHitFlash());
+        }
     }
 
+    // 2. 피격 시 번쩍이는 발광(Glow) 효과만 MPB를 통해 셰이더로 넘겨줍니다!
     private IEnumerator CoHitFlash()
     {
-        if (_meshRenderer == null) yield break;
-        SetColor(new Color(5f, 5f, 5f, 1f));
+        if (_spriteRenderer == null) yield break;
+
+        //  플래시 ON (HDR 컬러로 눈부시게!)
+        _spriteRenderer.GetPropertyBlock(_mpb);
+        _mpb.SetColor(FlashColorID, new Color(3f, 3f, 3f, 1f));
+        _spriteRenderer.SetPropertyBlock(_mpb);
+
         yield return new WaitForGameTime(0.1f);
-        ReturnColor();
+
+        //  플래시 OFF (원상 복구)
+        ResetFlashColor();
+    }
+
+    private void ResetFlashColor()
+    {
+        if (_spriteRenderer != null)
+        {
+            _spriteRenderer.GetPropertyBlock(_mpb);
+            _mpb.SetColor(FlashColorID, Color.white); // 플레이어 셰이더 기준 기본 중립 색상
+            _spriteRenderer.SetPropertyBlock(_mpb);
+        }
     }
 }

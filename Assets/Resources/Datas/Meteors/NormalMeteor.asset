@@ -22,6 +22,7 @@ MonoBehaviour:
   Score: 100
   Exp: 10
   spawnPhase: 0
+  targetChase: 1
   dropTable:
   - itemType: 3
     dropRate: 1

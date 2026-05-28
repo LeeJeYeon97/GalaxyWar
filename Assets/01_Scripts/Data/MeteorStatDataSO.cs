@@ -30,6 +30,8 @@ public class MeteorStatDataSO : ScriptableObject
 
     public Define.PhaseType spawnPhase;
 
+    public bool targetChase;
+
     [Header("Drop Item Settings")]
     public List<DropItemRate> dropTable = new List<DropItemRate>();
 

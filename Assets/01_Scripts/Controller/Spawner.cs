@@ -28,7 +28,6 @@ public class Spawner : MonoBehaviour
 
     IEnumerator CoSpawnMeteor()
     {
-        //  1. 치명적 버그 수정: 게임 오버가 아닐 때만 무한 반복되도록 변경!
         // StopSpawn()이 호출되기 전까지는 코루틴이 스스로 죽지 않고 계속 살아있게 합니다.
         while (Managers.Game.currentGameState != GameState.GameOver)
         {
@@ -79,7 +78,7 @@ public class Spawner : MonoBehaviour
             }
 
             // 2. 풀링 매니저에서 운석 꺼내기
-            MeteorStat stat = Managers.Stat.GetRandomMeteorStat();
+            MeteorStat stat = Managers.Stat.GetRandomSpawnMeteorStat();
             MeteorController meteor = Managers.Resource.Instantiate(stat.originalPrefabs).GetComponent<MeteorController>();
 
             if (meteor != null)

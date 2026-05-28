@@ -6,9 +6,9 @@ public class MapManager
     [Range(0, 0.5f)] public float topMargin = 0f;    // 상단 10% 비움
     [Range(0, 0.5f)] public float bottomMargin = 0f; // 하단 15% 비움
 
-    public float wallThickness = 0.03f; // 벽의 두께
-    public Color wallColor = new Color32(40, 123, 255, 255); // 벽의 색상 설정
-    public Sprite wallSprite;
+    [Header("Wall Settings")]
+    public float wallThickness = 0.03f;       // 시각적인 벽의 두께 (게임 화면에 보이는 얇은 선)
+    public float colliderThickness = 50f;     // 터널링 방지용 물리 두께 (화면 밖으로 50만큼 뻗어나감)
     private Camera mainCam;
 
     public Vector2 PlayZoneMin { get; private set; }
@@ -20,10 +20,14 @@ public class MapManager
     private Transform topWall, bottomWall, leftWall, rightWall;
 
     public Transform root;
+    // 프리팹 원본의 스프라이트 사이즈를 저장할 변수
+    private float baseWidth = 1f;
+    private float baseHeight = 1f;
+
     public void Init()
     {
         mainCam = Camera.main;
-        wallSprite = Managers.Resource.Load<Sprite>("Sprites/Wall");
+
         root = new GameObject("@Map").transform;
 
         // 1. 처음 한 번만 벽을 생성하여 변수에 할당
@@ -36,10 +40,24 @@ public class MapManager
     // 벽을 처음에 생성하는 로직
     void GenerateInitialWalls()
     {
-        topWall = CreateWall("TopWall");
-        bottomWall = CreateWall("BottomWall");
-        leftWall = CreateWall("LeftWall");
-        rightWall = CreateWall("RightWall");
+        topWall = Managers.Resource.Instantiate("Object/Wall").transform;
+        bottomWall = Managers.Resource.Instantiate("Object/Wall").transform;
+        leftWall = Managers.Resource.Instantiate("Object/Wall").transform;
+        rightWall = Managers.Resource.Instantiate("Object/Wall").transform;
+
+        // [수정] 모든 벽을 root의 자식으로 깔끔하게 넣습니다.
+        topWall.parent = root;
+        bottomWall.parent = root;
+        leftWall.parent = root;
+        rightWall.parent = root;
+
+        // [수정] 에러가 나던 wallSprite 대신, 생성된 프리팹에서 원본 크기를 알아옵니다!
+        SpriteRenderer sr = topWall.GetComponent<SpriteRenderer>();
+        if (sr != null && sr.sprite != null)
+        {
+            baseWidth = sr.sprite.bounds.size.x;
+            baseHeight = sr.sprite.bounds.size.y;
+        }
     }
 
     //  핵심: 카메라 사이즈가 변할 때마다 호출될 함수
@@ -82,10 +100,6 @@ public class MapManager
         Vector2 center = (PlayZoneMin + PlayZoneMax) / 2f;
         float half = wallThickness / 2f;
 
-        // 추가된 핵심: 어떤 스프라이트를 넣어도 1x1 단위로 맞추기 위한 마법의 보정값
-        float baseWidth = wallSprite.bounds.size.x;
-        float baseHeight = wallSprite.bounds.size.y;
-
         // 스케일 계산 시 baseWidth/baseHeight로 나눠줍니다!
         topWall.position = new Vector2(center.x, PlayZoneMax.y + half);
         topWall.localScale = new Vector3(screenWidth / baseWidth, wallThickness / baseHeight, 1f);
@@ -98,20 +112,37 @@ public class MapManager
 
         rightWall.position = new Vector2(PlayZoneMax.x + half, center.y);
         rightWall.localScale = new Vector3(wallThickness / baseWidth, screenHeight / baseHeight, 1f);
+
+        // 2. 터널링 방지: 화면 밖으로만 무식하게 두꺼워지도록 콜라이더를 덮어씌웁니다!
+        ApplyThickCollider(topWall, isHorizontal: true, direction: 1f);    // 위로 두껍게
+        ApplyThickCollider(bottomWall, isHorizontal: true, direction: -1f); // 아래로 두껍게
+        ApplyThickCollider(leftWall, isHorizontal: false, direction: -1f);  // 왼쪽으로 두껍게
+        ApplyThickCollider(rightWall, isHorizontal: false, direction: 1f);  // 오른쪽으로 두껍게
     }
 
-    Transform CreateWall(string name)
+    //  터널링 방지용 핵심 함수
+    void ApplyThickCollider(Transform wall, bool isHorizontal, float direction)
     {
-        GameObject wall = new GameObject(name);
-        wall.transform.parent = root;
-        wall.AddComponent<SpriteRenderer>().sprite = wallSprite;
-        wall.GetComponent<SpriteRenderer>().color = wallColor;
-        wall.AddComponent<BoxCollider2D>();
-        wall.tag = "Wall";
-        wall.layer = LayerMask.NameToLayer("Wall");
-        return wall.transform;
-    }
+        BoxCollider2D col = wall.GetComponent<BoxCollider2D>();
+        if (col == null) return;
 
+        // Transform의 스케일이 작아져 있으므로, 그 비율만큼 콜라이더를 뻥튀기해줘야 실제 50의 두께가 됩니다.
+        if (isHorizontal)
+        {
+            float localThickness = colliderThickness / wall.localScale.y;
+            col.size = new Vector2(baseWidth, localThickness);
+
+            // 플레이 존(안쪽)으로는 침범하지 않고 화면 밖으로만 두꺼워지도록 중심점(Offset)을 밖으로 밀어냅니다.
+            col.offset = new Vector2(0, direction * (localThickness - baseHeight) / 2f);
+        }
+        else
+        {
+            float localThickness = colliderThickness / wall.localScale.x;
+            col.size = new Vector2(localThickness, baseHeight);
+
+            col.offset = new Vector2(direction * (localThickness - baseWidth) / 2f, 0);
+        }
+    }
 
     //void OnDrawGizmos()
     //{

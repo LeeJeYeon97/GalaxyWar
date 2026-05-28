@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: PlayerStatData
   m_EditorClassIdentifier: Assembly-CSharp::PlayerStatDataSO
   statData:
-    speed: 2
+    speed: 2.5
     maxHp: 100
     maxDefenceCount: 0
     reloadCount: 7
@@ -31,7 +31,7 @@ MonoBehaviour:
     maxBurstFullChargeTime: 60
     isMultiShotEnabled: 0
     multiShotCount: 0
-    multiShotChance: 0
+    multiShotChance: 40
     multiShotAngle: 45
     isHomingShotEnabled: 0
     homingShotDelay: 1.5

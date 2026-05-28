@@ -21,6 +21,7 @@ public class StageManager
 
     private float _currentWaveSpawnDelayRate = 1f;
     private float _currentWaveHpRate = 1f;
+    private float _currentWaveSpeedRate = 1f;
 
     // 처음 시작할 때 페이즈가 강제 갱신되도록 돕는 스위치
     private bool _isPhaseInit = false;
@@ -118,6 +119,7 @@ public class StageManager
 
                 _currentWaveSpawnDelayRate = targetWave.waveSpawnDelayRate;
                 _currentWaveHpRate = targetWave.waveHpRate;
+                _currentWaveSpeedRate = targetWave.speedRate;
 
                 // 스폰 딜레이 최종 갱신
                 CurrentSpawnDelay = Mathf.Max(balanceData.minSpawnDelay, _stageBaseSpawnDelay * _currentWaveSpawnDelayRate);
@@ -153,6 +155,13 @@ public class StageManager
         float finalHp = (meteorBaseHp + _stageHpBonus) * _stageHpMultiplier * _currentWaveHpRate;
 
         return finalHp;
+    }
+    public float GetCalculatedMeteorSpeed(float meteorBaseSpeed)
+    {
+
+        float finalSpeed = (meteorBaseSpeed * _currentWaveSpeedRate);
+
+        return finalSpeed;
     }
     public void Clear()
     {

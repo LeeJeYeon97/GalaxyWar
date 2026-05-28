@@ -40,8 +40,6 @@ public class PlayerController : BaseController, IDamageable
 
     public SpriteRenderer sr;
 
-    public GameObject burstBoost_1;
-    public GameObject burstBoost_2;
     public GameObject shield;
     public float hitMaxStrength = 5f;
     public float hitRadius = 2f;
@@ -49,9 +47,15 @@ public class PlayerController : BaseController, IDamageable
     public bool shieldhit = false;
 
     public UI_HpWarningPopup warningpopup;
+
+    // 1. 클래스 상단에 변수 캐싱 (매번 생성하지 않기 위해)
+    private MaterialPropertyBlock _mpb;
+    private static readonly int FlashColorID = Shader.PropertyToID("_FlashColor");
+
     public void Init()
     {
-
+        //2. 게임 시작할 때 딱 한 번만 바구니를 만들어 둡니다!
+        _mpb = new MaterialPropertyBlock();
         mainCam = Camera.main;
         shieldCoolTime = 0;
         // 스탯 데이터 세팅
@@ -70,8 +74,6 @@ public class PlayerController : BaseController, IDamageable
         // HUD업데이트 이벤트 발생
         OnStatusEvent();
 
-        burstBoost_1.gameObject.SetActive(false);
-        burstBoost_2.gameObject.SetActive(false);
         shield.gameObject.SetActive(false);
         // 씬에 있는 Global Volume을 찾아 효과 가져오기
         _volume = GameObject.FindFirstObjectByType<Volume>();
@@ -274,25 +276,21 @@ public class PlayerController : BaseController, IDamageable
         // 카메라 쉐이크
         mainCam.transform.DOShakePosition(0.2f, 0.5f, 20, 90f).SetUpdate(true);
 
-        // 다시 PropertyBlock 부활!
-        MaterialPropertyBlock mpb = new MaterialPropertyBlock();
-
-        // 주의: 우리가 아까 셰이더 그래프에서 만든 변수 이름 Reference ("_FlashColor")를 써야 합니다!
-        string colorProp = "_FlashColor";
-
         bool isFlash = false;
 
         while (elapsed < Stat.hitCooldown)
         {
             if (sr != null)
             {
-                sr.GetPropertyBlock(mpb);
+                //  4. 새로 만들지 않고, 아까 만들어둔 _mpb 바구니를 재사용합니다!
+                sr.GetPropertyBlock(_mpb);
 
                 // 플래시 상태면 엄청 밝은 흰색, 아니면 그냥 원래 기본 색상(흰색)
                 Color targetColor = isFlash ? new Color(2f, 2f, 2f, 1f) : Color.white;
 
-                mpb.SetColor(colorProp, targetColor);
-                sr.SetPropertyBlock(mpb);
+                // 문자열 "_FlashColor" 대신 미리 찾아둔 ID 사용
+                _mpb.SetColor(FlashColorID, targetColor);
+                sr.SetPropertyBlock(_mpb);
 
                 isFlash = !isFlash;
             }
@@ -304,9 +302,9 @@ public class PlayerController : BaseController, IDamageable
         // 무적 종료 시 원상 복구
         if (sr != null)
         {
-            sr.GetPropertyBlock(mpb);
-            mpb.SetColor(colorProp, Color.white);
-            sr.SetPropertyBlock(mpb);
+            sr.GetPropertyBlock(_mpb);
+            _mpb.SetColor(FlashColorID, Color.white);
+            sr.SetPropertyBlock(_mpb);
         }
 
         if(shieldhit)
@@ -376,9 +374,6 @@ public class PlayerController : BaseController, IDamageable
             _isBurst = true;
             Managers.Sound.Play(Define.SoundID.Sfx_BurstModeOn);
 
-            // 이펙트 켜기
-            burstBoost_1.gameObject.SetActive(true);
-            burstBoost_2.gameObject.SetActive(true);
             StartCoroutine(BurstRoutine());
         }
     }
@@ -390,7 +385,7 @@ public class PlayerController : BaseController, IDamageable
             .OnUpdate(() =>
             {
                 Managers.Map.UpdateMap();
-                Managers.Effect.Play(EffectType.Screen_BurstMode, Vector3.zero);
+                //Managers.Effect.Play(EffectType.Screen_BurstMode, Vector3.zero);
             });
 
 
@@ -420,10 +415,6 @@ public class PlayerController : BaseController, IDamageable
         Stat.reloadTime.SetForceZero(false);
         currentBurst = 0;
         _isBurst = false;
-
-
-        burstBoost_1.gameObject.SetActive(false);
-        burstBoost_2.gameObject.SetActive(false);
 
         mainCam.DOOrthoSize(Managers.Data.GameData.gamePlayeSize, 0.3f)
             .SetEase(Ease.OutCubic)
@@ -508,5 +499,14 @@ public class PlayerController : BaseController, IDamageable
 
         OnStatusEvent();
     }
+    public void HealCurrentHp(float value)
+    {
+        if (value <= 0) return;
 
+        currentHp += value;
+        if (currentHp >= Stat.maxHp.TotalValue)
+        {
+            currentHp = Stat.maxHp.TotalValue;
+        }
+    }
 }

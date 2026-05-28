@@ -18,12 +18,12 @@ MonoBehaviour:
   _requiredAbility: 0
   splitIncreases:
   - countIncrease: 3
-    chanceIncrease: 30
+    chanceIncrease: 0
   - countIncrease: 2
-    chanceIncrease: 10
+    chanceIncrease: 15
   - countIncrease: 2
-    chanceIncrease: 10
+    chanceIncrease: 15
   - countIncrease: 2
-    chanceIncrease: 10
+    chanceIncrease: 15
   - countIncrease: 2
-    chanceIncrease: 10
+    chanceIncrease: 15

@@ -56,4 +56,16 @@ public class DamageText : MonoBehaviour
             Managers.Resource.Destroy(this.gameObject);
         });
     }
+    // [추가된 부분] 완벽한 2번 방법의 핵심!
+    // 오브젝트가 풀에 반납되어 SetActive(false)가 되는 순간 무조건 실행됩니다.
+    private void OnDisable()
+    {
+        // 진행 중이던 모든 애니메이션의 숨통을 완벽하게 끊어줍니다.
+        // 이렇게 해야 보이지 않는 유령 트윈이 시스템에 쌓이지 않습니다!
+        transform.DOKill();
+        if (_textMesh != null)
+        {
+            _textMesh.DOKill();
+        }
+    }
 }

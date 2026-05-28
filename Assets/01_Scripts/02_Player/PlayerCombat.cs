@@ -28,6 +28,10 @@ public class PlayerCombat : MonoBehaviour
     private float _targetTimer = 0f;
     private float _targetUpdateInterval = 0.1f;
 
+    //  [최신 세팅 1] 결과를 담을 빈 바구니(배열)와 검사 조건(필터)을 미리 선언합니다.
+    private Collider2D[] _targetColliders = new Collider2D[20];
+    private ContactFilter2D _contactFilter;
+
 
     public event Action<List<BulletController>> OnReload;
     public void Init(PlayerController player)
@@ -35,7 +39,13 @@ public class PlayerCombat : MonoBehaviour
         _player = player;
         isReloading = false;
         _lastHomingShotTime = 0f;
-        // 게임 시작 시 첫 장전
+
+        // [최신 세팅 2] 게임 시작 시 필터(ContactFilter2D)를 미리 세팅해 둡니다. (가비지 발생 X)
+        _contactFilter = new ContactFilter2D();
+        _contactFilter.useLayerMask = true; // 레이어 마스크 켤게!
+        _contactFilter.layerMask = LayerMask.GetMask("Meteor", "Boss"); // 메테오랑 보스만 걸러줘!
+        _contactFilter.useTriggers = true; // (선택) 트리거 콜라이더도 감지할 거면 true// 게임 시작 시 첫 장전
+
         Reload();
     }
 
@@ -69,31 +79,36 @@ public class PlayerCombat : MonoBehaviour
         if (_targetTimer < _targetUpdateInterval) return;
         _targetTimer = 0f;
 
-        float minDistance = Mathf.Infinity;
+        // [수술 2] 최적화를 위해 최소 거리도 '거리의 제곱'으로 둡니다.
+        float minSqrDistance = Mathf.Infinity;
         _target = null;
 
-        // 1. 추적할 레이어만 골라내기 (메테오와 적 레이어를 포함)
-        int layerMask = LayerMask.GetMask("Meteor", "Boss");
-
-        //  2. 레이어 마스크를 사용하여 오버랩 탐색 (최적화!)
-        Collider2D[] colliders = Physics2D.OverlapCircleAll(
+        //  [최신 세팅 3] Unity 6.3 권장 방식: 일반 OverlapCircle에 필터와 배열을 넘겨줍니다!
+        // 내부적으로 배열의 크기(20)만큼만 꽉 채워서 찾아오며 메모리를 새로 할당(new)하지 않습니다.
+        int count = Physics2D.OverlapCircle(
             transform.position,
             _player.Stat.shotRange.TotalValue,
-            layerMask
+            _contactFilter,
+            _targetColliders
         );
 
-        foreach (Collider2D col in colliders)
+        // 찾아낸 개수(count)만큼만 반복문을 돕니다.
+        for (int i = 0; i < count; i++)
         {
-            // 3. 메테오인지 보스인지 묻지 말고, IDamageable 인터페이스만 확인!
-            IDamageable damageable = col.GetComponent<IDamageable>();
+            Collider2D col = _targetColliders[i];
 
-            // 인터페이스가 있고, 활성화된 상태라면 타겟으로 고려
-            if (damageable != null && col.gameObject.activeInHierarchy)
+            // 비활성화된 오브젝트는 스킵
+            if (!col.gameObject.activeInHierarchy) continue;
+
+            // [수술 4] GetComponent보다 빠르고 안전한 TryGetComponent!
+            if (col.TryGetComponent(out IDamageable damageable))
             {
-                float distance = Vector2.Distance(transform.position, col.transform.position);
-                if (distance < minDistance)
+                //  [수술 5] CPU를 혹사시키는 루트(Distance) 대신, 단순 뺄셈의 제곱(sqrMagnitude) 사용!
+                float sqrDistance = (transform.position - col.transform.position).sqrMagnitude;
+
+                if (sqrDistance < minSqrDistance)
                 {
-                    minDistance = distance;
+                    minSqrDistance = sqrDistance;
                     _target = col.gameObject;
                 }
             }

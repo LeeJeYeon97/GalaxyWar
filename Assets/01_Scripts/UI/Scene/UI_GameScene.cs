@@ -130,8 +130,8 @@ public class UI_GameScene : UI_Scene
     }
     private void BindingButtonClickListener()
     {
-        //Button restartButton = GetButton((int)Buttons.RestartButton);
-        //restartButton.onClick.AddListener(OnClickGameTestButton);
+        Button restartButton = GetButton((int)Buttons.RestartButton);
+        restartButton.onClick.AddListener(OnClickGameTestButton);
 
         Button BurstButton = GetButton((int)Buttons.BurstModeBar);
         BurstButton.onClick.AddListener(OnBurstButton);

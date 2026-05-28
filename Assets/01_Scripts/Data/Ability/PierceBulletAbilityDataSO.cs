@@ -32,7 +32,7 @@ public class PierceBulletAbilityDataSO : BulletAbilityDataSO
         // 내 현재 레벨 데이터 꺼내기
         PierceBulletStatData data = stats[level];
 
-        if (targetStat is PierceBulletStat stat)
+        if (targetStat is NormalBulletStat stat)
         {
             stat.pierceCount.AddValue(data.pierceCount);
             stat.pierceDamageDecreaseValue.SubValue(data.pierceDamageDecreaseValue);

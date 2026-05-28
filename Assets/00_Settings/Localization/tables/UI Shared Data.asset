@@ -275,6 +275,10 @@ MonoBehaviour:
     m_Key: LevelupPopup_ReloadText
     m_Metadata:
       m_Items: []
+  - m_Id: 15223988491014144
+    m_Key: ProfilePopup_ClearStage
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

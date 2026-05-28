@@ -23,5 +23,5 @@ MonoBehaviour:
   originalPrefab: {fileID: 4317400478341151153, guid: dc6b18b197f8c9c4b8dfdab987c59309, type: 3}
   isReload: 0
   homingBulletStat:
-    homingShotDelay: 1
+    homingShotDelay: 2
   trunSpeed: 500

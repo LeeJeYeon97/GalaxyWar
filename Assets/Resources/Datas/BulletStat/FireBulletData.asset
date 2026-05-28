@@ -23,6 +23,6 @@ MonoBehaviour:
   originalPrefab: {fileID: 945438956561580913, guid: bf4e9cbc186d11146844f7046be1a209, type: 3}
   isReload: 1
   fireStat:
-    fireDamageValue: 0.2
+    fireDamageValue: 50
     fireRemainTime: 2
-    fireZoneDestroyTime: 4
+    fireZoneDestroyTime: 2

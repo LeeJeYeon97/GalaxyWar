@@ -35,4 +35,5 @@ public class WaveMultiplier
     public float waveHpRate = 1f;           // 이 웨이브의 체력 배율 (후반부는 2배 등)
     public float waveSpawnDelayRate = 1f;   // 이 웨이브의 스폰 속도 배율 (후반부는 0.5배 등)
     public float expRate = 1f;              // 웨이브마다 늘어날 경험치 배율
+    public float speedRate = 1f;
 }

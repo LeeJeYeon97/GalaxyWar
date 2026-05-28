@@ -12,9 +12,24 @@ public class LightningChain : MonoBehaviour
 
     public GameObject hitEffect;
     private HashSet<GameObject> _visitedTargets = new HashSet<GameObject>();
-    private LayerMask _targetLayer;
     private bool _isMaxLevel; // 클래스 상단에 변수 추가
 
+    // 이동을 위한 상태 변수들
+    private GameObject _currentTarget;
+    private bool _isMoving = false;
+
+    // 1. 멤버 변수로 바구니 준비
+    private Collider2D[] _chainColliders = new Collider2D[10];
+    private ContactFilter2D _chainFilter;
+
+    private void Awake()
+    {
+        //  최적화 2: 필터 초기화
+        _chainFilter = new ContactFilter2D();
+        _chainFilter.useLayerMask = true;
+        _chainFilter.layerMask = LayerMask.GetMask("Meteor","Boss");
+        _chainFilter.useTriggers = true;
+    }
     public void Init(Vector3 startPos, GameObject firstTarget, float damage, float range, int count,bool maxLevel = false)
     {
         transform.position = startPos;
@@ -22,7 +37,7 @@ public class LightningChain : MonoBehaviour
         _range = range;
         _remainCount = count;
         _isMaxLevel = maxLevel;
-        _targetLayer = LayerMask.GetMask("Meteor");
+
 
         _visitedTargets.Clear();
         // 첫 번째 맞은 놈은 방금 총알한테 맞았으니(혹은 여기서 중복으로 안 때리기 위해) 제외 목록에 추가
@@ -31,18 +46,38 @@ public class LightningChain : MonoBehaviour
             _visitedTargets.Add(firstTarget);
         }
 
-        if (_isMaxLevel && firstTarget != null)
+        if (_isMaxLevel && firstTarget != null && firstTarget.TryGetComponent(out MeteorController firstMeteor))
         {
-            MeteorController firstMeteor = firstTarget.GetComponent<MeteorController>();
-            if (firstMeteor != null)
-            {
-                firstMeteor.Status.ApplyShock();
-            }
+            firstMeteor.Status.ApplyShock();
         }
         // 번개 전이 시작!
         StartCoroutine(CoChainProcess());
     }
 
+    // FixedUpdate에서 이동 처리 (물리 엔진과 동기화!)
+    private void FixedUpdate()
+    {
+        // 1. 아예 움직일 필요가 없으면 리턴
+        if (!_isMoving) return;
+
+        // 2. 이동 중에 타겟이 먼저 죽거나(오브젝트 풀로 돌아감) 사라진 경우!
+        if (_currentTarget == null || !_currentTarget.activeSelf)
+        {
+            // 허공에 멈추지 않도록 상태를 초기화하고 코루틴 대기를 풀어줍니다.
+            _currentTarget = null;
+            _isMoving = false;
+            return;
+        }
+
+        // 3. 물리 타임스텝에 맞춰 부드럽게 이동
+        transform.position = Vector3.MoveTowards(transform.position, _currentTarget.transform.position, _speed * Time.fixedDeltaTime);
+
+        // 4. 도착 판정
+        if ((transform.position - _currentTarget.transform.position).sqrMagnitude < 0.01f)
+        {
+            OnTargetReached();
+        }
+    }
     private IEnumerator CoChainProcess()
     {
         while (_remainCount > 0)
@@ -53,72 +88,59 @@ public class LightningChain : MonoBehaviour
                 yield return null;
                 continue;
             }
+            //  최적화 3: NonAlloc 방식 사용
+            int hitCount = Physics2D.OverlapCircle(transform.position, _range, _chainFilter, _chainColliders);
 
-            // 1. 현재 내 위치를 기준으로 다음 타겟 찾기
-            Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, _range, _targetLayer);
-            Collider2D closestEnemy = null;
-            float minDistance = float.MaxValue;
+            GameObject nextTarget = null;
+            float minSqrDistance = float.MaxValue;
 
-            foreach (var col in colliders)
+            for (int i = 0; i < hitCount; i++)
             {
+                var col = _chainColliders[i];
                 if (_visitedTargets.Contains(col.gameObject)) continue;
 
-                float dist = Vector2.Distance(transform.position, col.transform.position);
-                if (dist < minDistance)
+                float sqrDist = (transform.position - col.transform.position).sqrMagnitude;
+                if (sqrDist < minSqrDistance)
                 {
-                    minDistance = dist;
-                    closestEnemy = col;
+                    minSqrDistance = sqrDist;
+                    nextTarget = col.gameObject;
                 }
             }
 
-            // 2. 주변에 더 이상 타겟이 없으면 조기 퇴근!
-            if (closestEnemy == null) break;
+            if (nextTarget == null) break;
 
-            // 3. 다음 타겟 확정
-            GameObject targetGo = closestEnemy.gameObject;
-            _visitedTargets.Add(targetGo);
+            // 2. 타겟 설정 후 이동 시작
+            _currentTarget = nextTarget;
+            _visitedTargets.Add(_currentTarget);
             _remainCount--;
+            _isMoving = true; // FixedUpdate가 이동을 시작하게 함
 
-            // 4. 타겟을 향해 미친 듯이 날아감 (업데이트처럼 작동)
-            // 만약 날아가는 도중에 적이 다른 공격에 맞아 죽으면(activeSelf == false) 자연스럽게 루프 탈출
-            while (targetGo != null && targetGo.activeSelf)
+            //  3. 이동이 끝날 때까지 코루틴은 여기서 대기 (이동 중엔 while이 멈춤)
+            while (_isMoving) yield return null;
+        }
+
+        yield return new WaitForSeconds(0.2f);
+        Managers.Resource.Destroy(gameObject);
+    }
+
+    private void OnTargetReached()
+    {
+        // 데미지 처리
+        if (_currentTarget.TryGetComponent(out MeteorController meteor))
+        {
+            meteor.OnDamage(_damage);
+            if (_isMaxLevel) meteor.Status.ApplyShock();
+            Managers.Sound.Play(Define.SoundID.Sfx_Lightning_Hit);
+
+            if (Managers.Effect.CanSpawnEffect(meteor.transform.position))
             {
-                // Vector3.MoveTowards를 쓰면 목표를 향해 아주 깔끔하게 직선 이동합니다.
-                transform.position = Vector3.MoveTowards(transform.position, targetGo.transform.position, _speed * Time.deltaTime);
-
-                // 적에게 거의 다다랐다면? (충돌 판정)
-                if ((transform.position - targetGo.transform.position).sqrMagnitude < 0.01f)
-                {
-                    MeteorController meteor = targetGo.GetComponent<MeteorController>();
-                    if (meteor != null)
-                    {
-                        // 찌릿! 데미지 주기
-                        meteor.OnDamage(_damage);
-
-                        // 데미지가 들어간 직후에 감전 주기
-                        if (_isMaxLevel)
-                        {
-                            meteor.Status.ApplyShock();
-                        }
-
-                        Managers.Sound.Play(Define.SoundID.Sfx_Lightning_Hit);
-                        GameObject hitGo = Managers.Resource.Instantiate(hitEffect);
-
-                        if(hitGo != null)
-                        {
-                            hitGo.transform.position = meteor.transform.position;
-                        }
-                    }
-                    break; // 데미지를 줬으니 다음 적을 찾으러 안쪽 while문 탈출
-                }
-
-                yield return null; // 1프레임 대기
+                GameObject hitGo = Managers.Resource.Instantiate(hitEffect);
+                hitGo.transform.position = meteor.transform.position;
             }
         }
 
-        // 5. 전이가 다 끝났다면 씬에서 사라지기 (풀에 반납)
-        // 만약 꼬리(Trail Renderer)가 달려있다면, 잔상이 사라질 수 있도록 0.5초 정도 대기 후 꺼주는 게 예쁩니다.
-        yield return new WaitForSeconds(0.2f);
-        Managers.Resource.Destroy(gameObject);
+        // 이동 종료 및 다음 단계로
+        _isMoving = false;
+        _currentTarget = null;
     }
 }

@@ -100,6 +100,7 @@ public class Define
         Screen_ShieldHit,
         Screen_BurstMode,
         Screen_PlayerHit,
+        Meteor_ShockHit,
     }
     public enum AbilityType
     {
@@ -118,6 +119,7 @@ public class Define
         Passive_PlayerCritical = 8,         // 플레이어 크리티컬
         Passive_PlayerDamageUp = 9,         // 플레이어 데미지 업
         Passive_AllBulletBounceCountUp = 10,// 모든 총알의 바운스(튕기는) 횟수 증가
+        Passive_PlayerHeal,
         
         // 특수 기능
         Passive_SplitBullet = 20,           // 분열 기능 업그레이드

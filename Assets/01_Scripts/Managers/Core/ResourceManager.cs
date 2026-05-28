@@ -56,16 +56,26 @@ public class ResourceManager
 
     public void Destroy(GameObject go)
     {
-        if (go == null)
-            return;
-        Poolable poolable = go.GetComponent<Poolable>();
-        if (poolable != null)
+        if (go == null) return;
+
+        //Poolable poolable = go.GetComponent<Poolable>();
+        //if (poolable != null)
+        //{
+        //    Managers.Pool.Release(go);
+        //    return;
+        //}
+
+        //Object.Destroy(go);
+
+        // GetComponent 연산 생략 가능
+        if (go.TryGetComponent<Poolable>(out var p) && p.IsPooled)
         {
             Managers.Pool.Release(go);
-            return;
         }
-
-        Object.Destroy(go);
+        else
+        {
+            Object.Destroy(go);
+        }
     }
 }
 

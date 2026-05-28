@@ -17,7 +17,8 @@ public class UI_ProfilePopup : UI_Popup
         Text_PlayerID,
         Text_Score,
         Text_Time,
-        Text_RemoveAd
+        Text_RemoveAd,
+        Text_ClearStage,
     }
     public override void Init()
     {
@@ -67,6 +68,9 @@ public class UI_ProfilePopup : UI_Popup
         }
         // 4. 최고 점수 설정
         GetTMP((int)Texts.Text_Score).text = $"{Managers.PlayerData.PlayerDataLocal.MaxScore}";
+
+        // 4. 최고 점수 설정
+        GetTMP((int)Texts.Text_ClearStage).text = $"{Managers.PlayerData.PlayerDataLocal.MaxClearStage}";
 
 
         float time = Managers.PlayerData.PlayerDataLocal.MaxSurviveTime;

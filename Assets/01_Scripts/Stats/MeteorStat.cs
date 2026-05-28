@@ -22,6 +22,7 @@ public class MeteorStat
 
     public Define.PhaseType spawnPhase;
 
+    public bool targetChase;
 
     [Header("Drop Item Settings")]
     public List<DropItemRate> dropTable = new List<DropItemRate>();
@@ -54,6 +55,7 @@ public class MeteorStat
         magmaPuddle = data.magmaPuddle;
         sludgePuddle = data.sludgePuddle;
         fragment = data.fragmentMeteor;
+        targetChase = data.targetChase;
         // ... Ω∫≈» √ ±‚»≠ ...
         Behavior = CreateBehavior(data);
     }

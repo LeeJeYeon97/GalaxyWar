@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e2c0bfc9147886c4cb1b571dbda175ee, type: 3}
+  m_Name: PlayerHeal
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerHealDataSO
+  type: 11
+  icon: {fileID: 21300000, guid: 8144acae632f40449aa9f42c8ccc8074, type: 3}
+  maxLevel: 9999
+  _requiredAbility: 0
+  values:
+  - 50

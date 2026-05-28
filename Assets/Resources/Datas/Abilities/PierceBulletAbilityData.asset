@@ -49,7 +49,7 @@ MonoBehaviour:
     speed: 0
     bounceCount: 0
   stats:
-  - pierceCount: 0
+  - pierceCount: 1
     pierceDamageDecreaseValue: 0
   - pierceCount: 1
     pierceDamageDecreaseValue: 5

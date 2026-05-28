@@ -29,6 +29,9 @@ public class BulletController : BaseController
     [field: SerializeField] public int currentPierceCount { get; set; }
 
     public float CurDamage;
+
+    private int _wallLayerMask; // 클래스 멤버로 선언
+
     public void Awake()
     {
         if(Rb == null)
@@ -43,6 +46,7 @@ public class BulletController : BaseController
         Collider.isTrigger = true;
 
         BulletParticle = Util.GetOrAddComponent<BulletParticle>(gameObject);
+        _wallLayerMask = LayerMask.GetMask("Wall");
     }
 
     private void OnEnable()
@@ -116,8 +120,7 @@ public class BulletController : BaseController
 
             // 2. 레이캐스트 발사 (현재 위치에서 이동 방향으로 moveDistance보다 살짝 더 길게 쏨)
             // 1.2~1.5 정도를 곱해줘야 벽에 박히기 전에 미리 튕깁니다.
-            int wallLayerMask = LayerMask.GetMask("Wall");
-            RaycastHit2D hit = Physics2D.Raycast(Rb.position, _shotDir, moveDistance * 1.5f, wallLayerMask);
+            RaycastHit2D hit = Physics2D.Raycast(Rb.position, _shotDir, moveDistance * 1.5f, _wallLayerMask);
 
             if (hit.collider != null)
             {
@@ -184,8 +187,14 @@ public class BulletController : BaseController
         if (target == null) return;
 
         // 1. 공통 처리: 데미지 주고 파티클 생성
+        // [2단계 스로틀링 적용] 매니저에게 허락을 받았을 때만 파티클을 생성합니다!
         Vector2 hitPoint = collision.ClosestPoint(transform.position);
-        BulletParticle?.SpawnHit(hitPoint, Vector2.zero, Stat);
+        if (Managers.Effect.CanSpawnEffect(hitPoint))
+        {
+            BulletParticle?.SpawnHit(hitPoint, Vector2.zero, Stat);
+        }
+        //Vector2 hitPoint = collision.ClosestPoint(transform.position);
+        //BulletParticle?.SpawnHit(hitPoint, Vector2.zero, Stat);
 
         CalculateDamage(target,CurDamage);
         Stat.behavior.OnHit(this, collision.gameObject, Stat);
@@ -193,12 +202,12 @@ public class BulletController : BaseController
         // 2. 능력치에 따른 분기 처리 (관통 -> 도탄 -> 소멸 순서)
         if (currentPierceCount > 0)
         {
-            // [관통탄] 관통 횟수가 남아있다면 튕기지 않고 그냥 지나갑니다.
+            // 관통 횟수가 남아있다면 튕기지 않고 그냥 지나갑니다.
             currentPierceCount--;
         }
         else if (currentBounceCount > 0)
         {
-            // [일반탄/도탄] 관통은 안 되는데 튕길 횟수가 남아있다면 튕겨 나갑니다.
+            // 관통은 안 되는데 튕길 횟수가 남아있다면 튕겨 나갑니다.
             ReflectFromMeteor(collision);
             DecreaseBounceCount();
         }

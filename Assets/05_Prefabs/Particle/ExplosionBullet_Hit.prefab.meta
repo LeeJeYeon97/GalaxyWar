@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: ac2312a3e32471549882f1a6da5568e6
+guid: 2e33bbd89680b744a8f2b0727a31b0ca
 NativeFormatImporter:
   externalObjects: {}
   mainObjectFileID: 100100000
@@ -8,8 +8,9 @@ NativeFormatImporter:
   assetBundleVariant: 
 AssetOrigin:
   serializedVersion: 1
-  productId: 158199
-  packageName: Toon Projectiles
-  packageVersion: 2.1
-  assetPath: Assets/Hovl Studio/Toon projectiles/Prefabs/Hit 7.prefab
-  uploadId: 883372
+  productId: 130378
+  packageName: AAA Stylized Projectiles Vol.1
+  packageVersion: 5.0.1
+  assetPath: Assets/Hovl Studio/AAA Projectiles Vol 1/Prefabs/Flash and hits/Hit
+    25 orange explosion.prefab
+  uploadId: 883366

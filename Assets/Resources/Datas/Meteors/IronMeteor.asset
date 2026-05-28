@@ -15,13 +15,14 @@ MonoBehaviour:
   Type: 2
   originalPrefabs: {fileID: 1474625085365856687, guid: eddda9f988ea55a43bc63e3e337df3d1, type: 3}
   isExclude: 0
-  MaxHp: 50
+  MaxHp: 40
   MaxSpeed: 0.5
   MinSpeed: 0.3
   Damage: 20
   Score: 300
-  Exp: 30
-  spawnPhase: 2
+  Exp: 60
+  spawnPhase: 3
+  targetChase: 1
   dropTable:
   - itemType: 3
     dropRate: 1

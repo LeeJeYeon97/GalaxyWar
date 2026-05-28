@@ -10,7 +10,7 @@ using static Define;
 
 public class FireBulletBehavior : IBulletBehavior
 {
-
+    
     public void OnHit(BulletController bullet, GameObject target, BaseBulletStat activeStat)
     {
         if (target == null) return;
@@ -26,7 +26,7 @@ public class FireBulletBehavior : IBulletBehavior
         if (activeStat is FireBulletStat stat)
         {
             // 직접 맞았을 때의 화상 데미지 적용
-            float totalBurnDamage = stat.damage.TotalValue * stat.fireDamageValue.TotalValue;
+            float totalBurnDamage = stat.damage.TotalValue * (stat.fireDamageValue.TotalValue / 100f);
 
             float actualTickDamage = totalBurnDamage * tickTime;
             meteor.Status.ApplyBurn(actualTickDamage, stat.fireRemainTime.TotalValue, tickTime);
@@ -67,7 +67,6 @@ public class FireBulletBehavior : IBulletBehavior
         // 3. 총알이 화면에 살아있는 동안 계속 감시합니다.
         while (bullet != null && bullet.gameObject.activeSelf)
         {
-
             //  코루틴 방어 로직: 일시정지나 광고 중이면 계산을 아예 건너뛰고 멍때립니다.
             // (만약 Managers.Game.IsPaused 프로퍼티를 만드셨다면 if(Managers.Game.IsPaused) 로 쓰시면 훨씬 깔끔합니다!)
             if (Managers.Game.currentGameState == GameState.Pause)

@@ -159,6 +159,10 @@ public class Managers : MonoBehaviour
     {
         // 다른 매니저들 업데이트 돌리기
     }
+    private void LateUpdate()
+    {
+        Effect.OnLateUpdate();
+    }
     public void Clear()
     {
         _scene.Clear();

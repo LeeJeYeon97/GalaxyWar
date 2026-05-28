@@ -55,11 +55,17 @@ public class MeteorStatus : MonoBehaviour
         auraBuff.SetActive(false);
         shockDeBuffEffect.SetActive(false);
 
-        _controller.Visual.ReturnColor();
-
         if (_freezeCoroutine != null) StopCoroutine(_freezeCoroutine);
         if (_slowCoroutine != null) StopCoroutine(_slowCoroutine);
         if (_burnCoroutine != null) StopCoroutine(_burnCoroutine);
+
+        // [추가된 핵심 코드] 변수 안에 남은 코루틴 찌꺼기를 완벽히 지워줍니다!
+        _freezeCoroutine = null;
+        _slowCoroutine = null;
+        _burnCoroutine = null;
+
+        _controller.Visual.ReturnColor();
+
     }
 
     private void Update()

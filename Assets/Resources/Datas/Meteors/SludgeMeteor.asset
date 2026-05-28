@@ -20,8 +20,9 @@ MonoBehaviour:
   MinSpeed: 0.7
   Damage: 10
   Score: 250
-  Exp: 25
+  Exp: 30
   spawnPhase: 1
+  targetChase: 1
   dropTable:
   - itemType: 3
     dropRate: 1
