@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: PlayerHeal
   m_EditorClassIdentifier: Assembly-CSharp::PlayerHealDataSO
   type: 11
-  icon: {fileID: 21300000, guid: 8144acae632f40449aa9f42c8ccc8074, type: 3}
+  icon: {fileID: 21300000, guid: 794cd8940f4250f4b8fc99478b9b0ed2, type: 3}
   maxLevel: 9999
   _requiredAbility: 0
   values:

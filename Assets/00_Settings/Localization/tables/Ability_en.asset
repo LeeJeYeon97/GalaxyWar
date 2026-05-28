@@ -492,6 +492,14 @@ MonoBehaviour:
     m_Localized: Damage +{0}%
     m_Metadata:
       m_Items: []
+  - m_Id: 15205743201505280
+    m_Localized: Heal
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15205814383038464
+    m_Localized: Restores {0} Health.
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

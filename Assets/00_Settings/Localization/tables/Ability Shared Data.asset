@@ -419,6 +419,14 @@ MonoBehaviour:
     m_Key: Passive_PlayerDamageUp_Desc_4
     m_Metadata:
       m_Items: []
+  - m_Id: 15205743201505280
+    m_Key: Passive_PlayerHeal_Name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15205814383038464
+    m_Key: Passive_PlayerHeal_Desc_0
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:
