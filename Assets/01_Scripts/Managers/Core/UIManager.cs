@@ -127,12 +127,36 @@ public class UIManager
         if (_popupStack.Count == 0)
             return;
 
+        // 1. 만약 닫으려는 팝업이 최상단(Peek)이 아니라면?
         if (_popupStack.Peek() != popup)
         {
-            Debug.Log("Close Popup Failed!");
+            Debug.Log("최상단 팝업이 아니어서 스택을 재배치하고 강제 삭제합니다.");
+
+            // Stack을 임시 리스트로 변환 (ToList를 하면 최상단 요소가 0번 인덱스에 옵니다)
+            List<UI_Popup> tempList = System.Linq.Enumerable.ToList(_popupStack);
+
+            // 리스트에서 해당 팝업을 찾아서 지움
+            if (tempList.Contains(popup))
+            {
+                tempList.Remove(popup);
+
+                // 기존 스택을 싹 비우고
+                _popupStack.Clear();
+
+                // 리스트를 역순으로 뒤집은 뒤 다시 스택에 쌓아줌 (원래 순서 복구)
+                tempList.Reverse();
+                foreach (UI_Popup p in tempList)
+                {
+                    _popupStack.Push(p);
+                }
+
+                // 팝업 오브젝트 파괴
+                Managers.Resource.Destroy(popup.gameObject);
+            }
             return;
         }
 
+        // 2. 최상단 팝업이 맞다면 기존 로직대로 닫기
         ClosePopupUI();
     }
     public void ClosePopupUI()

@@ -86,8 +86,8 @@ MonoBehaviour:
 
       Burn Duration +{1} sec
 
-      Leaves a
-      trail of fire lasting {2} sec'
+      Creates
+      a fire zone on hit.'
     m_Metadata:
       m_Items: []
   - m_Id: 266949843111936
@@ -371,7 +371,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 270604319215616
-    m_Localized: Bullet Count +{0}
+    m_Localized: Chance +30%
     m_Metadata:
       m_Items: []
   - m_Id: 270612208701440
@@ -379,7 +379,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 270620307902464
-    m_Localized: Bullet Count +{0}
+    m_Localized: Chance +30%
     m_Metadata:
       m_Items: []
   - m_Id: 270627765374976

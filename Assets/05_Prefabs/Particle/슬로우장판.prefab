@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 400000}
   - component: {fileID: 19800000}
   - component: {fileID: 19900000}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Poison-Flash2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4841,7 +4841,7 @@ GameObject:
   - component: {fileID: 400002}
   - component: {fileID: 19800002}
   - component: {fileID: 19900002}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Poison-Flash2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9671,7 +9671,7 @@ GameObject:
   - component: {fileID: 400004}
   - component: {fileID: 19800004}
   - component: {fileID: 19900004}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Poison-Smoke2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14501,7 +14501,7 @@ GameObject:
   - component: {fileID: 400006}
   - component: {fileID: 19800006}
   - component: {fileID: 19900006}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Poison-Smoke
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19332,7 +19332,7 @@ GameObject:
   - component: {fileID: 601496706211512956}
   - component: {fileID: -1184615125296938797}
   - component: {fileID: 3510965455611532815}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: "\uC2AC\uB85C\uC6B0\uC7A5\uD310"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19371,6 +19371,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Poolable
   IsUsing: 0
+  IsPooled: 1
 --- !u!114 &-1184615125296938797
 MonoBehaviour:
   m_ObjectHideFlags: 0

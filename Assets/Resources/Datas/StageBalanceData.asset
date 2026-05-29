@@ -29,13 +29,13 @@ MonoBehaviour:
   - phaseType: 1
     waveStartTime: 90
     waveHpRate: 2
-    waveSpawnDelayRate: 0.7
+    waveSpawnDelayRate: 0.6
     expRate: 1.2
     speedRate: 1.2
   - phaseType: 2
     waveStartTime: 180
     waveHpRate: 3
-    waveSpawnDelayRate: 0.5
+    waveSpawnDelayRate: 0.4
     expRate: 1.4
     speedRate: 1.5
   - phaseType: 3
@@ -43,11 +43,11 @@ MonoBehaviour:
     waveHpRate: 5
     waveSpawnDelayRate: 0.2
     expRate: 1.5
-    speedRate: 1.7
+    speedRate: 1.5
   - phaseType: 4
     waveStartTime: 360
     waveHpRate: 7
-    waveSpawnDelayRate: 0.2
+    waveSpawnDelayRate: 0.1
     expRate: 1.5
-    speedRate: 2
+    speedRate: 1.5
   bossStageInterval: 5

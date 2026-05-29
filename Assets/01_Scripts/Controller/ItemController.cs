@@ -17,7 +17,7 @@ public class ItemController : MonoBehaviour
     public bool _hasEnteredView;
     private float _checkOffset = 2.0f; // 경계 밖 여유 공간
 
-    private ItemDataSO _data;
+    public ItemDataSO _data;
     public int value;
 
     // 획득 연출 중복 실행 방지용 플래그
@@ -86,6 +86,8 @@ public class ItemController : MonoBehaviour
             float randomTorque = Random.Range(-100f, 100f);
             _rb.angularVelocity = randomTorque;
         }
+
+        Managers.Game.AddActiveObject(this);
     }
     private void Update()
     {
@@ -204,7 +206,31 @@ public class ItemController : MonoBehaviour
         }
 
         Managers.Sound.Play(_data.getSoundClip);
+        Managers.Game.RemoveActiveObject(this);
         Managers.Resource.Destroy(this.gameObject);
+    }
+
+    //  플레이어에게 자석처럼 빨려 들어가는 연출
+    public void AbsorbToPlayer(Transform playerTransform)
+    {
+        // 1. 날아가는 도중에 플레이어가 또 먹지 못하도록 콜라이더를 끕니다.
+        Collider2D col = GetComponent<Collider2D>();
+        if (col != null) col.enabled = false;
+
+        // 2. 도달 시간 랜덤화: 0.4초 ~ 1.0초 
+        // (전부 똑같은 속도로 오면 재미없습니다. 랜덤을 줘야 촤르르륵~ 하고 들어옵니다)
+        float duration = UnityEngine.Random.Range(0.4f, 1.0f);
+
+        // 3. 마법의 연출: Ease.InBack
+        // (살짝 뒤로(바깥으로) 퍼졌다가 플레이어에게 훅! 하고 빨려 들어가는 쫀득한 애니메이션입니다)
+        transform.DOMove(playerTransform.position, duration)
+            .SetEase(Ease.InBack)
+            .OnComplete(() =>
+            {
+                // 플레이어에게 도착하면 이펙트 하나 터뜨려주고 (옵션) 파괴
+                // Managers.Sound.Play(Define.SoundID.Sfx_GetExp); (사운드 조절 주의!)
+                Managers.Resource.Destroy(gameObject);
+            });
     }
     void CheckBoundaries()
     {

@@ -25,4 +25,5 @@ MonoBehaviour:
   fireStat:
     fireDamageValue: 50
     fireRemainTime: 2
-    fireZoneDestroyTime: 2
+    fireZoneDestroyTime: 5
+    fireZoneSize: 2

@@ -311,7 +311,7 @@ public class UI_LevelUpPopup : UI_Popup
                         Managers.Level.IsLevelUpPopupOpen = false;
                         // 모두 끝났다면 게임 재개 및 팝업 닫기
                         Managers.Game.ChangeGameState(GameState.Resume);
-                        Managers.UI.ClosePopupUI();
+                        Managers.UI.ClosePopupUI(this);
                     }
                 });
             }

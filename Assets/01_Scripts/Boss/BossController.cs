@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem.XR;
 
@@ -140,6 +141,14 @@ public class BossController : BaseController, IDamageable
         OnHpChanged?.Invoke(currentHp, Stat.MaxHp.TotalValue);
 
         PlayHitFlash();
+
+        Vector3 textPos = transform.position + new Vector3(UnityEngine.Random.Range(-0.5f, 0.5f), 0.5f, 0);
+        GameObject go = Managers.Resource.Instantiate("DamageText");
+        DamageText damageText = go.GetOrAddComponent<DamageText>();
+        if (damageText != null)
+        {
+            damageText.Init(textPos, Mathf.FloorToInt(damage), isCrit);
+        }
 
         if (currentHp <= 0)
         {

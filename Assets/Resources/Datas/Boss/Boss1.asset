@@ -15,8 +15,8 @@ MonoBehaviour:
   Type: 0
   originalPrefab: {fileID: 7521002130601087132, guid: 5ea24fcd12b544f4e8c94ef8c980f78b, type: 3}
   bossBulletPrefab: {fileID: 2161769684337717586, guid: fa27d729d639d0846b19ed9fd678fe53, type: 3}
-  MaxHp: 500
-  Speed: 0.5
+  MaxHp: 20000
+  Speed: 1
   Damage: 10
   Score: 0
   dropTable: []

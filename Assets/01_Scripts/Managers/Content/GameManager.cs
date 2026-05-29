@@ -13,6 +13,8 @@ public class GameManager : MonoBehaviour
 
     public List<MeteorController> activeMeteors = new List<MeteorController>();
     public List<BulletController> activeBullets = new List<BulletController>();
+    // 상단 변수 선언부에 아이템 리스트 추가
+    public List<ItemController> activeItems = new List<ItemController>();
 
     public PlayerController _player;
     public Spawner spawner;
@@ -121,6 +123,10 @@ public class GameManager : MonoBehaviour
             // 1. 일반 메테오 스폰 속도를 무한대로 늘리거나 스포너를 멈춤
             spawner.StopSpawn(); // 혹은 스폰 딜레이를 9999로 변경
 
+            // 맵에 깔린 모든 잔몹과 경험치를 깔끔하게 청소!
+            ClearAllMeteors();
+            AbsorbAllItemsAndLevelUp();
+
             // 2. 보스 스폰 로직 호출 (StageManager가 들고 있는 프리팹과 HP 사용)
             BossStat stat = Managers.Stat.GetRandomBossStat();
             if(stat == null)
@@ -147,12 +153,11 @@ public class GameManager : MonoBehaviour
         if (Managers.Stage.IsBossStage)
         {
             
-
             // 프로젝트에 만들어두신 위험 팝업 클래스 이름을 넣으시면 됩니다! (예: UI_WarningPopup)
             Managers.UI.ShowPopupUI<UI_BossWarningPopup>(); 
 
             // 꿀팁: 사이렌 소리 같은 Sfx를 이때 같이 재생해주면 몰입감이 200% 증가합니다.
-            // Managers.Sound.Play(Define.SoundID.Sfx_Warning_Siren);
+            Managers.Sound.Play(Define.SoundID.Sfx_BossWarning);
         }
     }
     public void AddActiveObject<T>(T item)
@@ -173,6 +178,12 @@ public class GameManager : MonoBehaviour
                 activeMeteors.Add(brick);
             }
         }
+        //  [추가] 아이템 리스트 관리
+        else if (item is ItemController dropItem)
+        {
+            if (activeItems.Contains(dropItem) == false)
+                activeItems.Add(dropItem);
+        }
     }
 
     public void RemoveActiveObject<T>(T item)
@@ -189,8 +200,44 @@ public class GameManager : MonoBehaviour
             if (activeMeteors.Contains(brick))
                 activeMeteors.Remove(brick);
         }
+        //  [추가] 아이템 리스트 관리
+        else if (item is ItemController dropItem)
+        {
+            if (activeItems.Contains(dropItem))
+                activeItems.Remove(dropItem);
+        }
     }
+    public void AbsorbAllItemsAndLevelUp()
+    {
+        if (activeItems.Count == 0) return;
 
+        int totalExpToGain = 0;
+
+        for (int i = activeItems.Count - 1; i >= 0; i--)
+        {
+            ItemController item = activeItems[i];
+
+             //1. (선택) 아이템 타입이 경험치인지 체크 후, 해당 경험치 값을 미리 전부 더해둡니다.
+             //(대표님의 아이템 데이터 구조에 맞게 item.customValue 등을 가져오시면 됩니다)
+             if (item._data.type == ItemType.Exp)
+             {
+                  totalExpToGain += item.value;
+             }
+
+            // 2. 시각적으로 빨려 들어가는 연출 실행
+            item.AbsorbToPlayer(_player.transform);
+        }
+
+        // 3. 리스트 비우기 (어차피 DOTween 끝나면 알아서 파괴되므로 리스트만 비웁니다)
+        activeItems.Clear();
+
+        // 4. 모인 경험치를 플레이어에게 딱 '1번'만 지급!
+        // 이렇게 해야 렉이 안 걸리고, 레벨이 여러 번 올랐다면 레벨업 UI가 차례대로 뜨게 됩니다.
+        if (totalExpToGain > 0)
+        {
+             Managers.Level.AddExp(totalExpToGain);
+        }
+    }
     public void ChangeGameState(GameState state)
     {
         // Resume은 '상태'라기보다 '동작'에 가깝습니다.
@@ -242,6 +289,7 @@ public class GameManager : MonoBehaviour
     {
         ClearAllBullets();
         ClearAllMeteors();
+        ClearAllItems();
         Managers.Pool.Clear();
         Managers.Stat.Clear();
     }
@@ -282,6 +330,17 @@ public class GameManager : MonoBehaviour
             Managers.Resource.Destroy(activeMeteors[i].gameObject);
         }
         activeMeteors.Clear(); // 리스트 비우기
+    }
+    public void ClearAllItems()
+    {
+        if (activeItems.Count == 0) return;
+
+        // 뒤에서부터 순회하며 안전하게 파괴(또는 풀링 반납)
+        for (int i = activeItems.Count - 1; i >= 0; i--)
+        {
+            Managers.Resource.Destroy(activeItems[i].gameObject);
+        }
+        activeItems.Clear(); // 리스트 비우기
     }
     // 테스트용
     public void TestAbility()

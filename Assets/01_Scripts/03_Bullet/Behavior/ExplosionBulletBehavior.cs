@@ -70,7 +70,10 @@ public class ExplosionBulletBehavior : IBulletBehavior
                     Vector2 secExplosionPos = secCenter.position;
 
                     // 2차 폭발 파티클 및 사운드
-                    bullet.BulletParticle?.SpawnHit(secExplosionPos, Vector2.zero, stat);
+                    if(Managers.Effect.CanSpawnEffect(secExplosionPos))
+                    {
+                        bullet.BulletParticle?.SpawnHit(secExplosionPos, Vector2.zero, stat);
+                    }
                     Managers.Sound.Play(Define.SoundID.Sfx_Explosion_Hit);
 
                     Collider2D[] secondaryColliders = Physics2D.OverlapCircleAll(secExplosionPos, radius, layerMask);

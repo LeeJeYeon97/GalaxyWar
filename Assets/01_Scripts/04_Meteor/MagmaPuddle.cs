@@ -4,7 +4,7 @@ using UnityEngine;
 public class MagmaPuddle : MonoBehaviour
 {
     public float damage = 5f;        // 장판 틱 데미지
-    public float lifeTime = 3f;      // 장판 유지 시간
+    public float lifeTime = 2f;      // 장판 유지 시간
     public float damageTick = 0.5f;  // 0.5초마다 데미지를 줌
 
     private float _lastDamageTime;

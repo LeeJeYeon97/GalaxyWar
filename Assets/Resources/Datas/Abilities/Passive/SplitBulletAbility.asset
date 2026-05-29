@@ -19,11 +19,11 @@ MonoBehaviour:
   splitIncreases:
   - countIncrease: 3
     chanceIncrease: 0
+  - countIncrease: 0
+    chanceIncrease: 30
   - countIncrease: 2
-    chanceIncrease: 15
+    chanceIncrease: 0
+  - countIncrease: 0
+    chanceIncrease: 30
   - countIncrease: 2
-    chanceIncrease: 15
-  - countIncrease: 2
-    chanceIncrease: 15
-  - countIncrease: 2
-    chanceIncrease: 15
+    chanceIncrease: 0

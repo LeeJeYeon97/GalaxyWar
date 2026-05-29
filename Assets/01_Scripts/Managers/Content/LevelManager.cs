@@ -46,14 +46,14 @@ public class LevelManager
         else if (CurrentLevel <= 30)
         {
             float midStep = CurrentLevel - 20;
-            return baseRequired + (midStep * 100);
+            return baseRequired + (midStep * 150);
         }
         // 4. 극후반 (31레벨 이상): 억제기 풀가동!
         // 오라, 분열 메테오 등 고가치(50~70) 메테오를 잡아야만 렙업이 가능하게 꽉 묶습니다.
         else
         {
             float lateStep = CurrentLevel - 30;
-            return baseRequired + 1000 + (lateStep * 300);
+            return baseRequired + 1000 + (lateStep * 400);
         }
     }
     public void AddExp(float exp)

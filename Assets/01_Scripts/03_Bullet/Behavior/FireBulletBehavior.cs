@@ -27,9 +27,33 @@ public class FireBulletBehavior : IBulletBehavior
         {
             // 직접 맞았을 때의 화상 데미지 적용
             float totalBurnDamage = stat.damage.TotalValue * (stat.fireDamageValue.TotalValue / 100f);
+            
+            meteor.Status.ApplyBurn(totalBurnDamage, stat.fireRemainTime.TotalValue, tickTime);
 
-            float actualTickDamage = totalBurnDamage * tickTime;
-            meteor.Status.ApplyBurn(actualTickDamage, stat.fireRemainTime.TotalValue, tickTime);
+            // =======================================================
+            // 2. 만렙(5레벨) 특성: 맞은 위치에 거대 장판 생성
+            // =======================================================
+            if (stat.curLevel >= 5)
+            {
+                // 풀링 매니저에서 마그마 장판 꺼내기
+                GameObject puddleGo = Managers.Resource.Instantiate("Bullets/FirePuddle");
+
+                if (puddleGo != null)
+                {
+                    puddleGo.transform.position = target.transform.position;
+
+                    //  핵심: 장판의 크기(Scale)를 2~3배로 뻥튀기해서 '큰 장판'으로 만듭니다!
+                    float size = stat.fireZoneSize;
+                    puddleGo.transform.localScale = new Vector3(size, size, 1f);
+
+                    FireZoneController puddle = puddleGo.GetComponent<FireZoneController>();
+                    if (puddle != null)
+                    {
+                        // 장판 초기화 (장판 데미지는 기획에 맞게 조절하세요)
+                        puddle.Init(stat);
+                    }
+                }
+            }
         }
     }
 
@@ -43,10 +67,10 @@ public class FireBulletBehavior : IBulletBehavior
 
     public void OnShot(BulletController bullet)
     {
-        if(bullet.Stat.curLevel >= 5)
-        {
-            bullet.StartCoroutine(CoDropFireTrail(bullet));
-        }
+        //if(bullet.Stat.curLevel >= 5)
+        //{
+        //    bullet.StartCoroutine(CoDropFireTrail(bullet));
+        //}
     }
 
     public void OnUpdate(BulletController bullet)
@@ -56,47 +80,47 @@ public class FireBulletBehavior : IBulletBehavior
     // =======================================================
     // 장판 생성 코루틴
     // =======================================================
-    private IEnumerator CoDropFireTrail(BulletController bullet)
-    {
-        // 1. 발사된 초기 위치를 기록합니다.
-        Vector2 lastDropPos = bullet.transform.position;
+    //private IEnumerator CoDropFireTrail(BulletController bullet)
+    //{
+    //    // 1. 발사된 초기 위치를 기록합니다.
+    //    Vector2 lastDropPos = bullet.transform.position;
 
-        // 2. 장판을 깔 간격 (필요하다면 나중에 FireBulletStat으로 빼셔도 좋습니다!)
-        float dropDistance = 0.5f;
+    //    // 2. 장판을 깔 간격 (필요하다면 나중에 FireBulletStat으로 빼셔도 좋습니다!)
+    //    float dropDistance = 0.5f;
         
-        // 3. 총알이 화면에 살아있는 동안 계속 감시합니다.
-        while (bullet != null && bullet.gameObject.activeSelf)
-        {
-            //  코루틴 방어 로직: 일시정지나 광고 중이면 계산을 아예 건너뛰고 멍때립니다.
-            // (만약 Managers.Game.IsPaused 프로퍼티를 만드셨다면 if(Managers.Game.IsPaused) 로 쓰시면 훨씬 깔끔합니다!)
-            if (Managers.Game.currentGameState == GameState.Pause)
-            {
-                yield return null;
-                continue;
-            }
+    //    // 3. 총알이 화면에 살아있는 동안 계속 감시합니다.
+    //    while (bullet != null && bullet.gameObject.activeSelf)
+    //    {
+    //        //  코루틴 방어 로직: 일시정지나 광고 중이면 계산을 아예 건너뛰고 멍때립니다.
+    //        // (만약 Managers.Game.IsPaused 프로퍼티를 만드셨다면 if(Managers.Game.IsPaused) 로 쓰시면 훨씬 깔끔합니다!)
+    //        if (Managers.Game.currentGameState == GameState.Pause)
+    //        {
+    //            yield return null;
+    //            continue;
+    //        }
 
-            // 이전에 깔았던 위치와 지금 총알의 위치 거리를 잽니다.
-            if (Vector2.Distance(lastDropPos, bullet.transform.position) >= dropDistance)
-            {
-                // 지정한 거리만큼 멀어졌다면 장판을 소환!
-                GameObject fireZoneGo = Managers.Resource.Instantiate("Bullets/FirePuddle");
+    //        // 이전에 깔았던 위치와 지금 총알의 위치 거리를 잽니다.
+    //        if (Vector2.Distance(lastDropPos, bullet.transform.position) >= dropDistance)
+    //        {
+    //            // 지정한 거리만큼 멀어졌다면 장판을 소환!
+    //            GameObject fireZoneGo = Managers.Resource.Instantiate("Bullets/FirePuddle");
 
-                if (fireZoneGo != null)
-                {
-                    fireZoneGo.transform.position = bullet.transform.position;
+    //            if (fireZoneGo != null)
+    //            {
+    //                fireZoneGo.transform.position = bullet.transform.position;
 
-                    // (선택 사항) 장판 스크립트에 데미지를 전달해주면 더 완벽합니다!
-                    FireZoneController zone = fireZoneGo.GetComponent<FireZoneController>();
-                    if (bullet.Stat is FireBulletStat stat) 
-                            zone.Init(stat);
-                }
+    //                // (선택 사항) 장판 스크립트에 데미지를 전달해주면 더 완벽합니다!
+    //                FireZoneController zone = fireZoneGo.GetComponent<FireZoneController>();
+    //                if (bullet.Stat is FireBulletStat stat) 
+    //                        zone.Init(stat);
+    //            }
 
-                // 다음 측정을 위해 현재 위치를 갱신합니다.
-                lastDropPos = bullet.transform.position;
-            }
+    //            // 다음 측정을 위해 현재 위치를 갱신합니다.
+    //            lastDropPos = bullet.transform.position;
+    //        }
 
-            // 매 프레임마다 검사합니다.
-            yield return null;
-        }
-    }
+    //        // 매 프레임마다 검사합니다.
+    //        yield return null;
+    //    }
+    //}
 }

@@ -10,9 +10,13 @@ public class Spawner : MonoBehaviour
 {
     private Coroutine _meteorSpawnCoroutine;
     private Coroutine _itemSpawnCoroutine;
-
+    //  [추가] 강제로 스폰이 멈췄는지 기억하는 자물쇠 변수
+    private bool _isSpawnLocked = false;
     public void StartSpawn()
     {
+        //  [추가] 자물쇠가 잠겨있다면, 밖에서 StartSpawn을 불러도 무시하고 리턴합니다.
+        if (_isSpawnLocked) return;
+
         if (_meteorSpawnCoroutine != null) StopCoroutine(_meteorSpawnCoroutine);
         _meteorSpawnCoroutine = StartCoroutine(CoSpawnMeteor());
 
@@ -21,6 +25,8 @@ public class Spawner : MonoBehaviour
     }
     public void StopSpawn()
     {
+        //  [추가] StopSpawn이 불리면 자물쇠를 잠가버립니다.
+        _isSpawnLocked = true;
         if (_meteorSpawnCoroutine != null) StopCoroutine(_meteorSpawnCoroutine);
 
         if (_itemSpawnCoroutine != null) StopCoroutine(_itemSpawnCoroutine);

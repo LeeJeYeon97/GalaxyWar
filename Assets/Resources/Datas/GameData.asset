@@ -15,9 +15,9 @@ MonoBehaviour:
   GameStartTime: 3
   itemSpawnInterval: 60
   reviveCount: 1
-  rerollGoldCost: 50
+  rerollGoldCost: 0
   expZero: 0
-  playerGod: 0
+  playerGod: 1
   noAttack: 0
   gameclearTime: 480
   gamePlayeSize: 15

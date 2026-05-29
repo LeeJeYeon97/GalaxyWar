@@ -24549,6 +24549,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Poolable
   IsUsing: 0
+  IsPooled: 1
 --- !u!58 &8118222968386560248
 CircleCollider2D:
   m_ObjectHideFlags: 0
