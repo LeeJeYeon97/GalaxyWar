@@ -143,7 +143,7 @@ public class BossBulletController : BaseController
     private void OnTriggerEnter2D(Collider2D collision)
     {
         // 상대가 누구든, '데미지를 받을 수 있는 녀석(IDamageable)'인지 한 번만 검사합니다!
-        IDamageable target = collision.gameObject.GetComponent<IDamageable>();
+        IDamageable target = collision.gameObject.GetComponentInParent<IDamageable>();
 
         // 타겟이 아니면(벽, 아이템 등) 무시!
         if (target == null) return;

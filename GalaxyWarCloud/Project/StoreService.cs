@@ -121,7 +121,7 @@ public class StoreService
 
     #region RealMoney Purchase (현금 결제 / IAP)
     [CloudCodeFunction("ProcessRealMoneyPurchase")]
-    public async Task<PlayerEconomyData> ProcessRealMoneyPurchase(IExecutionContext context, IGameApiClient gameApiClient,
+    public async Task<PlayerDataResponse> ProcessRealMoneyPurchase(IExecutionContext context, IGameApiClient gameApiClient,
         string productId, string receipt, double localPrice, string currencyCode)
     {
         _logger.LogInformation($"[결제 검증 시작] 들어온 productId: {productId ?? "NULL입니다!!"}");
@@ -134,9 +134,19 @@ public class StoreService
             // 영수증 검증 및 보상 지급 영수증을 까보고 구글/애플에 검증을 맡기는 핵심 함수 호출!
             await ProcessStoreReceipt(context, gameApiClient, productId, receipt, localPrice, currencyCode);
 
-            return await _playerEconomyService.GetPlayerEconomyData(context, gameApiClient)
-                ?? throw new InvalidOperationException("Failed to get player economy data");
+            //return await _playerEconomyService.GetPlayerEconomyData(context, gameApiClient)
+            //    ?? throw new InvalidOperationException("Failed to get player economy data");
 
+            // 3. [추가] 결제가 완전히 끝났으므로 최신 PlayerData와 Economy 데이터를 모두 불러옵니다.
+            var (playerExists, playerData) = await _playerDataService.TryGetPlayerData(context, gameApiClient);
+            var economyData = await _playerEconomyService.GetPlayerEconomyData(context, gameApiClient);
+
+            return new PlayerDataResponse
+            {
+                PlayerData = playerData,
+                PlayerEconomyData = economyData,
+                IsNewPlayer = false
+            };
         }
         catch (ApiException ex)
         {
@@ -240,6 +250,19 @@ public class StoreService
             );
 
 
+        //  [핵심 추가] 검증이 성공했고, 상품이 '광고 제거'라면 PlayerData에 기록합니다!
+        if (productId == ServerDefine.k_removeAd)
+        {
+            var (playerExists, playerData) = await _playerDataService.TryGetPlayerData(context, gameApiClient);
+            if (playerExists && playerData != null)
+            {
+                playerData.IsAdsRemoved = true; // 플래그 ON!
+                await _playerDataService.SaveData(context, gameApiClient, ServerDefine.k_PlayerDataKey, playerData);
+                _logger.LogInformation($"[구글 결제 완료] 유저 {context.PlayerId}의 PlayerData에 IsAdsRemoved=true 저장 완료");
+            }
+        }
+
+
         // 현금 결제 후 UGS가 무식하게 지급한 '빈 껍데기'를 부수고 지능형 매니저로 넘깁니다!
         if (purchaseResult.Data?.Rewards?.Inventory != null && purchaseResult.Data.Rewards.Inventory.Count > 0)
         {
@@ -310,6 +333,18 @@ public class StoreService
             context.PlayerId!,
             appleRequest
             );
+
+        //  [핵심 추가] 검증이 성공했고, 상품이 '광고 제거'라면 PlayerData에 기록합니다!
+        if (productId == ServerDefine.k_removeAd)
+        {
+            var (playerExists, playerData) = await _playerDataService.TryGetPlayerData(context, gameApiClient);
+            if (playerExists && playerData != null)
+            {
+                playerData.IsAdsRemoved = true; // 플래그 ON!
+                await _playerDataService.SaveData(context, gameApiClient, ServerDefine.k_PlayerDataKey, playerData);
+                _logger.LogInformation($"[애플 결제 완료] 유저 {context.PlayerId}의 PlayerData에 IsAdsRemoved=true 저장 완료");
+            }
+        }
 
         //// 애플 결제 가로채기 로직 (구글과 동일)
         if (purchaseResult.Data?.Rewards?.Inventory != null && purchaseResult.Data.Rewards.Inventory.Count > 0)
@@ -423,7 +458,15 @@ public class StoreService
         switch (productId)
         {
             case ServerDefine.k_removeAd: // 스토어에 등록된 '광고 제거' 상품 ID
-                checkItemKey = "REMOVE_AD_TICKET";
+                                          // 유저의 클라우드 데이터를 로드합니다.
+                var (playerExists, playerData) = await _playerDataService.TryGetPlayerData(context, gameApiClient);
+
+                // 이미 데이터에 광고 제거가 true로 박혀있다면?
+                if (playerExists && playerData != null && playerData.IsAdsRemoved == true)
+                {
+                    _logger.LogWarning($"[결제 차단] 유저 {context.PlayerId}는 이미 PlayerData에 광고 제거 권한을 가지고 있습니다.");
+                    throw new InvalidOperationException($"Already purchased limited item: {productId}");
+                }
                 break;
             //case "com.mygame.starter_pack_01": // 스토어에 등록된 '초보자 패키지' 상품 ID
             //    checkItemKey = "FLAG_STARTER_PACK_BOUGHT";
@@ -472,6 +515,59 @@ public class StoreService
         return new PlayerDataResponse
         {
             PlayerData = playerData,
+            PlayerEconomyData = economyData,
+            IsNewPlayer = false
+        };
+    }
+
+
+    //  [추가] 복원(Restore) 전용 클라우드 코드 함수
+    [CloudCodeFunction("RestoreRealMoneyPurchase")]
+    public async Task<PlayerDataResponse> RestoreRealMoneyPurchase(IExecutionContext context, IGameApiClient gameApiClient,
+        string productId, string receipt, double localPrice, string currencyCode)
+    {
+        _logger.LogInformation($"[복원 검증 시작] productId: {productId}");
+
+        try
+        {
+            // 1. 기존의 결제 검증 로직을 그대로 태워봅니다.
+            await ProcessStoreReceipt(context, gameApiClient, productId, receipt, localPrice, currencyCode);
+        }
+        catch (ApiException ex)
+        {
+            //  [수정된 부분] 에러의 전체 내용(ToString)을 문자열로 뽑아서 422가 있는지 확인합니다!
+            string errorDetails = ex.ToString();
+
+            // UGS가 뱉는 중복 에러(422)이거나 메시지가 숨겨진(unknown) 경우 모두 '진짜 영수증'으로 인정합니다.
+            if (errorDetails.Contains("422") || errorDetails.Contains("duplicate") || errorDetails.Contains("already") || errorDetails.Contains("unknown"))
+            {
+                _logger.LogInformation($"[복원 성공] 422 중복 에러 감지. 이미 결제된 유효한 영수증이므로 복구를 승인합니다!");
+
+                if (productId == ServerDefine.k_removeAd)
+                {
+                    var (playerExists, playerData) = await _playerDataService.TryGetPlayerData(context, gameApiClient);
+                    if (playerExists && playerData != null)
+                    {
+                        playerData.IsAdsRemoved = true;
+                        await _playerDataService.SaveData(context, gameApiClient, ServerDefine.k_PlayerDataKey, playerData);
+                    }
+                }
+            }
+            else
+            {
+                // 400 Bad Request 등 진짜 형식이 망가진 가짜 영수증일 때만 에러를 던집니다.
+                _logger.LogError($"[복원 실패] 알 수 없는 통신 오류 또는 위조 영수증: {errorDetails}");
+                throw;
+            }
+        }
+
+        // 3. 복구 작업이 끝난 최신 유저 데이터를 클라이언트에 반환합니다.
+        var (_, updatedPlayerData) = await _playerDataService.TryGetPlayerData(context, gameApiClient);
+        var economyData = await _playerEconomyService.GetPlayerEconomyData(context, gameApiClient);
+
+        return new PlayerDataResponse
+        {
+            PlayerData = updatedPlayerData,
             PlayerEconomyData = economyData,
             IsNewPlayer = false
         };

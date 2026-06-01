@@ -24,12 +24,23 @@ public class LoginManager
 
     public bool IsLoginFinished { get; private set; } = false;
 
+    private UI_LoadingPopup _LoadingPopup;
     // 유니티 서비스 초기화
     public void Init()
     {
-        StartAnonymousSignIn();
-    }
+        _LoadingPopup = null;
+        //  기존: 무조건 익명(게스트) 로그인부터 시작함
+        // StartAnonymousSignIn();
 
+        // 변경: 구글 플레이 게임즈 '자동 로그인(Silent Login)'을 가장 먼저 시도합니다!
+#if UNITY_ANDROID
+        Debug.Log("게임 시작! 구글 자동 로그인을 시도합니다...");
+        LoginGooglePlayGames();
+#else
+        // 유니티 에디터나 iOS 환경에서는 구글 로그인이 안 되니 바로 익명 로그인으로 빠집니다.
+        StartAnonymousSignIn();
+#endif
+    }
     #region 익명 로그인
     public async void StartAnonymousSignIn()
     {
@@ -205,13 +216,31 @@ public class LoginManager
     }
     public void StartSignInWithGooglePlayGames()
     {
-        // 1. 이미 구글에 로그인이 되어 있다면 바로 UGS 연동으로 넘어갑니다.
+        //  1. [로딩 ON] 유저가 연동 버튼을 누르자마자 로딩 팝업을 띄웁니다!
+        _LoadingPopup = Managers.UI.ShowPopupUI<UI_LoadingPopup>(); // (대표님의 로딩 팝업 클래스명으로 변경해주세요)
+
         if (PlayGamesPlatform.Instance.IsAuthenticated() == true)
         {
-            SignInOrLinkWithGooglePlayGames();
+            Debug.Log("이미 구글에 로그인되어 있습니다. UGS 연동용 토큰을 요청합니다.");
+
+            //  [수정된 부분] 토큰을 달라고 구글에 요청한 뒤에 연동 함수를 부릅니다!
+            PlayGamesPlatform.Instance.RequestServerSideAccess(true, code =>
+            {
+                if (!string.IsNullOrEmpty(code))
+                {
+                    Debug.Log("자동 로그인 토큰 발급 완료: " + code);
+                    _GooglePlayGamesToken = code;
+                    SignInOrLinkWithGooglePlayGames(); // 이제 토큰이 있으니 정상 작동!
+                }
+                else
+                {
+                    Debug.LogWarning("자동 로그인은 되어있으나 토큰 발급에 실패했습니다.");
+                    //  [로딩 OFF] 토큰 발급 실패 시 무한 로딩 방지
+                    Managers.UI.ClosePopupUI(_LoadingPopup);
+                }
+            });
             return;
         }
-
         // 2. 로그인이 안 되어 있다면 무조건 강제 팝업(수동 로그인)을 띄웁니다!
         Debug.LogWarning("구글 로그인 팝업을 강제로 띄웁니다!");
 
@@ -224,16 +253,23 @@ public class LoginManager
                 // 성공했으니 유니티 서버(UGS)에 넘길 암호(Token)를 달라고 요청합니다.
                 PlayGamesPlatform.Instance.RequestServerSideAccess(true, code =>
                 {
-                    Debug.Log("Authorization code: " + code);
-                    _GooglePlayGamesToken = code;
-
-                    // 토큰을 받았으니 이제 UGS 익명 계정과 구글 계정을 하나로 합칩니다(Link)!
-                    SignInOrLinkWithGooglePlayGames();
+                    if (!string.IsNullOrEmpty(code))
+                    {
+                        Debug.Log("Authorization code: " + code);
+                        _GooglePlayGamesToken = code;
+                        SignInOrLinkWithGooglePlayGames();
+                    }
+                    else
+                    {
+                        // [로딩 OFF] 여기서도 토큰 발급 실패 방어
+                        Managers.UI.ClosePopupUI(_LoadingPopup);
+                    }
                 });
             }
             else
             {
                 Debug.Log($"수동 로그인 실패 또는 유저가 팝업을 닫음: {status}");
+                Managers.UI.ClosePopupUI(_LoadingPopup);
             }
         });
     }
@@ -241,7 +277,12 @@ public class LoginManager
     {
         if(string.IsNullOrEmpty(_GooglePlayGamesToken))
         {
+            //앱을 방금 막 켰기 때문에 _GooglePlayGamesToken 변수는 텅 비어(null) 있습니다.
+            //이 토큰(암호)은 아래에 있는 RequestServerSideAccess를 호출했을 때만 채워지는데,
+            //이미 로그인이 되어있다고 해서 토큰을 발급받는 과정을 통째로 건너뛰어 버린 것입니다.
             Debug.LogWarning("Authorization code is null or empty!");
+            // [로딩 OFF] 토큰이 비어있어서 튕겨낼 때 로딩 해제
+            Managers.UI.ClosePopupUI(_LoadingPopup);
             return;
         }
         if(AuthenticationService.Instance.IsSignedIn == false)
@@ -271,22 +312,25 @@ public class LoginManager
             await AuthenticationService.Instance.SignInWithGooglePlayGamesAsync(authCode);
             Debug.Log("SignIn is successful.");
 
-
             await ChangeNickNameToGoogle();
             IsLoginFinished = true;
             HandleGoogleLinkSuccess();
         }
         catch (AuthenticationException ex)
         {
-            // Compare error code to AuthenticationErrorCodes
-            // Notify the player with the proper error message
             Debug.LogException(ex);
+            //  [핵심 방어막] 구글 로그인이 모종의 이유로 터졌을 때 멈추지 않게 플랜 B 가동!
+            Debug.LogWarning("구글 로그인 실패! 게스트(익명) 모드로 우회하여 게임을 시작합니다.");
+            Managers.UI.ClosePopupUI(_LoadingPopup);
+            StartAnonymousSignIn();
         }
         catch (RequestFailedException ex)
         {
-            // Compare error code to CommonErrorCodes
-            // Notify the player with the proper error message
             Debug.LogException(ex);
+            // 네트워크 에러 등의 경우에도 플랜 B 가동!
+            Debug.LogWarning("네트워크/서버 에러! 게스트(익명) 모드로 우회하여 게임을 시작합니다.");
+            Managers.UI.ClosePopupUI(_LoadingPopup);
+            StartAnonymousSignIn();
         }
     }
 
@@ -324,8 +368,22 @@ public class LoginManager
             // 1. 현재 접속되어 있는 '쓸모없는 쌩초보 익명 계정'에서 로그아웃하고 기기 토큰을 지웁니다.
             AuthenticationService.Instance.SignOut(true);
 
-            // 2. 구글에서 받은 암호(authCode)를 써서 '연동(Link)'이 아니라 '로그인(SignIn)'을 시도합니다!
-            await SignInWithGooglePlayGamesAsync(authCode);
+            //  2. [핵심 수정] authCode는 이미 방금 전 Link 시도에서 타버렸습니다(일회용)!
+            // 구글에 다시 '새 암호'를 달라고 요청한 뒤에 SignIn을 시도해야 합니다.
+            PlayGamesPlatform.Instance.RequestServerSideAccess(true, async newAuthCode =>
+            {
+                if (!string.IsNullOrEmpty(newAuthCode))
+                {
+                    Debug.Log("복구용 새 구글 토큰 발급 완료! 로그인을 시도합니다.");
+                    // 새로 발급받은 newAuthCode를 사용해서 로그인(SignIn) 진행
+                    await SignInWithGooglePlayGamesAsync(newAuthCode);
+                }
+                else
+                {
+                    Debug.LogError("복구용 새 구글 토큰 발급에 실패했습니다.");
+                    Managers.UI.ClosePopupUI(_LoadingPopup);
+                }
+            });
         }
 
         catch (AuthenticationException ex)
@@ -333,12 +391,14 @@ public class LoginManager
             // Compare error code to AuthenticationErrorCodes
             // Notify the player with the proper error message
             Debug.LogException(ex);
+            Managers.UI.ClosePopupUI(_LoadingPopup);
         }
         catch (RequestFailedException ex)
         {
             // Compare error code to CommonErrorCodes
             // Notify the player with the proper error message
             Debug.LogException(ex);
+            Managers.UI.ClosePopupUI(_LoadingPopup);
         }
     }
     // 내부의 구글 연동 성공 처리 함수
@@ -355,6 +415,7 @@ public class LoginManager
             Debug.LogError($"플레이어 정보 갱신 실패: {ex.Message}");
         }
 
+        Managers.UI.ClosePopupUI(_LoadingPopup);
         // 2. 정보 갱신이 완전히 끝난 후, UI들에게 "이제 화면 바꿔도 돼!" 하고 방송함
         if (OnLoginSuccess != null)
             OnLoginSuccess.Invoke();
@@ -391,15 +452,23 @@ public class LoginManager
     private async Task ChangeNickNameToGoogle()
     {
 #if UNITY_ANDROID
-        // 1. 구글 시스템에서 유저의 프로필 이름을 가져옵니다.
-        string googleName = PlayGamesPlatform.Instance.GetUserDisplayName();
-
-        // 2. 이름이 정상적으로 가져와졌는지 확인합니다.
-        if (!string.IsNullOrEmpty(googleName))
+        try
         {
-            // 3. 유니티 서버(UGS)의 PlayerName을 구글 이름으로 덮어씌웁니다.
-            await AuthenticationService.Instance.UpdatePlayerNameAsync(googleName);
-            Debug.Log($"구글 닉네임 UGS 동기화 완료: {googleName}");
+            // 1. 구글 시스템에서 유저의 프로필 이름을 가져옵니다.
+            string googleName = PlayGamesPlatform.Instance.GetUserDisplayName();
+
+            // 2. 이름이 정상적으로 가져와졌는지 확인합니다.
+            if (!string.IsNullOrEmpty(googleName))
+            {
+                // 3. 유니티 서버(UGS)의 PlayerName을 구글 이름으로 덮어씌웁니다.
+                await AuthenticationService.Instance.UpdatePlayerNameAsync(googleName);
+                Debug.Log($"구글 닉네임 UGS 동기화 완료: {googleName}");
+            }
+        }
+        catch (Exception ex)
+        {
+            // 닉네임 변경에 실패했다고 로그인이 멈추면 안 되므로, 경고만 남기고 무시합니다.
+            Debug.LogWarning($"구글 닉네임 동기화 실패 (무시하고 로그인을 계속 진행합니다): {ex.Message}");
         }
 #endif
     }

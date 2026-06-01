@@ -163,6 +163,11 @@ public class Spawner : MonoBehaviour
 
         item.Init(position, itemData, customValue);
     }
+    public void UnlockSpawn()
+    {
+        _isSpawnLocked = false;
+        Debug.Log("스포너 자물쇠가 해제되었습니다!");
+    }
 
     //IEnumerator CoSpawnItem()
     //{

@@ -156,7 +156,8 @@ public class PlayerDataService
             MaxSurviveTime = 0,
             MaxScore = 0,
             MaxClearStage = 0,
-            LastDailyFreeGoldClaimDate = string.Empty
+            LastDailyFreeGoldClaimDate = string.Empty,
+            IsAdsRemoved = false
         };
 
         PlayerEconomyData newEconomyData;

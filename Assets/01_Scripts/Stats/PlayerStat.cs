@@ -31,6 +31,8 @@ public class PlayerStat
 
     public float hitCooldown;       // ÇÇ°Ý µô·¹ÀÌ
 
+    public Stat bounceChance = new Stat();
+
     [Header("¸ÖÆ¼¼¦°ü·Ã")]
     public bool isMultiShotEnabled; // ¸ÖÆ¼¼¦(ºÐ¿­) ´É·Â È¹µæ ¿©ºÎ
     public Stat multiShotCount = new Stat();
@@ -69,6 +71,7 @@ public class PlayerStat
         multiShotCount.Init(data.statData.multiShotCount);
         multiShotAngle = data.statData.multiShotAngle;
         multiShotChance.Init(data.statData.multiShotChance);
+        bounceChance.Init(data.statData.bounceChance);
 
         isHomingShotEnabled = data.statData.isHomingShotEnabled;
 

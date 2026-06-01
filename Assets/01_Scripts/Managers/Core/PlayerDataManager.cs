@@ -53,6 +53,11 @@ public class PlayerDataManager
 
             LogResponse(playerDataResponse);
 
+            // =======================================================
+            //  2. 교통정리 끝! 데이터가 무조건 존재함이 보장되는 이 시점에 IAP를 켭니다.
+            // =======================================================
+            Debug.Log("[시스템] 서버 데이터 로딩 완료! 이제 상점 카탈로그와 IAP를 시작합니다.");
+            Managers.PlayerEconomy.SyncEconomyConfig();
 
         }
         catch(CloudCodeException e)

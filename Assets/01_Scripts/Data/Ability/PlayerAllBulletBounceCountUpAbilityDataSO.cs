@@ -5,10 +5,17 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 
+[Serializable]
+public struct BulletBounceLevelData
+{
+    public float countIncrease;  // 발사체 수 증가
+    public float chanceIncrease; // 멀티샷 확률 증가
+}
+
 [CreateAssetMenu(fileName = "BulletBounceCountUpAbility", menuName = "ScriptableObjects/Ability/Player/BulletBounceCountUp")]
 public class PlayerAllBulletBounceCountUpAbilityDataSO : PlayerAbilityDataSO
 {
-    public List<int> increases = new List<int>();
+    public List<BulletBounceLevelData> increases = new List<BulletBounceLevelData>();
     public override object[] GetUpgradeValues()
     {
         int nextLevel = Managers.Ability.GetCurrentLevel(type);
@@ -32,10 +39,10 @@ public class PlayerAllBulletBounceCountUpAbilityDataSO : PlayerAbilityDataSO
             {
                 continue;
             }
-
-            stat.Value.bounceCount.AddValue(increases[level]);
+            
+            stat.Value.bounceCount.AddValue(increases[level].countIncrease);
         }
-
+        targetStat.bounceChance.AddValue(increases[level].chanceIncrease);
         Managers.Event.PostEvent(Define.ActionEvent.BulletBounceCountUp, increases[level]);
     }
 }

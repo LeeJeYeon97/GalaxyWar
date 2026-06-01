@@ -81,14 +81,15 @@ public class PlayerEconomyManager
     // [6] 카탈로그 동기화 함수
     // 내가 얼마를 가지고 있는지(Balance)가 아니라, 이 게임에 어떤 화폐가 존재하고 
     // 어떤 아이템을 파는지(Config)를 UGS 서버에서 다운로드 받는 아주 중요한 과정입니다.
-    private async void SyncEconomyConfig()
+    //  [수정] private에서 public으로 변경하여, 외부(PlayerData)에서 지시할 수 있게 합니다.
+    public async void SyncEconomyConfig()
     {
         try
         {
             await EconomyService.Instance.Configuration.SyncConfigurationAsync();
             Debug.Log("Economy configuration synced (상점 카탈로그 다운로드 완료)");
 
-            // 카탈로그 다운로드가 끝나면 상점 UI 등에게 방송을 보냅니다.
+            // 카탈로그 다운로드가 끝나면 IAP가 이걸 듣고 InitializeIAPSync를 실행합니다!
             EconomyConfigSynced?.Invoke();
         }
         catch (Exception ex)
@@ -108,6 +109,14 @@ public class PlayerEconomyManager
     // 초기화 또는 인벤토리 동기화 완료 시 호출되는 함수
     public void CheckAdRemovalStatus()
     {
+        //  핵심 방어막: 이미 구글 IAP 영수증 복구를 통해 광고 제거가 true가 되었다면,
+        // UGS 인벤토리에 없다고 해서 굳이 false로 덮어씌우면 안 됩니다!
+        if (Managers.AD.IsAdsRemoved == true)
+        {
+            Debug.Log("[UGS] 이미 기기 영수증(IAP)으로 광고가 제거된 상태입니다. 인벤토리 체크를 스킵합니다.");
+            return; // 그냥 돌아갑니다!
+        }
+
         // Dictionary의 특성을 활용해 foreach 루프 없이 한 번에 검색합니다.
         if (EconomyDataLocal.ItemInventory.ContainsKey(Define.k_RemoveAdItem))
         {

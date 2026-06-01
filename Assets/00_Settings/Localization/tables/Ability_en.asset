@@ -223,23 +223,23 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 268049589620736
-    m_Localized: Bounce Count +{0}
+    m_Localized: Bounce Count +1
     m_Metadata:
       m_Items: []
   - m_Id: 268269366956032
-    m_Localized: Bounce Count +{0}
+    m_Localized: Chance +20%
     m_Metadata:
       m_Items: []
   - m_Id: 269374268264448
-    m_Localized: Bounce Count +{0}
+    m_Localized: Bounce Count +1
     m_Metadata:
       m_Items: []
   - m_Id: 269386888925184
-    m_Localized: Bounce Count +{0}
+    m_Localized: Chance +20%
     m_Metadata:
       m_Items: []
   - m_Id: 269395420139520
-    m_Localized: Bounce Count +{0}
+    m_Localized: Bounce Count +1
     m_Metadata:
       m_Items: []
   - m_Id: 269650681286656

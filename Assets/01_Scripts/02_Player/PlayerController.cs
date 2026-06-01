@@ -459,7 +459,7 @@ public class PlayerController : BaseController, IDamageable
             warningpopup.StopWarning();
             warningpopup = null; // 참조를 비워주어야 다음에 다시 체력이 떨어질 때 새로 생성됩니다.
         }
-
+        SetState(PlayerState.Playing);
         OnStatusEvent();
     }
     public void UpdateMaxHp(float value)

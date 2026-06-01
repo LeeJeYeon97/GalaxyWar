@@ -3,6 +3,7 @@ using System.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem.XR;
+using static Define;
 
 public class BossController : BaseController, IDamageable
 {
@@ -26,6 +27,12 @@ public class BossController : BaseController, IDamageable
 
     //  [추가] 체력이 변할 때마다 발동할 이벤트 (현재 체력, 최대 체력)
     public event Action<float, float> OnHpChanged;
+
+    //  [추가] 일시 정지 상태를 백업하기 위한 변수들
+    private bool _isPaused = false;
+    private Vector2 _savedVelocity;
+    private float _savedAngularVelocity;
+
 
     public void Init(BossStat stat,Vector2 startPos, GameObject target)
     {
@@ -56,6 +63,49 @@ public class BossController : BaseController, IDamageable
     {
         base.OnUpdate();
 
+        // =========================================================
+        //  1. 게임 일시 정지(Pause) 시 물리 상태 저장 및 잠금
+        // =========================================================
+        if (Managers.Game.currentGameState == GameState.Pause)
+        {
+            if (!_isPaused)
+            {
+                _isPaused = true;
+                if (Rb != null)
+                {
+                    // 현재 속도와 회전값을 안전하게 저장해둡니다.
+                    _savedVelocity = Rb.linearVelocity;
+                    _savedAngularVelocity = Rb.angularVelocity;
+
+                    // 속도를 0으로 묶고, 물리 연산을 강제로 정지시킵니다.
+                    Rb.linearVelocity = Vector2.zero;
+                    Rb.angularVelocity = 0f;
+                    Rb.bodyType = RigidbodyType2D.Kinematic;
+                }
+            }
+            // 일시 정지 중이므로 아래의 이동 및 회전 로직을 무시하고 바로 리턴합니다.
+            return;
+        }
+        // =========================================================
+        //  2. 게임 재개(Play) 시 물리 상태 복구
+        // =========================================================
+        else
+        {
+            if (_isPaused)
+            {
+                _isPaused = false;
+                if (Rb != null)
+                {
+                    // 보스가 원래 Dynamic이었다면 다시 풀어줍니다.
+                    // (만약 원래부터 Kinematic만 쓰는 보스라면 아래 줄은 지우셔도 됩니다)
+                    Rb.bodyType = RigidbodyType2D.Dynamic;
+
+                    // 저장해둔 속도를 돌려줍니다.
+                    Rb.linearVelocity = _savedVelocity;
+                    Rb.angularVelocity = _savedAngularVelocity;
+                }
+            }
+        }
         // 1. 타겟이 없거나 보스가 죽었으면 추적 중지
         if (_isDead || attackTarget == null) return;
 

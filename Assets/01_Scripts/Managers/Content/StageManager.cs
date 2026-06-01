@@ -19,7 +19,7 @@ public class StageManager
     private float _stageHpBonus;
     private float _stageHpMultiplier;
 
-    private float _currentWaveSpawnDelayRate = 1f;
+    private float _currentWaveSpawnDelay = 1f;
     private float _currentWaveHpRate = 1f;
     private float _currentWaveSpeedRate = 1f;
 
@@ -117,12 +117,12 @@ public class StageManager
                 CurrentPhase = targetWave.phaseType;
                 _isPhaseInit = true;
 
-                _currentWaveSpawnDelayRate = targetWave.waveSpawnDelayRate;
+                _currentWaveSpawnDelay = targetWave.waveSpawnDelay;
                 _currentWaveHpRate = targetWave.waveHpRate;
                 _currentWaveSpeedRate = targetWave.speedRate;
 
                 // 스폰 딜레이 최종 갱신
-                CurrentSpawnDelay = Mathf.Max(balanceData.minSpawnDelay, _stageBaseSpawnDelay * _currentWaveSpawnDelayRate);
+                CurrentSpawnDelay = Mathf.Max(balanceData.minSpawnDelay, _currentWaveSpawnDelay);
 
                 Debug.Log($"[페이즈 변경!] 현재 페이즈: {CurrentPhase} | 게임 타임: {playTime:F1}초");
 

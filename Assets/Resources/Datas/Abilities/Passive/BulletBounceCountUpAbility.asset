@@ -16,4 +16,14 @@ MonoBehaviour:
   icon: {fileID: 21300000, guid: 28194a534b3fdf54dbb59d7a9a212a04, type: 3}
   maxLevel: 5
   _requiredAbility: 0
-  increases: 0100000001000000010000000100000001000000
+  increases:
+  - countIncrease: 1
+    chanceIncrease: 30
+  - countIncrease: 0
+    chanceIncrease: 20
+  - countIncrease: 1
+    chanceIncrease: 0
+  - countIncrease: 20
+    chanceIncrease: 0
+  - countIncrease: 1
+    chanceIncrease: 0

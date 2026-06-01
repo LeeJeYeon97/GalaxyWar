@@ -270,8 +270,22 @@ public class BulletController : BaseController
         SetPhysicsState(false);
         Rb.AddForce(_shotDir, ForceMode2D.Impulse);
 
-        currentBounceCount = Mathf.FloorToInt(Stat.bounceCount.TotalValue);
-        BulletParticle.SpawnShot(dragVector,shotPos);
+        // 1. 0.0f 부터 100.0f 사이의 랜덤한 소수점 숫자를 뽑습니다. (float 사용이 핵심!)
+        float random = UnityEngine.Random.Range(0f, 100f);
+        // 2. 뽑힌 랜덤 숫자가 내 '바운스 확률(bounceChance)'보다 작거나 같으면 당첨!
+        if (random <= Managers.Game._player.Stat.bounceChance.TotalValue)
+        {
+            // 당첨되었으므로 바운스 횟수를 부여합니다.
+            currentBounceCount = Mathf.FloorToInt(Stat.bounceCount.TotalValue);
+        }
+        else
+        {
+            // 꽝! 바운스 횟수 0
+            currentBounceCount = 0;
+        }
+
+
+        BulletParticle.SpawnShot(dragVector, shotPos);
         Stat.behavior.OnShot(this);
     }
     

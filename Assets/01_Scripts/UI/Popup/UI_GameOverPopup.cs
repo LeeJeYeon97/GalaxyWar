@@ -142,17 +142,14 @@ public class UI_GameOverPopup : UI_Popup
             {
                 Debug.Log("부활 광고 시청 완료! 플레이어를 부활시킵니다.");
 
-                // 1. 남은 횟수 차감
-                Managers.Game.reviveCount--;
 
-                // 2. 플레이어 부활 함수 호출 (이전에 만들어두신 PlayerController의 Revive() 활용!)
-                PlayerController player = GameObject.FindFirstObjectByType<PlayerController>();
-                if (player != null)
-                {
-                    player.SetState(PlayerState.Die); // Revive 내부 로직 통과를 위해 상태 맞춤 (필요시)
-                    player.Revive();
-                    player.SetState(PlayerState.Playing);
-                }
+
+
+
+                //    player.Revive();
+                //}
+
+                Managers.Game.RevivePlayer();
 
                 // 3. 게임 상태 복구 및 팝업 닫기
                 Managers.Game.ChangeGameState(GameState.Playing);

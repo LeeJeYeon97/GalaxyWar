@@ -39,7 +39,7 @@ public class MagmaMeteorBehavior : IMeteorBehavior
         Vector2[] directions = { Vector2.up, Vector2.down, Vector2.left, Vector2.right };
 
         // 브레스(장판)의 길이와 간격 설정 (기획에 맞게 수치를 조절하세요!)
-        int breathLength = 2; // 한 방향당 깔리는 장판 개수 (3이면 총 1+12=13개 생성)
+        int breathLength = 1; // 한 방향당 깔리는 장판 개수 (3이면 총 1+12=13개 생성)
         float spacing = 1.0f; // 장판 사이의 간격
 
         // 1. 메테오가 죽은 정중앙 자리에 하나 생성
@@ -102,7 +102,7 @@ public class MagmaMeteorBehavior : IMeteorBehavior
     //  시간차로 십자 장판을 퍼뜨리는 코루틴
     private IEnumerator CoSpreadMagmaBreath(GameObject prefab, Vector2 centerPos, float damage)
     {
-        int breathLength = 3;  // 한 방향당 깔리는 장판 개수
+        int breathLength = 2;  // 한 방향당 깔리는 장판 개수
         float spacing = 1.0f;  // 장판 사이의 간격
         float delay = 0.06f;   // 다음 장판이 터질 때까지의 지연 시간 (초 단위)
 

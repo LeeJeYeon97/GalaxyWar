@@ -25,6 +25,8 @@ public struct PlayerStatData
     public float shieldChargeTime;
     public float maxDefenceGuage;
 
+    public float bounceChance;
+
     [Header("버스트모드관련")]
     public bool isBurstModeEnabled;
     public float maxBurstGuage;

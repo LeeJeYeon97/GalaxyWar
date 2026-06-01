@@ -29,13 +29,15 @@ public class GameManager : MonoBehaviour
 
     private Camera mainCam;
 
+    public bool isBossSpawn;
+
     public void Init()
     {
         gamePlayTime = 0f;
         currentSessionGold = 0;
         _isWarningTimeReached = false;
         _isTargetTimeReached = false;
-
+        isBossSpawn = false;
         killCount = 0;
         ChangeGameState(GameState.Pause);
         mainCam = Camera.main;
@@ -122,6 +124,8 @@ public class GameManager : MonoBehaviour
 
             // 1. 일반 메테오 스폰 속도를 무한대로 늘리거나 스포너를 멈춤
             spawner.StopSpawn(); // 혹은 스폰 딜레이를 9999로 변경
+
+            isBossSpawn = true;
 
             // 맵에 깔린 모든 잔몹과 경험치를 깔끔하게 청소!
             ClearAllMeteors();
@@ -229,14 +233,14 @@ public class GameManager : MonoBehaviour
         }
 
         // 3. 리스트 비우기 (어차피 DOTween 끝나면 알아서 파괴되므로 리스트만 비웁니다)
-        activeItems.Clear();
+        //activeItems.Clear();
 
-        // 4. 모인 경험치를 플레이어에게 딱 '1번'만 지급!
-        // 이렇게 해야 렉이 안 걸리고, 레벨이 여러 번 올랐다면 레벨업 UI가 차례대로 뜨게 됩니다.
-        if (totalExpToGain > 0)
-        {
-             Managers.Level.AddExp(totalExpToGain);
-        }
+        //// 4. 모인 경험치를 플레이어에게 딱 '1번'만 지급!
+        //// 이렇게 해야 렉이 안 걸리고, 레벨이 여러 번 올랐다면 레벨업 UI가 차례대로 뜨게 됩니다.
+        //if (totalExpToGain > 0)
+        //{
+        //     Managers.Level.AddExp(totalExpToGain);
+        //}
     }
     public void ChangeGameState(GameState state)
     {
@@ -303,6 +307,11 @@ public class GameManager : MonoBehaviour
         if(reviveCount >= 1)
         {
             reviveCount--;
+        }
+        // 보스가 스폰 되지 않았을 때만 스폰을 풀기
+        if(isBossSpawn == false)
+        {
+            spawner.UnlockSpawn();
         }
         // 3. 게임 상태를 다시 Playing으로 변경
         ChangeGameState(GameState.Playing);

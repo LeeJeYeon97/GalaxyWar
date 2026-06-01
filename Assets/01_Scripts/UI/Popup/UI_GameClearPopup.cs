@@ -87,20 +87,22 @@ public class UI_GameClearPopup : UI_Popup
         GetButton((int)Buttons.Btn_RewardDouble).interactable = false;
 
         // 아이언소스 보상형 광고 호출 (플레이스먼트 이름은 대시보드에 맞게 수정하세요)
-        Managers.AD.ShowRewardedAd(placement_GameOver, (success) =>
+        Managers.AD.ShowRewardedAd(placement_GameOver, async (success) =>
         {
             if (success)
             {
                 Debug.Log("보상 두 배 광고 시청 완료!");
 
                 // 보상 두배 제공
+                Managers.Game.currentSessionGold = Managers.Game.currentSessionGold * 2;
+                // 2. 서버 데이터 저장 완료까지 대기
+                await SaveSessionData();
 
-                Managers.UI.ClosePopupUI();
+                Managers.Scene.LoadScene(Define.Scene.LobbyScene);
             }
             else
             {
                 Debug.Log("부활 광고 시청 실패 또는 취소.");
-
             }
         });
     }

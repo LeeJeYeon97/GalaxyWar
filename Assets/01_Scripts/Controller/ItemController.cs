@@ -229,6 +229,19 @@ public class ItemController : MonoBehaviour
             {
                 // 플레이어에게 도착하면 이펙트 하나 터뜨려주고 (옵션) 파괴
                 // Managers.Sound.Play(Define.SoundID.Sfx_GetExp); (사운드 조절 주의!)
+
+                // --- [페이즈 3] 획득 및 파괴 ---
+                switch (_data.type)
+                {
+                    case Define.ItemType.Gold:
+                        Managers.Game.currentSessionGold += value;
+                        Managers.Event.PostEvent(Define.ActionEvent.GetGold);
+                        break;
+                    case Define.ItemType.Exp:
+                        Managers.Level.AddExp(value);
+                        break;
+                }
+                Managers.Game.RemoveActiveObject(this);
                 Managers.Resource.Destroy(gameObject);
             });
     }

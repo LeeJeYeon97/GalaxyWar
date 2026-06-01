@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerStatDataSO
   statData:
     speed: 2.5
-    maxHp: 100
+    maxHp: 200
     maxDefenceCount: 0
     reloadCount: 7
     reloadTime: 2
@@ -26,6 +26,7 @@ MonoBehaviour:
     hitCooldown: 1
     shieldChargeTime: 20
     maxDefenceGuage: 100
+    bounceChance: 0
     isBurstModeEnabled: 0
     maxBurstGuage: 100
     maxBurstFullChargeTime: 60

@@ -14,12 +14,21 @@ public class Pattern_WallGapSO : BossPatternSO
 
     public override IEnumerator Execute(BossController boss)
     {
-        float startAngle = -90f - (spreadAngle / 2f);
+        // 총알 사이의 각도 간격은 변하지 않으므로 밖에서 미리 계산해둡니다.
         float angleStep = spreadAngle / (totalBullets - 1);
 
         for (int w = 0; w < waveCount; w++)
         {
-            if (boss._isDead) yield break;
+            // 타겟(플레이어)이 파괴되었거나 보스가 죽었으면 즉시 중지
+            if (boss._isDead || boss.attackTarget == null) yield break;
+
+            //  1. 플레이어를 향하는 기준 각도(Base Angle) 구하기
+            Vector2 targetPos = boss.attackTarget.transform.position;
+            Vector2 dirToTarget = (targetPos - (Vector2)boss.firePoint.position).normalized;
+            float baseAngle = Mathf.Atan2(dirToTarget.y, dirToTarget.x) * Mathf.Rad2Deg;
+
+            //  2. 플레이어 방향(baseAngle)을 정중앙으로 두고, 절반만큼 빼서 부채꼴 시작 각도를 잡습니다.
+            float startAngle = baseAngle - (spreadAngle / 2f);
 
             // 랜덤하게 구멍이 시작될 인덱스를 뽑습니다. 
             // (양쪽 끝단에 구멍이 생기면 너무 쉬우므로 중간 어딘가로 제한)
@@ -33,6 +42,7 @@ public class Pattern_WallGapSO : BossPatternSO
                     continue;
                 }
 
+                // 부채꼴 내에서의 현재 총알 각도 계산
                 float currentAngle = startAngle + (angleStep * i);
                 float rad = currentAngle * Mathf.Deg2Rad;
                 Vector2 shootDir = new Vector2(Mathf.Cos(rad), Mathf.Sin(rad));
@@ -40,6 +50,7 @@ public class Pattern_WallGapSO : BossPatternSO
                 boss.FireBullet(shootDir, bulletSpeed);
             }
 
+            // 한 번 쏘고 설정된 시간만큼 대기 (다음 번 쏠 땐 플레이어 위치를 '다시' 조준합니다!)
             yield return new WaitForSeconds(waveDelay);
         }
     }

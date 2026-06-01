@@ -24,9 +24,9 @@ namespace Unity.Services.CloudCode.GeneratedBindings
                 });
         }
 
-        public async Task<Project.PlayerEconomyData> ProcessRealMoneyPurchase(string productId, string receipt, double localPrice, string currencyCode)
+        public async Task<Project.PlayerDataResponse> ProcessRealMoneyPurchase(string productId, string receipt, double localPrice, string currencyCode)
         {
-            return await k_Service.CallModuleEndpointAsync<Project.PlayerEconomyData>(
+            return await k_Service.CallModuleEndpointAsync<Project.PlayerDataResponse>(
                 "Project",
                 "ProcessRealMoneyPurchase",
                 new Dictionary<string, object>()
@@ -46,6 +46,20 @@ namespace Unity.Services.CloudCode.GeneratedBindings
                 new Dictionary<string, object>()
                 {
                     {"amount", amount},
+                });
+        }
+
+        public async Task<Project.PlayerDataResponse> RestoreRealMoneyPurchase(string productId, string receipt, double localPrice, string currencyCode)
+        {
+            return await k_Service.CallModuleEndpointAsync<Project.PlayerDataResponse>(
+                "Project",
+                "RestoreRealMoneyPurchase",
+                new Dictionary<string, object>()
+                {
+                    {"productId", productId},
+                    {"receipt", receipt},
+                    {"localPrice", localPrice},
+                    {"currencyCode", currencyCode},
                 });
         }
     }

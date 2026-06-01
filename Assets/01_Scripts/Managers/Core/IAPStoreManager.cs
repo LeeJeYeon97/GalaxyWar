@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Unity.Services.CloudCode;
 using Unity.Services.CloudCode.GeneratedBindings;
 using Unity.Services.CloudCode.GeneratedBindings.Project;
+using Unity.Services.CloudSave;
 using Unity.Services.Economy;
 using Unity.Services.Economy.Model;
 using UnityEngine;
@@ -131,7 +132,26 @@ public class IAPStoreManager
 
     void OnPurchasesFetched(Orders orders)
     {
-        // Process purchases, e.g. check for entitlements from completed orders
+        // 1. orders.count 대신 orders.ConfirmedOrders.Count 를 사용합니다.
+        Debug.Log($"[IAP] 과거 결제 내역 조회 완료. 확정된 주문: {orders.ConfirmedOrders.Count}건");
+
+        // 2.  핵심: orders 자체가 아니라 'orders.ConfirmedOrders' 리스트를 순회합니다!
+        foreach (var order in orders.ConfirmedOrders)
+        {
+            var purchasedProduct = order.CartOrdered.Items().FirstOrDefault()?.Product;
+            if (purchasedProduct != null)
+            {
+                string pid = purchasedProduct.definition.id;
+                Debug.Log($"[IAP] 복원된 상품 발견: {pid}");
+
+                // 3. 영구 상품(광고 제거 등)이라면 혜택을 다시 적용해 줍니다!
+                if (pid.Equals(Define.k_IAP_RemoveAd, StringComparison.OrdinalIgnoreCase))
+                {
+                    // 비동기 함수를 호출 (에러 방지를 위해 Task.Run이나 UniTask 권장, 여기서는 간단히 래핑)
+                    RestorePurchaseToServerAsync(purchasedProduct, order.Info.Receipt);
+                }
+            }
+        }
     }
     private void OnPurchasesFetchFailed(PurchasesFetchFailureDescription failure)
     {
@@ -192,14 +212,16 @@ public class IAPStoreManager
 
             // 3. 서버(Cloud Code)에 영수증을 보내서 2차 깐깐한 검증을 받고 보상을 지급받습니다!
             // Cloud Code validation + grant
-            PlayerEconomyData updated = await _storeServiceBindings.ProcessRealMoneyPurchase(
+            PlayerDataResponse response = await _storeServiceBindings.ProcessRealMoneyPurchase(
                 product.definition.id,
-                receipt,
-                (double)product.metadata.localizedPrice,    //Cloud Code bindings don't support decimals
+                receipt,        
+                (double)product.metadata.localizedPrice,
                 product.metadata.isoCurrencyCode);
 
             // 4. 보상이 잘 들어왔으니 내 지갑(로컬 데이터)을 최신화합니다.
-            Managers.PlayerEconomy.HandleEconomyUpdate(updated);
+            // 무료 보상 때 쓰셨던 최신화 도우미 함수들을 그대로 돌려줍니다.
+            Managers.PlayerData.UpdatedPlayerData(response.PlayerData);
+            Managers.PlayerEconomy.HandleEconomyUpdate(response.PlayerEconomyData);
 
             // 인벤토리 티켓 로직 실행
             ApplyPurchaseBenefit(pid);
@@ -465,7 +487,7 @@ public class IAPStoreManager
     }
 
     // 결제/복원 성공 시 Economy 인벤토리에 아이템을 넣어주는 공통 함수
-    private void ApplyPurchaseBenefit(string productId)
+    private async Task ApplyPurchaseBenefit(string productId)
     {
         if (productId == Define.k_IAP_RemoveAd)
         {
@@ -477,11 +499,77 @@ public class IAPStoreManager
 
             // 3. [UI] 상점 UI 새로고침 (결제창에서 '보유 중'으로 버튼 변경)
             // 예시: Managers.UI.FindPopup<UI_ShopPanel>()?.RefreshUI();
+
+            // =======================================================
+            //  4. [서버 동기화] 새로운 익명 계정일 경우를 대비해 서버에 덮어씌우기
+            // =======================================================
+            try
+            {
+                // ① 내 메모리에 들고 있는 플레이어 데이터 원본의 값을 먼저 true로 바꿔줍니다.
+                // (※ Managers.PlayerData.PlayerDataLocal 부분은 대표님이 실제로 데이터를 담아두신 변수명으로 맞춰주세요!)
+                if (Managers.PlayerData.PlayerDataLocal != null)
+                {
+                    Managers.PlayerData.PlayerDataLocal.IsAdsRemoved = true;
+
+                    // ② 그 덩어리 전체를 "PLAYER_DATA"라는 키 값으로 다시 포장합니다.
+                    var data = new Dictionary<string, object>
+                {
+                    { "PLAYER_DATA", Managers.PlayerData.PlayerDataLocal }
+                };
+
+                    // ③ 통째로 서버에 덮어씌웁니다!
+                    await CloudSaveService.Instance.Data.Player.SaveAsync(data);
+
+                    Debug.Log("[UGS] PLAYER_DATA 내부의 광고 제거 상태가 성공적으로 갱신되었습니다!");
+                }
+            }
+            catch (System.Exception e)
+            {
+                // 네트워크가 끊겨서 저장을 실패해도 괜찮습니다.
+                // 어차피 구글 영수증은 폰에 남아있어서 다음 번에 게임을 켤 때 또 복구(ApplyPurchaseBenefit)를 시도하기 때문입니다!
+                Debug.LogWarning($"[UGS] 서버 동기화 실패 (다음 접속 시 재시도): {e.Message}");
+            }
         }
-        else if (productId == "gold_package_01")
+    }
+
+
+    //  [추가] 서버에 복원을 요청하는 통신 함수
+    private async void RestorePurchaseToServerAsync(Product product, string receipt)
+    {
+        try
         {
-            // 만약 골드 패키지 같은 거라면?
-            // 서버가 이미 골드를 줬으니, 클라이언트는 "골드 획득 연출(파티클)"만 띄워주면 됩니다!
+            Debug.Log($"[IAP] 서버에 {product.definition.id} 복원 및 검증을 요청합니다...");
+
+            // 1. 서버의 "RestoreRealMoneyPurchase" 함수 호출!
+            PlayerDataResponse response = await _storeServiceBindings.RestoreRealMoneyPurchase(
+                product.definition.id,
+                receipt,
+                (double)product.metadata.localizedPrice,
+                product.metadata.isoCurrencyCode
+            );
+
+            // 2. 서버가 깐깐하게 검증하고 돌려준 최신 데이터를 내 로컬 메모리에 덮어씌웁니다.
+            Managers.PlayerData.UpdatedPlayerData(response.PlayerData);
+            Managers.PlayerEconomy.HandleEconomyUpdate(response.PlayerEconomyData);
+
+            // 3. 서버가 IsAdsRemoved를 true로 만들어줬는지 확인하고 클라이언트 광고 시스템을 통제합니다.
+            if (Managers.PlayerData.PlayerDataLocal != null && Managers.PlayerData.PlayerDataLocal.IsAdsRemoved)
+            {
+                Managers.AD.IsAdsRemoved = true;
+                Debug.Log("[IAP] 서버 검증을 통한 광고 제거 복구가 완벽하게 완료되었습니다!");
+                Debug.Log("[IAP] TestRemoved OK");
+
+                // 상점 UI 새로고침 (필요 시)
+                // Managers.UI.FindPopup<UI_ShopPanel>()?.RefreshUI();
+            }
+            else
+            {
+                Debug.Log("[IAP] TestRemoved Failed");
+            }
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError($"[IAP] 서버 복원 요청 중 에러 발생 (위조 또는 네트워크 오류): {ex.Message}");
         }
     }
 

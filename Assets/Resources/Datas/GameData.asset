@@ -17,7 +17,7 @@ MonoBehaviour:
   reviveCount: 1
   rerollGoldCost: 0
   expZero: 0
-  playerGod: 1
+  playerGod: 0
   noAttack: 0
   gameclearTime: 480
   gamePlayeSize: 15

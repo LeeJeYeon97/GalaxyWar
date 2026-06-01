@@ -26,25 +26,25 @@ MonoBehaviour:
     bounceCount: 0
   - CardIcon: {fileID: 0}
     hudIcon: {fileID: 0}
-    chance: 10
+    chance: 0
     damage: 0
     speed: 0
     bounceCount: 0
   - CardIcon: {fileID: 0}
     hudIcon: {fileID: 0}
-    chance: 10
+    chance: 0
     damage: 0
     speed: 0
     bounceCount: 0
   - CardIcon: {fileID: 0}
     hudIcon: {fileID: 0}
-    chance: 10
+    chance: 0
     damage: 0
     speed: 0
     bounceCount: 0
   - CardIcon: {fileID: 0}
     hudIcon: {fileID: 0}
-    chance: 10
+    chance: 0
     damage: 0
     speed: 0
     bounceCount: 0

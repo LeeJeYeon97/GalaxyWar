@@ -16,7 +16,7 @@ MonoBehaviour:
   stats:
     CardIcon: {fileID: 21300000, guid: 80fc31152a1918e49a6c827b300a0527, type: 3}
     hudIcon: {fileID: 21300000, guid: ef6650460765c1946a8dde96638b9e64, type: 3}
-    chance: 30
+    chance: 100
     damage: 10
     speed: 10
     bounceCount: 0

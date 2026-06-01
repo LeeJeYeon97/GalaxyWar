@@ -27,6 +27,9 @@ public class PlayerData
     // [추가] 마지막 무료 보상 수령 날짜를 관리할 필드 추가!
     [JsonProperty("lastDailyFreeGoldClaimDate")]
     public string LastDailyFreeGoldClaimDate { get; set; } = string.Empty; // 기본값은 빈 문자열
+
+    [JsonProperty("isAdsRemoved")]
+    public bool IsAdsRemoved { get; set; }
 }
 
 public class PlayerEconomyData
