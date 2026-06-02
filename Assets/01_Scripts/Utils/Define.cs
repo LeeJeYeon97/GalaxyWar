@@ -139,47 +139,6 @@ public class Define
         Weapon_BlackHoleBullet = 107,         // 블랙홀탄
         Weapon_PoisonBullet = 108,            // 맹독탄
         
-        // ==========================================
-        // [2. 액티브 무기] : 획득 시 Lv.1, 중복 획득 시 레벨업 (최대 Lv.5)
-        // ==========================================
-
-        // 분열탄(플레이어)
-        //ActivateSplitBullet = 20,            // 분열탄 활성화
-        //UpgradeSplitBulletCount = 22,        // 분열탄 갯수 강화
-        //UpgradeSplitBulletChance = 23,       // 분열탄 확률 강화
-
-        //// 폭발탄
-        //ActivateExplosionBullet = 30,        // 폭발탄 활성화
-        //UpgradeExplosionDamage = 31,         // 폭발탄 데미지 증가
-        //UpgradeExplosionRange = 32,          // 폭발탄 범위 증가
-        //UpgradeExplosionChance = 33,         // 폭발탄 확률 증가
-
-        //// 번개탄
-        //ActivateLightningBullet = 40,        // 번개탄 활성화
-        //UpgradeLigthningCount = 41,          // 번개탄 전이 횟수 증가
-        //UpgradeLigthningDamage = 42,         // 번개탄 데미지 증가
-        //UpgradeLightningRange = 43,          // 번개탄 전이 범위 증가
-        //UpgradeLightningChance = 44,         // 번개탄 확률 증가
-
-        //// 관통탄
-        //ActivatePierceBullet = 50,           // 관통탄 활성화
-        //UpgradePierceCount = 51,             // 관통횟수 증가
-        //UpgradePierceDamage = 52,            // 관통탄 데미지 증가
-
-        //// 얼음탄
-        //ActivateIceBullet = 60,              // 얼음탄 활성화
-        //UpgradeIceSlowValue = 61,            // 슬로우 % 증가
-        //UpgradeFreezeChance = 62,            // 빙결 걸릴 확률 증가
-        //UpgradeIceSlowTime = 63,             // 슬로우 시간 증가
-        //UpgradeFreezeTime = 64,              // 빙결 시간 증가
-
-        //// 유도탄        
-        //ActivateHomingBullet = 70,           // 유도탄 활성화
-        //UpgradeHomingBulletRange = 71,       // 유도탄 범위 증가
-        //                                     // 유도탄 탐색 범위 증가
-        //// TODO : 화염탄
-        //ActivateFireBullet = 80,             // 화염탄 활성화
-        //UpgradeFireBulletDamage = 81,        // 화염탄 데미지 증가
     }
     public enum BulletType
     {
@@ -213,6 +172,15 @@ public class Define
         Boss2, 
         Boss3, 
         Boss4,
+    }
+    public enum BossPatternType
+    {
+        Spiral,
+        CircleBurst,
+        Shotgun,
+        Sniper,
+        Pinball,
+        WallGap
     }
     public enum ItemType
     {

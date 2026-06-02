@@ -12,13 +12,13 @@ public struct LightningBulletStatData
 {
     public float lightningDamageValue;
     public int lightningCount;
+    public float lightningRange;
 }
 
 [CreateAssetMenu(fileName = "LightningBulletData", menuName = "ScriptableObjects/BulletData/Lightning")]
 public class LightningBulletStatDataSO : BulletStatDataSO
 {
     public LightningBulletStatData lightningStat;
-    public float lightningRange;
     public GameObject lightningChain;
 
     public override BaseBulletStat CreateRuntimeStat()

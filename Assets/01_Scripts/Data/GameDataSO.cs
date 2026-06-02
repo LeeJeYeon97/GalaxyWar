@@ -3,14 +3,6 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-[Serializable]
-public struct PhaseInfo
-{
-    public Define.PhaseType phaseType; // 어떤 페이즈인지
-    public float startTime;           // 도달 시간 (초)
-    public float meteorSpawnInterval;   // 메테오 스폰 주기
-}
-
 [CreateAssetMenu(fileName = "GameData", menuName = "ScriptableObjects/GameData")]
 public class GameDataSO : ScriptableObject
 {

@@ -9,14 +9,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7eda5d8a78606324894a465d4e14dd5e, type: 3}
-  m_Name: Pattern_WallGap
-  m_EditorClassIdentifier: Assembly-CSharp::Pattern_WallGapSO
+  m_Script: {fileID: 11500000, guid: 54fa4554a516047468c50eca84e1def8, type: 3}
+  m_Name: Pattern_CircleBurst
+  m_EditorClassIdentifier: Assembly-CSharp::Pattern_CircleBurstSO
+  type: 1
   patternName: 
   nextPatternDelay: 2.5
-  totalBullets: 20
-  spreadAngle: 160
-  gapSize: 3
-  waveCount: 3
-  waveDelay: 1.5
-  bulletSpeed: 4
+  bulletCount: 18
+  burstCount: 2
+  burstDelay: 1
+  bulletSpeed: 6

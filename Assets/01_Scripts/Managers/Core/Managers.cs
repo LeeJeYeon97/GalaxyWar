@@ -47,7 +47,8 @@ public class Managers : MonoBehaviour
     private AdsManager _ad;
     private VirtualStoreManager _virtualStore;
     private IAPStoreManager _iapStore;
-    
+    private RemoteConfigManager _remoteConfig;
+
     // ========================================================== //
     // 프로퍼티를 통해 외부에서 접근하도록 설정
     public static InitManager Initialize => Instance._init;
@@ -75,6 +76,7 @@ public class Managers : MonoBehaviour
     public static EffectManager Effect => Instance._effect;
 
     public static StageManager Stage => Instance._stage;
+    public static RemoteConfigManager RemoteConfig => Instance._remoteConfig;
     // ========================================================== //
 
     // 추가: 외부에서 Managers.Coroutine.StartCoroutine() 으로 접근할 수 있게 열어줍니다!
@@ -122,6 +124,7 @@ public class Managers : MonoBehaviour
             _instance._setting = new SettingManager();
             _instance._effect = new EffectManager();
             _instance._stage = new StageManager();
+            _instance._remoteConfig = new RemoteConfigManager();
 
             // 컴포넌트 형태의 매니저들은 여기서 초기화하거나 자식으로 붙임
             _instance._game = Util.GetOrAddComponent<GameManager>(go);
@@ -143,6 +146,7 @@ public class Managers : MonoBehaviour
             AD.Init();
             Pool.Init();
             Data.Init();
+            _ = RemoteConfig.InitAsync();
             Stage.Init();
             Input.Init();
             Sound.Init();

@@ -1,0 +1,64 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 469c24fdb3bd6431b92cc1465bd9166b, type: 3}
+  m_Name: RemoteConfigDataStoreAsset
+  m_EditorClassIdentifier: Unity.RemoteConfig.Editor::Unity.RemoteConfig.Editor.RemoteConfigDataStore
+  _rsKeyList: "[\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"d657615e-2f53-46de-b4ff-2e736a92a8b1\"\r\n   
+    },\r\n    \"rs\": {\r\n      \"key\": \"StageBalanceData\",\r\n      \"type\":
+    \"json\",\r\n      \"schemaId\": \"\",\r\n      \"value\": {\r\n        \"maxStage\":
+    100,\r\n        \"baseSpawnDelay\": 1,\r\n        \"minSpawnDelay\": 0.1,\r\n       
+    \"spawnDelayDecrease\": 0,\r\n        \"hpGrowthPerStage\": 10,\r\n        \"hpMultiplierPerStage\":
+    1.02,\r\n        \"speedGrowthPerStage\": 0.05,\r\n        \"bossStageInterval\":
+    5,\r\n        \"waves\": [\r\n          {\r\n            \"phaseType\": 0,\r\n           
+    \"waveStartTime\": 0,\r\n            \"waveHpRate\": 1,\r\n            \"waveSpawnDelay\":
+    1,\r\n            \"expRate\": 1,\r\n            \"speedRate\": 1\r\n         
+    },\r\n          {\r\n            \"phaseType\": 1,\r\n            \"waveStartTime\":
+    90,\r\n            \"waveHpRate\": 1.3,\r\n            \"waveSpawnDelay\": 0.7,\r\n           
+    \"expRate\": 1.2,\r\n            \"speedRate\": 1.2\r\n          },\r\n         
+    {\r\n            \"phaseType\": 2,\r\n            \"waveStartTime\": 180,\r\n           
+    \"waveHpRate\": 1.5,\r\n            \"waveSpawnDelay\": 0.5,\r\n            \"expRate\":
+    1.5,\r\n            \"speedRate\": 1.5\r\n          },\r\n          {\r\n           
+    \"phaseType\": 3,\r\n            \"waveStartTime\": 270,\r\n            \"waveHpRate\":
+    5,\r\n            \"waveSpawnDelay\": 0.3,\r\n            \"expRate\": 1,\r\n           
+    \"speedRate\": 1.5\r\n          },\r\n          {\r\n            \"phaseType\":
+    4,\r\n            \"waveStartTime\": 360,\r\n            \"waveHpRate\": 7,\r\n           
+    \"waveSpawnDelay\": 0.1,\r\n            \"expRate\": 1,\r\n            \"speedRate\":
+    1.5\r\n          }\r\n        ]\r\n      }\r\n    }\r\n  }\r\n]"
+  _rsLastCachedKeyList: "[\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"d657615e-2f53-46de-b4ff-2e736a92a8b1\"\r\n   
+    },\r\n    \"rs\": {\r\n      \"key\": \"StageBalanceData\",\r\n      \"type\":
+    \"json\",\r\n      \"schemaId\": null,\r\n      \"value\": {\r\n        \"maxStage\":
+    100,\r\n        \"baseSpawnDelay\": 1,\r\n        \"minSpawnDelay\": 0.1,\r\n       
+    \"spawnDelayDecrease\": 0,\r\n        \"hpGrowthPerStage\": 10,\r\n        \"hpMultiplierPerStage\":
+    1.02,\r\n        \"speedGrowthPerStage\": 0.05,\r\n        \"bossStageInterval\":
+    5,\r\n        \"waves\": [\r\n          {\r\n            \"phaseType\": 0,\r\n           
+    \"waveStartTime\": 0,\r\n            \"waveHpRate\": 1,\r\n            \"waveSpawnDelay\":
+    1,\r\n            \"expRate\": 1,\r\n            \"speedRate\": 1\r\n         
+    },\r\n          {\r\n            \"phaseType\": 1,\r\n            \"waveStartTime\":
+    180,\r\n            \"waveHpRate\": 1.5,\r\n            \"waveSpawnDelay\": 0.8,\r\n           
+    \"expRate\": 1.2,\r\n            \"speedRate\": 1.1\r\n          },\r\n         
+    {\r\n            \"phaseType\": 2,\r\n            \"waveStartTime\": 0,\r\n           
+    \"waveHpRate\": 1,\r\n            \"waveSpawnDelay\": 1,\r\n            \"expRate\":
+    1,\r\n            \"speedRate\": 1\r\n          },\r\n          {\r\n           
+    \"phaseType\": 3,\r\n            \"waveStartTime\": 0,\r\n            \"waveHpRate\":
+    1,\r\n            \"waveSpawnDelay\": 1,\r\n            \"expRate\": 1,\r\n           
+    \"speedRate\": 1\r\n          },\r\n          {\r\n            \"phaseType\":
+    4,\r\n            \"waveStartTime\": 0,\r\n            \"waveHpRate\": 1,\r\n           
+    \"waveSpawnDelay\": 1,\r\n            \"expRate\": 1,\r\n            \"speedRate\":
+    1\r\n          }\r\n        ]\r\n      }\r\n    }\r\n  }\r\n]"
+  _environments: "[\r\n  {\r\n    \"projectId\": \"81c40dac-89db-46ca-8209-4adaf08ceef5\",\r\n   
+    \"name\": \"development\",\r\n    \"id\": \"644feeeb-2816-46fe-9145-1ac2b65f001e\",\r\n   
+    \"isDefault\": false,\r\n    \"createdAt\": \"2026-04-13T01:58:02Z\",\r\n   
+    \"updatedAt\": \"2026-04-13T01:58:02Z\"\r\n  },\r\n  {\r\n    \"projectId\":
+    \"81c40dac-89db-46ca-8209-4adaf08ceef5\",\r\n    \"name\": \"production\",\r\n   
+    \"id\": \"25111c7c-b610-46c3-93ed-de0ce31e38b3\",\r\n    \"isDefault\": true,\r\n   
+    \"createdAt\": \"2025-12-23T11:59:16Z\",\r\n    \"updatedAt\": \"2025-12-23T11:59:16Z\"\r\n 
+    }\r\n]"

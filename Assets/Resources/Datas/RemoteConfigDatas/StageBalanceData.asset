@@ -16,9 +16,9 @@ MonoBehaviour:
   baseSpawnDelay: 1
   minSpawnDelay: 0.1
   spawnDelayDecrease: 0
-  hpGrowthPerStage: 1
-  hpMultiplierPerStage: 1
-  speedGrowthPerStage: 0
+  hpGrowthPerStage: 10
+  hpMultiplierPerStage: 1.02
+  speedGrowthPerStage: 0.05
   waves:
   - phaseType: 0
     waveStartTime: 0
@@ -28,7 +28,7 @@ MonoBehaviour:
     speedRate: 1
   - phaseType: 1
     waveStartTime: 90
-    waveHpRate: 1.3
+    waveHpRate: 1.2
     waveSpawnDelay: 0.7
     expRate: 1.2
     speedRate: 1.2

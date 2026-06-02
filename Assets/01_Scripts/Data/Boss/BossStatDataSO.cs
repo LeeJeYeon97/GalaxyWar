@@ -2,6 +2,28 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
+[System.Serializable]
+public class BossConfigWrapper
+{
+    public List<BossBalanceData> bossList;
+}
+
+[System.Serializable]
+public struct BossBalanceData
+{
+    public string Type;
+    public float MaxHp;
+    public float Speed;
+    public float Damage;
+    public float Score;
+
+    public List<DropItemRateString> dropTable;
+
+    //  핵심: 서버에서는 패턴의 '이름표'들만 문자열 리스트로 받습니다!
+    public List<string> myPatterns;
+}
+
+
 [CreateAssetMenu(fileName = "BossStatData", menuName = "ScriptableObjects/BossStatData")]
 public class BossStatDataSO : ScriptableObject
 {

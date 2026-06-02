@@ -10,6 +10,41 @@ public struct DropItemRate
     [Range(0f, 1f)]
     public float dropRate;          // 0.0(0%) ~ 1.0(100%) 확률
 }
+[System.Serializable]
+public class MeteorConfigWrapper
+{
+    public List<MeteorBalanceData> meteorList;
+}
+
+[System.Serializable]
+public struct MeteorBalanceData
+{
+    //  핵심: Define.MeteorType 이 아니라 일단 string으로 받습니다!
+    public string Type;
+    public bool IsExclude;
+    public float MaxHp;
+    public float MaxSpeed;
+    public float MinSpeed;
+    public float Damage;
+    public float Score;
+    public float Exp;
+
+    public string spawnPhase;
+    public bool targetChase;
+
+    //  특수 기믹 밸런스 수치 추가!
+    public float magmaTick;
+    public float auraRadius;
+
+    public List<DropItemRateString> dropTable;
+}
+//  드랍 아이템용 구조체도 string으로 받을 수 있게 하나 만들어 줍니다.
+[System.Serializable]
+public struct DropItemRateString
+{
+    public string itemType;
+    public float dropRate;
+}
 
 [CreateAssetMenu(fileName = "MeteorStatData", menuName = "ScriptableObjects/MeteorStatData")]
 public class MeteorStatDataSO : ScriptableObject

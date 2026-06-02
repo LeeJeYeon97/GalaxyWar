@@ -107,7 +107,7 @@ public class LightningBulletStat : BaseBulletStat
         if (data is LightningBulletStatDataSO da)
         {
             lightningDamageValue.Init(da.lightningStat.lightningDamageValue);
-            lightningRange.Init(da.lightningRange);
+            lightningRange.Init(da.lightningStat.lightningRange);
             lightningCount.Init(da.lightningStat.lightningCount);
             ligthningChainObject = da.lightningChain;
         }

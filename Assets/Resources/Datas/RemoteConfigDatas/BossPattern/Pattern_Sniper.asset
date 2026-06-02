@@ -9,11 +9,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2973542b5d90f264cbf97b8887cd56ec, type: 3}
-  m_Name: Pattern_Pinball
-  m_EditorClassIdentifier: Assembly-CSharp::Pattern_PinballSO
+  m_Script: {fileID: 11500000, guid: da74a05dc5856bd4bbf9dfed98153ca8, type: 3}
+  m_Name: Pattern_Sniper
+  m_EditorClassIdentifier: Assembly-CSharp::Pattern_SniperSO
+  type: 3
   patternName: 
   nextPatternDelay: 2.5
-  totalBullets: 16
-  fireDelay: 0.15
-  bulletSpeed: 8
+  burstCount: 5
+  fireDelay: 0.08
+  repeatCount: 3
+  repeatDelay: 1.2
+  bulletSpeed: 12

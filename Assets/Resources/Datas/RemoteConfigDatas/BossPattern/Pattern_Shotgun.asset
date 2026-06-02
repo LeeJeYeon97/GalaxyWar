@@ -9,13 +9,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: da74a05dc5856bd4bbf9dfed98153ca8, type: 3}
-  m_Name: Pattern_Sniper
-  m_EditorClassIdentifier: Assembly-CSharp::Pattern_SniperSO
+  m_Script: {fileID: 11500000, guid: fb0c1060d3a6025498ebb741dbfbfb42, type: 3}
+  m_Name: Pattern_Shotgun
+  m_EditorClassIdentifier: Assembly-CSharp::Pattern_ShotgunSO
+  type: 2
   patternName: 
   nextPatternDelay: 2.5
-  burstCount: 5
-  fireDelay: 0.08
-  repeatCount: 3
-  repeatDelay: 1.2
-  bulletSpeed: 12
+  bulletCount: 5
+  spreadAngle: 60
+  burstCount: 3
+  burstDelay: 0.5
+  bulletSpeed: 7

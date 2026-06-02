@@ -18,6 +18,7 @@ public class DataManager
 
     public Dictionary<Define.MeteorType, MeteorStatDataSO> MeteorStatDataDict {  get; private set; }
     public Dictionary<Define.BossType, BossStatDataSO> BossStatDataDict { get; private set; }
+    public Dictionary<Define.BossPatternType, BossPatternSO> BossPatternDict { get; private set; }
     public SoundDataSO SoundData { get; private set; }
     public EffectDataSO EffectData { get; private set; }
     public StageBalanceDataSO StageData { get; private set; }
@@ -25,53 +26,46 @@ public class DataManager
 
     public void Init()
     {
-        BulletDataDict = LoadDataToDict<Define.BulletType, BulletStatDataSO>("BulletStat", data => data.type);
+        // 딕셔너리 로드 (내부에서 자동으로 복사본 생성)
+        BulletDataDict = LoadDataToDict<Define.BulletType, BulletStatDataSO>("RemoteConfigDatas/BulletStat", data => data.type);
+        AbilityDataDict = LoadDataToDict<Define.AbilityType, AbilityDataSO>("RemoteConfigDatas/Abilities", data => data.type);
 
-        // 2. Abilities는 만약 내부에 'abilityID' 같은 별도 필드가 있다면 그것을 키로 사용
-        // AbilityDataDict = LoadDataToDict<string, AbilityDataSO>("Abilities", data => data.abilityID);
-        AbilityDataDict = LoadDataToDict<Define.AbilityType, AbilityDataSO>("Abilities", data => data.type);
+        // [핵심 변경] 새로 만든 안전 로드 함수(LoadAndInstantiate)를 사용하여 코드가 엄청나게 깔끔해졌습니다!
+        GameData = LoadAndInstantiate<GameDataSO>("Datas/RemoteConfigDatas/GameData");
+        playerStatData = LoadAndInstantiate<PlayerStatDataSO>("Datas/RemoteConfigDatas/PlayerStatData");
+        StageData = LoadAndInstantiate<StageBalanceDataSO>("Datas/RemoteConfigDatas/StageBalanceData");
+        MeteorStatDataDict = LoadDataToDict<Define.MeteorType, MeteorStatDataSO>("RemoteConfigDatas/Meteors", data => data.Type);
 
-        GameData = Managers.Resource.Load<GameDataSO>("Datas/GameData");
-        if(GameData == null)
-        {
-            Debug.LogError("GameData Null");
-        }
-        playerStatData = Managers.Resource.Load<PlayerStatDataSO>("Datas/PlayerStatData");
-        if (playerStatData == null)
-        {
-            Debug.LogError("playerStatData Null");
-        }
 
-        SoundData = Managers.Resource.Load<SoundDataSO>("Datas/SoundData");
-        if (SoundData == null)
-        {
-            Debug.LogError("SoundData Null");
-        }
-
-        EffectData = Managers.Resource.Load<EffectDataSO>("Datas/EffectData");
-        if (EffectData == null)
-        {
-            Debug.LogError("EffectData Null");
-        }
-
-        StageData = Managers.Resource.Load<StageBalanceDataSO>("Datas/StageBalanceData");
-        if (StageData == null)
-        {
-            Debug.LogError("StageData Null");
-        }
+        EffectData = LoadAndInstantiate<EffectDataSO>("Datas/EffectData");
+        SoundData = LoadAndInstantiate<SoundDataSO>("Datas/SoundData");
         ShopItemDataDict = LoadDataToDict<Define.ShopItemType, ShopItemDataSO>("ShopItems", data => data.type);
+        ItemDataList = LoadDataToDict<Define.ItemType, ItemDataSO>("Items", data => data.type);
 
-        ItemDataList = LoadDataToDict<Define.ItemType, ItemDataSO>("Items",data => data.type);
-        MeteorStatDataDict = LoadDataToDict<Define.MeteorType, MeteorStatDataSO>("Meteors", data => data.Type);
+        BossStatDataDict = LoadDataToDict<Define.BossType, BossStatDataSO>("RemoteConfigDatas/Boss", data => data.Type);
+        BossPatternDict = LoadDataToDict<Define.BossPatternType, BossPatternSO>("RemoteConfigDatas/BossPattern", data => data.type);
+    }
 
-        BossStatDataDict = LoadDataToDict<Define.BossType, BossStatDataSO>("Boss", data => data.Type);
+    /// <summary>
+    ///  단일 ScriptableObject를 안전하게(복사본으로) 불러오는 헬퍼 함수
+    /// 에디터에서 원본 파일이 변조되는 것을 완벽하게 막아줍니다.
+    /// </summary>
+    private T LoadAndInstantiate<T>(string path) where T : ScriptableObject
+    {
+        T original = Managers.Resource.Load<T>(path);
+        if (original != null)
+        {
+            // 원본 파일은 그대로 두고, 메모리에 똑같이 생긴 복사본(Clone)을 띄워서 반환합니다.
+            return UnityEngine.Object.Instantiate(original);
+        }
+
+        Debug.LogError($"DataManager Null 에러: {path} 경로에서 데이터를 찾을 수 없습니다.");
+        return null;
     }
 
     /// <summary>
     /// 데이터를 로드하여 지정한 키 생성 규칙에 따라 딕셔너리를 생성합니다.
     /// </summary>
-    /// <typeparam name="TKey">딕셔너리의 키 타입 (string, int, Enum 등)</typeparam>
-    /// <typeparam name="TValue">데이터 타입 (ScriptableObject 상속체)</typeparam>
     private Dictionary<TKey, TValue> LoadDataToDict<TKey, TValue>(string folderName, Func<TValue, TKey> keySelector) where TValue : ScriptableObject
     {
         Dictionary<TKey, TValue> dict = new Dictionary<TKey, TValue>();
@@ -85,15 +79,19 @@ public class DataManager
 
         foreach (var data in datas)
         {
-            // keySelector 델리게이트를 실행하여 데이터에서 키를 뽑아냄
             TKey key = keySelector(data);
 
             if (key == null) continue;
 
             if (!dict.ContainsKey(key))
-                dict.Add(key, data);
+            {
+                //  딕셔너리에 들어가는 수많은 데이터들도 나중에 RemoteConfig로 수정할 때를 대비해 모두 복사본으로 저장!
+                dict.Add(key, UnityEngine.Object.Instantiate(data));
+            }
             else
+            {
                 Debug.LogWarning($"DataManager: 중복된 키 감지! Type: {typeof(TValue)}, Key: {key}");
+            }
         }
 
         return dict;
@@ -107,10 +105,15 @@ public class DataManager
         if (datas == null || datas.Length == 0)
         {
             Debug.LogWarning($"DataManager: Datas/{folderName} 경로에 데이터가 없습니다.");
-            return null;
+            return list; // null 대신 빈 리스트 반환이 널포인터 에러 예방에 좋습니다.
         }
 
-        list = datas.ToList<T>();
+        // 리스트 역시 안전하게 복사
+        foreach (var data in datas)
+        {
+            list.Add(UnityEngine.Object.Instantiate(data));
+        }
+
         return list;
     }
 
