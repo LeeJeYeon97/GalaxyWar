@@ -98,35 +98,39 @@ public class UI_GameOverPopup : UI_Popup
     }
     private async void OnClickRestartButton()
     {
-        // 1. 중복 클릭 방지를 위해 버튼 비활성화
         GetButton((int)Buttons.Btn_Restart).interactable = false;
 
-        // 2. 서버 데이터 저장 완료까지 대기
-        await SaveSessionData();
+        // 1. 로딩 팝업 띄우기
+        var popup = Managers.UI.ShowPopupUI<UI_LoadingPopup>();
 
-        // 로비로 돌아가기
-        // 현재 씬(GameScene)을 다시 로드! (가장 깔끔한 초기화)
+        // 2. 데이터 매니저에게 골드+기록 통합 저장을 요청하고 끝날 때까지 대기
+        await Managers.PlayerData.SavePlayerData(false);
+
+        // 3. 저장이 끝나면 로딩 창 닫기
+        Managers.UI.ClosePopupUI(popup);
+
+        // 4. 로비로 돌아가기 (광고 후 씬 로드)
         Managers.AD.ShowInterstitialAd(() =>
         {
-            // 이 중괄호 안의 코드는 유저가 광고를 [X] 버튼으로 닫거나, 
-            // 쿨타임 등으로 광고가 스킵되었을 때만 실행됩니다!
             Managers.Scene.LoadScene(Define.Scene.GameScene);
         });
     }
     private async void OnClickQuitLobbyButton()
     {
-        // 1. 중복 클릭 방지
         GetButton((int)Buttons.Btn_QuitLobby).interactable = false;
 
-        // 2. 서버 데이터 저장 완료까지 대기
-        await SaveSessionData();
+        // 1. 로딩 팝업 띄우기
+        var popup = Managers.UI.ShowPopupUI<UI_LoadingPopup>();
 
-        // 로비로 돌아가기
-        // 현재 씬(GameScene)을 다시 로드! (가장 깔끔한 초기화)
+        // 2. 데이터 매니저에게 골드+기록 통합 저장을 요청하고 끝날 때까지 대기
+        await Managers.PlayerData.SavePlayerData(false);
+
+        // 3. 저장이 끝나면 로딩 창 닫기
+        Managers.UI.ClosePopupUI(popup);
+
+        // 4. 로비로 돌아가기 (광고 후 씬 로드)
         Managers.AD.ShowInterstitialAd(() =>
         {
-            // 이 중괄호 안의 코드는 유저가 광고를 [X] 버튼으로 닫거나, 
-            // 쿨타임 등으로 광고가 스킵되었을 때만 실행됩니다!
             Managers.Scene.LoadScene(Define.Scene.LobbyScene);
         });
     }
@@ -141,13 +145,6 @@ public class UI_GameOverPopup : UI_Popup
             if (success)
             {
                 Debug.Log("부활 광고 시청 완료! 플레이어를 부활시킵니다.");
-
-
-
-
-
-                //    player.Revive();
-                //}
 
                 Managers.Game.RevivePlayer();
 
@@ -165,31 +162,31 @@ public class UI_GameOverPopup : UI_Popup
         });
     }
 
-    private async Task SaveSessionData()
-    {
-        int sessionGold = Managers.Game.currentSessionGold;
+    //private async Task SaveSessionData()
+    //{
+    //    int sessionGold = Managers.Game.currentSessionGold;
 
-        var popup = Managers.UI.ShowPopupUI<UI_LoadingPopup>();
-        // 얻은 골드가 0보다 클 때만 서버에 요청을 보냅니다.
-        if (sessionGold > 0)
-        {
-            Debug.Log($"서버에 {sessionGold} 골드 저장을 요청합니다...");
+    //    var popup = Managers.UI.ShowPopupUI<UI_LoadingPopup>();
+    //    // 얻은 골드가 0보다 클 때만 서버에 요청을 보냅니다.
+    //    if (sessionGold > 0)
+    //    {
+    //        Debug.Log($"서버에 {sessionGold} 골드 저장을 요청합니다...");
 
-            // 저번에 만든 PlayerEconomyManager의 기능을 활용합니다.
-            // (함수명은 프로젝트의 Economy 관리자 구현에 맞게 맞추시면 됩니다)
-            bool success = await Managers.PlayerEconomy.AddGoldAsync(sessionGold);
+    //        // 저번에 만든 PlayerEconomyManager의 기능을 활용합니다.
+    //        // (함수명은 프로젝트의 Economy 관리자 구현에 맞게 맞추시면 됩니다)
+    //        bool success = await Managers.PlayerEconomy.AddGoldAsync(sessionGold);
 
-            if (success)
-                Debug.Log("골드 저장 성공!");
-            else
-                Debug.LogWarning("골드 저장 실패. 네트워크 상태를 확인하세요.");
-        }
+    //        if (success)
+    //            Debug.Log("골드 저장 성공!");
+    //        else
+    //            Debug.LogWarning("골드 저장 실패. 네트워크 상태를 확인하세요.");
+    //    }
 
-        // 2. 플레이어 최고 기록(점수, 생존 시간) 저장
-        Debug.Log("서버에 플레이어 기록 저장을 요청합니다...");
+    //    // 2. 플레이어 최고 기록(점수, 생존 시간) 저장
+    //    Debug.Log("서버에 플레이어 기록 저장을 요청합니다...");
 
-        // PlayerDataManager에 만들어둔 저장 함수를 호출하고 끝날 때까지 기다립니다.
-        await Managers.PlayerData.SavePlayerData(false);
-        Managers.UI.ClosePopupUI(popup);
-    }
+    //    // PlayerDataManager에 만들어둔 저장 함수를 호출하고 끝날 때까지 기다립니다.
+    //    await Managers.PlayerData.SavePlayerData(false);
+    //    Managers.UI.ClosePopupUI(popup);
+    //}
 }

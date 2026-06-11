@@ -262,7 +262,7 @@ Canvas:
   m_GameObject: {fileID: 4632255605501395344}
   m_Enabled: 1
   serializedVersion: 3
-  m_RenderMode: 0
+  m_RenderMode: 1
   m_Camera: {fileID: 0}
   m_PlaneDistance: 100
   m_PixelPerfect: 0
@@ -328,4 +328,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 359109d56bdef6c45bb883eb6ddefd37, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UI_StartCountDownPopup
-  canvasRenderMode: 0
+  canvasRenderMode: 1

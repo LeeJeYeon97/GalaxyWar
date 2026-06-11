@@ -62,6 +62,8 @@ public class Define
         Sfx_GameStart,
         Sfx_BurstModeOnAlarm,
         Sfx_NormalBulletHit,
+        Sfx_UpgradeLineUpSound,
+        Sfx_UpgradeIconOpenSound,
     }
     public enum UIEvent
     {
@@ -101,6 +103,8 @@ public class Define
         Screen_BurstMode,
         Screen_PlayerHit,
         Meteor_ShockHit,
+        IceBullet_Hit,
+        IceBullet_Explosion,
     }
     public enum AbilityType
     {
@@ -139,6 +143,13 @@ public class Define
         Weapon_BlackHoleBullet = 107,         // 블랙홀탄
         Weapon_PoisonBullet = 108,            // 맹독탄
         
+    }
+    public enum UpgradeType 
+    { 
+        HP, 
+        Damage, 
+        Speed, 
+        Defense 
     }
     public enum BulletType
     {
@@ -188,6 +199,7 @@ public class Define
         RecoveryBurst,          // 버스트 게이지 회복
         Gold,
         Exp,
+        Magnet,
     }
     public enum ShopItemType
     {

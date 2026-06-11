@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 188c54a4195879741a7c060ae727c669, type: 3}
+  m_Name: Magnet
+  m_EditorClassIdentifier: Assembly-CSharp::ItemDataSO
+  type: 4
+  itemName: "\uC790\uC11D"
+  isDrop: 1
+  originalPrefab: {fileID: 4897896328884475170, guid: e4524357ea22bc1429f41e12a8e697c6, type: 3}
+  minValue: 0
+  maxValue: 0
+  getSoundClip: {fileID: 8300000, guid: 74b38292e944b3a4c9e93fce6b826880, type: 3}

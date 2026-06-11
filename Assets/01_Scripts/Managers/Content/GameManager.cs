@@ -119,8 +119,6 @@ public class GameManager : MonoBehaviour
             {
                 Managers.Map.UpdateMap();
             });
-            // [보스 스테이지인 경우]
-            Debug.Log("10분 도달! 잔몹 스폰을 중지하고 보스를 소환합니다.");
 
             // 1. 일반 메테오 스폰 속도를 무한대로 늘리거나 스포너를 멈춤
             spawner.StopSpawn(); // 혹은 스폰 딜레이를 9999로 변경
@@ -131,6 +129,7 @@ public class GameManager : MonoBehaviour
             ClearAllMeteors();
             AbsorbAllItemsAndLevelUp();
 
+            Managers.Game._player.GetComponentInChildren<AttackRangeIndicator>().HideCircle();
             // 2. 보스 스폰 로직 호출 (StageManager가 들고 있는 프리팹과 HP 사용)
             BossStat stat = Managers.Stat.GetRandomBossStat();
             if(stat == null)
@@ -142,8 +141,6 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            // [일반 스테이지인 경우]
-            Debug.Log("10분 생존 성공! 일반 스테이지 클리어 처리합니다.");
             ChangeGameState(GameState.GameClear);
         }
     }
@@ -215,32 +212,13 @@ public class GameManager : MonoBehaviour
     {
         if (activeItems.Count == 0) return;
 
-        int totalExpToGain = 0;
-
         for (int i = activeItems.Count - 1; i >= 0; i--)
         {
             ItemController item = activeItems[i];
 
-             //1. (선택) 아이템 타입이 경험치인지 체크 후, 해당 경험치 값을 미리 전부 더해둡니다.
-             //(대표님의 아이템 데이터 구조에 맞게 item.customValue 등을 가져오시면 됩니다)
-             if (item._data.type == ItemType.Exp)
-             {
-                  totalExpToGain += item.value;
-             }
-
             // 2. 시각적으로 빨려 들어가는 연출 실행
             item.AbsorbToPlayer(_player.transform);
         }
-
-        // 3. 리스트 비우기 (어차피 DOTween 끝나면 알아서 파괴되므로 리스트만 비웁니다)
-        //activeItems.Clear();
-
-        //// 4. 모인 경험치를 플레이어에게 딱 '1번'만 지급!
-        //// 이렇게 해야 렉이 안 걸리고, 레벨이 여러 번 올랐다면 레벨업 UI가 차례대로 뜨게 됩니다.
-        //if (totalExpToGain > 0)
-        //{
-        //     Managers.Level.AddExp(totalExpToGain);
-        //}
     }
     public void ChangeGameState(GameState state)
     {

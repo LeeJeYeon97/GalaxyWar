@@ -1,0 +1,10 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="LeaderboardDeploymentStyle.uss" />
+    <ui:VisualElement>
+        <ui:VisualElement name="ContainerAddScore" class="container-add">
+            <ui:Button text="Add Score" name="ButtonAdd" />
+            <ui:IntegerField value="42" name="IntField" />
+        </ui:VisualElement>
+        <ui:Button text="Log Score" name="ButtonLog" />
+    </ui:VisualElement>
+</ui:UXML>

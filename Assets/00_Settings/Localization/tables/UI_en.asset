@@ -19,19 +19,19 @@ MonoBehaviour:
     m_Items: []
   m_TableData:
   - m_Id: 99079049216
-    m_Localized: System Init...
+    m_Localized: System Initializing...
     m_Metadata:
       m_Items: []
   - m_Id: 283766837248
-    m_Localized: Touch To Start
+    m_Localized: Touch to Start
     m_Metadata:
       m_Items: []
   - m_Id: 788064784384
-    m_Localized: Check Account...
+    m_Localized: Checking Account Info...
     m_Metadata:
       m_Items: []
   - m_Id: 195585789952
-    m_Localized: PlayerData Async...
+    m_Localized: Syncing Player Data...
     m_Metadata:
       m_Items: []
   - m_Id: 11032912351232
@@ -55,11 +55,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 12224199544832
-    m_Localized: Touch To Close
+    m_Localized: Touch to Close
     m_Metadata:
       m_Items: []
   - m_Id: 12363618209792
-    m_Localized: Setting
+    m_Localized: Settings
     m_Metadata:
       m_Items: []
   - m_Id: 13046530592768
@@ -79,7 +79,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 13492309610496
-    m_Localized: Do you really want to quit game?
+    m_Localized: Do you really want to quit the game?
     m_Metadata:
       m_Items: []
   - m_Id: 13825815498752
@@ -87,11 +87,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 13788565884928
-    m_Localized: PlayerID
+    m_Localized: Player ID
     m_Metadata:
       m_Items: []
   - m_Id: 13785076224000
-    m_Localized: NickName
+    m_Localized: Nickname
     m_Metadata:
       m_Items: []
   - m_Id: 13749642743808
@@ -107,7 +107,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 19254285062144
-    m_Localized: 'Count : {0}'
+    m_Localized: 'Remaining: {0}'
     m_Metadata:
       m_Items: []
   - m_Id: 23026897932288
@@ -119,7 +119,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 21858436141056
-    m_Localized: SETTING
+    m_Localized: SETTINGS
     m_Metadata:
       m_Items: []
   - m_Id: 21837296848896
@@ -131,7 +131,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 19171908931584
-    m_Localized: COTINUE
+    m_Localized: CONTINUE
     m_Metadata:
       m_Items: []
   - m_Id: 1401619523719168
@@ -139,15 +139,15 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 6452206539788288
-    m_Localized: Kill
+    m_Localized: Kills
     m_Metadata:
       m_Items: []
   - m_Id: 6452246775746560
-    m_Localized: Gold
+    m_Localized: Gold Earned
     m_Metadata:
       m_Items: []
   - m_Id: 6452147148443648
-    m_Localized: Survive Time
+    m_Localized: Survival Time
     m_Metadata:
       m_Items: []
   - m_Id: 6452062700326912
@@ -167,7 +167,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 6544904554696704
-    m_Localized: Top SurviveTime
+    m_Localized: Top Survival Time
     m_Metadata:
       m_Items: []
   - m_Id: 11638247705956352
@@ -175,19 +175,19 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 11638124963844096
-    m_Localized: Reward 2x!!
+    m_Localized: 2x Reward!
     m_Metadata:
       m_Items: []
   - m_Id: 11638196908740608
-    m_Localized: NEXT STAGE
+    m_Localized: NEXT CHAPTER
     m_Metadata:
       m_Items: []
   - m_Id: 11840956274987008
-    m_Localized: STAT
+    m_Localized: STATS
     m_Metadata:
       m_Items: []
   - m_Id: 11840995395260416
-    m_Localized: ABILITY
+    m_Localized: ABILITIES
     m_Metadata:
       m_Items: []
   - m_Id: 11841093692968960
@@ -203,11 +203,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 11841206528135168
-    m_Localized: Max Hp
+    m_Localized: Max HP
     m_Metadata:
       m_Items: []
   - m_Id: 11841228091052032
-    m_Localized: Speed
+    m_Localized: Movement Speed
     m_Metadata:
       m_Items: []
   - m_Id: 11841272550674432
@@ -215,15 +215,15 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 11841305333354496
-    m_Localized: Shot Time
+    m_Localized: Fire Delay
     m_Metadata:
       m_Items: []
   - m_Id: 11841327819018240
-    m_Localized: BurstMode ChargeTime
+    m_Localized: Burst Mode Charge Time
     m_Metadata:
       m_Items: []
   - m_Id: 11841637996187648
-    m_Localized: Shield ChargeTime
+    m_Localized: Shield Charge Time
     m_Metadata:
       m_Items: []
   - m_Id: 11841722486247424
@@ -231,11 +231,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 11841812219187200
-    m_Localized: Bullet Bounce Count
+    m_Localized: Ricochet Count
     m_Metadata:
       m_Items: []
   - m_Id: 11841248320180224
-    m_Localized: Reload Count
+    m_Localized: Magazine Capacity
     m_Metadata:
       m_Items: []
   - m_Id: 12990919751127040
@@ -279,7 +279,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 15223988491014144
-    m_Localized: Top Clear Stage
+    m_Localized: Highest Cleared Stage
     m_Metadata:
       m_Items: []
   - m_Id: 15929497426743296

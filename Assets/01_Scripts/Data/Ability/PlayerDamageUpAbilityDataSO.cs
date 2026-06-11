@@ -29,12 +29,13 @@ public class PlayerDamageUpAbilityDataSO : PlayerAbilityDataSO
     {
         if (level < 0 || level > maxHpIncreases.Count) return;
 
-        // 모든 탄환의 공격력 증가
-        foreach (var stat in Managers.Stat.bulletStatDict)
-        {
-            // 데미지 비율로 증가
-            stat.Value.damage.AddMultiplier(maxHpIncreases[level]);
-        }
-        Managers.Event.PostEvent(Define.ActionEvent.BulletDamageUp);
+        //// 모든 탄환의 공격력 증가
+        //foreach (var stat in Managers.Stat.bulletStatDict)
+        //{
+        //    // 데미지 비율로 증가
+        //    stat.Value.damage.AddMultiplier(maxHpIncreases[level]);
+        //}
+        targetStat.damage.AddMultiplier(maxHpIncreases[level]);
+        //Managers.Event.PostEvent(Define.ActionEvent.BulletDamageUp);
     }
 }

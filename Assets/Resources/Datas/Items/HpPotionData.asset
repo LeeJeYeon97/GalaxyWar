@@ -14,5 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ItemDataSO
   type: 0
   itemName: "Hp\uD3EC\uC158"
-  sprite: {fileID: 3612672720353975195, guid: e964c691648f27a4ebd96f97cabbd998, type: 3}
-  value: 1
+  isDrop: 1
+  originalPrefab: {fileID: 5837151271949650945, guid: 3419bfb77de62e5469adce251a269223, type: 3}
+  minValue: 25
+  maxValue: 25
+  getSoundClip: {fileID: 8300000, guid: 74b38292e944b3a4c9e93fce6b826880, type: 3}

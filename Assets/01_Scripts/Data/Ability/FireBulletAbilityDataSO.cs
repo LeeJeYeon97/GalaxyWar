@@ -36,7 +36,8 @@ public class FireBulletAbilityDataSO : BulletAbilityDataSO
         {
             stat.fireDamageValue.AddValue(data.fireDamageValue);
             stat.fireRemainTime.AddValue(data.fireRemainTime);
-
+            stat.fireZoneDestroyTime.AddValue(data.fireZoneDestroyTime);
+            stat.fireZoneSize.AddValue(data.fireZoneSize);
         }
         base.ApplyLevelUp(level, targetStat);
     }

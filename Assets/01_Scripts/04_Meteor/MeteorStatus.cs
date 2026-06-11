@@ -19,8 +19,12 @@ public class MeteorStatus : MonoBehaviour
     private GameObject shockDeBuffEffect;
     public bool HasShockDebuff { get; private set; } = false;
 
-    // 1. 감전 묻히기
-    
+    // [변경점] 얼음 장판 예약 변수들
+    public bool hasIcePuddleMark = false;
+    public float icePuddleDamage = 0f;
+    public float icePuddleRadius = 0f;
+    public float icePuddleSlowPercent = 0f;
+
     private void Awake()
     {
         _controller = GetComponent<MeteorController>();
@@ -50,6 +54,12 @@ public class MeteorStatus : MonoBehaviour
     {
         HasAuraBuff = false;
         HasShockDebuff = false;
+
+        // [변경점] 얼음 장판 마커 초기화
+        hasIcePuddleMark = false;
+        icePuddleDamage = 0f;
+        icePuddleRadius = 0f;
+        icePuddleSlowPercent = 0f;
 
         _auraBuffEndTime = 0f;
         auraBuff.SetActive(false);
@@ -176,9 +186,21 @@ public class MeteorStatus : MonoBehaviour
         _controller.Movement.UpdateVelocity();
         _freezeCoroutine = null;
         _controller.Visual.ReturnColor();
+        hasIcePuddleMark = false;
 
         ApplySlow(slowPercent, slowDuration);
     }
+
+    // 총알이 5레벨일 때 이 몬스터에게 얼음 파편 폭발을 예약하는 함수
+    // [변경점] 파편 마커 함수 대신 장판 마커 함수로 변경
+    public void AddIcePuddleMark(float damage, float radius, float slowPercent)
+    {
+        hasIcePuddleMark = true;
+        icePuddleDamage = damage;
+        icePuddleRadius = radius;
+        icePuddleSlowPercent = slowPercent;
+    }
+
     #endregion
 
     #region 화상

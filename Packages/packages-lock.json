@@ -352,6 +352,17 @@
         "com.unity.render-pipelines.core": "17.0.3"
       }
     },
+    "com.unity.samples.lb-deployment": {
+      "version": "file:com.unity.samples.lb-deployment",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {
+        "com.unity.services.authentication": "3.5.2",
+        "com.unity.services.core": "1.15.1",
+        "com.unity.services.deployment": "1.6.2",
+        "com.unity.services.leaderboards": "2.3.3"
+      }
+    },
     "com.unity.scriptablebuildpipeline": {
       "version": "2.6.0",
       "depth": 2,
@@ -449,6 +460,16 @@
       "source": "registry",
       "dependencies": {
         "com.unity.services.core": "1.13.0",
+        "com.unity.services.authentication": "3.3.3"
+      },
+      "url": "https://packages.unity.com"
+    },
+    "com.unity.services.leaderboards": {
+      "version": "2.3.3",
+      "depth": 1,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.services.core": "1.15.1",
         "com.unity.services.authentication": "3.3.3"
       },
       "url": "https://packages.unity.com"

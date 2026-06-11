@@ -7,6 +7,22 @@ using System.Threading.Tasks;
 
 namespace Project;
 
+public class PlayerDataResponse
+{
+    [JsonProperty("playerData")]
+    public PlayerData PlayerData { get; set; } = new PlayerData();
+
+    [JsonProperty("playerEconomyData")]
+    public PlayerEconomyData PlayerEconomyData { get; set; } = new PlayerEconomyData();
+
+    // [새로 추가!] 클라이언트로 내려줄 업그레이드 데이터
+    [JsonProperty("playerUpgradeData")]
+    public PlayerUpgradeData PlayerUpgradeData { get; set; } = new PlayerUpgradeData();
+
+    [JsonProperty("isNewPlayer")]
+    public bool IsNewPlayer { get; set; }
+}
+
 public class PlayerData
 {
     [JsonProperty("displayName")]
@@ -40,22 +56,17 @@ public class PlayerEconomyData
     [JsonProperty("itemInventory")]
     public Dictionary<string, int> ItemInventory { get; set; } = new Dictionary<string, int>();
 
+
     //  3. [새로 추가!] 장비 아이템 상세 목록 (고유 일련번호와 세부 데이터를 모두 포함)
     [JsonProperty("equipmentlist")]
     public List<EquipmentItemData> EquipmentList { get; set; } = new List<EquipmentItemData>();
 }
 
-public class PlayerDataResponse
+
+public class PlayerUpgradeData
 {
-    [JsonProperty("playerData")]
-    public PlayerData PlayerData { get; set; } = new PlayerData();
-
-    [JsonProperty("playerEconomyData")]
-    public PlayerEconomyData PlayerEconomyData { get; set; } = new PlayerEconomyData();
-
-
-    [JsonProperty("isNewPlayer")]
-    public bool IsNewPlayer { get; set; }
+    [JsonProperty("upgradeLevels")]
+    public Dictionary<string, int> UpgradeLevels { get; set; } = new Dictionary<string, int>();
 }
 
 public class EquipmentItemData

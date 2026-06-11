@@ -119,7 +119,7 @@ public class FireBulletStat : BaseBulletStat //상속!
     public Stat fireRemainTime = new Stat();
     public Stat fireDamageValue = new Stat();
     public Stat fireZoneDestroyTime = new Stat();
-    public float fireZoneSize;
+    public Stat fireZoneSize = new Stat();
     // 부모의 세팅 함수를 덮어씌웁니다(override).
     public override void Init(BulletStatDataSO data)
     {
@@ -133,7 +133,7 @@ public class FireBulletStat : BaseBulletStat //상속!
             fireRemainTime.Init(fireData.fireStat.fireRemainTime);
             fireDamageValue.Init(fireData.fireStat.fireDamageValue);
             fireZoneDestroyTime.Init(fireData.fireStat.fireZoneDestroyTime);
-            fireZoneSize = fireData.fireStat.fireZoneSize;
+            fireZoneSize.Init(fireData.fireStat.fireZoneSize);
         }
     }
 }

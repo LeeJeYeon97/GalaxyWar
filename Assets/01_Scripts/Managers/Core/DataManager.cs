@@ -24,6 +24,8 @@ public class DataManager
     public StageBalanceDataSO StageData { get; private set; }
     public Dictionary<Define.ShopItemType, ShopItemDataSO> ShopItemDataDict { get; private set; }
 
+    public Dictionary<Define.UpgradeType, UpgradeDataSO> UpgradeDataDict { get; private set; }
+
     public void Init()
     {
         // 딕셔너리 로드 (내부에서 자동으로 복사본 생성)
@@ -44,6 +46,8 @@ public class DataManager
 
         BossStatDataDict = LoadDataToDict<Define.BossType, BossStatDataSO>("RemoteConfigDatas/Boss", data => data.Type);
         BossPatternDict = LoadDataToDict<Define.BossPatternType, BossPatternSO>("RemoteConfigDatas/BossPattern", data => data.type);
+
+        UpgradeDataDict = LoadDataToDict<Define.UpgradeType, UpgradeDataSO>("Upgrade", data => data.type);
     }
 
     /// <summary>

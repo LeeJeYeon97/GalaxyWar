@@ -77,6 +77,7 @@ public class RemoteConfigManager
         UpdateAbilityData();
         UpdateBossStatData();
         UpdateBossPatternData();
+        UpdateUpgradeData();
     }
     private void UpdateMeteorData()
     {
@@ -515,6 +516,56 @@ public class RemoteConfigManager
                     }
                 }
                 Debug.Log("모든 보스 패턴 상세 수치 패치 완료! (Enum 기반)");
+            }
+        }
+    }
+    private void UpdateUpgradeData()
+    {
+        // 1. Remote Config에서 데이터 가져오기
+        string upgradeJson = RemoteConfigService.Instance.appConfig.GetJson("UpgradeData");
+
+        if (!string.IsNullOrEmpty(upgradeJson))
+        {
+            // 2. JSON을 Wrapper 구조체로 파싱
+            UpgradeConfigWrapper wrapper = JsonUtility.FromJson<UpgradeConfigWrapper>(upgradeJson);
+
+            if (wrapper != null && wrapper.upgradeList != null)
+            {
+                // 3. 리스트를 돌면서 덮어씌우기
+                foreach (UpgradeBalanceData serverData in wrapper.upgradeList)
+                {
+                    // string("HP")을 Define.UpgradeType Enum으로 안전하게 번역
+                    if (Enum.TryParse(serverData.type, true, out Define.UpgradeType parsedType))
+                    {
+                        // 딕셔너리에서 실제 업그레이드 SO 찾기
+                        if (Managers.Data.UpgradeDataDict.TryGetValue(parsedType, out UpgradeDataSO targetSO))
+                        {
+                            // ?? 데이터 덮어씌우기
+
+                            // 이름 변경 (서버 데이터가 비어있지 않을 때만)
+                            if (!string.IsNullOrEmpty(serverData.upgradeName))
+                            {
+                                targetSO.upgradeName = serverData.upgradeName;
+                            }
+
+                            // 핵심! 레벨별 수치 배열 통째로 갈아끼우기
+                            if (serverData.levelInfos != null && serverData.levelInfos.Length > 0)
+                            {
+                                targetSO.levelInfos = serverData.levelInfos;
+                            }
+                        }
+                        else
+                        {
+                            Debug.LogWarning($"[RemoteConfig] {parsedType} 영구 강화 SO를 찾을 수 없습니다.");
+                        }
+                    }
+                    else
+                    {
+                        Debug.LogWarning($"[RemoteConfig] 알 수 없는 업그레이드 타입입니다: {serverData.type}");
+                    }
+                }
+
+                Debug.Log("모든 영구 강화(Upgrade) 데이터 패치 완료!");
             }
         }
     }

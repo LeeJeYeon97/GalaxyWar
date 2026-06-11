@@ -28,6 +28,8 @@ MonoBehaviour:
     dropRate: 1
   - itemType: 2
     dropRate: 0.05
+  - itemType: 4
+    dropRate: 0.02
   magmaTick: 0
   magmaPuddle: {fileID: 0}
   sludgePuddle: {fileID: 0}

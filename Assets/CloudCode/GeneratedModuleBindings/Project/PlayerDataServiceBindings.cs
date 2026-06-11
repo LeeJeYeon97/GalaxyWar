@@ -36,5 +36,17 @@ namespace Unity.Services.CloudCode.GeneratedBindings
                     {"clearStageLevel", clearStageLevel},
                 });
         }
+
+        public async Task<Project.PlayerUpgradeData> UpdateUpgradeLevel(string upgradeType, int newLevel)
+        {
+            return await k_Service.CallModuleEndpointAsync<Project.PlayerUpgradeData>(
+                "Project",
+                "UpdateUpgradeLevel",
+                new Dictionary<string, object>()
+                {
+                    {"upgradeType", upgradeType},
+                    {"newLevel", newLevel},
+                });
+        }
     }
 }

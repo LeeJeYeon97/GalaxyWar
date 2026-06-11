@@ -39,17 +39,18 @@ public class UI_Profile : UI_Base
     {
         // 서버에서 받아온 PlayerData의 DisplayName을 사용합니다.
         string fullName = playerData.DisplayName;
+        GetTMP((int)Texts.Text_NickName).text = fullName;
 
-        // 태그(#) 앞부분만 보여주는 로직은 그대로 유지합니다.
-        if (fullName.Contains("#"))
-        {
-            string[] splitName = fullName.Split('#');
-            GetTMP((int)Texts.Text_NickName).text = splitName[0];
-        }
-        else
-        {
-            GetTMP((int)Texts.Text_NickName).text = fullName;
-        }
+        //// 태그(#) 앞부분만 보여주는 로직은 그대로 유지합니다.
+        //if (fullName.Contains("#"))
+        //{
+        //    string[] splitName = fullName.Split('#');
+        //    GetTMP((int)Texts.Text_NickName).text = splitName[0];
+        //}
+        //else
+        //{
+        //    
+        //}
 
     }
     public override void Clear()

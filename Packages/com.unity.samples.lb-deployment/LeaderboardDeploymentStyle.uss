@@ -1,0 +1,13 @@
+.container-add {
+    flex-grow: 1;
+    flex-direction: row;
+}
+
+.unity-button {
+    flex-grow: 1;
+}
+
+.unity-integer-field {
+    flex-grow: 1;
+}
+

@@ -48,7 +48,7 @@ public class UI_MarqueeText : UI_Base
         float maskWidth = maskRect.rect.width;
 
         // (디버그용: 왜 굴러갔는지 범인을 찾아줍니다. 확인 후 지우셔도 됩니다!)
-        Debug.Log($"[마키 텍스트] 글자 진짜 길이: {textWidth} / 마스크 가로 길이: {maskWidth}");
+        //Debug.Log($"[마키 텍스트] 글자 진짜 길이: {textWidth} / 마스크 가로 길이: {maskWidth}");
 
         if (textWidth > maskWidth)
         {

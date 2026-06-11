@@ -37,6 +37,11 @@ public class MeteorController : BaseController, IDamageable
 
     // MeteorController.cs 내부
     public Coroutine ActionCoroutine; // 행동(패턴) 코루틴을 저장할 변수
+                                      // 폭발 전용 바구니 (클래스 맨 위에 선언)
+
+    private static readonly Collider2D[] _shatterColliders = new Collider2D[20];
+    private static ContactFilter2D _shatterFilter;
+    private static bool _isFilterInitialized = false;
 
     private void Awake()
     {
@@ -44,6 +49,16 @@ public class MeteorController : BaseController, IDamageable
         Movement = Util.GetOrAddComponent<MeteorMovement>(gameObject);
         Status = Util.GetOrAddComponent<MeteorStatus>(gameObject);
         Visual = Util.GetOrAddComponent<MeteorVisual>(gameObject);
+
+        // 2. 필터 초기화 (모든 몬스터가 똑같은 필터를 쓰므로 한 번만 세팅하면 됩니다)
+        if (!_isFilterInitialized)
+        {
+            _shatterFilter = new ContactFilter2D();
+            _shatterFilter.useLayerMask = true;
+            // FireBullet이나 IceBullet에서 타겟팅할 레이어와 똑같이 맞춰주세요
+            _shatterFilter.layerMask = LayerMask.GetMask("Meteor", "Boss");
+            _isFilterInitialized = true;
+        }
     }
     public void Init(Vector2 pos, MeteorStat stat)
     {
@@ -186,6 +201,27 @@ public class MeteorController : BaseController, IDamageable
     }
     private void Die()
     {
+        // [변경점] 마커가 있다면 얼음 장판 소환!
+        if (Status.hasIcePuddleMark)
+        {
+            // 1. 풀링 매니저에서 얼음 장판 꺼내기
+            GameObject puddleGo = Managers.Resource.Instantiate("Bullets/IcePuddle");
+
+            if (puddleGo != null)
+            {
+                puddleGo.transform.position = transform.position;
+
+                // 2. 반경(Radius)에 맞춰 장판 크기 스케일 조절
+                //puddleGo.transform.localScale = new Vector3(1f,1f, 1f);
+
+                // 3. 장판 작동 시작
+                if (puddleGo.TryGetComponent(out IceZoneController puddle))
+                {
+                    puddle.Init(Status.icePuddleDamage, Status.icePuddleRadius, Status.icePuddleSlowPercent);
+                }
+            }
+        }
+
         Visual.ReturnColor();
         Stat.Behavior?.OnDie(this);
         Managers.Level.AddScore(Mathf.FloorToInt(Stat.Score.TotalValue));
@@ -196,7 +232,13 @@ public class MeteorController : BaseController, IDamageable
     }
     private void DropItem()
     {
-        foreach(var drop in Stat.dropTable)
+        // 첫 번째 아이템인지 체크하기 위한 변수
+        bool isFirstItem = true;
+
+        // 아이템이 퍼질 최대 반경 (원하는 만큼 수치를 조절하세요!)
+        float scatterRadius = 0.5f;
+
+        foreach (var drop in Stat.dropTable)
         {
             // 0.0 ~ 1.0 사이의 랜덤 값을 뽑습니다.
             float roll = UnityEngine.Random.value;
@@ -206,13 +248,27 @@ public class MeteorController : BaseController, IDamageable
             {
                 int customVal = 0;
 
-                // 생성할 아이템이 경험치(Exp) 구슬이라면 메테오의 경험치를 담아줍니다!
                 if (drop.itemType == Define.ItemType.Exp)
                 {
                     customVal = Mathf.FloorToInt(Stat.Exp.TotalValue);
                 }
+
+                // 기본 위치는 죽은 자리(정중앙)
+                Vector3 spawnPos = transform.position;
+
+                // 첫 번째 생성되는 아이템이 아니라면 위치를 살짝 비틀어줍니다.
+                if (!isFirstItem)
+                {
+                    // insideUnitCircle은 반지름 1짜리 원 안의 랜덤한 2D 좌표(Vector2)를 반환합니다.
+                    Vector2 randomOffset = UnityEngine.Random.insideUnitCircle * scatterRadius;
+                    spawnPos += (Vector3)randomOffset;
+                }
+
                 // 스포너에게 생성을 요청합니다.
-                Managers.Game.spawner.SpawnDropItem(transform.position, drop.itemType, customVal);
+                Managers.Game.spawner.SpawnDropItem(spawnPos, drop.itemType, customVal);
+
+                // 하나라도 생성했다면, 다음부터는 첫 번째 아이템이 아님!
+                isFirstItem = false;
             }
         }
     }

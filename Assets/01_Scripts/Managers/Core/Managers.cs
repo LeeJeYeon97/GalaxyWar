@@ -48,6 +48,8 @@ public class Managers : MonoBehaviour
     private VirtualStoreManager _virtualStore;
     private IAPStoreManager _iapStore;
     private RemoteConfigManager _remoteConfig;
+    private LeaderboardManager _leaderboard;
+    private UpgradeManager _upgrade;
 
     // ========================================================== //
     // 프로퍼티를 통해 외부에서 접근하도록 설정
@@ -77,6 +79,8 @@ public class Managers : MonoBehaviour
 
     public static StageManager Stage => Instance._stage;
     public static RemoteConfigManager RemoteConfig => Instance._remoteConfig;
+    public static LeaderboardManager Leaderboard => Instance._leaderboard;
+    public static UpgradeManager Upgrade => Instance._upgrade;
     // ========================================================== //
 
     // 추가: 외부에서 Managers.Coroutine.StartCoroutine() 으로 접근할 수 있게 열어줍니다!
@@ -125,6 +129,8 @@ public class Managers : MonoBehaviour
             _instance._effect = new EffectManager();
             _instance._stage = new StageManager();
             _instance._remoteConfig = new RemoteConfigManager();
+            _instance._leaderboard = new LeaderboardManager();
+            _instance._upgrade = new UpgradeManager();
 
             // 컴포넌트 형태의 매니저들은 여기서 초기화하거나 자식으로 붙임
             _instance._game = Util.GetOrAddComponent<GameManager>(go);
@@ -154,6 +160,7 @@ public class Managers : MonoBehaviour
             Scene.Init();
             UI.Init();
             Setting.Init();
+            //Upgrade.Init();
 
             Application.targetFrameRate = 60; // 60프레임 고정 (부드러운 화면)
 

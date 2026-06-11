@@ -53,86 +53,101 @@ public class UI_GameClearPopup : UI_Popup
     }
     private async void OnClickNextStageButton()
     {
-
         GetButton((int)Buttons.Btn_NextStage).interactable = false;
-        
-        // 2. 서버 데이터 저장 완료까지 대기
-        await SaveSessionData();
 
-        // SaveSessionData를 완료하면 자동으로 스테이지 올라감
+        // 1. 로딩 팝업 띄우기
+        var popup = Managers.UI.ShowPopupUI<UI_LoadingPopup>();
 
-        // 새로 로드되는 GameScene의 StageManager는 자동으로 다음 단계 난이도를 계산하게 됩니다!
+        // 2. 서버 데이터 저장 완료까지 대기 (클리어 했으므로 true 전달)
+        await Managers.PlayerData.SavePlayerData(true);
+
+        // 3. 로딩 창 닫기
+        Managers.UI.ClosePopupUI(popup);
+
+        // 4. 다음 스테이지로 이동 (GameScene 다시 로드)
         Managers.Scene.LoadScene(Define.Scene.GameScene);
     }
     private async void OnClickQuitLobbyButton()
     {
-        // 1. 중복 클릭 방지
         GetButton((int)Buttons.Btn_QuitLobby).interactable = false;
 
-        // 2. 서버 데이터 저장 완료까지 대기
-        await SaveSessionData();
+        // 1. 로딩 팝업 띄우기
+        var popup = Managers.UI.ShowPopupUI<UI_LoadingPopup>();
 
-        // 로비로 돌아가기
-        // 현재 씬(GameScene)을 다시 로드! (가장 깔끔한 초기화)
+        // 2. 서버 데이터 저장 완료까지 대기 (클리어 했으므로 true 전달)
+        await Managers.PlayerData.SavePlayerData(true);
+
+        // 3. 로딩 창 닫기
+        Managers.UI.ClosePopupUI(popup);
+
+        // 4. 로비로 돌아가기 (광고 후 씬 로드)
         Managers.AD.ShowInterstitialAd(() =>
         {
-            // 이 중괄호 안의 코드는 유저가 광고를 [X] 버튼으로 닫거나, 
-            // 쿨타임 등으로 광고가 스킵되었을 때만 실행됩니다!
             Managers.Scene.LoadScene(Define.Scene.LobbyScene);
         });
     }
     private void OnClickRewardButton()
     {
-        // 클릭 중복 방지 (광고 로딩 중 버튼 끄기)
         GetButton((int)Buttons.Btn_RewardDouble).interactable = false;
 
-        // 아이언소스 보상형 광고 호출 (플레이스먼트 이름은 대시보드에 맞게 수정하세요)
+        // 아이언소스 보상형 광고 호출
         Managers.AD.ShowRewardedAd(placement_GameOver, async (success) =>
         {
             if (success)
             {
                 Debug.Log("보상 두 배 광고 시청 완료!");
 
-                // 보상 두배 제공
-                Managers.Game.currentSessionGold = Managers.Game.currentSessionGold * 2;
-                // 2. 서버 데이터 저장 완료까지 대기
-                await SaveSessionData();
+                // 1. 보상 두배 적용
+                Managers.Game.currentSessionGold *= 2;
 
+                // 2. 로딩 팝업 띄우기
+                var popup = Managers.UI.ShowPopupUI<UI_LoadingPopup>();
+
+                // 3. 두 배가 된 골드와 기록을 서버에 저장 (클리어 했으므로 true 전달)
+                await Managers.PlayerData.SavePlayerData(true);
+
+                // 4. 로딩 창 닫기
+                Managers.UI.ClosePopupUI(popup);
+
+                // 5. 로비로 이동
                 Managers.Scene.LoadScene(Define.Scene.LobbyScene);
             }
             else
             {
-                Debug.Log("부활 광고 시청 실패 또는 취소.");
+                Debug.Log("보상 두 배 광고 시청 실패 또는 취소.");
+
+                // 광고를 중간에 껐을 경우 다시 누를 수 있도록 버튼 활성화 (선택 사항)
+                GetButton((int)Buttons.Btn_RewardDouble).interactable = true;
             }
         });
     }
 
-    private async Task SaveSessionData()
-    {
-        int sessionGold = Managers.Game.currentSessionGold;
+    //private async Task SaveSessionData()
+    //{
+    //    int sessionGold = Managers.Game.currentSessionGold;
 
-        var popup = Managers.UI.ShowPopupUI<UI_LoadingPopup>();
-        // 얻은 골드가 0보다 클 때만 서버에 요청을 보냅니다.
-        if (sessionGold > 0)
-        {
-            Debug.Log($"서버에 {sessionGold} 골드 저장을 요청합니다...");
+    //    var popup = Managers.UI.ShowPopupUI<UI_LoadingPopup>();
+    //    // 얻은 골드가 0보다 클 때만 서버에 요청을 보냅니다.
+    //    if (sessionGold > 0)
+    //    {
+    //        Debug.Log($"서버에 {sessionGold} 골드 저장을 요청합니다...");
 
-            // 저번에 만든 PlayerEconomyManager의 기능을 활용합니다.
-            // (함수명은 프로젝트의 Economy 관리자 구현에 맞게 맞추시면 됩니다)
-            bool success = await Managers.PlayerEconomy.AddGoldAsync(sessionGold);
+    //        // 저번에 만든 PlayerEconomyManager의 기능을 활용합니다.
+    //        // (함수명은 프로젝트의 Economy 관리자 구현에 맞게 맞추시면 됩니다)
+    //        bool success = await Managers.PlayerEconomy.AddGoldAsync(sessionGold);
 
-            if (success)
-                Debug.Log("골드 저장 성공!");
-            else
-                Debug.LogWarning("골드 저장 실패. 네트워크 상태를 확인하세요.");
-        }
+    //        if (success)
+    //            Debug.Log("골드 저장 성공!");
+    //        else
+    //            Debug.LogWarning("골드 저장 실패. 네트워크 상태를 확인하세요.");
+    //    }
 
-        // 2. 플레이어 최고 기록(점수, 생존 시간) 저장
-        Debug.Log("서버에 플레이어 기록 저장을 요청합니다...");
+    //    // 2. 플레이어 최고 기록(점수, 생존 시간) 저장
+    //    Debug.Log("서버에 플레이어 기록 저장을 요청합니다...");
 
-        // PlayerDataManager에 만들어둔 저장 함수를 호출하고 끝날 때까지 기다립니다.
-        await Managers.PlayerData.SavePlayerData(true);
+    //    // PlayerDataManager에 만들어둔 저장 함수를 호출하고 끝날 때까지 기다립니다.
+    //    await Managers.PlayerData.SavePlayerData(true);
 
-        Managers.UI.ClosePopupUI(popup);
-    }
+    //    Managers.UI.ClosePopupUI(popup);
+    //}
 }

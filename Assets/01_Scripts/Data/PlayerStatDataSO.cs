@@ -5,7 +5,7 @@ using UnityEngine;
 public struct PlayerStatData
 {
     public float speed;
-
+    public float damage;
     public float maxHp;
     public float maxDefenceCount;
     

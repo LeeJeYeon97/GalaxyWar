@@ -157,7 +157,7 @@ public class BulletController : BaseController
 
         }
     }
-    public void SetBullet(BaseBulletStat stat)
+    public void SetBullet(BaseBulletStat stat, float PlayerDamage)
     {
         if(stat == null)
         {
@@ -171,7 +171,7 @@ public class BulletController : BaseController
         }
         
         Stat = stat;
-        CurDamage = Stat.damage.TotalValue;
+        CurDamage = PlayerDamage + Stat.damage.TotalValue;
         SetPhysicsState(true); // 대기 중엔 물리 끄기
         
         // 각 탄환별로 초기화 시 실행시킬 로직 실행

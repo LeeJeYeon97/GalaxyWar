@@ -23,9 +23,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 23272088555520
-    m_Localized: 'Obtain an Explosion Bullet that deals area-of-effect damage.
-
-'
+    m_Localized: Obtain an Explosion Bullet that deals area-of-effect damage.
     m_Metadata:
       m_Items: []
   - m_Id: 25023952867328
@@ -51,8 +49,8 @@ MonoBehaviour:
 
       Explosion Damage Ratio +{1}%
 
-      Triggers
-      chain explosion on hit'
+      On
+      hit: Triggers a chain explosion'
     m_Metadata:
       m_Items: []
   - m_Id: 263820665835520
@@ -60,7 +58,8 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 264332530307072
-    m_Localized: Obtain a Fire Bullet that deals burn damage.
+    m_Localized: Fires a projectile that creates a fire zone, dealing burn damage
+      on hit.
     m_Metadata:
       m_Items: []
   - m_Id: 264443956187136
@@ -84,10 +83,7 @@ MonoBehaviour:
   - m_Id: 264491070803968
     m_Localized: 'Burn Damage +{0}%
 
-      Burn Duration +{1} sec
-
-      Creates
-      a fire zone on hit.'
+      Burn Duration +{1} sec'
     m_Metadata:
       m_Items: []
   - m_Id: 266949843111936
@@ -145,8 +141,8 @@ MonoBehaviour:
 
       Slow Duration +{1} sec
 
-      Applies freeze
-      effect on hit'
+      On hit: Apply
+      Freeze and deal bonus damage.'
     m_Metadata:
       m_Items: []
   - m_Id: 267505852633088
@@ -223,7 +219,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 268049589620736
-    m_Localized: Bounce Count +1
+    m_Localized: 30% chance to bounce.
     m_Metadata:
       m_Items: []
   - m_Id: 268269366956032
@@ -367,7 +363,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 270574338330624
-    m_Localized: Bullets have a chance to split upon firing.
+    m_Localized: Chance to split bullets upon firing.
     m_Metadata:
       m_Items: []
   - m_Id: 270604319215616
@@ -395,15 +391,15 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 4216584978714624
-    m_Localized: Shield Cooldown -{0} sec
+    m_Localized: Shield Charge Time -{0} sec
     m_Metadata:
       m_Items: []
   - m_Id: 4216593409265664
-    m_Localized: Shield Cooldown -{0} sec
+    m_Localized: Shield Charge Time -{0} sec
     m_Metadata:
       m_Items: []
   - m_Id: 4216600715743232
-    m_Localized: Shield Cooldown -{0} sec
+    m_Localized: Shield Charge Time -{0} sec
     m_Metadata:
       m_Items: []
   - m_Id: 4216608131272704
@@ -411,24 +407,24 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 7572682628550656
-    m_Localized: Activates Burst Mode, enhancing player stats and changing bullets
-      to special bullets.
+    m_Localized: Activates Burst Mode, enhancing player stats and firing special
+      bullets.
     m_Metadata:
       m_Items: []
   - m_Id: 7572809183285248
-    m_Localized: Burst Mode Cooldown -{0} sec
+    m_Localized: Burst Mode Charge Time -{0} sec
     m_Metadata:
       m_Items: []
   - m_Id: 7572816569454592
-    m_Localized: Burst Mode Cooldown -{0} sec
+    m_Localized: Burst Mode Charge Time -{0} sec
     m_Metadata:
       m_Items: []
   - m_Id: 7572823326478336
-    m_Localized: Burst Mode Cooldown -{0} sec
+    m_Localized: Burst Mode Charge Time -{0} sec
     m_Metadata:
       m_Items: []
   - m_Id: 7572829601157120
-    m_Localized: Burst Mode Cooldown -{0} sec
+    m_Localized: Burst Mode Charge Time -{0} sec
     m_Metadata:
       m_Items: []
   - m_Id: 7631028014436352
@@ -436,7 +432,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 7631117898371072
-    m_Localized: 'Critical hits applied.
+    m_Localized: 'Enables critical hits.
 
       Base Critical Chance {0}%
 
@@ -498,6 +494,10 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 15205814383038464
     m_Localized: Restores {0} Health.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16949208327278592
+    m_Localized: Shield Charge Time -{0} sec
     m_Metadata:
       m_Items: []
   references:

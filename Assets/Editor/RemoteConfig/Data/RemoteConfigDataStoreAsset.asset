@@ -12,48 +12,882 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 469c24fdb3bd6431b92cc1465bd9166b, type: 3}
   m_Name: RemoteConfigDataStoreAsset
   m_EditorClassIdentifier: Unity.RemoteConfig.Editor::Unity.RemoteConfig.Editor.RemoteConfigDataStore
-  _rsKeyList: "[\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"d657615e-2f53-46de-b4ff-2e736a92a8b1\"\r\n   
-    },\r\n    \"rs\": {\r\n      \"key\": \"StageBalanceData\",\r\n      \"type\":
-    \"json\",\r\n      \"schemaId\": \"\",\r\n      \"value\": {\r\n        \"maxStage\":
-    100,\r\n        \"baseSpawnDelay\": 1,\r\n        \"minSpawnDelay\": 0.1,\r\n       
-    \"spawnDelayDecrease\": 0,\r\n        \"hpGrowthPerStage\": 10,\r\n        \"hpMultiplierPerStage\":
-    1.02,\r\n        \"speedGrowthPerStage\": 0.05,\r\n        \"bossStageInterval\":
-    5,\r\n        \"waves\": [\r\n          {\r\n            \"phaseType\": 0,\r\n           
-    \"waveStartTime\": 0,\r\n            \"waveHpRate\": 1,\r\n            \"waveSpawnDelay\":
-    1,\r\n            \"expRate\": 1,\r\n            \"speedRate\": 1\r\n         
-    },\r\n          {\r\n            \"phaseType\": 1,\r\n            \"waveStartTime\":
-    90,\r\n            \"waveHpRate\": 1.3,\r\n            \"waveSpawnDelay\": 0.7,\r\n           
-    \"expRate\": 1.2,\r\n            \"speedRate\": 1.2\r\n          },\r\n         
-    {\r\n            \"phaseType\": 2,\r\n            \"waveStartTime\": 180,\r\n           
-    \"waveHpRate\": 1.5,\r\n            \"waveSpawnDelay\": 0.5,\r\n            \"expRate\":
-    1.5,\r\n            \"speedRate\": 1.5\r\n          },\r\n          {\r\n           
-    \"phaseType\": 3,\r\n            \"waveStartTime\": 270,\r\n            \"waveHpRate\":
-    5,\r\n            \"waveSpawnDelay\": 0.3,\r\n            \"expRate\": 1,\r\n           
-    \"speedRate\": 1.5\r\n          },\r\n          {\r\n            \"phaseType\":
-    4,\r\n            \"waveStartTime\": 360,\r\n            \"waveHpRate\": 7,\r\n           
-    \"waveSpawnDelay\": 0.1,\r\n            \"expRate\": 1,\r\n            \"speedRate\":
-    1.5\r\n          }\r\n        ]\r\n      }\r\n    }\r\n  }\r\n]"
-  _rsLastCachedKeyList: "[\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"d657615e-2f53-46de-b4ff-2e736a92a8b1\"\r\n   
+  _rsKeyList: "[\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"712e248f-cede-415b-bbcd-b1af5a41b9ce\"\r\n   
     },\r\n    \"rs\": {\r\n      \"key\": \"StageBalanceData\",\r\n      \"type\":
     \"json\",\r\n      \"schemaId\": null,\r\n      \"value\": {\r\n        \"maxStage\":
     100,\r\n        \"baseSpawnDelay\": 1,\r\n        \"minSpawnDelay\": 0.1,\r\n       
-    \"spawnDelayDecrease\": 0,\r\n        \"hpGrowthPerStage\": 10,\r\n        \"hpMultiplierPerStage\":
-    1.02,\r\n        \"speedGrowthPerStage\": 0.05,\r\n        \"bossStageInterval\":
-    5,\r\n        \"waves\": [\r\n          {\r\n            \"phaseType\": 0,\r\n           
-    \"waveStartTime\": 0,\r\n            \"waveHpRate\": 1,\r\n            \"waveSpawnDelay\":
-    1,\r\n            \"expRate\": 1,\r\n            \"speedRate\": 1\r\n         
-    },\r\n          {\r\n            \"phaseType\": 1,\r\n            \"waveStartTime\":
-    180,\r\n            \"waveHpRate\": 1.5,\r\n            \"waveSpawnDelay\": 0.8,\r\n           
-    \"expRate\": 1.2,\r\n            \"speedRate\": 1.1\r\n          },\r\n         
-    {\r\n            \"phaseType\": 2,\r\n            \"waveStartTime\": 0,\r\n           
-    \"waveHpRate\": 1,\r\n            \"waveSpawnDelay\": 1,\r\n            \"expRate\":
-    1,\r\n            \"speedRate\": 1\r\n          },\r\n          {\r\n           
-    \"phaseType\": 3,\r\n            \"waveStartTime\": 0,\r\n            \"waveHpRate\":
-    1,\r\n            \"waveSpawnDelay\": 1,\r\n            \"expRate\": 1,\r\n           
-    \"speedRate\": 1\r\n          },\r\n          {\r\n            \"phaseType\":
-    4,\r\n            \"waveStartTime\": 0,\r\n            \"waveHpRate\": 1,\r\n           
-    \"waveSpawnDelay\": 1,\r\n            \"expRate\": 1,\r\n            \"speedRate\":
-    1\r\n          }\r\n        ]\r\n      }\r\n    }\r\n  }\r\n]"
+    \"spawnDelayDecrease\": 0,\r\n        \"hpGrowthPerStage\": 1,\r\n        \"hpMultiplierPerStage\":
+    1,\r\n        \"speedGrowthPerStage\": 0,\r\n        \"bossStageInterval\": 5,\r\n       
+    \"waves\": [\r\n          {\r\n            \"phaseType\": 0,\r\n            \"waveStartTime\":
+    0,\r\n            \"waveHpRate\": 1,\r\n            \"waveSpawnDelay\": 1,\r\n           
+    \"expRate\": 1,\r\n            \"speedRate\": 1\r\n          },\r\n         
+    {\r\n            \"phaseType\": 1,\r\n            \"waveStartTime\": 90,\r\n           
+    \"waveHpRate\": 1.5,\r\n            \"waveSpawnDelay\": 0.7,\r\n            \"expRate\":
+    1.2,\r\n            \"speedRate\": 1.2\r\n          },\r\n          {\r\n           
+    \"phaseType\": 2,\r\n            \"waveStartTime\": 180,\r\n            \"waveHpRate\":
+    2,\r\n            \"waveSpawnDelay\": 0.5,\r\n            \"expRate\": 1.5,\r\n           
+    \"speedRate\": 1.5\r\n          },\r\n          {\r\n            \"phaseType\":
+    3,\r\n            \"waveStartTime\": 270,\r\n            \"waveHpRate\": 5,\r\n           
+    \"waveSpawnDelay\": 0.2,\r\n            \"expRate\": 1,\r\n            \"speedRate\":
+    1.5\r\n          },\r\n          {\r\n            \"phaseType\": 4,\r\n           
+    \"waveStartTime\": 360,\r\n            \"waveHpRate\": 7,\r\n            \"waveSpawnDelay\":
+    0.2,\r\n            \"expRate\": 1,\r\n            \"speedRate\": 1.5\r\n         
+    }\r\n        ]\r\n      }\r\n    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n     
+    \"entityId\": \"c4662e8b-7936-4295-887e-62cce9da8bde\"\r\n    },\r\n    \"rs\":
+    {\r\n      \"key\": \"GameData\",\r\n      \"type\": \"json\",\r\n      \"schemaId\":
+    null,\r\n      \"value\": {\r\n        \"GameStartTime\": 3,\r\n        \"itemSpawnInterval\":
+    60,\r\n        \"reviveCount\": 1,\r\n        \"rerollGoldCost\": 100,\r\n       
+    \"expZero\": false,\r\n        \"playerGod\": false,\r\n        \"noAttack\":
+    false,\r\n        \"gameclearTime\": 5,\r\n        \"gamePlayeSize\": 15,\r\n       
+    \"burstModeSize\": 20,\r\n        \"bossStageSize\": 20\r\n      }\r\n    }\r\n 
+    },\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"34b25646-8c66-46fc-90f6-49b5a7778bc5\"\r\n   
+    },\r\n    \"rs\": {\r\n      \"key\": \"PlayerStatData\",\r\n      \"type\":
+    \"json\",\r\n      \"schemaId\": null,\r\n      \"value\": {\r\n        \"statData\":
+    {\r\n          \"speed\": 2.5,\r\n          \"maxHp\": 200,\r\n          \"maxDefenceCount\":
+    0,\r\n          \"reloadCount\": 10,\r\n          \"reloadTime\": 2.5,\r\n         
+    \"shotRange\": 5,\r\n          \"shotTime\": 1,\r\n          \"criticalChance\":
+    0,\r\n          \"criticalDamageRate\": 0,\r\n          \"itemGetRange\": 0,\r\n         
+    \"hitCooldown\": 1.5,\r\n          \"shieldChargeTime\": 20,\r\n          \"maxDefenceGuage\":
+    100,\r\n          \"bounceChance\": 0,\r\n          \"isBurstModeEnabled\": false,\r\n         
+    \"maxBurstGuage\": 100,\r\n          \"maxBurstFullChargeTime\": 60,\r\n         
+    \"isMultiShotEnabled\": false,\r\n          \"multiShotCount\": 0,\r\n         
+    \"multiShotChance\": 40,\r\n          \"multiShotAngle\": 45,\r\n          \"isHomingShotEnabled\":
+    false,\r\n          \"homingShotDelay\": 1.5,\r\n          \"homingRange\": 5\r\n       
+    }\r\n      }\r\n    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\":
+    \"63fc2c67-b9c7-41ef-9965-74c5c4613b97\"\r\n    },\r\n    \"rs\": {\r\n     
+    \"key\": \"MeteorStats\",\r\n      \"type\": \"json\",\r\n      \"schemaId\":
+    null,\r\n      \"value\": {\r\n        \"meteorList\": [\r\n          {\r\n           
+    \"Type\": \"NormalMeteor\",\r\n            \"IsExclude\": false,\r\n           
+    \"MaxHp\": 7,\r\n            \"MaxSpeed\": 0.6,\r\n            \"MinSpeed\":
+    0.3,\r\n            \"Damage\": 10,\r\n            \"Score\": 100,\r\n           
+    \"Exp\": 10,\r\n            \"spawnPhase\": \"Phase1\",\r\n            \"targetChase\":
+    true,\r\n            \"magmaTick\": 0,\r\n            \"auraRadius\": 0,\r\n           
+    \"dropTable\": [\r\n              {\r\n                \"itemType\": \"Gold\",\r\n               
+    \"dropRate\": 0.01\r\n              },\r\n              {\r\n               
+    \"itemType\": \"Exp\",\r\n                \"dropRate\": 1\r\n              }\r\n           
+    ]\r\n          },\r\n          {\r\n            \"Type\": \"CometMeteor\",\r\n           
+    \"IsExclude\": false,\r\n            \"MaxHp\": 5,\r\n            \"MaxSpeed\":
+    3,\r\n            \"MinSpeed\": 3,\r\n            \"Damage\": 5,\r\n           
+    \"Score\": 150,\r\n            \"Exp\": 25,\r\n            \"spawnPhase\": \"Phase2\",\r\n           
+    \"targetChase\": false,\r\n            \"magmaTick\": 0,\r\n            \"auraRadius\":
+    0,\r\n            \"dropTable\": [\r\n              {\r\n                \"itemType\":
+    \"Gold\",\r\n                \"dropRate\": 0.01\r\n              },\r\n             
+    {\r\n                \"itemType\": \"Exp\",\r\n                \"dropRate\":
+    1\r\n              }\r\n            ]\r\n          },\r\n          {\r\n           
+    \"Type\": \"FractureMeteor\",\r\n            \"IsExclude\": false,\r\n           
+    \"MaxHp\": 20,\r\n            \"MaxSpeed\": 0.7,\r\n            \"MinSpeed\":
+    0.5,\r\n            \"Damage\": 15,\r\n            \"Score\": 400,\r\n           
+    \"Exp\": 40,\r\n            \"spawnPhase\": \"Phase3\",\r\n            \"targetChase\":
+    true,\r\n            \"magmaTick\": 0,\r\n            \"auraRadius\": 0,\r\n           
+    \"dropTable\": [\r\n              {\r\n                \"itemType\": \"Gold\",\r\n               
+    \"dropRate\": 0.01\r\n              },\r\n              {\r\n               
+    \"itemType\": \"Exp\",\r\n                \"dropRate\": 1\r\n              },\r\n             
+    {\r\n                \"itemType\": \"RecoveryHp\",\r\n                \"dropRate\":
+    0.01\r\n              },\r\n              {\r\n                \"itemType\":
+    \"Magnet\",\r\n                \"dropRate\": 0.01\r\n              }\r\n           
+    ]\r\n          },\r\n          {\r\n            \"Type\": \"IronMeteor\",\r\n           
+    \"IsExclude\": false,\r\n            \"MaxHp\": 30,\r\n            \"MaxSpeed\":
+    0.5,\r\n            \"MinSpeed\": 0.3,\r\n            \"Damage\": 20,\r\n           
+    \"Score\": 300,\r\n            \"Exp\": 60,\r\n            \"spawnPhase\": \"Phase4\",\r\n           
+    \"targetChase\": true,\r\n            \"magmaTick\": 0,\r\n            \"auraRadius\":
+    0,\r\n            \"dropTable\": [\r\n              {\r\n                \"itemType\":
+    \"Gold\",\r\n                \"dropRate\": 0.01\r\n              },\r\n             
+    {\r\n                \"itemType\": \"Exp\",\r\n                \"dropRate\":
+    1\r\n              },\r\n              {\r\n                \"itemType\": \"RecoveryHp\",\r\n               
+    \"dropRate\": 0.01\r\n              },\r\n              {\r\n               
+    \"itemType\": \"Magnet\",\r\n                \"dropRate\": 0.01\r\n             
+    }\r\n            ]\r\n          },\r\n          {\r\n            \"Type\": \"MagmaMeteor\",\r\n           
+    \"IsExclude\": false,\r\n            \"MaxHp\": 25,\r\n            \"MaxSpeed\":
+    0.9,\r\n            \"MinSpeed\": 0.6,\r\n            \"Damage\": 15,\r\n           
+    \"Score\": 250,\r\n            \"Exp\": 50,\r\n            \"spawnPhase\": \"Phase5\",\r\n           
+    \"targetChase\": true,\r\n            \"magmaTick\": 0.5,\r\n            \"auraRadius\":
+    0,\r\n            \"dropTable\": [\r\n              {\r\n                \"itemType\":
+    \"Gold\",\r\n                \"dropRate\": 0.01\r\n              },\r\n             
+    {\r\n                \"itemType\": \"Exp\",\r\n                \"dropRate\":
+    1\r\n              },\r\n              {\r\n                \"itemType\": \"RecoveryHp\",\r\n               
+    \"dropRate\": 0.01\r\n              },\r\n              {\r\n               
+    \"itemType\": \"Magnet\",\r\n                \"dropRate\": 0.01\r\n             
+    }\r\n            ]\r\n          },\r\n          {\r\n            \"Type\": \"SludgeMeteor\",\r\n           
+    \"IsExclude\": false,\r\n            \"MaxHp\": 15,\r\n            \"MaxSpeed\":
+    0.7,\r\n            \"MinSpeed\": 0.7,\r\n            \"Damage\": 10,\r\n           
+    \"Score\": 250,\r\n            \"Exp\": 30,\r\n            \"spawnPhase\": \"Phase2\",\r\n           
+    \"targetChase\": true,\r\n            \"magmaTick\": 0,\r\n            \"auraRadius\":
+    0,\r\n            \"dropTable\": [\r\n              {\r\n                \"itemType\":
+    \"Gold\",\r\n                \"dropRate\": 0.01\r\n              },\r\n             
+    {\r\n                \"itemType\": \"Exp\",\r\n                \"dropRate\":
+    1\r\n              },\r\n              {\r\n                \"itemType\": \"RecoveryHp\",\r\n               
+    \"dropRate\": 0.01\r\n              },\r\n              {\r\n               
+    \"itemType\": \"Magnet\",\r\n                \"dropRate\": 0.01\r\n             
+    }\r\n            ]\r\n          },\r\n          {\r\n            \"Type\": \"AuraBuffMeteor\",\r\n           
+    \"IsExclude\": false,\r\n            \"MaxHp\": 25,\r\n            \"MaxSpeed\":
+    0.6,\r\n            \"MinSpeed\": 0.4,\r\n            \"Damage\": 10,\r\n           
+    \"Score\": 500,\r\n            \"Exp\": 70,\r\n            \"spawnPhase\": \"Phase5\",\r\n           
+    \"targetChase\": true,\r\n            \"magmaTick\": 0,\r\n            \"auraRadius\":
+    2,\r\n            \"dropTable\": [\r\n              {\r\n                \"itemType\":
+    \"Gold\",\r\n                \"dropRate\": 0.01\r\n              },\r\n             
+    {\r\n                \"itemType\": \"Exp\",\r\n                \"dropRate\":
+    1\r\n              },\r\n              {\r\n                \"itemType\": \"RecoveryHp\",\r\n               
+    \"dropRate\": 0.01\r\n              },\r\n              {\r\n               
+    \"itemType\": \"Magnet\",\r\n                \"dropRate\": 0.01\r\n             
+    }\r\n            ]\r\n          },\r\n          {\r\n            \"Type\": \"FragmentMeteor\",\r\n           
+    \"IsExclude\": true,\r\n            \"MaxHp\": 5,\r\n            \"MaxSpeed\":
+    0.8,\r\n            \"MinSpeed\": 0.6,\r\n            \"Damage\": 3,\r\n           
+    \"Score\": 100,\r\n            \"Exp\": 10,\r\n            \"spawnPhase\": \"Phase5\",\r\n           
+    \"targetChase\": false,\r\n            \"magmaTick\": 0,\r\n            \"auraRadius\":
+    0,\r\n            \"dropTable\": [\r\n              {\r\n                \"itemType\":
+    \"Gold\",\r\n                \"dropRate\": 0.01\r\n              },\r\n             
+    {\r\n                \"itemType\": \"Exp\",\r\n                \"dropRate\":
+    1\r\n              },\r\n              {\r\n                \"itemType\": \"RecoveryHp\",\r\n               
+    \"dropRate\": 0.01\r\n              },\r\n              {\r\n               
+    \"itemType\": \"Magnet\",\r\n                \"dropRate\": 0.01\r\n             
+    }\r\n            ]\r\n          }\r\n        ]\r\n      }\r\n    }\r\n  },\r\n 
+    {\r\n    \"metadata\": {\r\n      \"entityId\": \"bd657ba8-38ee-4879-bb98-7b9d10a914ee\"\r\n   
+    },\r\n    \"rs\": {\r\n      \"key\": \"BulletStatData\",\r\n      \"type\":
+    \"json\",\r\n      \"schemaId\": null,\r\n      \"value\": {\r\n        \"bulletList\":
+    [\r\n          {\r\n            \"type\": \"NormalBullet\",\r\n            \"isReload\":
+    true,\r\n            \"chance\": 100,\r\n            \"damage\": 10,\r\n           
+    \"speed\": 10,\r\n            \"bounceCount\": 0,\r\n            \"pierceCount\":
+    0,\r\n            \"pierceDamageDecreaseValue\": 20\r\n          },\r\n         
+    {\r\n            \"type\": \"LightningBullet\",\r\n            \"isReload\":
+    true,\r\n            \"chance\": 100,\r\n            \"damage\": 10,\r\n           
+    \"speed\": 10,\r\n            \"bounceCount\": 0,\r\n            \"lightningDamageValue\":
+    60,\r\n            \"lightningCount\": 1,\r\n            \"lightningRange\":
+    5\r\n          },\r\n          {\r\n            \"type\": \"ExplosionBullet\",\r\n           
+    \"isReload\": true,\r\n            \"chance\": 100,\r\n            \"damage\":
+    10,\r\n            \"speed\": 10,\r\n            \"bounceCount\": 0,\r\n           
+    \"explosionRange\": 1,\r\n            \"explosionDamageValue\": 60\r\n         
+    },\r\n          {\r\n            \"type\": \"FireBullet\",\r\n            \"isReload\":
+    true,\r\n            \"chance\": 100,\r\n            \"damage\": 10,\r\n           
+    \"speed\": 10,\r\n            \"bounceCount\": 0,\r\n            \"fireDamageValue\":
+    50,\r\n            \"fireRemainTime\": 2,\r\n            \"fireZoneDestroyTime\":
+    5,\r\n            \"fireZoneSize\": 0.5\r\n          },\r\n          {\r\n           
+    \"type\": \"IceBullet\",\r\n            \"isReload\": true,\r\n            \"chance\":
+    100,\r\n            \"damage\": 10,\r\n            \"speed\": 10,\r\n           
+    \"bounceCount\": 0,\r\n            \"slowValue\": 30,\r\n            \"slowTime\":
+    1.5,\r\n            \"freezeTime\": 2\r\n          },\r\n          {\r\n           
+    \"type\": \"HomingBullet\",\r\n            \"isReload\": false,\r\n           
+    \"chance\": 100,\r\n            \"damage\": 10,\r\n            \"speed\": 10,\r\n           
+    \"bounceCount\": 0,\r\n            \"homingShotDelay\": 2\r\n          },\r\n         
+    {\r\n            \"type\": \"BurstBullet\",\r\n            \"isReload\": false,\r\n           
+    \"chance\": 100,\r\n            \"damage\": 30,\r\n            \"speed\": 20,\r\n           
+    \"bounceCount\": 0\r\n          }\r\n        ]\r\n      }\r\n    }\r\n  },\r\n 
+    {\r\n    \"metadata\": {\r\n      \"entityId\": \"baf9524b-d92f-48ac-9e11-2cb91020436f\"\r\n   
+    },\r\n    \"rs\": {\r\n      \"key\": \"AbilityStatData\",\r\n      \"type\":
+    \"json\",\r\n      \"schemaId\": null,\r\n      \"value\": {\r\n        \"abilityList\":
+    [\r\n          {\r\n            \"type\": \"Passive_MaxHpUp\",\r\n           
+    \"maxLevel\": 5,\r\n            \"requiredAbility\": \"Unknown\",\r\n           
+    \"maxHpUpData\": [\r\n              50,\r\n              50,\r\n             
+    50,\r\n              50,\r\n              50\r\n            ]\r\n          },\r\n         
+    {\r\n            \"type\": \"Passive_PlayerSpeedUp\",\r\n            \"maxLevel\":
+    5,\r\n            \"requiredAbility\": \"Unknown\",\r\n            \"speedUpData\":
+    [\r\n              30,\r\n              30,\r\n              30,\r\n             
+    30,\r\n              30\r\n            ]\r\n          },\r\n          {\r\n           
+    \"type\": \"Passive_ReloadCountUp\",\r\n            \"maxLevel\": 5,\r\n           
+    \"requiredAbility\": \"Unknown\",\r\n            \"reloadCountUpData\": [\r\n             
+    2,\r\n              2,\r\n              2,\r\n              2,\r\n             
+    2\r\n            ]\r\n          },\r\n          {\r\n            \"type\": \"Passive_ReloadTimeDown\",\r\n           
+    \"maxLevel\": 5,\r\n            \"requiredAbility\": \"Unknown\",\r\n           
+    \"reloadTimeDownData\": [\r\n              0.4,\r\n              0.4,\r\n             
+    0.4,\r\n              0.4,\r\n              0.3\r\n            ]\r\n         
+    },\r\n          {\r\n            \"type\": \"Passive_ShotTimeDown\",\r\n           
+    \"maxLevel\": 5,\r\n            \"requiredAbility\": \"Unknown\",\r\n           
+    \"shotTimeDownData\": [\r\n              0.2,\r\n              0.2,\r\n             
+    0.2,\r\n              0.2,\r\n              0.1\r\n            ]\r\n         
+    },\r\n          {\r\n            \"type\": \"Passive_BurstMode\",\r\n           
+    \"maxLevel\": 1,\r\n            \"requiredAbility\": \"Unknown\",\r\n           
+    \"burstModeIncreases\": [\r\n              {\r\n                \"speed\": 100,\r\n               
+    \"criticalDamageRate\": 100,\r\n                \"burstChargeTime\": 7.5\r\n             
+    },\r\n              {\r\n                \"speed\": 100,\r\n                \"criticalDamageRate\":
+    100,\r\n                \"burstChargeTime\": 7.5\r\n              },\r\n             
+    {\r\n                \"speed\": 100,\r\n                \"criticalDamageRate\":
+    100,\r\n                \"burstChargeTime\": 7.5\r\n              },\r\n             
+    {\r\n                \"speed\": 100,\r\n                \"criticalDamageRate\":
+    100,\r\n                \"burstChargeTime\": 7.5\r\n              },\r\n             
+    {\r\n                \"speed\": 100,\r\n                \"criticalDamageRate\":
+    100,\r\n                \"burstChargeTime\": 7.5\r\n              }\r\n           
+    ]\r\n          },\r\n          {\r\n            \"type\": \"Passive_PlayerShield\",\r\n           
+    \"maxLevel\": 5,\r\n            \"requiredAbility\": \"Unknown\",\r\n           
+    \"bulletType\": \"None\",\r\n            \"ShieldAbilityData\": [\r\n             
+    0,\r\n              4,\r\n              4,\r\n              4,\r\n             
+    4\r\n            ]\r\n          },\r\n          {\r\n            \"type\": \"Passive_PlayerCritical\",\r\n           
+    \"maxLevel\": 5,\r\n            \"requiredAbility\": \"Unknown\",\r\n           
+    \"criticalAbilityData\": [\r\n              {\r\n                \"CriticalChance\":
+    20,\r\n                \"CriticalDamageRate\": 150\r\n              },\r\n             
+    {\r\n                \"CriticalChance\": 12.5,\r\n                \"CriticalDamageRate\":
+    12.5\r\n              },\r\n              {\r\n                \"CriticalChance\":
+    12.5,\r\n                \"CriticalDamageRate\": 12.5\r\n              },\r\n             
+    {\r\n                \"CriticalChance\": 12.5,\r\n                \"CriticalDamageRate\":
+    12.5\r\n              },\r\n              {\r\n                \"CriticalChance\":
+    12.5,\r\n                \"CriticalDamageRate\": 12.5\r\n              }\r\n           
+    ]\r\n          },\r\n          {\r\n            \"type\": \"Passive_PlayerDamageUp\",\r\n           
+    \"maxLevel\": 5,\r\n            \"requiredAbility\": \"Unknown\",\r\n           
+    \"damageUpAbilityData\": [\r\n              20,\r\n              20,\r\n             
+    20,\r\n              20,\r\n              20\r\n            ]\r\n          },\r\n         
+    {\r\n            \"type\": \"Passive_AllBulletBounceCountUp\",\r\n           
+    \"maxLevel\": 5,\r\n            \"requiredAbility\": \"Unknown\",\r\n           
+    \"bounceIncreases\": [\r\n              {\r\n                \"countIncrease\":
+    1,\r\n                \"chanceIncrease\": 30\r\n              },\r\n             
+    {\r\n                \"countIncrease\": 0,\r\n                \"chanceIncrease\":
+    20\r\n              },\r\n              {\r\n                \"countIncrease\":
+    1,\r\n                \"chanceIncrease\": 0\r\n              },\r\n             
+    {\r\n                \"countIncrease\": 0,\r\n                \"chanceIncrease\":
+    20\r\n              },\r\n              {\r\n                \"countIncrease\":
+    1,\r\n                \"chanceIncrease\": 0\r\n              }\r\n           
+    ]\r\n          },\r\n          {\r\n            \"type\": \"Passive_PlayerHeal\",\r\n           
+    \"maxLevel\": 9999,\r\n            \"requiredAbility\": \"Unknown\",\r\n           
+    \"playerHealData\": [\r\n              50,\r\n              50,\r\n             
+    50,\r\n              50,\r\n              50\r\n            ]\r\n          },\r\n         
+    {\r\n            \"type\": \"Passive_SplitBullet\",\r\n            \"maxLevel\":
+    5,\r\n            \"requiredAbility\": \"Unknown\",\r\n            \"splitBulletData\":
+    [\r\n              {\r\n                \"countIncrease\": 3,\r\n               
+    \"chanceIncrease\": 0\r\n              },\r\n              {\r\n               
+    \"countIncrease\": 0,\r\n                \"chanceIncrease\": 30\r\n             
+    },\r\n              {\r\n                \"countIncrease\": 2,\r\n               
+    \"chanceIncrease\": 0\r\n              },\r\n              {\r\n               
+    \"countIncrease\": 0,\r\n                \"chanceIncrease\": 30\r\n             
+    },\r\n              {\r\n                \"countIncrease\": 2,\r\n               
+    \"chanceIncrease\": 0\r\n              }\r\n            ]\r\n          },\r\n         
+    {\r\n            \"type\": \"Weapon_ExplosionBullet\",\r\n            \"maxLevel\":
+    5,\r\n            \"requiredAbility\": \"Unknown\",\r\n            \"bulletType\":
+    \"ExplosionBullet\",\r\n            \"baseStats\": [\r\n              {\r\n               
+    \"chance\": 0,\r\n                \"damage\": 0,\r\n                \"speed\":
+    0,\r\n                \"bounceCount\": 0\r\n              },\r\n             
+    {\r\n                \"chance\": 0,\r\n                \"damage\": 0,\r\n               
+    \"speed\": 0,\r\n                \"bounceCount\": 0\r\n              },\r\n             
+    {\r\n                \"chance\": 0,\r\n                \"damage\": 0,\r\n               
+    \"speed\": 0,\r\n                \"bounceCount\": 0\r\n              },\r\n             
+    {\r\n                \"chance\": 0,\r\n                \"damage\": 0,\r\n               
+    \"speed\": 0,\r\n                \"bounceCount\": 0\r\n              },\r\n             
+    {\r\n                \"chance\": 0,\r\n                \"damage\": 0,\r\n               
+    \"speed\": 0,\r\n                \"bounceCount\": 0\r\n              }\r\n           
+    ],\r\n            \"explosionBulletStats\": [\r\n              {\r\n               
+    \"explosionRange\": 0,\r\n                \"explosionDamageValue\": 0\r\n             
+    },\r\n              {\r\n                \"explosionRange\": 0.5,\r\n               
+    \"explosionDamageValue\": 10\r\n              },\r\n              {\r\n               
+    \"explosionRange\": 0.5,\r\n                \"explosionDamageValue\": 10\r\n             
+    },\r\n              {\r\n                \"explosionRange\": 0.5,\r\n               
+    \"explosionDamageValue\": 10\r\n              },\r\n              {\r\n               
+    \"explosionRange\": 0.5,\r\n                \"explosionDamageValue\": 10\r\n             
+    }\r\n            ]\r\n          },\r\n          {\r\n            \"type\": \"Weapon_LightningBullet\",\r\n           
+    \"maxLevel\": 5,\r\n            \"requiredAbility\": \"Unknown\",\r\n           
+    \"bulletType\": \"Lightning\",\r\n            \"baseStats\": [\r\n             
+    {\r\n                \"chance\": 0,\r\n                \"damage\": 0,\r\n               
+    \"speed\": 0,\r\n                \"bounceCount\": 0\r\n              },\r\n             
+    {\r\n                \"chance\": 0,\r\n                \"damage\": 0,\r\n               
+    \"speed\": 0,\r\n                \"bounceCount\": 0\r\n              },\r\n             
+    {\r\n                \"chance\": 0,\r\n                \"damage\": 0,\r\n               
+    \"speed\": 0,\r\n                \"bounceCount\": 0\r\n              },\r\n             
+    {\r\n                \"chance\": 0,\r\n                \"damage\": 0,\r\n               
+    \"speed\": 0,\r\n                \"bounceCount\": 0\r\n              },\r\n             
+    {\r\n                \"chance\": 0,\r\n                \"damage\": 0,\r\n               
+    \"speed\": 0,\r\n                \"bounceCount\": 0\r\n              }\r\n           
+    ],\r\n            \"lightningBulletStats\": [\r\n              {\r\n               
+    \"lightningDamageValue\": 0,\r\n                \"lightningCount\": 0,\r\n               
+    \"lightningRange\": 0\r\n              },\r\n              {\r\n               
+    \"lightningDamageValue\": 10,\r\n                \"lightningCount\": 1,\r\n               
+    \"lightningRange\": 0\r\n              },\r\n              {\r\n               
+    \"lightningDamageValue\": 10,\r\n                \"lightningCount\": 1,\r\n               
+    \"lightningRange\": 0\r\n              },\r\n              {\r\n               
+    \"lightningDamageValue\": 10,\r\n                \"lightningCount\": 1,\r\n               
+    \"lightningRange\": 0\r\n              },\r\n              {\r\n               
+    \"lightningDamageValue\": 10,\r\n                \"lightningCount\": 2,\r\n               
+    \"lightningRange\": 0\r\n              }\r\n            ]\r\n          },\r\n         
+    {\r\n            \"type\": \"Weapon_PierceBullet\",\r\n            \"maxLevel\":
+    5,\r\n            \"requiredAbility\": \"Unknown\",\r\n            \"bulletType\":
+    \"NormalBullet\",\r\n            \"baseStats\": [\r\n              {\r\n               
+    \"chance\": 0,\r\n                \"damage\": 0,\r\n                \"speed\":
+    0,\r\n                \"bounceCount\": 0\r\n              },\r\n             
+    {\r\n                \"chance\": 0,\r\n                \"damage\": 0,\r\n               
+    \"speed\": 0,\r\n                \"bounceCount\": 0\r\n              },\r\n             
+    {\r\n                \"chance\": 0,\r\n                \"damage\": 0,\r\n               
+    \"speed\": 0,\r\n                \"bounceCount\": 0\r\n              },\r\n             
+    {\r\n                \"chance\": 0,\r\n                \"damage\": 0,\r\n               
+    \"speed\": 0,\r\n                \"bounceCount\": 0\r\n              },\r\n             
+    {\r\n                \"chance\": 0,\r\n                \"damage\": 0,\r\n               
+    \"speed\": 0,\r\n                \"bounceCount\": 0\r\n              }\r\n           
+    ],\r\n            \"pierceBulletStats\": [\r\n              {\r\n               
+    \"pierceCount\": 1,\r\n                \"pierceDamageDecreaseValue\": 0\r\n             
+    },\r\n              {\r\n                \"pierceCount\": 1,\r\n               
+    \"pierceDamageDecreaseValue\": 5\r\n              },\r\n              {\r\n               
+    \"pierceCount\": 1,\r\n                \"pierceDamageDecreaseValue\": 5\r\n             
+    },\r\n              {\r\n                \"pierceCount\": 1,\r\n               
+    \"pierceDamageDecreaseValue\": 5\r\n              },\r\n              {\r\n               
+    \"pierceCount\": 999,\r\n                \"pierceDamageDecreaseValue\": 5\r\n             
+    }\r\n            ]\r\n          },\r\n          {\r\n            \"type\": \"Weapon_IceBullet\",\r\n           
+    \"maxLevel\": 5,\r\n            \"requiredAbility\": \"Unknown\",\r\n           
+    \"bulletType\": \"IceBullet\",\r\n            \"baseStats\": [\r\n             
+    {\r\n                \"chance\": 0,\r\n                \"damage\": 0,\r\n               
+    \"speed\": 0,\r\n                \"bounceCount\": 0\r\n              },\r\n             
+    {\r\n                \"chance\": 0,\r\n                \"damage\": 0,\r\n               
+    \"speed\": 0,\r\n                \"bounceCount\": 0\r\n              },\r\n             
+    {\r\n                \"chance\": 0,\r\n                \"damage\": 0,\r\n               
+    \"speed\": 0,\r\n                \"bounceCount\": 0\r\n              },\r\n             
+    {\r\n                \"chance\": 0,\r\n                \"damage\": 0,\r\n               
+    \"speed\": 0,\r\n                \"bounceCount\": 0\r\n              },\r\n             
+    {\r\n                \"chance\": 0,\r\n                \"damage\": 0,\r\n               
+    \"speed\": 0,\r\n                \"bounceCount\": 0\r\n              }\r\n           
+    ],\r\n            \"iceBulletStats\": [\r\n              {\r\n               
+    \"slowValue\": 0,\r\n                \"slowTime\": 0,\r\n                \"freezeTime\":
+    0\r\n              },\r\n              {\r\n                \"slowValue\": 10,\r\n               
+    \"slowTime\": 0.5,\r\n                \"freezeTime\": 0\r\n              },\r\n             
+    {\r\n                \"slowValue\": 10,\r\n                \"slowTime\": 0.5,\r\n               
+    \"freezeTime\": 0\r\n              },\r\n              {\r\n                \"slowValue\":
+    10,\r\n                \"slowTime\": 0.5,\r\n                \"freezeTime\":
+    0\r\n              },\r\n              {\r\n                \"slowValue\": 10,\r\n               
+    \"slowTime\": 0.5,\r\n                \"freezeTime\": 0\r\n              }\r\n           
+    ]\r\n          },\r\n          {\r\n            \"type\": \"Weapon_HomingBullet\",\r\n           
+    \"maxLevel\": 5,\r\n            \"requiredAbility\": \"Unknown\",\r\n           
+    \"bulletType\": \"HomingBullet\",\r\n            \"baseStats\": [\r\n             
+    {\r\n                \"chance\": 0,\r\n                \"damage\": 0,\r\n               
+    \"speed\": 0,\r\n                \"bounceCount\": 0\r\n              },\r\n             
+    {\r\n                \"chance\": 0,\r\n                \"damage\": 0,\r\n               
+    \"speed\": 0,\r\n                \"bounceCount\": 0\r\n              },\r\n             
+    {\r\n                \"chance\": 0,\r\n                \"damage\": 0,\r\n               
+    \"speed\": 0,\r\n                \"bounceCount\": 0\r\n              },\r\n             
+    {\r\n                \"chance\": 0,\r\n                \"damage\": 0,\r\n               
+    \"speed\": 0,\r\n                \"bounceCount\": 0\r\n              },\r\n             
+    {\r\n                \"chance\": 0,\r\n                \"damage\": 0,\r\n               
+    \"speed\": 0,\r\n                \"bounceCount\": 0\r\n              }\r\n           
+    ],\r\n            \"homingBulletStats\": [\r\n              {\r\n               
+    \"homingShotDelay\": 0\r\n              },\r\n              {\r\n               
+    \"homingShotDelay\": 0.5\r\n              },\r\n              {\r\n               
+    \"homingShotDelay\": 0.5\r\n              },\r\n              {\r\n               
+    \"homingShotDelay\": 0.5\r\n              },\r\n              {\r\n               
+    \"homingShotDelay\": 0.5\r\n              }\r\n            ]\r\n          },\r\n         
+    {\r\n            \"type\": \"Weapon_FireBullet\",\r\n            \"maxLevel\":
+    5,\r\n            \"requiredAbility\": \"Unknown\",\r\n            \"bulletType\":
+    \"FireBullet\",\r\n            \"baseStats\": [\r\n              {\r\n               
+    \"chance\": 0,\r\n                \"damage\": 0,\r\n                \"speed\":
+    0,\r\n                \"bounceCount\": 0\r\n              },\r\n             
+    {\r\n                \"chance\": 0,\r\n                \"damage\": 0,\r\n               
+    \"speed\": 0,\r\n                \"bounceCount\": 0\r\n              },\r\n             
+    {\r\n                \"chance\": 0,\r\n                \"damage\": 0,\r\n               
+    \"speed\": 0,\r\n                \"bounceCount\": 0\r\n              },\r\n             
+    {\r\n                \"chance\": 0,\r\n                \"damage\": 0,\r\n               
+    \"speed\": 0,\r\n                \"bounceCount\": 0\r\n              },\r\n             
+    {\r\n                \"chance\": 0,\r\n                \"damage\": 0,\r\n               
+    \"speed\": 0,\r\n                \"bounceCount\": 0\r\n              }\r\n           
+    ],\r\n            \"fireBulletStats\": [\r\n              {\r\n               
+    \"fireDamageValue\": 0,\r\n                \"fireRemainTime\": 0,\r\n               
+    \"fireZoneDestroyTime\": 0,\r\n                \"fireZoneSize\": 0\r\n             
+    },\r\n              {\r\n                \"fireDamageValue\": 10,\r\n               
+    \"fireRemainTime\": 0.5,\r\n                \"fireZoneDestroyTime\": 0,\r\n               
+    \"fireZoneSize\": 0\r\n              },\r\n              {\r\n               
+    \"fireDamageValue\": 10,\r\n                \"fireRemainTime\": 0.5,\r\n               
+    \"fireZoneDestroyTime\": 0,\r\n                \"fireZoneSize\": 0.5\r\n             
+    },\r\n              {\r\n                \"fireDamageValue\": 10,\r\n               
+    \"fireRemainTime\": 0.5,\r\n                \"fireZoneDestroyTime\": 0,\r\n               
+    \"fireZoneSize\": 0\r\n              },\r\n              {\r\n               
+    \"fireDamageValue\": 10,\r\n                \"fireRemainTime\": 0.5,\r\n               
+    \"fireZoneDestroyTime\": 0,\r\n                \"fireZoneSize\": 2\r\n             
+    }\r\n            ]\r\n          },\r\n          {\r\n            \"type\": \"Weapon_BlackHoleBullet\",\r\n           
+    \"maxLevel\": 5,\r\n            \"requiredAbility\": \"Unknown\",\r\n           
+    \"bulletType\": \"BlackHole\",\r\n            \"baseStats\": [\r\n             
+    {\r\n                \"chance\": 0,\r\n                \"damage\": 0,\r\n               
+    \"speed\": 0,\r\n                \"bounceCount\": 0\r\n              },\r\n             
+    {\r\n                \"chance\": 0,\r\n                \"damage\": 0,\r\n               
+    \"speed\": 0,\r\n                \"bounceCount\": 0\r\n              },\r\n             
+    {\r\n                \"chance\": 0,\r\n                \"damage\": 0,\r\n               
+    \"speed\": 0,\r\n                \"bounceCount\": 0\r\n              },\r\n             
+    {\r\n                \"chance\": 0,\r\n                \"damage\": 0,\r\n               
+    \"speed\": 0,\r\n                \"bounceCount\": 0\r\n              },\r\n             
+    {\r\n                \"chance\": 0,\r\n                \"damage\": 0,\r\n               
+    \"speed\": 0,\r\n                \"bounceCount\": 0\r\n              }\r\n           
+    ]\r\n          },\r\n          {\r\n            \"type\": \"Weapon_PoisonBullet\",\r\n           
+    \"maxLevel\": 5,\r\n            \"requiredAbility\": \"Unknown\",\r\n           
+    \"bulletType\": \"Poison\",\r\n            \"baseStats\": [\r\n             
+    {\r\n                \"chance\": 0,\r\n                \"damage\": 0,\r\n               
+    \"speed\": 0,\r\n                \"bounceCount\": 0\r\n              },\r\n             
+    {\r\n                \"chance\": 0,\r\n                \"damage\": 0,\r\n               
+    \"speed\": 0,\r\n                \"bounceCount\": 0\r\n              },\r\n             
+    {\r\n                \"chance\": 0,\r\n                \"damage\": 0,\r\n               
+    \"speed\": 0,\r\n                \"bounceCount\": 0\r\n              },\r\n             
+    {\r\n                \"chance\": 0,\r\n                \"damage\": 0,\r\n               
+    \"speed\": 0,\r\n                \"bounceCount\": 0\r\n              },\r\n             
+    {\r\n                \"chance\": 0,\r\n                \"damage\": 0,\r\n               
+    \"speed\": 0,\r\n                \"bounceCount\": 0\r\n              }\r\n           
+    ]\r\n          },\r\n          {\r\n            \"type\": \"Weapon_LaserBeam\",\r\n           
+    \"maxLevel\": 5,\r\n            \"requiredAbility\": \"Unknown\",\r\n           
+    \"baseStats\": [\r\n              {\r\n                \"chance\": 0,\r\n               
+    \"damage\": 0,\r\n                \"speed\": 0,\r\n                \"bounceCount\":
+    0\r\n              },\r\n              {\r\n                \"chance\": 0,\r\n               
+    \"damage\": 0,\r\n                \"speed\": 0,\r\n                \"bounceCount\":
+    0\r\n              },\r\n              {\r\n                \"chance\": 0,\r\n               
+    \"damage\": 0,\r\n                \"speed\": 0,\r\n                \"bounceCount\":
+    0\r\n              },\r\n              {\r\n                \"chance\": 0,\r\n               
+    \"damage\": 0,\r\n                \"speed\": 0,\r\n                \"bounceCount\":
+    0\r\n              },\r\n              {\r\n                \"chance\": 0,\r\n               
+    \"damage\": 0,\r\n                \"speed\": 0,\r\n                \"bounceCount\":
+    0\r\n              }\r\n            ]\r\n          }\r\n        ]\r\n      }\r\n   
+    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"08b1cc6e-2dac-448a-9c55-6e560a73db18\"\r\n   
+    },\r\n    \"rs\": {\r\n      \"key\": \"BossStatData\",\r\n      \"type\": \"json\",\r\n     
+    \"schemaId\": null,\r\n      \"value\": {\r\n        \"bossList\": [\r\n         
+    {\r\n            \"Type\": \"Boss1\",\r\n            \"MaxHp\": 20000,\r\n           
+    \"Speed\": 1,\r\n            \"Damage\": 10,\r\n            \"Score\": 5000,\r\n           
+    \"dropTable\": [],\r\n            \"myPatterns\": [\r\n              \"Spiral\",\r\n             
+    \"Shotgun\",\r\n              \"Sniper\",\r\n              \"CircleBurst\",\r\n             
+    \"WallGap\"\r\n            ]\r\n          }\r\n        ]\r\n      }\r\n    }\r\n 
+    },\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"6e889a72-0f3c-4bdd-ac3e-cb16db368f8e\"\r\n   
+    },\r\n    \"rs\": {\r\n      \"key\": \"BossPatternData\",\r\n      \"type\":
+    \"json\",\r\n      \"schemaId\": null,\r\n      \"value\": {\r\n        \"patternList\":
+    [\r\n          {\r\n            \"type\": \"CircleBurst\",\r\n            \"nextPatternDelay\":
+    2.5,\r\n            \"bulletCount\": 18,\r\n            \"burstCount\": 2,\r\n           
+    \"burstDelay\": 1,\r\n            \"bulletSpeed\": 6\r\n          },\r\n         
+    {\r\n            \"type\": \"Pinball\",\r\n            \"nextPatternDelay\":
+    2.5,\r\n            \"totalBullets\": 16,\r\n            \"fireDelay\": 0.15,\r\n           
+    \"bulletSpeed\": 8\r\n          },\r\n          {\r\n            \"type\": \"Shotgun\",\r\n           
+    \"nextPatternDelay\": 2.5,\r\n            \"bulletCount\": 5,\r\n           
+    \"spreadAngle\": 60,\r\n            \"burstCount\": 3,\r\n            \"burstDelay\":
+    0.5,\r\n            \"bulletSpeed\": 7\r\n          },\r\n          {\r\n           
+    \"type\": \"Sniper\",\r\n            \"nextPatternDelay\": 2.5,\r\n           
+    \"burstCount\": 5,\r\n            \"fireDelay\": 0.08,\r\n            \"repeatCount\":
+    3,\r\n            \"repeatDelay\": 1.2,\r\n            \"bulletSpeed\": 12\r\n         
+    },\r\n          {\r\n            \"type\": \"Spiral\",\r\n            \"nextPatternDelay\":
+    2.5,\r\n            \"bulletCount\": 30,\r\n            \"angleStep\": 15,\r\n           
+    \"fireDelay\": 0.1,\r\n            \"bulletSpeed\": 5\r\n          },\r\n         
+    {\r\n            \"type\": \"WallGap\",\r\n            \"nextPatternDelay\":
+    2.5,\r\n            \"totalBullets\": 20,\r\n            \"spreadAngle\": 160,\r\n           
+    \"gapSize\": 3,\r\n            \"waveCount\": 3,\r\n            \"waveDelay\":
+    1.5,\r\n            \"bulletSpeed\": 4\r\n          }\r\n        ]\r\n      }\r\n   
+    }\r\n  }\r\n]"
+  _rsLastCachedKeyList: "[\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"712e248f-cede-415b-bbcd-b1af5a41b9ce\"\r\n   
+    },\r\n    \"rs\": {\r\n      \"key\": \"StageBalanceData\",\r\n      \"type\":
+    \"json\",\r\n      \"schemaId\": null,\r\n      \"value\": {\r\n        \"maxStage\":
+    100,\r\n        \"baseSpawnDelay\": 1,\r\n        \"minSpawnDelay\": 0.1,\r\n       
+    \"spawnDelayDecrease\": 0,\r\n        \"hpGrowthPerStage\": 1,\r\n        \"hpMultiplierPerStage\":
+    1,\r\n        \"speedGrowthPerStage\": 0,\r\n        \"bossStageInterval\": 5,\r\n       
+    \"waves\": [\r\n          {\r\n            \"phaseType\": 0,\r\n            \"waveStartTime\":
+    0,\r\n            \"waveHpRate\": 1,\r\n            \"waveSpawnDelay\": 1,\r\n           
+    \"expRate\": 1,\r\n            \"speedRate\": 1\r\n          },\r\n         
+    {\r\n            \"phaseType\": 1,\r\n            \"waveStartTime\": 90,\r\n           
+    \"waveHpRate\": 1.5,\r\n            \"waveSpawnDelay\": 0.7,\r\n            \"expRate\":
+    1.2,\r\n            \"speedRate\": 1.2\r\n          },\r\n          {\r\n           
+    \"phaseType\": 2,\r\n            \"waveStartTime\": 180,\r\n            \"waveHpRate\":
+    2,\r\n            \"waveSpawnDelay\": 0.5,\r\n            \"expRate\": 1.5,\r\n           
+    \"speedRate\": 1.5\r\n          },\r\n          {\r\n            \"phaseType\":
+    3,\r\n            \"waveStartTime\": 270,\r\n            \"waveHpRate\": 5,\r\n           
+    \"waveSpawnDelay\": 0.2,\r\n            \"expRate\": 1,\r\n            \"speedRate\":
+    1.5\r\n          },\r\n          {\r\n            \"phaseType\": 4,\r\n           
+    \"waveStartTime\": 360,\r\n            \"waveHpRate\": 7,\r\n            \"waveSpawnDelay\":
+    0.2,\r\n            \"expRate\": 1,\r\n            \"speedRate\": 1.5\r\n         
+    }\r\n        ]\r\n      }\r\n    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n     
+    \"entityId\": \"c4662e8b-7936-4295-887e-62cce9da8bde\"\r\n    },\r\n    \"rs\":
+    {\r\n      \"key\": \"GameData\",\r\n      \"type\": \"json\",\r\n      \"schemaId\":
+    null,\r\n      \"value\": {\r\n        \"GameStartTime\": 3,\r\n        \"itemSpawnInterval\":
+    60,\r\n        \"reviveCount\": 1,\r\n        \"rerollGoldCost\": 100,\r\n       
+    \"expZero\": false,\r\n        \"playerGod\": false,\r\n        \"noAttack\":
+    false,\r\n        \"gameclearTime\": 5,\r\n        \"gamePlayeSize\": 15,\r\n       
+    \"burstModeSize\": 20,\r\n        \"bossStageSize\": 20\r\n      }\r\n    }\r\n 
+    },\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"34b25646-8c66-46fc-90f6-49b5a7778bc5\"\r\n   
+    },\r\n    \"rs\": {\r\n      \"key\": \"PlayerStatData\",\r\n      \"type\":
+    \"json\",\r\n      \"schemaId\": null,\r\n      \"value\": {\r\n        \"statData\":
+    {\r\n          \"speed\": 2.5,\r\n          \"maxHp\": 200,\r\n          \"maxDefenceCount\":
+    0,\r\n          \"reloadCount\": 10,\r\n          \"reloadTime\": 2.5,\r\n         
+    \"shotRange\": 5,\r\n          \"shotTime\": 1,\r\n          \"criticalChance\":
+    0,\r\n          \"criticalDamageRate\": 0,\r\n          \"itemGetRange\": 0,\r\n         
+    \"hitCooldown\": 1.5,\r\n          \"shieldChargeTime\": 20,\r\n          \"maxDefenceGuage\":
+    100,\r\n          \"bounceChance\": 0,\r\n          \"isBurstModeEnabled\": false,\r\n         
+    \"maxBurstGuage\": 100,\r\n          \"maxBurstFullChargeTime\": 60,\r\n         
+    \"isMultiShotEnabled\": false,\r\n          \"multiShotCount\": 0,\r\n         
+    \"multiShotChance\": 40,\r\n          \"multiShotAngle\": 45,\r\n          \"isHomingShotEnabled\":
+    false,\r\n          \"homingShotDelay\": 1.5,\r\n          \"homingRange\": 5\r\n       
+    }\r\n      }\r\n    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\":
+    \"63fc2c67-b9c7-41ef-9965-74c5c4613b97\"\r\n    },\r\n    \"rs\": {\r\n     
+    \"key\": \"MeteorStats\",\r\n      \"type\": \"json\",\r\n      \"schemaId\":
+    null,\r\n      \"value\": {\r\n        \"meteorList\": [\r\n          {\r\n           
+    \"Type\": \"NormalMeteor\",\r\n            \"IsExclude\": false,\r\n           
+    \"MaxHp\": 7,\r\n            \"MaxSpeed\": 0.6,\r\n            \"MinSpeed\":
+    0.3,\r\n            \"Damage\": 10,\r\n            \"Score\": 100,\r\n           
+    \"Exp\": 10,\r\n            \"spawnPhase\": \"Phase1\",\r\n            \"targetChase\":
+    true,\r\n            \"magmaTick\": 0,\r\n            \"auraRadius\": 0,\r\n           
+    \"dropTable\": [\r\n              {\r\n                \"itemType\": \"Gold\",\r\n               
+    \"dropRate\": 0.01\r\n              },\r\n              {\r\n               
+    \"itemType\": \"Exp\",\r\n                \"dropRate\": 1\r\n              }\r\n           
+    ]\r\n          },\r\n          {\r\n            \"Type\": \"CometMeteor\",\r\n           
+    \"IsExclude\": false,\r\n            \"MaxHp\": 5,\r\n            \"MaxSpeed\":
+    3,\r\n            \"MinSpeed\": 3,\r\n            \"Damage\": 5,\r\n           
+    \"Score\": 150,\r\n            \"Exp\": 25,\r\n            \"spawnPhase\": \"Phase2\",\r\n           
+    \"targetChase\": false,\r\n            \"magmaTick\": 0,\r\n            \"auraRadius\":
+    0,\r\n            \"dropTable\": [\r\n              {\r\n                \"itemType\":
+    \"Gold\",\r\n                \"dropRate\": 0.01\r\n              },\r\n             
+    {\r\n                \"itemType\": \"Exp\",\r\n                \"dropRate\":
+    1\r\n              }\r\n            ]\r\n          },\r\n          {\r\n           
+    \"Type\": \"FractureMeteor\",\r\n            \"IsExclude\": false,\r\n           
+    \"MaxHp\": 20,\r\n            \"MaxSpeed\": 0.7,\r\n            \"MinSpeed\":
+    0.5,\r\n            \"Damage\": 15,\r\n            \"Score\": 400,\r\n           
+    \"Exp\": 40,\r\n            \"spawnPhase\": \"Phase3\",\r\n            \"targetChase\":
+    true,\r\n            \"magmaTick\": 0,\r\n            \"auraRadius\": 0,\r\n           
+    \"dropTable\": [\r\n              {\r\n                \"itemType\": \"Gold\",\r\n               
+    \"dropRate\": 0.01\r\n              },\r\n              {\r\n               
+    \"itemType\": \"Exp\",\r\n                \"dropRate\": 1\r\n              },\r\n             
+    {\r\n                \"itemType\": \"RecoveryHp\",\r\n                \"dropRate\":
+    0.01\r\n              },\r\n              {\r\n                \"itemType\":
+    \"Magnet\",\r\n                \"dropRate\": 0.01\r\n              }\r\n           
+    ]\r\n          },\r\n          {\r\n            \"Type\": \"IronMeteor\",\r\n           
+    \"IsExclude\": false,\r\n            \"MaxHp\": 30,\r\n            \"MaxSpeed\":
+    0.5,\r\n            \"MinSpeed\": 0.3,\r\n            \"Damage\": 20,\r\n           
+    \"Score\": 300,\r\n            \"Exp\": 60,\r\n            \"spawnPhase\": \"Phase4\",\r\n           
+    \"targetChase\": true,\r\n            \"magmaTick\": 0,\r\n            \"auraRadius\":
+    0,\r\n            \"dropTable\": [\r\n              {\r\n                \"itemType\":
+    \"Gold\",\r\n                \"dropRate\": 0.01\r\n              },\r\n             
+    {\r\n                \"itemType\": \"Exp\",\r\n                \"dropRate\":
+    1\r\n              },\r\n              {\r\n                \"itemType\": \"RecoveryHp\",\r\n               
+    \"dropRate\": 0.01\r\n              },\r\n              {\r\n               
+    \"itemType\": \"Magnet\",\r\n                \"dropRate\": 0.01\r\n             
+    }\r\n            ]\r\n          },\r\n          {\r\n            \"Type\": \"MagmaMeteor\",\r\n           
+    \"IsExclude\": false,\r\n            \"MaxHp\": 25,\r\n            \"MaxSpeed\":
+    0.9,\r\n            \"MinSpeed\": 0.6,\r\n            \"Damage\": 15,\r\n           
+    \"Score\": 250,\r\n            \"Exp\": 50,\r\n            \"spawnPhase\": \"Phase5\",\r\n           
+    \"targetChase\": true,\r\n            \"magmaTick\": 0.5,\r\n            \"auraRadius\":
+    0,\r\n            \"dropTable\": [\r\n              {\r\n                \"itemType\":
+    \"Gold\",\r\n                \"dropRate\": 0.01\r\n              },\r\n             
+    {\r\n                \"itemType\": \"Exp\",\r\n                \"dropRate\":
+    1\r\n              },\r\n              {\r\n                \"itemType\": \"RecoveryHp\",\r\n               
+    \"dropRate\": 0.01\r\n              },\r\n              {\r\n               
+    \"itemType\": \"Magnet\",\r\n                \"dropRate\": 0.01\r\n             
+    }\r\n            ]\r\n          },\r\n          {\r\n            \"Type\": \"SludgeMeteor\",\r\n           
+    \"IsExclude\": false,\r\n            \"MaxHp\": 15,\r\n            \"MaxSpeed\":
+    0.7,\r\n            \"MinSpeed\": 0.7,\r\n            \"Damage\": 10,\r\n           
+    \"Score\": 250,\r\n            \"Exp\": 30,\r\n            \"spawnPhase\": \"Phase2\",\r\n           
+    \"targetChase\": true,\r\n            \"magmaTick\": 0,\r\n            \"auraRadius\":
+    0,\r\n            \"dropTable\": [\r\n              {\r\n                \"itemType\":
+    \"Gold\",\r\n                \"dropRate\": 0.01\r\n              },\r\n             
+    {\r\n                \"itemType\": \"Exp\",\r\n                \"dropRate\":
+    1\r\n              },\r\n              {\r\n                \"itemType\": \"RecoveryHp\",\r\n               
+    \"dropRate\": 0.01\r\n              },\r\n              {\r\n               
+    \"itemType\": \"Magnet\",\r\n                \"dropRate\": 0.01\r\n             
+    }\r\n            ]\r\n          },\r\n          {\r\n            \"Type\": \"AuraBuffMeteor\",\r\n           
+    \"IsExclude\": false,\r\n            \"MaxHp\": 25,\r\n            \"MaxSpeed\":
+    0.6,\r\n            \"MinSpeed\": 0.4,\r\n            \"Damage\": 10,\r\n           
+    \"Score\": 500,\r\n            \"Exp\": 70,\r\n            \"spawnPhase\": \"Phase5\",\r\n           
+    \"targetChase\": true,\r\n            \"magmaTick\": 0,\r\n            \"auraRadius\":
+    2,\r\n            \"dropTable\": [\r\n              {\r\n                \"itemType\":
+    \"Gold\",\r\n                \"dropRate\": 0.01\r\n              },\r\n             
+    {\r\n                \"itemType\": \"Exp\",\r\n                \"dropRate\":
+    1\r\n              },\r\n              {\r\n                \"itemType\": \"RecoveryHp\",\r\n               
+    \"dropRate\": 0.01\r\n              },\r\n              {\r\n               
+    \"itemType\": \"Magnet\",\r\n                \"dropRate\": 0.01\r\n             
+    }\r\n            ]\r\n          },\r\n          {\r\n            \"Type\": \"FragmentMeteor\",\r\n           
+    \"IsExclude\": true,\r\n            \"MaxHp\": 5,\r\n            \"MaxSpeed\":
+    0.8,\r\n            \"MinSpeed\": 0.6,\r\n            \"Damage\": 3,\r\n           
+    \"Score\": 100,\r\n            \"Exp\": 10,\r\n            \"spawnPhase\": \"Phase5\",\r\n           
+    \"targetChase\": false,\r\n            \"magmaTick\": 0,\r\n            \"auraRadius\":
+    0,\r\n            \"dropTable\": [\r\n              {\r\n                \"itemType\":
+    \"Gold\",\r\n                \"dropRate\": 0.01\r\n              },\r\n             
+    {\r\n                \"itemType\": \"Exp\",\r\n                \"dropRate\":
+    1\r\n              },\r\n              {\r\n                \"itemType\": \"RecoveryHp\",\r\n               
+    \"dropRate\": 0.01\r\n              },\r\n              {\r\n               
+    \"itemType\": \"Magnet\",\r\n                \"dropRate\": 0.01\r\n             
+    }\r\n            ]\r\n          }\r\n        ]\r\n      }\r\n    }\r\n  },\r\n 
+    {\r\n    \"metadata\": {\r\n      \"entityId\": \"bd657ba8-38ee-4879-bb98-7b9d10a914ee\"\r\n   
+    },\r\n    \"rs\": {\r\n      \"key\": \"BulletStatData\",\r\n      \"type\":
+    \"json\",\r\n      \"schemaId\": null,\r\n      \"value\": {\r\n        \"bulletList\":
+    [\r\n          {\r\n            \"type\": \"NormalBullet\",\r\n            \"isReload\":
+    true,\r\n            \"chance\": 100,\r\n            \"damage\": 10,\r\n           
+    \"speed\": 10,\r\n            \"bounceCount\": 0,\r\n            \"pierceCount\":
+    0,\r\n            \"pierceDamageDecreaseValue\": 20\r\n          },\r\n         
+    {\r\n            \"type\": \"LightningBullet\",\r\n            \"isReload\":
+    true,\r\n            \"chance\": 100,\r\n            \"damage\": 10,\r\n           
+    \"speed\": 10,\r\n            \"bounceCount\": 0,\r\n            \"lightningDamageValue\":
+    60,\r\n            \"lightningCount\": 1,\r\n            \"lightningRange\":
+    5\r\n          },\r\n          {\r\n            \"type\": \"ExplosionBullet\",\r\n           
+    \"isReload\": true,\r\n            \"chance\": 100,\r\n            \"damage\":
+    10,\r\n            \"speed\": 10,\r\n            \"bounceCount\": 0,\r\n           
+    \"explosionRange\": 1,\r\n            \"explosionDamageValue\": 60\r\n         
+    },\r\n          {\r\n            \"type\": \"FireBullet\",\r\n            \"isReload\":
+    true,\r\n            \"chance\": 100,\r\n            \"damage\": 10,\r\n           
+    \"speed\": 10,\r\n            \"bounceCount\": 0,\r\n            \"fireDamageValue\":
+    50,\r\n            \"fireRemainTime\": 2,\r\n            \"fireZoneDestroyTime\":
+    5,\r\n            \"fireZoneSize\": 0.5\r\n          },\r\n          {\r\n           
+    \"type\": \"IceBullet\",\r\n            \"isReload\": true,\r\n            \"chance\":
+    100,\r\n            \"damage\": 10,\r\n            \"speed\": 10,\r\n           
+    \"bounceCount\": 0,\r\n            \"slowValue\": 30,\r\n            \"slowTime\":
+    1.5,\r\n            \"freezeTime\": 2\r\n          },\r\n          {\r\n           
+    \"type\": \"HomingBullet\",\r\n            \"isReload\": false,\r\n           
+    \"chance\": 100,\r\n            \"damage\": 10,\r\n            \"speed\": 10,\r\n           
+    \"bounceCount\": 0,\r\n            \"homingShotDelay\": 2\r\n          },\r\n         
+    {\r\n            \"type\": \"BurstBullet\",\r\n            \"isReload\": false,\r\n           
+    \"chance\": 100,\r\n            \"damage\": 30,\r\n            \"speed\": 20,\r\n           
+    \"bounceCount\": 0\r\n          }\r\n        ]\r\n      }\r\n    }\r\n  },\r\n 
+    {\r\n    \"metadata\": {\r\n      \"entityId\": \"baf9524b-d92f-48ac-9e11-2cb91020436f\"\r\n   
+    },\r\n    \"rs\": {\r\n      \"key\": \"AbilityStatData\",\r\n      \"type\":
+    \"json\",\r\n      \"schemaId\": null,\r\n      \"value\": {\r\n        \"abilityList\":
+    [\r\n          {\r\n            \"type\": \"Passive_MaxHpUp\",\r\n           
+    \"maxLevel\": 5,\r\n            \"requiredAbility\": \"Unknown\",\r\n           
+    \"maxHpUpData\": [\r\n              50,\r\n              50,\r\n             
+    50,\r\n              50,\r\n              50\r\n            ]\r\n          },\r\n         
+    {\r\n            \"type\": \"Passive_PlayerSpeedUp\",\r\n            \"maxLevel\":
+    5,\r\n            \"requiredAbility\": \"Unknown\",\r\n            \"speedUpData\":
+    [\r\n              30,\r\n              30,\r\n              30,\r\n             
+    30,\r\n              30\r\n            ]\r\n          },\r\n          {\r\n           
+    \"type\": \"Passive_ReloadCountUp\",\r\n            \"maxLevel\": 5,\r\n           
+    \"requiredAbility\": \"Unknown\",\r\n            \"reloadCountUpData\": [\r\n             
+    2,\r\n              2,\r\n              2,\r\n              2,\r\n             
+    2\r\n            ]\r\n          },\r\n          {\r\n            \"type\": \"Passive_ReloadTimeDown\",\r\n           
+    \"maxLevel\": 5,\r\n            \"requiredAbility\": \"Unknown\",\r\n           
+    \"reloadTimeDownData\": [\r\n              0.4,\r\n              0.4,\r\n             
+    0.4,\r\n              0.4,\r\n              0.3\r\n            ]\r\n         
+    },\r\n          {\r\n            \"type\": \"Passive_ShotTimeDown\",\r\n           
+    \"maxLevel\": 5,\r\n            \"requiredAbility\": \"Unknown\",\r\n           
+    \"shotTimeDownData\": [\r\n              0.2,\r\n              0.2,\r\n             
+    0.2,\r\n              0.2,\r\n              0.1\r\n            ]\r\n         
+    },\r\n          {\r\n            \"type\": \"Passive_BurstMode\",\r\n           
+    \"maxLevel\": 1,\r\n            \"requiredAbility\": \"Unknown\",\r\n           
+    \"burstModeIncreases\": [\r\n              {\r\n                \"speed\": 100,\r\n               
+    \"criticalDamageRate\": 100,\r\n                \"burstChargeTime\": 7.5\r\n             
+    },\r\n              {\r\n                \"speed\": 100,\r\n                \"criticalDamageRate\":
+    100,\r\n                \"burstChargeTime\": 7.5\r\n              },\r\n             
+    {\r\n                \"speed\": 100,\r\n                \"criticalDamageRate\":
+    100,\r\n                \"burstChargeTime\": 7.5\r\n              },\r\n             
+    {\r\n                \"speed\": 100,\r\n                \"criticalDamageRate\":
+    100,\r\n                \"burstChargeTime\": 7.5\r\n              },\r\n             
+    {\r\n                \"speed\": 100,\r\n                \"criticalDamageRate\":
+    100,\r\n                \"burstChargeTime\": 7.5\r\n              }\r\n           
+    ]\r\n          },\r\n          {\r\n            \"type\": \"Passive_PlayerShield\",\r\n           
+    \"maxLevel\": 5,\r\n            \"requiredAbility\": \"Unknown\",\r\n           
+    \"bulletType\": \"None\",\r\n            \"ShieldAbilityData\": [\r\n             
+    0,\r\n              4,\r\n              4,\r\n              4,\r\n             
+    4\r\n            ]\r\n          },\r\n          {\r\n            \"type\": \"Passive_PlayerCritical\",\r\n           
+    \"maxLevel\": 5,\r\n            \"requiredAbility\": \"Unknown\",\r\n           
+    \"criticalAbilityData\": [\r\n              {\r\n                \"CriticalChance\":
+    20,\r\n                \"CriticalDamageRate\": 150\r\n              },\r\n             
+    {\r\n                \"CriticalChance\": 12.5,\r\n                \"CriticalDamageRate\":
+    12.5\r\n              },\r\n              {\r\n                \"CriticalChance\":
+    12.5,\r\n                \"CriticalDamageRate\": 12.5\r\n              },\r\n             
+    {\r\n                \"CriticalChance\": 12.5,\r\n                \"CriticalDamageRate\":
+    12.5\r\n              },\r\n              {\r\n                \"CriticalChance\":
+    12.5,\r\n                \"CriticalDamageRate\": 12.5\r\n              }\r\n           
+    ]\r\n          },\r\n          {\r\n            \"type\": \"Passive_PlayerDamageUp\",\r\n           
+    \"maxLevel\": 5,\r\n            \"requiredAbility\": \"Unknown\",\r\n           
+    \"damageUpAbilityData\": [\r\n              20,\r\n              20,\r\n             
+    20,\r\n              20,\r\n              20\r\n            ]\r\n          },\r\n         
+    {\r\n            \"type\": \"Passive_AllBulletBounceCountUp\",\r\n           
+    \"maxLevel\": 5,\r\n            \"requiredAbility\": \"Unknown\",\r\n           
+    \"bounceIncreases\": [\r\n              {\r\n                \"countIncrease\":
+    1,\r\n                \"chanceIncrease\": 30\r\n              },\r\n             
+    {\r\n                \"countIncrease\": 0,\r\n                \"chanceIncrease\":
+    20\r\n              },\r\n              {\r\n                \"countIncrease\":
+    1,\r\n                \"chanceIncrease\": 0\r\n              },\r\n             
+    {\r\n                \"countIncrease\": 0,\r\n                \"chanceIncrease\":
+    20\r\n              },\r\n              {\r\n                \"countIncrease\":
+    1,\r\n                \"chanceIncrease\": 0\r\n              }\r\n           
+    ]\r\n          },\r\n          {\r\n            \"type\": \"Passive_PlayerHeal\",\r\n           
+    \"maxLevel\": 9999,\r\n            \"requiredAbility\": \"Unknown\",\r\n           
+    \"playerHealData\": [\r\n              50,\r\n              50,\r\n             
+    50,\r\n              50,\r\n              50\r\n            ]\r\n          },\r\n         
+    {\r\n            \"type\": \"Passive_SplitBullet\",\r\n            \"maxLevel\":
+    5,\r\n            \"requiredAbility\": \"Unknown\",\r\n            \"splitBulletData\":
+    [\r\n              {\r\n                \"countIncrease\": 3,\r\n               
+    \"chanceIncrease\": 0\r\n              },\r\n              {\r\n               
+    \"countIncrease\": 0,\r\n                \"chanceIncrease\": 30\r\n             
+    },\r\n              {\r\n                \"countIncrease\": 2,\r\n               
+    \"chanceIncrease\": 0\r\n              },\r\n              {\r\n               
+    \"countIncrease\": 0,\r\n                \"chanceIncrease\": 30\r\n             
+    },\r\n              {\r\n                \"countIncrease\": 2,\r\n               
+    \"chanceIncrease\": 0\r\n              }\r\n            ]\r\n          },\r\n         
+    {\r\n            \"type\": \"Weapon_ExplosionBullet\",\r\n            \"maxLevel\":
+    5,\r\n            \"requiredAbility\": \"Unknown\",\r\n            \"bulletType\":
+    \"ExplosionBullet\",\r\n            \"baseStats\": [\r\n              {\r\n               
+    \"chance\": 0,\r\n                \"damage\": 0,\r\n                \"speed\":
+    0,\r\n                \"bounceCount\": 0\r\n              },\r\n             
+    {\r\n                \"chance\": 0,\r\n                \"damage\": 0,\r\n               
+    \"speed\": 0,\r\n                \"bounceCount\": 0\r\n              },\r\n             
+    {\r\n                \"chance\": 0,\r\n                \"damage\": 0,\r\n               
+    \"speed\": 0,\r\n                \"bounceCount\": 0\r\n              },\r\n             
+    {\r\n                \"chance\": 0,\r\n                \"damage\": 0,\r\n               
+    \"speed\": 0,\r\n                \"bounceCount\": 0\r\n              },\r\n             
+    {\r\n                \"chance\": 0,\r\n                \"damage\": 0,\r\n               
+    \"speed\": 0,\r\n                \"bounceCount\": 0\r\n              }\r\n           
+    ],\r\n            \"explosionBulletStats\": [\r\n              {\r\n               
+    \"explosionRange\": 0,\r\n                \"explosionDamageValue\": 0\r\n             
+    },\r\n              {\r\n                \"explosionRange\": 0.5,\r\n               
+    \"explosionDamageValue\": 10\r\n              },\r\n              {\r\n               
+    \"explosionRange\": 0.5,\r\n                \"explosionDamageValue\": 10\r\n             
+    },\r\n              {\r\n                \"explosionRange\": 0.5,\r\n               
+    \"explosionDamageValue\": 10\r\n              },\r\n              {\r\n               
+    \"explosionRange\": 0.5,\r\n                \"explosionDamageValue\": 10\r\n             
+    }\r\n            ]\r\n          },\r\n          {\r\n            \"type\": \"Weapon_LightningBullet\",\r\n           
+    \"maxLevel\": 5,\r\n            \"requiredAbility\": \"Unknown\",\r\n           
+    \"bulletType\": \"Lightning\",\r\n            \"baseStats\": [\r\n             
+    {\r\n                \"chance\": 0,\r\n                \"damage\": 0,\r\n               
+    \"speed\": 0,\r\n                \"bounceCount\": 0\r\n              },\r\n             
+    {\r\n                \"chance\": 0,\r\n                \"damage\": 0,\r\n               
+    \"speed\": 0,\r\n                \"bounceCount\": 0\r\n              },\r\n             
+    {\r\n                \"chance\": 0,\r\n                \"damage\": 0,\r\n               
+    \"speed\": 0,\r\n                \"bounceCount\": 0\r\n              },\r\n             
+    {\r\n                \"chance\": 0,\r\n                \"damage\": 0,\r\n               
+    \"speed\": 0,\r\n                \"bounceCount\": 0\r\n              },\r\n             
+    {\r\n                \"chance\": 0,\r\n                \"damage\": 0,\r\n               
+    \"speed\": 0,\r\n                \"bounceCount\": 0\r\n              }\r\n           
+    ],\r\n            \"lightningBulletStats\": [\r\n              {\r\n               
+    \"lightningDamageValue\": 0,\r\n                \"lightningCount\": 0,\r\n               
+    \"lightningRange\": 0\r\n              },\r\n              {\r\n               
+    \"lightningDamageValue\": 10,\r\n                \"lightningCount\": 1,\r\n               
+    \"lightningRange\": 0\r\n              },\r\n              {\r\n               
+    \"lightningDamageValue\": 10,\r\n                \"lightningCount\": 1,\r\n               
+    \"lightningRange\": 0\r\n              },\r\n              {\r\n               
+    \"lightningDamageValue\": 10,\r\n                \"lightningCount\": 1,\r\n               
+    \"lightningRange\": 0\r\n              },\r\n              {\r\n               
+    \"lightningDamageValue\": 10,\r\n                \"lightningCount\": 2,\r\n               
+    \"lightningRange\": 0\r\n              }\r\n            ]\r\n          },\r\n         
+    {\r\n            \"type\": \"Weapon_PierceBullet\",\r\n            \"maxLevel\":
+    5,\r\n            \"requiredAbility\": \"Unknown\",\r\n            \"bulletType\":
+    \"NormalBullet\",\r\n            \"baseStats\": [\r\n              {\r\n               
+    \"chance\": 0,\r\n                \"damage\": 0,\r\n                \"speed\":
+    0,\r\n                \"bounceCount\": 0\r\n              },\r\n             
+    {\r\n                \"chance\": 0,\r\n                \"damage\": 0,\r\n               
+    \"speed\": 0,\r\n                \"bounceCount\": 0\r\n              },\r\n             
+    {\r\n                \"chance\": 0,\r\n                \"damage\": 0,\r\n               
+    \"speed\": 0,\r\n                \"bounceCount\": 0\r\n              },\r\n             
+    {\r\n                \"chance\": 0,\r\n                \"damage\": 0,\r\n               
+    \"speed\": 0,\r\n                \"bounceCount\": 0\r\n              },\r\n             
+    {\r\n                \"chance\": 0,\r\n                \"damage\": 0,\r\n               
+    \"speed\": 0,\r\n                \"bounceCount\": 0\r\n              }\r\n           
+    ],\r\n            \"pierceBulletStats\": [\r\n              {\r\n               
+    \"pierceCount\": 1,\r\n                \"pierceDamageDecreaseValue\": 0\r\n             
+    },\r\n              {\r\n                \"pierceCount\": 1,\r\n               
+    \"pierceDamageDecreaseValue\": 5\r\n              },\r\n              {\r\n               
+    \"pierceCount\": 1,\r\n                \"pierceDamageDecreaseValue\": 5\r\n             
+    },\r\n              {\r\n                \"pierceCount\": 1,\r\n               
+    \"pierceDamageDecreaseValue\": 5\r\n              },\r\n              {\r\n               
+    \"pierceCount\": 999,\r\n                \"pierceDamageDecreaseValue\": 5\r\n             
+    }\r\n            ]\r\n          },\r\n          {\r\n            \"type\": \"Weapon_IceBullet\",\r\n           
+    \"maxLevel\": 5,\r\n            \"requiredAbility\": \"Unknown\",\r\n           
+    \"bulletType\": \"IceBullet\",\r\n            \"baseStats\": [\r\n             
+    {\r\n                \"chance\": 0,\r\n                \"damage\": 0,\r\n               
+    \"speed\": 0,\r\n                \"bounceCount\": 0\r\n              },\r\n             
+    {\r\n                \"chance\": 0,\r\n                \"damage\": 0,\r\n               
+    \"speed\": 0,\r\n                \"bounceCount\": 0\r\n              },\r\n             
+    {\r\n                \"chance\": 0,\r\n                \"damage\": 0,\r\n               
+    \"speed\": 0,\r\n                \"bounceCount\": 0\r\n              },\r\n             
+    {\r\n                \"chance\": 0,\r\n                \"damage\": 0,\r\n               
+    \"speed\": 0,\r\n                \"bounceCount\": 0\r\n              },\r\n             
+    {\r\n                \"chance\": 0,\r\n                \"damage\": 0,\r\n               
+    \"speed\": 0,\r\n                \"bounceCount\": 0\r\n              }\r\n           
+    ],\r\n            \"iceBulletStats\": [\r\n              {\r\n               
+    \"slowValue\": 0,\r\n                \"slowTime\": 0,\r\n                \"freezeTime\":
+    0\r\n              },\r\n              {\r\n                \"slowValue\": 10,\r\n               
+    \"slowTime\": 0.5,\r\n                \"freezeTime\": 0\r\n              },\r\n             
+    {\r\n                \"slowValue\": 10,\r\n                \"slowTime\": 0.5,\r\n               
+    \"freezeTime\": 0\r\n              },\r\n              {\r\n                \"slowValue\":
+    10,\r\n                \"slowTime\": 0.5,\r\n                \"freezeTime\":
+    0\r\n              },\r\n              {\r\n                \"slowValue\": 10,\r\n               
+    \"slowTime\": 0.5,\r\n                \"freezeTime\": 0\r\n              }\r\n           
+    ]\r\n          },\r\n          {\r\n            \"type\": \"Weapon_HomingBullet\",\r\n           
+    \"maxLevel\": 5,\r\n            \"requiredAbility\": \"Unknown\",\r\n           
+    \"bulletType\": \"HomingBullet\",\r\n            \"baseStats\": [\r\n             
+    {\r\n                \"chance\": 0,\r\n                \"damage\": 0,\r\n               
+    \"speed\": 0,\r\n                \"bounceCount\": 0\r\n              },\r\n             
+    {\r\n                \"chance\": 0,\r\n                \"damage\": 0,\r\n               
+    \"speed\": 0,\r\n                \"bounceCount\": 0\r\n              },\r\n             
+    {\r\n                \"chance\": 0,\r\n                \"damage\": 0,\r\n               
+    \"speed\": 0,\r\n                \"bounceCount\": 0\r\n              },\r\n             
+    {\r\n                \"chance\": 0,\r\n                \"damage\": 0,\r\n               
+    \"speed\": 0,\r\n                \"bounceCount\": 0\r\n              },\r\n             
+    {\r\n                \"chance\": 0,\r\n                \"damage\": 0,\r\n               
+    \"speed\": 0,\r\n                \"bounceCount\": 0\r\n              }\r\n           
+    ],\r\n            \"homingBulletStats\": [\r\n              {\r\n               
+    \"homingShotDelay\": 0\r\n              },\r\n              {\r\n               
+    \"homingShotDelay\": 0.5\r\n              },\r\n              {\r\n               
+    \"homingShotDelay\": 0.5\r\n              },\r\n              {\r\n               
+    \"homingShotDelay\": 0.5\r\n              },\r\n              {\r\n               
+    \"homingShotDelay\": 0.5\r\n              }\r\n            ]\r\n          },\r\n         
+    {\r\n            \"type\": \"Weapon_FireBullet\",\r\n            \"maxLevel\":
+    5,\r\n            \"requiredAbility\": \"Unknown\",\r\n            \"bulletType\":
+    \"FireBullet\",\r\n            \"baseStats\": [\r\n              {\r\n               
+    \"chance\": 0,\r\n                \"damage\": 0,\r\n                \"speed\":
+    0,\r\n                \"bounceCount\": 0\r\n              },\r\n             
+    {\r\n                \"chance\": 0,\r\n                \"damage\": 0,\r\n               
+    \"speed\": 0,\r\n                \"bounceCount\": 0\r\n              },\r\n             
+    {\r\n                \"chance\": 0,\r\n                \"damage\": 0,\r\n               
+    \"speed\": 0,\r\n                \"bounceCount\": 0\r\n              },\r\n             
+    {\r\n                \"chance\": 0,\r\n                \"damage\": 0,\r\n               
+    \"speed\": 0,\r\n                \"bounceCount\": 0\r\n              },\r\n             
+    {\r\n                \"chance\": 0,\r\n                \"damage\": 0,\r\n               
+    \"speed\": 0,\r\n                \"bounceCount\": 0\r\n              }\r\n           
+    ],\r\n            \"fireBulletStats\": [\r\n              {\r\n               
+    \"fireDamageValue\": 0,\r\n                \"fireRemainTime\": 0,\r\n               
+    \"fireZoneDestroyTime\": 0,\r\n                \"fireZoneSize\": 0\r\n             
+    },\r\n              {\r\n                \"fireDamageValue\": 10,\r\n               
+    \"fireRemainTime\": 0.5,\r\n                \"fireZoneDestroyTime\": 0,\r\n               
+    \"fireZoneSize\": 0\r\n              },\r\n              {\r\n               
+    \"fireDamageValue\": 10,\r\n                \"fireRemainTime\": 0.5,\r\n               
+    \"fireZoneDestroyTime\": 0,\r\n                \"fireZoneSize\": 0.5\r\n             
+    },\r\n              {\r\n                \"fireDamageValue\": 10,\r\n               
+    \"fireRemainTime\": 0.5,\r\n                \"fireZoneDestroyTime\": 0,\r\n               
+    \"fireZoneSize\": 0\r\n              },\r\n              {\r\n               
+    \"fireDamageValue\": 10,\r\n                \"fireRemainTime\": 0.5,\r\n               
+    \"fireZoneDestroyTime\": 0,\r\n                \"fireZoneSize\": 2\r\n             
+    }\r\n            ]\r\n          },\r\n          {\r\n            \"type\": \"Weapon_BlackHoleBullet\",\r\n           
+    \"maxLevel\": 5,\r\n            \"requiredAbility\": \"Unknown\",\r\n           
+    \"bulletType\": \"BlackHole\",\r\n            \"baseStats\": [\r\n             
+    {\r\n                \"chance\": 0,\r\n                \"damage\": 0,\r\n               
+    \"speed\": 0,\r\n                \"bounceCount\": 0\r\n              },\r\n             
+    {\r\n                \"chance\": 0,\r\n                \"damage\": 0,\r\n               
+    \"speed\": 0,\r\n                \"bounceCount\": 0\r\n              },\r\n             
+    {\r\n                \"chance\": 0,\r\n                \"damage\": 0,\r\n               
+    \"speed\": 0,\r\n                \"bounceCount\": 0\r\n              },\r\n             
+    {\r\n                \"chance\": 0,\r\n                \"damage\": 0,\r\n               
+    \"speed\": 0,\r\n                \"bounceCount\": 0\r\n              },\r\n             
+    {\r\n                \"chance\": 0,\r\n                \"damage\": 0,\r\n               
+    \"speed\": 0,\r\n                \"bounceCount\": 0\r\n              }\r\n           
+    ]\r\n          },\r\n          {\r\n            \"type\": \"Weapon_PoisonBullet\",\r\n           
+    \"maxLevel\": 5,\r\n            \"requiredAbility\": \"Unknown\",\r\n           
+    \"bulletType\": \"Poison\",\r\n            \"baseStats\": [\r\n             
+    {\r\n                \"chance\": 0,\r\n                \"damage\": 0,\r\n               
+    \"speed\": 0,\r\n                \"bounceCount\": 0\r\n              },\r\n             
+    {\r\n                \"chance\": 0,\r\n                \"damage\": 0,\r\n               
+    \"speed\": 0,\r\n                \"bounceCount\": 0\r\n              },\r\n             
+    {\r\n                \"chance\": 0,\r\n                \"damage\": 0,\r\n               
+    \"speed\": 0,\r\n                \"bounceCount\": 0\r\n              },\r\n             
+    {\r\n                \"chance\": 0,\r\n                \"damage\": 0,\r\n               
+    \"speed\": 0,\r\n                \"bounceCount\": 0\r\n              },\r\n             
+    {\r\n                \"chance\": 0,\r\n                \"damage\": 0,\r\n               
+    \"speed\": 0,\r\n                \"bounceCount\": 0\r\n              }\r\n           
+    ]\r\n          },\r\n          {\r\n            \"type\": \"Weapon_LaserBeam\",\r\n           
+    \"maxLevel\": 5,\r\n            \"requiredAbility\": \"Unknown\",\r\n           
+    \"baseStats\": [\r\n              {\r\n                \"chance\": 0,\r\n               
+    \"damage\": 0,\r\n                \"speed\": 0,\r\n                \"bounceCount\":
+    0\r\n              },\r\n              {\r\n                \"chance\": 0,\r\n               
+    \"damage\": 0,\r\n                \"speed\": 0,\r\n                \"bounceCount\":
+    0\r\n              },\r\n              {\r\n                \"chance\": 0,\r\n               
+    \"damage\": 0,\r\n                \"speed\": 0,\r\n                \"bounceCount\":
+    0\r\n              },\r\n              {\r\n                \"chance\": 0,\r\n               
+    \"damage\": 0,\r\n                \"speed\": 0,\r\n                \"bounceCount\":
+    0\r\n              },\r\n              {\r\n                \"chance\": 0,\r\n               
+    \"damage\": 0,\r\n                \"speed\": 0,\r\n                \"bounceCount\":
+    0\r\n              }\r\n            ]\r\n          }\r\n        ]\r\n      }\r\n   
+    }\r\n  },\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"08b1cc6e-2dac-448a-9c55-6e560a73db18\"\r\n   
+    },\r\n    \"rs\": {\r\n      \"key\": \"BossStatData\",\r\n      \"type\": \"json\",\r\n     
+    \"schemaId\": null,\r\n      \"value\": {\r\n        \"bossList\": [\r\n         
+    {\r\n            \"Type\": \"Boss1\",\r\n            \"MaxHp\": 20000,\r\n           
+    \"Speed\": 1,\r\n            \"Damage\": 10,\r\n            \"Score\": 5000,\r\n           
+    \"dropTable\": [],\r\n            \"myPatterns\": [\r\n              \"Spiral\",\r\n             
+    \"Shotgun\",\r\n              \"Sniper\",\r\n              \"CircleBurst\",\r\n             
+    \"WallGap\"\r\n            ]\r\n          }\r\n        ]\r\n      }\r\n    }\r\n 
+    },\r\n  {\r\n    \"metadata\": {\r\n      \"entityId\": \"6e889a72-0f3c-4bdd-ac3e-cb16db368f8e\"\r\n   
+    },\r\n    \"rs\": {\r\n      \"key\": \"BossPatternData\",\r\n      \"type\":
+    \"json\",\r\n      \"schemaId\": null,\r\n      \"value\": {\r\n        \"patternList\":
+    [\r\n          {\r\n            \"type\": \"CircleBurst\",\r\n            \"nextPatternDelay\":
+    2.5,\r\n            \"bulletCount\": 18,\r\n            \"burstCount\": 2,\r\n           
+    \"burstDelay\": 1,\r\n            \"bulletSpeed\": 6\r\n          },\r\n         
+    {\r\n            \"type\": \"Pinball\",\r\n            \"nextPatternDelay\":
+    2.5,\r\n            \"totalBullets\": 16,\r\n            \"fireDelay\": 0.15,\r\n           
+    \"bulletSpeed\": 8\r\n          },\r\n          {\r\n            \"type\": \"Shotgun\",\r\n           
+    \"nextPatternDelay\": 2.5,\r\n            \"bulletCount\": 5,\r\n           
+    \"spreadAngle\": 60,\r\n            \"burstCount\": 3,\r\n            \"burstDelay\":
+    0.5,\r\n            \"bulletSpeed\": 7\r\n          },\r\n          {\r\n           
+    \"type\": \"Sniper\",\r\n            \"nextPatternDelay\": 2.5,\r\n           
+    \"burstCount\": 5,\r\n            \"fireDelay\": 0.08,\r\n            \"repeatCount\":
+    3,\r\n            \"repeatDelay\": 1.2,\r\n            \"bulletSpeed\": 12\r\n         
+    },\r\n          {\r\n            \"type\": \"Spiral\",\r\n            \"nextPatternDelay\":
+    2.5,\r\n            \"bulletCount\": 30,\r\n            \"angleStep\": 15,\r\n           
+    \"fireDelay\": 0.1,\r\n            \"bulletSpeed\": 5\r\n          },\r\n         
+    {\r\n            \"type\": \"WallGap\",\r\n            \"nextPatternDelay\":
+    2.5,\r\n            \"totalBullets\": 20,\r\n            \"spreadAngle\": 160,\r\n           
+    \"gapSize\": 3,\r\n            \"waveCount\": 3,\r\n            \"waveDelay\":
+    1.5,\r\n            \"bulletSpeed\": 4\r\n          }\r\n        ]\r\n      }\r\n   
+    }\r\n  }\r\n]"
   _environments: "[\r\n  {\r\n    \"projectId\": \"81c40dac-89db-46ca-8209-4adaf08ceef5\",\r\n   
     \"name\": \"development\",\r\n    \"id\": \"644feeeb-2816-46fe-9145-1ac2b65f001e\",\r\n   
     \"isDefault\": false,\r\n    \"createdAt\": \"2026-04-13T01:58:02Z\",\r\n   

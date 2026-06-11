@@ -10,48 +10,36 @@ using static Define;
 
 public class FireBulletBehavior : IBulletBehavior
 {
-    
+
     public void OnHit(BulletController bullet, GameObject target, BaseBulletStat activeStat)
     {
         if (target == null) return;
 
+        // 직접 맞은 타겟 확인
         MeteorController meteor = target.GetComponent<MeteorController>();
-
         if (meteor == null) return;
-
-        float tickTime = 0.5f;
 
         Managers.Sound.Play(Define.SoundID.Sfx_FireBullet_Hit);
 
         if (activeStat is FireBulletStat stat)
         {
-            // 직접 맞았을 때의 화상 데미지 적용
-            float totalBurnDamage = stat.damage.TotalValue * (stat.fireDamageValue.TotalValue / 100f);
-            
-            meteor.Status.ApplyBurn(totalBurnDamage, stat.fireRemainTime.TotalValue, tickTime);
+            // 1~5레벨 공통: 맞은 위치에 무조건 마그마 장판 생성
+            GameObject puddleGo = Managers.Resource.Instantiate("Bullets/FirePuddle");
 
-            // =======================================================
-            // 2. 만렙(5레벨) 특성: 맞은 위치에 거대 장판 생성
-            // =======================================================
-            if (stat.curLevel >= 5)
+            if (puddleGo != null)
             {
-                // 풀링 매니저에서 마그마 장판 꺼내기
-                GameObject puddleGo = Managers.Resource.Instantiate("Bullets/FirePuddle");
+                puddleGo.transform.position = target.transform.position;
 
-                if (puddleGo != null)
+                // 기본 장판 크기 세팅
+                float size = stat.fireZoneSize.TotalValue;
+
+                puddleGo.transform.localScale = new Vector3(size, size, 1f);
+
+                FireZoneController puddle = puddleGo.GetComponent<FireZoneController>();
+                if (puddle != null)
                 {
-                    puddleGo.transform.position = target.transform.position;
-
-                    //  핵심: 장판의 크기(Scale)를 2~3배로 뻥튀기해서 '큰 장판'으로 만듭니다!
-                    float size = stat.fireZoneSize;
-                    puddleGo.transform.localScale = new Vector3(size, size, 1f);
-
-                    FireZoneController puddle = puddleGo.GetComponent<FireZoneController>();
-                    if (puddle != null)
-                    {
-                        // 장판 초기화 (장판 데미지는 기획에 맞게 조절하세요)
-                        puddle.Init(stat);
-                    }
+                    // 장판 컨트롤러가 알아서 스탯(데미지, 지속시간 등)을 바탕으로 화상을 입히도록 넘겨줍니다.
+                    puddle.Init(stat);
                 }
             }
         }

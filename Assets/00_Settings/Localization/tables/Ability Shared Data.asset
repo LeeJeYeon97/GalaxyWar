@@ -15,154 +15,6 @@ MonoBehaviour:
   m_TableCollectionName: Ability
   m_TableCollectionNameGuidString: d4a4c3d15f95cdd41a8b8a7c070f3423
   m_Entries:
-  - m_Id: 23063803613184
-    m_Key: Weapon_ExplosionBullet_Name
-    m_Metadata:
-      m_Items: []
-  - m_Id: 23272088555520
-    m_Key: Weapon_ExplosionBullet_Desc_0
-    m_Metadata:
-      m_Items: []
-  - m_Id: 25023952867328
-    m_Key: Weapon_ExplosionBullet_Desc_1
-    m_Metadata:
-      m_Items: []
-  - m_Id: 25036602888192
-    m_Key: Weapon_ExplosionBullet_Desc_2
-    m_Metadata:
-      m_Items: []
-  - m_Id: 55748592816128
-    m_Key: Weapon_ExplosionBullet_Desc_3
-    m_Metadata:
-      m_Items: []
-  - m_Id: 55756159340544
-    m_Key: Weapon_ExplosionBullet_Desc_4
-    m_Metadata:
-      m_Items: []
-  - m_Id: 263820665835520
-    m_Key: Weapon_FireBullet_Name
-    m_Metadata:
-      m_Items: []
-  - m_Id: 264332530307072
-    m_Key: Weapon_FireBullet_Desc_0
-    m_Metadata:
-      m_Items: []
-  - m_Id: 264443956187136
-    m_Key: Weapon_FireBullet_Desc_1
-    m_Metadata:
-      m_Items: []
-  - m_Id: 264466446045184
-    m_Key: Weapon_FireBullet_Desc_2
-    m_Metadata:
-      m_Items: []
-  - m_Id: 264477992964096
-    m_Key: Weapon_FireBullet_Desc_3
-    m_Metadata:
-      m_Items: []
-  - m_Id: 264491070803968
-    m_Key: Weapon_FireBullet_Desc_4
-    m_Metadata:
-      m_Items: []
-  - m_Id: 266949843111936
-    m_Key: Weapon_HomingBullet_Name
-    m_Metadata:
-      m_Items: []
-  - m_Id: 267081904967680
-    m_Key: Weapon_HomingBullet_Desc_0
-    m_Metadata:
-      m_Items: []
-  - m_Id: 267193100161024
-    m_Key: Weapon_HomingBullet_Desc_1
-    m_Metadata:
-      m_Items: []
-  - m_Id: 267238239260672
-    m_Key: Weapon_HomingBullet_Desc_2
-    m_Metadata:
-      m_Items: []
-  - m_Id: 267249375137792
-    m_Key: Weapon_HomingBullet_Desc_3
-    m_Metadata:
-      m_Items: []
-  - m_Id: 267258866847744
-    m_Key: Weapon_HomingBullet_Desc_4
-    m_Metadata:
-      m_Items: []
-  - m_Id: 267286981267456
-    m_Key: Weapon_IceBullet_Name
-    m_Metadata:
-      m_Items: []
-  - m_Id: 267351657435136
-    m_Key: Weapon_IceBullet_Desc_0
-    m_Metadata:
-      m_Items: []
-  - m_Id: 267459581071360
-    m_Key: Weapon_IceBullet_Desc_1
-    m_Metadata:
-      m_Items: []
-  - m_Id: 267478228946944
-    m_Key: Weapon_IceBullet_Desc_2
-    m_Metadata:
-      m_Items: []
-  - m_Id: 267487561273344
-    m_Key: Weapon_IceBullet_Desc_3
-    m_Metadata:
-      m_Items: []
-  - m_Id: 267497313030144
-    m_Key: Weapon_IceBullet_Desc_4
-    m_Metadata:
-      m_Items: []
-  - m_Id: 267505852633088
-    m_Key: Weapon_LightningBullet_Name
-    m_Metadata:
-      m_Items: []
-  - m_Id: 267586194526208
-    m_Key: Weapon_LightningBullet_Desc_0
-    m_Metadata:
-      m_Items: []
-  - m_Id: 267727802617856
-    m_Key: Weapon_LightningBullet_Desc_1
-    m_Metadata:
-      m_Items: []
-  - m_Id: 267739085295616
-    m_Key: Weapon_LightningBullet_Desc_2
-    m_Metadata:
-      m_Items: []
-  - m_Id: 267747926888448
-    m_Key: Weapon_LightningBullet_Desc_3
-    m_Metadata:
-      m_Items: []
-  - m_Id: 267757171134464
-    m_Key: Weapon_LightningBullet_Desc_4
-    m_Metadata:
-      m_Items: []
-  - m_Id: 267773084323840
-    m_Key: Weapon_PierceBullet_Name
-    m_Metadata:
-      m_Items: []
-  - m_Id: 267842340671488
-    m_Key: Weapon_PierceBullet_Desc_0
-    m_Metadata:
-      m_Items: []
-  - m_Id: 267914377842688
-    m_Key: Weapon_PierceBullet_Desc_1
-    m_Metadata:
-      m_Items: []
-  - m_Id: 267927917056000
-    m_Key: Weapon_PierceBullet_Desc_2
-    m_Metadata:
-      m_Items: []
-  - m_Id: 267935852679168
-    m_Key: Weapon_PierceBullet_Desc_3
-    m_Metadata:
-      m_Items: []
-  - m_Id: 267944186761216
-    m_Key: Weapon_PierceBullet_Desc_4
-    m_Metadata:
-      m_Items: []
-  - m_Id: 267964784988160
-    m_Key: Passive_AllBulletBounceCountUp_Name
-    m_Metadata:
-      m_Items: []
   - m_Id: 268049589620736
     m_Key: Passive_AllBulletBounceCountUp_Desc_0
     m_Metadata:
@@ -183,172 +35,8 @@ MonoBehaviour:
     m_Key: Passive_AllBulletBounceCountUp_Desc_4
     m_Metadata:
       m_Items: []
-  - m_Id: 269650681286656
-    m_Key: Passive_MaxHpUp_Name
-    m_Metadata:
-      m_Items: []
-  - m_Id: 269735200706560
-    m_Key: Passive_MaxHpUp_Desc_0
-    m_Metadata:
-      m_Items: []
-  - m_Id: 269846412677120
-    m_Key: Passive_MaxHpUp_Desc_1
-    m_Metadata:
-      m_Items: []
-  - m_Id: 269864649510912
-    m_Key: Passive_MaxHpUp_Desc_2
-    m_Metadata:
-      m_Items: []
-  - m_Id: 269872622882816
-    m_Key: Passive_MaxHpUp_Desc_3
-    m_Metadata:
-      m_Items: []
-  - m_Id: 269881896488960
-    m_Key: Passive_MaxHpUp_Desc_4
-    m_Metadata:
-      m_Items: []
-  - m_Id: 269916713406464
-    m_Key: Passive_ReloadCountUp_Name
-    m_Metadata:
-      m_Items: []
-  - m_Id: 269998854656000
-    m_Key: Passive_ReloadCountUp_Desc_0
-    m_Metadata:
-      m_Items: []
-  - m_Id: 270024410550272
-    m_Key: Passive_ReloadCountUp_Desc_1
-    m_Metadata:
-      m_Items: []
-  - m_Id: 270033000484864
-    m_Key: Passive_ReloadCountUp_Desc_2
-    m_Metadata:
-      m_Items: []
-  - m_Id: 270042446057472
-    m_Key: Passive_ReloadCountUp_Desc_3
-    m_Metadata:
-      m_Items: []
-  - m_Id: 270049979027456
-    m_Key: Passive_ReloadCountUp_Desc_4
-    m_Metadata:
-      m_Items: []
-  - m_Id: 270065971908608
-    m_Key: Passive_ReloadTimeDown_Name
-    m_Metadata:
-      m_Items: []
-  - m_Id: 270153293123584
-    m_Key: Passive_ReloadTimeDown_Desc_0
-    m_Metadata:
-      m_Items: []
-  - m_Id: 270178177929216
-    m_Key: Passive_ReloadTimeDown_Desc_1
-    m_Metadata:
-      m_Items: []
-  - m_Id: 270190672760832
-    m_Key: Passive_ReloadTimeDown_Desc_2
-    m_Metadata:
-      m_Items: []
-  - m_Id: 270199589851136
-    m_Key: Passive_ReloadTimeDown_Desc_3
-    m_Metadata:
-      m_Items: []
-  - m_Id: 270208154619904
-    m_Key: Passive_ReloadTimeDown_Desc_4
-    m_Metadata:
-      m_Items: []
-  - m_Id: 270218028011520
-    m_Key: Passive_ShotTimeDown_Name
-    m_Metadata:
-      m_Items: []
-  - m_Id: 270312206913536
-    m_Key: Passive_ShotTimeDown_Desc_0
-    m_Metadata:
-      m_Items: []
-  - m_Id: 270330246615040
-    m_Key: Passive_ShotTimeDown_Desc_1
-    m_Metadata:
-      m_Items: []
-  - m_Id: 270338085769216
-    m_Key: Passive_ShotTimeDown_Desc_2
-    m_Metadata:
-      m_Items: []
-  - m_Id: 270345975255040
-    m_Key: Passive_ShotTimeDown_Desc_3
-    m_Metadata:
-      m_Items: []
-  - m_Id: 270355588599808
-    m_Key: Passive_ShotTimeDown_Desc_4
-    m_Metadata:
-      m_Items: []
-  - m_Id: 270372625862656
-    m_Key: Passive_PlayerSpeedUp_Name
-    m_Metadata:
-      m_Items: []
-  - m_Id: 270443744481280
-    m_Key: Passive_PlayerSpeedUp_Desc_0
-    m_Metadata:
-      m_Items: []
-  - m_Id: 270458177081344
-    m_Key: Passive_PlayerSpeedUp_Desc_1
-    m_Metadata:
-      m_Items: []
-  - m_Id: 270466016235520
-    m_Key: Passive_PlayerSpeedUp_Desc_2
-    m_Metadata:
-      m_Items: []
-  - m_Id: 270474325151744
-    m_Key: Passive_PlayerSpeedUp_Desc_3
-    m_Metadata:
-      m_Items: []
-  - m_Id: 270482063642624
-    m_Key: Passive_PlayerSpeedUp_Desc_4
-    m_Metadata:
-      m_Items: []
-  - m_Id: 270493530869760
-    m_Key: Passive_SplitBullet_Name
-    m_Metadata:
-      m_Items: []
-  - m_Id: 270574338330624
-    m_Key: Passive_SplitBullet_Desc_0
-    m_Metadata:
-      m_Items: []
-  - m_Id: 270604319215616
-    m_Key: Passive_SplitBullet_Desc_1
-    m_Metadata:
-      m_Items: []
-  - m_Id: 270612208701440
-    m_Key: Passive_SplitBullet_Desc_2
-    m_Metadata:
-      m_Items: []
-  - m_Id: 270620307902464
-    m_Key: Passive_SplitBullet_Desc_3
-    m_Metadata:
-      m_Items: []
-  - m_Id: 270627765374976
-    m_Key: Passive_SplitBullet_Desc_4
-    m_Metadata:
-      m_Items: []
-  - m_Id: 4216420096430080
-    m_Key: Passive_PlayerShield_Name
-    m_Metadata:
-      m_Items: []
-  - m_Id: 4216549994024960
-    m_Key: Passive_PlayerShield_Desc_0
-    m_Metadata:
-      m_Items: []
-  - m_Id: 4216584978714624
-    m_Key: Passive_PlayerShield_Desc_1
-    m_Metadata:
-      m_Items: []
-  - m_Id: 4216593409265664
-    m_Key: Passive_PlayerShield_Desc_2
-    m_Metadata:
-      m_Items: []
-  - m_Id: 4216600715743232
-    m_Key: Passive_PlayerShield_Desc_3
-    m_Metadata:
-      m_Items: []
-  - m_Id: 4216608131272704
-    m_Key: Passive_BurstMode_Name
+  - m_Id: 267964784988160
+    m_Key: Passive_AllBulletBounceCountUp_Name
     m_Metadata:
       m_Items: []
   - m_Id: 7572682628550656
@@ -371,8 +59,32 @@ MonoBehaviour:
     m_Key: Passive_BurstMode_Desc_4
     m_Metadata:
       m_Items: []
-  - m_Id: 7631028014436352
-    m_Key: Passive_PlayerCritical_Name
+  - m_Id: 4216608131272704
+    m_Key: Passive_BurstMode_Name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 269735200706560
+    m_Key: Passive_MaxHpUp_Desc_0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 269846412677120
+    m_Key: Passive_MaxHpUp_Desc_1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 269864649510912
+    m_Key: Passive_MaxHpUp_Desc_2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 269872622882816
+    m_Key: Passive_MaxHpUp_Desc_3
+    m_Metadata:
+      m_Items: []
+  - m_Id: 269881896488960
+    m_Key: Passive_MaxHpUp_Desc_4
+    m_Metadata:
+      m_Items: []
+  - m_Id: 269650681286656
+    m_Key: Passive_MaxHpUp_Name
     m_Metadata:
       m_Items: []
   - m_Id: 7631117898371072
@@ -395,8 +107,8 @@ MonoBehaviour:
     m_Key: Passive_PlayerCritical_Desc_4
     m_Metadata:
       m_Items: []
-  - m_Id: 9360967159926784
-    m_Key: Passive_PlayerDamageUp_Name
+  - m_Id: 7631028014436352
+    m_Key: Passive_PlayerCritical_Name
     m_Metadata:
       m_Items: []
   - m_Id: 9361073007382528
@@ -419,12 +131,304 @@ MonoBehaviour:
     m_Key: Passive_PlayerDamageUp_Desc_4
     m_Metadata:
       m_Items: []
-  - m_Id: 15205743201505280
-    m_Key: Passive_PlayerHeal_Name
+  - m_Id: 9360967159926784
+    m_Key: Passive_PlayerDamageUp_Name
     m_Metadata:
       m_Items: []
   - m_Id: 15205814383038464
     m_Key: Passive_PlayerHeal_Desc_0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15205743201505280
+    m_Key: Passive_PlayerHeal_Name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4216549994024960
+    m_Key: Passive_PlayerShield_Desc_0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4216584978714624
+    m_Key: Passive_PlayerShield_Desc_1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4216593409265664
+    m_Key: Passive_PlayerShield_Desc_2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4216600715743232
+    m_Key: Passive_PlayerShield_Desc_3
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16949208327278592
+    m_Key: Passive_PlayerShield_Desc_4
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4216420096430080
+    m_Key: Passive_PlayerShield_Name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 270443744481280
+    m_Key: Passive_PlayerSpeedUp_Desc_0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 270458177081344
+    m_Key: Passive_PlayerSpeedUp_Desc_1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 270466016235520
+    m_Key: Passive_PlayerSpeedUp_Desc_2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 270474325151744
+    m_Key: Passive_PlayerSpeedUp_Desc_3
+    m_Metadata:
+      m_Items: []
+  - m_Id: 270482063642624
+    m_Key: Passive_PlayerSpeedUp_Desc_4
+    m_Metadata:
+      m_Items: []
+  - m_Id: 270372625862656
+    m_Key: Passive_PlayerSpeedUp_Name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 269998854656000
+    m_Key: Passive_ReloadCountUp_Desc_0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 270024410550272
+    m_Key: Passive_ReloadCountUp_Desc_1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 270033000484864
+    m_Key: Passive_ReloadCountUp_Desc_2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 270042446057472
+    m_Key: Passive_ReloadCountUp_Desc_3
+    m_Metadata:
+      m_Items: []
+  - m_Id: 270049979027456
+    m_Key: Passive_ReloadCountUp_Desc_4
+    m_Metadata:
+      m_Items: []
+  - m_Id: 269916713406464
+    m_Key: Passive_ReloadCountUp_Name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 270153293123584
+    m_Key: Passive_ReloadTimeDown_Desc_0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 270178177929216
+    m_Key: Passive_ReloadTimeDown_Desc_1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 270190672760832
+    m_Key: Passive_ReloadTimeDown_Desc_2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 270199589851136
+    m_Key: Passive_ReloadTimeDown_Desc_3
+    m_Metadata:
+      m_Items: []
+  - m_Id: 270208154619904
+    m_Key: Passive_ReloadTimeDown_Desc_4
+    m_Metadata:
+      m_Items: []
+  - m_Id: 270065971908608
+    m_Key: Passive_ReloadTimeDown_Name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 270312206913536
+    m_Key: Passive_ShotTimeDown_Desc_0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 270330246615040
+    m_Key: Passive_ShotTimeDown_Desc_1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 270338085769216
+    m_Key: Passive_ShotTimeDown_Desc_2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 270345975255040
+    m_Key: Passive_ShotTimeDown_Desc_3
+    m_Metadata:
+      m_Items: []
+  - m_Id: 270355588599808
+    m_Key: Passive_ShotTimeDown_Desc_4
+    m_Metadata:
+      m_Items: []
+  - m_Id: 270218028011520
+    m_Key: Passive_ShotTimeDown_Name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 270574338330624
+    m_Key: Passive_SplitBullet_Desc_0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 270604319215616
+    m_Key: Passive_SplitBullet_Desc_1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 270612208701440
+    m_Key: Passive_SplitBullet_Desc_2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 270620307902464
+    m_Key: Passive_SplitBullet_Desc_3
+    m_Metadata:
+      m_Items: []
+  - m_Id: 270627765374976
+    m_Key: Passive_SplitBullet_Desc_4
+    m_Metadata:
+      m_Items: []
+  - m_Id: 270493530869760
+    m_Key: Passive_SplitBullet_Name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 23272088555520
+    m_Key: Weapon_ExplosionBullet_Desc_0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 25023952867328
+    m_Key: Weapon_ExplosionBullet_Desc_1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 25036602888192
+    m_Key: Weapon_ExplosionBullet_Desc_2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 55748592816128
+    m_Key: Weapon_ExplosionBullet_Desc_3
+    m_Metadata:
+      m_Items: []
+  - m_Id: 55756159340544
+    m_Key: Weapon_ExplosionBullet_Desc_4
+    m_Metadata:
+      m_Items: []
+  - m_Id: 23063803613184
+    m_Key: Weapon_ExplosionBullet_Name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 264332530307072
+    m_Key: Weapon_FireBullet_Desc_0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 264443956187136
+    m_Key: Weapon_FireBullet_Desc_1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 264466446045184
+    m_Key: Weapon_FireBullet_Desc_2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 264477992964096
+    m_Key: Weapon_FireBullet_Desc_3
+    m_Metadata:
+      m_Items: []
+  - m_Id: 264491070803968
+    m_Key: Weapon_FireBullet_Desc_4
+    m_Metadata:
+      m_Items: []
+  - m_Id: 263820665835520
+    m_Key: Weapon_FireBullet_Name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 267081904967680
+    m_Key: Weapon_HomingBullet_Desc_0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 267193100161024
+    m_Key: Weapon_HomingBullet_Desc_1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 267238239260672
+    m_Key: Weapon_HomingBullet_Desc_2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 267249375137792
+    m_Key: Weapon_HomingBullet_Desc_3
+    m_Metadata:
+      m_Items: []
+  - m_Id: 267258866847744
+    m_Key: Weapon_HomingBullet_Desc_4
+    m_Metadata:
+      m_Items: []
+  - m_Id: 266949843111936
+    m_Key: Weapon_HomingBullet_Name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 267351657435136
+    m_Key: Weapon_IceBullet_Desc_0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 267459581071360
+    m_Key: Weapon_IceBullet_Desc_1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 267478228946944
+    m_Key: Weapon_IceBullet_Desc_2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 267487561273344
+    m_Key: Weapon_IceBullet_Desc_3
+    m_Metadata:
+      m_Items: []
+  - m_Id: 267497313030144
+    m_Key: Weapon_IceBullet_Desc_4
+    m_Metadata:
+      m_Items: []
+  - m_Id: 267286981267456
+    m_Key: Weapon_IceBullet_Name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 267586194526208
+    m_Key: Weapon_LightningBullet_Desc_0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 267727802617856
+    m_Key: Weapon_LightningBullet_Desc_1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 267739085295616
+    m_Key: Weapon_LightningBullet_Desc_2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 267747926888448
+    m_Key: Weapon_LightningBullet_Desc_3
+    m_Metadata:
+      m_Items: []
+  - m_Id: 267757171134464
+    m_Key: Weapon_LightningBullet_Desc_4
+    m_Metadata:
+      m_Items: []
+  - m_Id: 267505852633088
+    m_Key: Weapon_LightningBullet_Name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 267842340671488
+    m_Key: Weapon_PierceBullet_Desc_0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 267914377842688
+    m_Key: Weapon_PierceBullet_Desc_1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 267927917056000
+    m_Key: Weapon_PierceBullet_Desc_2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 267935852679168
+    m_Key: Weapon_PierceBullet_Desc_3
+    m_Metadata:
+      m_Items: []
+  - m_Id: 267944186761216
+    m_Key: Weapon_PierceBullet_Desc_4
+    m_Metadata:
+      m_Items: []
+  - m_Id: 267773084323840
+    m_Key: Weapon_PierceBullet_Name
     m_Metadata:
       m_Items: []
   m_Metadata:

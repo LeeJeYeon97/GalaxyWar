@@ -34,8 +34,20 @@ public class BossController : BaseController, IDamageable
     private float _savedAngularVelocity;
 
 
+    private SpriteRenderer _spriteRenderer;
+
+    //  MPB를 캐싱해두고 재사용하기 위한 변수
+    private MaterialPropertyBlock _mpb;
+
+    // Shader.PropertyToID를 쓰면 문자열 연산을 매번 하지 않아 성능이 더 좋습니다.
+    private static readonly int FlashColorID = Shader.PropertyToID("_FlashColor");
+
     public void Init(BossStat stat,Vector2 startPos, GameObject target)
     {
+        _spriteRenderer = GetComponent<SpriteRenderer>();
+
+        // Awake에서 딱 한 번만 할당합니다.
+        _mpb = new MaterialPropertyBlock();
         // 타겟을 계속 따라가도록 설정
         Stat = stat;
         currentHp = Stat.MaxHp.TotalValue;
@@ -258,9 +270,25 @@ public class BossController : BaseController, IDamageable
 
     private IEnumerator CoHitFlash()
     {
-        if (_meshRenderer == null) yield break;
-        SetColor(new Color(5f, 5f, 5f, 1f));
+        if (_spriteRenderer == null) yield break;
+
+        //  플래시 ON (HDR 컬러로 눈부시게!)
+        _spriteRenderer.GetPropertyBlock(_mpb);
+        _mpb.SetColor(FlashColorID, new Color(3f, 3f, 3f, 1f));
+        _spriteRenderer.SetPropertyBlock(_mpb);
+
         yield return new WaitForGameTime(0.1f);
-        ReturnColor();
+
+        //  플래시 OFF (원상 복구)
+        ResetFlashColor();
+    }
+    private void ResetFlashColor()
+    {
+        if (_spriteRenderer != null)
+        {
+            _spriteRenderer.GetPropertyBlock(_mpb);
+            _mpb.SetColor(FlashColorID, Color.white); // 플레이어 셰이더 기준 기본 중립 색상
+            _spriteRenderer.SetPropertyBlock(_mpb);
+        }
     }
 }

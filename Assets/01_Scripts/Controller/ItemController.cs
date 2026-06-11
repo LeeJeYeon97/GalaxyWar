@@ -203,6 +203,13 @@ public class ItemController : MonoBehaviour
             case Define.ItemType.Exp:
                 Managers.Level.AddExp(value);
                 break;
+            case Define.ItemType.RecoveryHp:
+                Managers.Game._player.HealCurrentHp(value);
+                break;
+            case Define.ItemType.Magnet:
+                Managers.Game.AbsorbAllItemsAndLevelUp();
+                break;
+                
         }
 
         Managers.Sound.Play(_data.getSoundClip);
@@ -217,33 +224,95 @@ public class ItemController : MonoBehaviour
         Collider2D col = GetComponent<Collider2D>();
         if (col != null) col.enabled = false;
 
-        // 2. 도달 시간 랜덤화: 0.4초 ~ 1.0초 
-        // (전부 똑같은 속도로 오면 재미없습니다. 랜덤을 줘야 촤르르륵~ 하고 들어옵니다)
-        float duration = UnityEngine.Random.Range(0.4f, 1.0f);
+        // 코루틴으로 유도탄 연출 실행
+        StartCoroutine(CoAbsorb(playerTransform));
 
-        // 3. 마법의 연출: Ease.InBack
-        // (살짝 뒤로(바깥으로) 퍼졌다가 플레이어에게 훅! 하고 빨려 들어가는 쫀득한 애니메이션입니다)
-        transform.DOMove(playerTransform.position, duration)
-            .SetEase(Ease.InBack)
-            .OnComplete(() =>
+        //float duration = UnityEngine.Random.Range(0.4f, 1.0f);
+        //
+        //// [추가 1] 출발 시간에 랜덤 딜레이를 줘서 "순차적으로 쫘르륵" 날아오게 만듭니다.
+        //float delay = UnityEngine.Random.Range(0f, 0.3f);
+        //
+        //transform.DOMove(playerTransform.position, duration)
+        //    .SetEase(Ease.InBack)
+        //    .SetDelay(delay)       // 딜레이 적용
+        //    .SetUpdate(true)       // [추가 2 / 핵심] 레벨업으로 Time.timeScale=0이 되어도 애니메이션 끝까지 재생!
+        //    .OnComplete(() =>
+        //    {
+        //        // --- [페이즈 3] 획득 및 파괴 ---
+        //        switch (_data.type)
+        //        {
+        //            case Define.ItemType.Gold:
+        //                Managers.Game.currentSessionGold += value;
+        //                Managers.Event.PostEvent(Define.ActionEvent.GetGold);
+        //                break;
+        //            case Define.ItemType.Exp:
+        //                Managers.Level.AddExp(value);
+        //                break;
+        //            case Define.ItemType.RecoveryHp:
+        //                Managers.Game._player.HealCurrentHp(value);
+        //                break;
+        //        }
+        //        Managers.Game.RemoveActiveObject(this);
+        //        Managers.Resource.Destroy(gameObject);
+        //    });
+    }
+
+    private IEnumerator CoAbsorb(Transform target)
+    {
+        // 1. 쫘르륵 느낌을 위한 랜덤 출발 대기 (일시정지 무시)
+        float delay = UnityEngine.Random.Range(0f, 0.3f);
+        yield return new WaitForSecondsRealtime(delay);
+
+        // 2. 살짝 밖으로 퍼지는 연출 (Ease.InBack의 튕겨나가는 느낌 직접 구현)
+        Vector3 startPos = transform.position;
+        Vector3 randomDir = UnityEngine.Random.insideUnitCircle.normalized * 1.5f; // 퍼지는 반경
+        Vector3 pushPos = startPos + randomDir;
+
+        float time = 0;
+        float pushDuration = 0.2f;
+        while (time < pushDuration)
+        {
+            time += Time.unscaledDeltaTime; // Time.timeScale이 0이어도 무시하고 작동!
+            transform.position = Vector3.Lerp(startPos, pushPos, time / pushDuration);
+            yield return null;
+        }
+
+        // 3. 플레이어에게 무섭게 날아가는 연출 (유도탄)
+        time = 0;
+        float flyDuration = UnityEngine.Random.Range(0.3f, 0.6f);
+        Vector3 flyStartPos = transform.position;
+
+        while (time < flyDuration)
+        {
+            time += Time.unscaledDeltaTime;
+            float t = time / flyDuration;
+
+            t = t * t; // 점점 빨라지는 가속 효과 (Ease.InQuad 느낌)
+
+            //  핵심: target.position을 매 프레임 실시간으로 바라보므로 도망가도 끝까지 쫓아감!
+            if (target != null)
             {
-                // 플레이어에게 도착하면 이펙트 하나 터뜨려주고 (옵션) 파괴
-                // Managers.Sound.Play(Define.SoundID.Sfx_GetExp); (사운드 조절 주의!)
+                transform.position = Vector3.Lerp(flyStartPos, target.position, t);
+            }
+            yield return null;
+        }
 
-                // --- [페이즈 3] 획득 및 파괴 ---
-                switch (_data.type)
-                {
-                    case Define.ItemType.Gold:
-                        Managers.Game.currentSessionGold += value;
-                        Managers.Event.PostEvent(Define.ActionEvent.GetGold);
-                        break;
-                    case Define.ItemType.Exp:
-                        Managers.Level.AddExp(value);
-                        break;
-                }
-                Managers.Game.RemoveActiveObject(this);
-                Managers.Resource.Destroy(gameObject);
-            });
+        // 4. 도착 후 처리 (기존 로직과 동일)
+        switch (_data.type)
+        {
+            case Define.ItemType.Gold:
+                Managers.Game.currentSessionGold += value;
+                Managers.Event.PostEvent(Define.ActionEvent.GetGold);
+                break;
+            case Define.ItemType.Exp:
+                Managers.Level.AddExp(value);
+                break;
+            case Define.ItemType.RecoveryHp:
+                Managers.Game._player.HealCurrentHp(value);
+                break;
+        }
+        Managers.Game.RemoveActiveObject(this);
+        Managers.Resource.Destroy(gameObject);
     }
     void CheckBoundaries()
     {

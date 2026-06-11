@@ -2,6 +2,7 @@ using GooglePlayGames;
 using System;
 using System.Threading.Tasks;
 using Unity.Services.Core;
+using Unity.Services.Core.Environments;
 using UnityEngine;
 using UnityEngine.Localization.Settings;
 using UnityEngine.UnityConsent;
@@ -45,9 +46,20 @@ public class InitManager
             // 1. 유니티 서비스 초기화 (필수)
             if (UnityServices.State == ServicesInitializationState.Uninitialized)
             {
+                // 2. 프로덕션 환경 옵션 세팅
+                var options = new InitializationOptions();
+                options.SetEnvironmentName("production");
+
                 Debug.Log("Unity Services Initializing...");
                 await UnityServices.InitializeAsync();
-                Debug.Log("Unity Services Initialized Successfully!");                
+                
+                // 3. 리더보드 및 기타 서비스가 완전히 준비될 때까지 안전하게 대기
+                while (UnityServices.State != ServicesInitializationState.Initialized)
+                {
+                    await Task.Yield();
+                }
+
+                Debug.Log("Unity Services Initialized Successfully!");
             }
 
             OnUnityServiceInit?.Invoke();

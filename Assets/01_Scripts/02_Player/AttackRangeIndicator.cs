@@ -42,20 +42,6 @@ public class AttackRangeIndicator : MonoBehaviour
 
         DrawCircle();
     }
-    //  [새로 추가된 함수] 인스펙터 창에서 변수 값을 건드릴 때마다 즉각 호출되는 유니티 내장 함수입니다.
-    //private void OnValidate()
-    //{
-    //    // 컴포넌트가 제대로 있는지 확인 후
-    //    if (_lineRenderer == null)
-    //        _lineRenderer = GetComponent<LineRenderer>();
-    //
-    //    // 씬 창에 즉시 선을 다시 그립니다!
-    //    if (_lineRenderer != null)
-    //    {
-    //        SetupLineRenderer();
-    //    }
-    //}
-
 
     public void DrawCircle()
     {
@@ -79,5 +65,24 @@ public class AttackRangeIndicator : MonoBehaviour
     {
         radius = newRadius;
         DrawCircle();
+    }
+    //  라인을 숨기는 함수 완성!
+    public void HideCircle()
+    {
+        if (_lineRenderer != null)
+        {
+            _lineRenderer.enabled = false;
+        }
+    }
+
+    //  보스가 죽거나 다시 보여야 할 때 호출할 함수 추가!
+    public void ShowCircle()
+    {
+        if (_lineRenderer != null)
+        {
+            _lineRenderer.enabled = true;
+            // 혹시 그 사이에 공격 범위가 바뀌었을 수도 있으니 다시 그려줍니다.
+            SetupLineRenderer();
+        }
     }
 }

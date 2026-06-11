@@ -32,6 +32,8 @@ public class PlayerCombat : MonoBehaviour
     private Collider2D[] _targetColliders = new Collider2D[20];
     private ContactFilter2D _contactFilter;
 
+    private ContactFilter2D _bossFilter;
+
 
     public event Action<List<BulletController>> OnReload;
     public void Init(PlayerController player)
@@ -40,13 +42,19 @@ public class PlayerCombat : MonoBehaviour
         isReloading = false;
         _lastHomingShotTime = 0f;
 
-        // [최신 세팅 2] 게임 시작 시 필터(ContactFilter2D)를 미리 세팅해 둡니다. (가비지 발생 X)
+        //  일반 적(메테오) 전용 필터
         _contactFilter = new ContactFilter2D();
-        _contactFilter.useLayerMask = true; // 레이어 마스크 켤게!
-        _contactFilter.layerMask = LayerMask.GetMask("Meteor", "Boss"); // 메테오랑 보스만 걸러줘!
-        _contactFilter.useTriggers = true; // (선택) 트리거 콜라이더도 감지할 거면 true// 게임 시작 시 첫 장전
+        _contactFilter.useLayerMask = true;
+        _contactFilter.layerMask = LayerMask.GetMask("Meteor"); // 메테오만 걸러줘!
+        _contactFilter.useTriggers = true;
 
-        Reload();
+        // 보스 전용 필터 추가
+        _bossFilter = new ContactFilter2D();
+        _bossFilter.useLayerMask = true;
+        _bossFilter.layerMask = LayerMask.GetMask("Boss"); // 보스만 걸러줘!
+        _bossFilter.useTriggers = true;
+
+        Reload(); ;
     }
 
     private void Update()
@@ -78,34 +86,38 @@ public class PlayerCombat : MonoBehaviour
         _targetTimer += Time.deltaTime;
         if (_targetTimer < _targetUpdateInterval) return;
         _targetTimer = 0f;
-
-        // [수술 2] 최적화를 위해 최소 거리도 '거리의 제곱'으로 둡니다.
-        float minSqrDistance = Mathf.Infinity;
         _target = null;
 
-        //  [최신 세팅 3] Unity 6.3 권장 방식: 일반 OverlapCircle에 필터와 배열을 넘겨줍니다!
-        // 내부적으로 배열의 크기(20)만큼만 꽉 채워서 찾아오며 메모리를 새로 할당(new)하지 않습니다.
-        int count = Physics2D.OverlapCircle(
-            transform.position,
-            _player.Stat.shotRange.TotalValue,
-            _contactFilter,
-            _targetColliders
-        );
+        // ====================================================
+        // 1. [보스 1순위 탐색] 거리에 상관없이(반경 1000f) 보스 탐색
+        // ====================================================
+        int bossCount = Physics2D.OverlapCircle(transform.position, 1000f, _bossFilter, _targetColliders);
+        for (int i = 0; i < bossCount; i++)
+        {
+            Collider2D col = _targetColliders[i];
 
-        // 찾아낸 개수(count)만큼만 반복문을 돕니다.
+            if (col.gameObject.activeInHierarchy && col.TryGetComponent(out IDamageable damageable))
+            {
+                _target = col.gameObject;
+                return; // 보스를 찾았다면 아래의 메테오 탐색 로직은 무시하고 즉시 함수 종료!
+            }
+        }
+
+        // ====================================================
+        // 2. [메테오 2순위 탐색] 보스가 없을 경우에만 기존처럼 사거리 내 탐색
+        // ====================================================
+        float minSqrDistance = Mathf.Infinity;
+        int count = Physics2D.OverlapCircle(transform.position, _player.Stat.shotRange.TotalValue, _contactFilter, _targetColliders);
+
         for (int i = 0; i < count; i++)
         {
             Collider2D col = _targetColliders[i];
 
-            // 비활성화된 오브젝트는 스킵
             if (!col.gameObject.activeInHierarchy) continue;
 
-            // [수술 4] GetComponent보다 빠르고 안전한 TryGetComponent!
             if (col.TryGetComponent(out IDamageable damageable))
             {
-                //  [수술 5] CPU를 혹사시키는 루트(Distance) 대신, 단순 뺄셈의 제곱(sqrMagnitude) 사용!
                 float sqrDistance = (transform.position - col.transform.position).sqrMagnitude;
-
                 if (sqrDistance < minSqrDistance)
                 {
                     minSqrDistance = sqrDistance;
@@ -222,7 +234,7 @@ public class PlayerCombat : MonoBehaviour
             GameObject go = Managers.Resource.Instantiate(homingStat.originalPrefabs);
             BulletController bullet = go.GetComponent<BulletController>();
 
-            bullet.SetBullet(homingStat);
+            bullet.SetBullet(homingStat,_player.Stat.damage.TotalValue);
 
             // 위에서 스위치문으로 결정된 방향(initialDir)과 위치(outOfScreenPos) 적용!
             bullet.Shot(initialDir, outOfScreenPos);
@@ -251,7 +263,7 @@ public class PlayerCombat : MonoBehaviour
                 bulletToFire = go?.GetComponent<BulletController>();
                 if (bulletToFire != null)
                 {
-                    bulletToFire.SetBullet(Managers.Stat.GetBulletStat(mainBullet.Stat.type));
+                    bulletToFire.SetBullet(Managers.Stat.GetBulletStat(mainBullet.Stat.type), _player.Stat.damage.TotalValue);
                 }
             }
 
@@ -310,7 +322,7 @@ public class PlayerCombat : MonoBehaviour
 
             if (bullet == null) return;
 
-            bullet.SetBullet(stat);
+            bullet.SetBullet(stat, _player.Stat.damage.TotalValue);
             bullets.Add(bullet);
         }
 

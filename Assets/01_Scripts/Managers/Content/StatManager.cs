@@ -27,6 +27,8 @@ public class StatManager
         playerStat = new PlayerStat();
         playerStat.SetStat(Managers.Data.playerStatData);
 
+        // 2. [추가된 코드] 영구 업그레이드 수치를 기본 스탯 위에 덧바르기!
+        Managers.Upgrade.ApplyPermanentUpgrades(playerStat);
         // 불릿
         foreach (var data in Managers.Data.BulletDataDict)
         {

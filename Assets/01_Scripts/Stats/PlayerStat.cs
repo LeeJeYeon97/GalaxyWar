@@ -7,7 +7,7 @@ using UnityEngine;
 public class PlayerStat
 {
     public Stat speed = new Stat();
-
+    public Stat damage = new Stat();
     public Stat maxHp = new Stat();
     public Stat maxDefenceCount = new Stat();
     public Stat shieldChargeTime = new Stat();
@@ -50,7 +50,7 @@ public class PlayerStat
         {
             return;
         }
-
+        damage.Init(data.statData.damage);
         speed.Init(data.statData.speed);
         maxHp.Init(data.statData.maxHp);
         maxDefenceCount.Init(data.statData.maxDefenceCount);
@@ -85,8 +85,11 @@ public class PlayerStat
 
         if (Managers.Ability.GetCurrentLevel(Define.AbilityType.Passive_PlayerCritical) > 0)
         {
-            criticalDamageRate.AddMultiplier(currentBurstStat.criticalDamageRate);
             criticalChance.SetForceValue(true, 100.0f);
+
+            float currentCritDmg = criticalDamageRate.TotalValue;
+            criticalDamageRate.SetForceValue(true, currentCritDmg * 2f);
+
         }
         if(Managers.Ability.GetCurrentLevel(Define.AbilityType.Passive_SplitBullet) > 0)
         {
@@ -98,11 +101,13 @@ public class PlayerStat
     public void RemoveBurstBuff()
     {
         speed.SubMultiplier(currentBurstStat.speed);
-        criticalDamageRate.SubMultiplier(currentBurstStat.criticalDamageRate);
-
+        
         reloadTime.SetForceZero(false);
         shotTime.SetForceValue(false);
+
         criticalChance.SetForceValue(false);
+        criticalDamageRate.SetForceValue(false);
+
         multiShotChance.SetForceValue(false);
     }
     private void AutoInitStats()

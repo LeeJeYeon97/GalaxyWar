@@ -15,6 +15,8 @@ public class UI_LobbyScene : UI_Scene
         Button_ShopPanel,
         Button_MainPanel,
         Button_RankingPanel,
+        Button_UpgradePanel,
+        //Button_InvenPanel,
         Button_Profile,
         Button_Setting,
     }
@@ -22,7 +24,8 @@ public class UI_LobbyScene : UI_Scene
     {
         UI_ShopPanel,
         UI_MainPanel,
-        
+        UI_UpgradePanel,
+        UI_RankPanel,
     }
     enum Texts
     {
@@ -178,6 +181,8 @@ public class UI_LobbyScene : UI_Scene
 
         GetButton((int)Buttons.Button_ShopPanel).onClick.AddListener(() => ShowPanel(Panels.UI_ShopPanel));
         GetButton((int)Buttons.Button_MainPanel).onClick.AddListener(() => ShowPanel(Panels.UI_MainPanel));
+        GetButton((int)Buttons.Button_UpgradePanel).onClick.AddListener(() => ShowPanel(Panels.UI_UpgradePanel));
+        GetButton((int)Buttons.Button_RankingPanel).onClick.AddListener(() => ShowPanel(Panels.UI_RankPanel));
 
         GetButton((int)Buttons.Button_Profile).onClick.AddListener(() => Managers.UI.ShowPopupUI<UI_ProfilePopup>());
         GetButton((int)Buttons.Button_Setting).onClick.AddListener(() => Managers.UI.ShowPopupUI<UI_SettingsPopup>());
@@ -191,7 +196,9 @@ public class UI_LobbyScene : UI_Scene
         {
             case Panels.UI_ShopPanel: return Buttons.Button_ShopPanel;
             case Panels.UI_MainPanel: return Buttons.Button_MainPanel;
-            //case Panels.UI_RankPanel: return Buttons.Button_RankingPanel;
+            case Panels.UI_RankPanel: return Buttons.Button_RankingPanel;
+            case Panels.UI_UpgradePanel: return Buttons.Button_UpgradePanel;
+            //case Panels.: return Buttons.Button_UpgradePanel;
             default: return Buttons.Button_MainPanel;
         }
     }

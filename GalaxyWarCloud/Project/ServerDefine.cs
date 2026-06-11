@@ -11,6 +11,7 @@ public class ServerDefine
     // 데이터 키
     public const string k_PlayerDataKey = "PLAYER_DATA";
     public const string k_PlayerNameKey = "PLAYER_NAME";
+    public const string k_PlayerUpgradeKey = "PLAYER_UPGRADE";
     //public const string k_PlayerShopDataKey = "PLAYER_SHOP";
     // Currency
     public const string k_GoldCurrencyKey = "GOLD";

@@ -93,7 +93,7 @@
         }
       },
       "runtimes": {
-        "linux-x64": {
+        "any": {
           "#import": []
         }
       }

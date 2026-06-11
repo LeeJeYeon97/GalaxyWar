@@ -106,6 +106,11 @@ public class PlayerController : BaseController, IDamageable
     }
     protected override void OnUpdate()
     {
+        // [추가된 방어 코드] 게임이 일시정지 상태면 게이지 회복 중지
+        if (Managers.Game.currentGameState != Define.GameState.Playing)
+        {
+            return;
+        }
         AddBurstGauge();
         AddShieldGauge();
     }
@@ -416,7 +421,13 @@ public class PlayerController : BaseController, IDamageable
         currentBurst = 0;
         _isBurst = false;
 
-        mainCam.DOOrthoSize(Managers.Data.GameData.gamePlayeSize, 0.3f)
+        float cameraSize = Managers.Data.GameData.gamePlayeSize;
+        if (Managers.Game.isBossSpawn)
+        {
+            cameraSize = Managers.Data.GameData.bossStageSize;
+        }
+
+        mainCam.DOOrthoSize(cameraSize, 0.3f)
             .SetEase(Ease.OutCubic)
             .SetUpdate(true)
             .OnUpdate(() => Managers.Map.UpdateMap());
@@ -508,5 +519,6 @@ public class PlayerController : BaseController, IDamageable
         {
             currentHp = Stat.maxHp.TotalValue;
         }
+        OnStatusEvent();
     }
 }

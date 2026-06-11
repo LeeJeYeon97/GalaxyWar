@@ -213,6 +213,7 @@ GameObject:
   - component: {fileID: 7965924031026744953}
   - component: {fileID: 1407911375452149555}
   - component: {fileID: 5378445417828083639}
+  - component: {fileID: -8215258081489506512}
   m_Layer: 5
   m_Name: UI_QuitGamePopup
   m_TagString: Untagged
@@ -249,7 +250,7 @@ Canvas:
   m_GameObject: {fileID: 4138187276895411702}
   m_Enabled: 1
   serializedVersion: 3
-  m_RenderMode: 0
+  m_RenderMode: 1
   m_Camera: {fileID: 0}
   m_PlaneDistance: 100
   m_PixelPerfect: 0
@@ -303,6 +304,19 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &-8215258081489506512
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4138187276895411702}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: db7b0f5ae01d855459a2b8ffa4d5c7d5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UI_QuitGamePopup
+  canvasRenderMode: 1
 --- !u!1 &4639670222887542885
 GameObject:
   m_ObjectHideFlags: 0

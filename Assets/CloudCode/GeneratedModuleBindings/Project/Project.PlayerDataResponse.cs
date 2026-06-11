@@ -8,6 +8,7 @@ namespace Unity.Services.CloudCode.GeneratedBindings.Project
     {
         public PlayerData PlayerData;
         public PlayerEconomyData PlayerEconomyData;
+        public PlayerUpgradeData PlayerUpgradeData;
         public bool IsNewPlayer;
 
         [Preserve]
