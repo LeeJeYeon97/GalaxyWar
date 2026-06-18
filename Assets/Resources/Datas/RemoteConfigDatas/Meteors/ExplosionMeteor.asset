@@ -1,0 +1,41 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ec4c77ead32a9764d887461a155fbfb8, type: 3}
+  m_Name: ExplosionMeteor
+  m_EditorClassIdentifier: Assembly-CSharp::MeteorStatDataSO
+  Type: 12
+  originalPrefabs: {fileID: 7464109041495977386, guid: 11fa3a46d3b1daa4a8fb9a243166ad50, type: 3}
+  isExclude: 0
+  MaxHp: 30
+  MaxSpeed: 4
+  MinSpeed: 3
+  Damage: 20
+  Score: 300
+  Exp: 40
+  spawnPhase: 4
+  targetChase: 1
+  dropTable:
+  - itemType: 3
+    dropRate: 1
+  - itemType: 2
+    dropRate: 0.05
+  magmaTick: 0
+  magmaPuddle: {fileID: 0}
+  sludgePuddle: {fileID: 0}
+  fragmentMeteor: {fileID: 0}
+  auraRadius: 0
+  poisonTick: 0
+  poisonDamage: 0
+  poisonRadius: 0
+  explosionRadius: 6
+  explosionDelay: 2.5
+  explosionTargetRadius: 2

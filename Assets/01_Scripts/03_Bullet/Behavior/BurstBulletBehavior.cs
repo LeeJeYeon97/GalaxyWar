@@ -26,7 +26,7 @@ public class BurstBulletBehavior : IBulletBehavior
             }
 
             if (stat.type == BulletType.BurstBullet ||
-                stat.type == BulletType.PoisonBullet ||
+                stat.type == BulletType.ShockBullet ||
                 stat.type == BulletType.HomingBullet ||
                 stat.type == BulletType.NormalBullet)
             {
@@ -69,7 +69,7 @@ public class BurstBulletBehavior : IBulletBehavior
             }
 
             if (stat.type == BulletType.BurstBullet ||
-                stat.type == BulletType.PoisonBullet ||
+                stat.type == BulletType.ShockBullet ||
                 stat.type == BulletType.HomingBullet ||
                 stat.type == BulletType.NormalBullet)
             {

@@ -1,4 +1,5 @@
 using JetBrains.Annotations;
+using NUnit.Framework.Constraints;
 using System;
 using System.Reflection;
 using UnityEngine;
@@ -42,8 +43,18 @@ public class PlayerStat
     [Header("유도탄 관련")]
     public bool isHomingShotEnabled;
 
+    [Header("지뢰 관련")]
+    public GameObject minePrefab;
+    public bool isMineEnabled;
+
+    public Stat mineDropDelay = new Stat();
+    public Stat mineDamageValue = new Stat();
+    public Stat mineExplodeRadius = new Stat();
+
+
     // 현재 적용받고 있는 버스트 모드 상세 스탯 기억용
     public BurstModeStat currentBurstStat;
+
     public void SetStat(PlayerStatDataSO data)
     {
         if(data == null)
@@ -75,6 +86,15 @@ public class PlayerStat
 
         isHomingShotEnabled = data.statData.isHomingShotEnabled;
 
+        isMineEnabled = data.statData.isMineEnabled;
+        mineDropDelay.Init(data.statData.minMineDelay);
+
+        if(minePrefab == null)
+        {
+            minePrefab = Managers.Resource.Load<GameObject>("Prefabs/Object/Mine");
+        }
+        mineExplodeRadius.Init(data.statData.mineExplodeRadius);
+        mineDamageValue.Init(data.statData.mineDamageValue);
     }
     //  [추가] 버스트 스탯 적용 함수
     public void ApplyBurstBuff()

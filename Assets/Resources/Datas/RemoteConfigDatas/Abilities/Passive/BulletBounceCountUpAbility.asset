@@ -20,10 +20,10 @@ MonoBehaviour:
   - countIncrease: 1
     chanceIncrease: 30
   - countIncrease: 0
-    chanceIncrease: 20
+    chanceIncrease: 30
   - countIncrease: 1
     chanceIncrease: 0
-  - countIncrease: 20
-    chanceIncrease: 0
+  - countIncrease: 0
+    chanceIncrease: 30
   - countIncrease: 1
     chanceIncrease: 0

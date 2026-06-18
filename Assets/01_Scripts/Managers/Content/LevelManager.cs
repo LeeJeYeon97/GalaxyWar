@@ -112,4 +112,28 @@ public class LevelManager
         // UI 갱신
         Managers.Event.PostEvent<(float, float)>(ActionEvent.ExpChanged, (CurrentExp, MaxExp));
     }
+    // ==========================================
+    // [추가] 팝업이 닫힐 때 상태를 강제 초기화하고 다음 레벨업을 체크하는 함수
+    // ==========================================
+    public void CheckPendingLevelUp()
+    {
+        // 1. 어떤 이유로 꺼졌든 팝업 상태는 무조건 false로 초기화합니다.
+        IsLevelUpPopupOpen = false;
+
+        // 2. 아직 처리하지 못한 레벨업 팝업이 남아있는지 확인합니다.
+        if (PendingLevelUpCount > 0)
+        {
+            // 남은 횟수가 있다면 다시 팝업을 띄웁니다!
+            IsLevelUpPopupOpen = true;
+            Managers.UI.ShowPopupUI<UI_LevelUpPopup>();
+        }
+        else
+        {
+            // 3. 더 이상 띄울 팝업이 없다면 멈춰있던 게임을 다시 재생시킵니다.
+            if (Managers.Game.currentGameState == Define.GameState.Pause)
+            {
+                Managers.Game.ChangeGameState(Define.GameState.Playing);
+            }
+        }
+    }
 }

@@ -641,7 +641,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec2b7a0af23438646859ff6efe04049d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UI_ClickSound
-  clickSoundClip: {fileID: 8300000, guid: 689b75734a2d27244a9dc7118c5a4d39, type: 3}
+  clickSoundClip: {fileID: 8300000, guid: 3d7bb1da87174514abb0a6f148abeab1, type: 3}
   soundPath: SFX/UI_Click
 --- !u!1 &6290240870566131951
 GameObject:

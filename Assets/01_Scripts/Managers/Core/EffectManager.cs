@@ -29,7 +29,7 @@ public class EffectManager
     }
 
     // 이펙트 재생 핵심 함수
-    public void Play(EffectType type, Vector3 position)
+    public GameObject Play(EffectType type, Vector3 position)
     {
         if (_effectDict.TryGetValue(type, out GameObject prefab))
         {
@@ -37,10 +37,12 @@ public class EffectManager
             // (이름을 기반으로 프리팹을 Instantiate 하는 기존 기능 활용)
             GameObject effectGo = Managers.Resource.Instantiate(prefab);
             effectGo.transform.position = position;
+            return effectGo;
         }
         else
         {
             Debug.LogWarning($"이펙트를 찾을 수 없습니다: {type}");
+            return null;
         }
     }
 

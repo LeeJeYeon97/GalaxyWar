@@ -50,9 +50,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   screenEffect: {fileID: 207495765307802987}
   sourceCamera: {fileID: 0}
-  fallbackDistance: 0.05
-  snapOnStart: 1
-  parentToCameraOnStart: 1
+  fallbackDistance: 10
 --- !u!198 &207495765307802987
 ParticleSystem:
   m_ObjectHideFlags: 0
@@ -4941,4 +4939,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EffectController
   returnMode: 1
-  customTime: 1
+  customTime: 1.5

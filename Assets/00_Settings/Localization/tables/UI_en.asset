@@ -290,6 +290,14 @@ MonoBehaviour:
     m_Localized: SYSTEM
     m_Metadata:
       m_Items: []
+  - m_Id: 21296672148705280
+    m_Localized: Reconnecting to server...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 21289079871262720
+    m_Localized: Server Connection Failed
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

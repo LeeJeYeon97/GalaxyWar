@@ -8,7 +8,9 @@ public class UI_UpgradeNode : UI_Base
     enum Images
     {
         Image_Icon,
-        Image_Line
+        Image_Line,
+        Image_LineBG
+
     }
     enum Texts
     {
@@ -79,6 +81,7 @@ public class UI_UpgradeNode : UI_Base
         if (isLastNode)
         {
             lineImg.gameObject.SetActive(false);
+            GetImage((int)Images.Image_LineBG).gameObject.SetActive(false);
         }
         else
         {

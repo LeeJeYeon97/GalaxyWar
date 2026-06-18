@@ -92,7 +92,7 @@ public class LeaderboardManager
         catch (System.Exception e)
         {
             // 아직 한 판도 플레이하지 않아 점수가 없는 유저일 경우 여기서 에러가 날 수 있습니다.
-            Debug.Log("내 기록을 찾을 수 없습니다 (신규 유저 등).");
+            Debug.Log($"내 기록을 찾을 수 없습니다 (신규 유저 등).{e.Message}");
             return null;
         }
     }

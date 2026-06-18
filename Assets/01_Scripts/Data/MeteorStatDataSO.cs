@@ -36,6 +36,14 @@ public struct MeteorBalanceData
     public float magmaTick;
     public float auraRadius;
 
+    public float poisonTick;
+    public float poisonDamage;
+    public float poisonRadius;
+
+    public float explosionRadius;
+    public float explosionDelay;
+    public float explosionTargetRadius;
+
     public List<DropItemRateString> dropTable;
 }
 //  드랍 아이템용 구조체도 string으로 받을 수 있게 하나 만들어 줍니다.
@@ -83,4 +91,14 @@ public class MeteorStatDataSO : ScriptableObject
     [Header("Aura Meteor Setting")]
     // 오라버프
     public float auraRadius;
+
+    [Header("Poison Meteor Setting")]
+    public float poisonTick;
+    public float poisonDamage;
+    public float poisonRadius;
+
+    [Header("Explosion Meteor Setting")]
+    public float explosionRadius;
+    public float explosionDelay;
+    public float explosionTargetRadius;
 }

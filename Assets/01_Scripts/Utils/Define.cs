@@ -29,6 +29,12 @@ public class Define
         LoginScene,
         GameScene,
     }
+    public enum CameraType
+    {
+        Main,
+        Boss,
+        Burst,
+    }
     public enum Sound
     {
         Bgm,
@@ -64,6 +70,13 @@ public class Define
         Sfx_NormalBulletHit,
         Sfx_UpgradeLineUpSound,
         Sfx_UpgradeIconOpenSound,
+        Sfx_GetGold,
+        Sfx_IceExplosion,
+        Sfx_MineExplosion,
+        Sfx_Poison,
+        Sfx_ExplosionMeteorAlaram,
+        Sfx_ExplosionMeteor,
+
     }
     public enum UIEvent
     {
@@ -105,6 +118,9 @@ public class Define
         Meteor_ShockHit,
         IceBullet_Hit,
         IceBullet_Explosion,
+        MineExplosion,
+        MeteorPoison,
+        MeteorExplosion,
     }
     public enum AbilityType
     {
@@ -124,6 +140,7 @@ public class Define
         Passive_PlayerDamageUp = 9,         // 플레이어 데미지 업
         Passive_AllBulletBounceCountUp = 10,// 모든 총알의 바운스(튕기는) 횟수 증가
         Passive_PlayerHeal,
+        Passive_PlayerMagnet,
         
         // 특수 기능
         Passive_SplitBullet = 20,           // 분열 기능 업그레이드
@@ -142,6 +159,8 @@ public class Define
         // 신규 무기 자리
         Weapon_BlackHoleBullet = 107,         // 블랙홀탄
         Weapon_PoisonBullet = 108,            // 맹독탄
+        Weapon_Mine = 109,
+        Weapon_ShockBullet = 110,
         
     }
     public enum UpgradeType 
@@ -160,7 +179,7 @@ public class Define
         PierceBullet = 4,       // 관통탄
         BurstBullet = 5,        // 버스트모드 불릿
         FireBullet = 6,
-        PoisonBullet = 7,
+        ShockBullet = 7,        // 충격탄
         HomingBullet = 8,
     }
     public enum MeteorType
@@ -176,6 +195,9 @@ public class Define
         GravityMeteor = 8 ,     // 블랙홀 메테오
         FragmentMeteor = 9,     // 분열하는 메테오에서 나오는 파편
         AuraBuffMeteor = 10,    // 메테오들한테 장판 버프 주는 메테오
+        PoisonMeteor = 11,      // 독 메테오
+        ExplosionMeteor = 12,   // 폭발 메테오
+
     }
     public enum BossType
     {
@@ -191,7 +213,9 @@ public class Define
         Shotgun,
         Sniper,
         Pinball,
-        WallGap
+        WallGap,
+        Warp,
+        Dash
     }
     public enum ItemType
     {

@@ -33,32 +33,44 @@ public class UI_Joystick : UI_Base
     }
     private void ShowJoystick(Vector2 screenPos)
     {
-        // 1. 조이스틱을 터치한 위치로 이동
+        if (Managers.Game.currentGameState != Define.GameState.Playing) return;
 
-        if(Managers.Game.currentGameState != Define.GameState.Playing)
+        RectTransform parentRect = container.parent.GetComponent<RectTransform>();
+
+        // [핵심 추가] Canvas의 렌더 모드가 Camera 모드일 때를 대비해 UI 카메라를 자동으로 찾아옵니다.
+        Camera uiCam = null;
+        Canvas canvas = container.GetComponentInParent<Canvas>();
+        if (canvas != null && canvas.renderMode == RenderMode.ScreenSpaceCamera)
         {
-            return;
+            uiCam = canvas.worldCamera != null ? canvas.worldCamera : Camera.main;
         }
-        container.position = screenPos;
-        handle.anchoredPosition = Vector2.zero; // 핸들 위치 초기화
+
+        //  세 번째 인자에 찾은 uiCam을 넣어 오차를 완전히 방지합니다.
+        if (RectTransformUtility.ScreenPointToLocalPointInRectangle(parentRect, screenPos, uiCam, out Vector2 localPoint))
+        {
+            container.anchoredPosition = localPoint;
+        }
+
+        handle.anchoredPosition = Vector2.zero;
         gameObject.SetActive(true);
     }
 
     private void OnDragging(Vector2 screenPos)
     {
-        if (Managers.Game.currentGameState != Define.GameState.Playing)
+        if (Managers.Game.currentGameState != Define.GameState.Playing) return;
+
+        //  여기도 마찬가지로 Canvas 모드에 따른 카메라를 매칭해줍니다.
+        Camera uiCam = null;
+        Canvas canvas = container.GetComponentInParent<Canvas>();
+        if (canvas != null && canvas.renderMode == RenderMode.ScreenSpaceCamera)
         {
-            return;
+            uiCam = canvas.worldCamera != null ? canvas.worldCamera : Camera.main;
         }
 
-        // 2. 터치 위치와 조이스틱 중심점 사이의 거리 계산
         Vector2 localPoint;
-        // 스크린 좌표를 RectTransform의 로컬 좌표로 변환
-        RectTransformUtility.ScreenPointToLocalPointInRectangle(
-            container, screenPos, null, out localPoint);
+        //  uiCam을 넣어 정확한 로컬 좌표를 뽑아냅니다.
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(container, screenPos, uiCam, out localPoint);
 
-        // 3. 거리 제한(Clamping)
-        // 로컬 좌표의 길이를 제한하여 핸들이 배경 밖으로 나가지 않게 함
         float distance = localPoint.magnitude;
         Vector2 direction = localPoint.normalized;
 
@@ -72,7 +84,6 @@ public class UI_Joystick : UI_Base
         }
 
         Vector2 _inputVector = handle.anchoredPosition / radius;
-        // ★ 하이라이트 회전 업데이트 호출
         UpdateIndicatorRotation(_inputVector);
     }
 

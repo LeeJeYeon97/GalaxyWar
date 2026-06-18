@@ -1,9 +1,8 @@
 using DG.Tweening;
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.SocialPlatforms.Impl;
+using Unity.Cinemachine;
 using static Define;
 
 public class GameManager : MonoBehaviour
@@ -54,6 +53,8 @@ public class GameManager : MonoBehaviour
         // UI 생성
         UI_GameScene sceneUI = Managers.UI.ShowSceneUI<UI_GameScene>();
 
+        Managers.Camera.Init();
+
         // 맵 생성
         Managers.Map.Init();
 
@@ -73,6 +74,9 @@ public class GameManager : MonoBehaviour
         if (_player == null)
             return;
         _player.Init();
+
+        // 2.  [핵심] 카메라 매니저에게 방금 태어난 플레이어의 멱살을 잡게 합니다.
+        Managers.Camera.SetTarget(_player.transform);
 
         spawner = Managers.Resource.Instantiate("Object/Spawner")?.GetComponent<Spawner>();
         if (spawner == null)
@@ -112,13 +116,16 @@ public class GameManager : MonoBehaviour
         // StageManager에게 "여기 보스 스테이지야?" 라고 물어봅니다.
         if (Managers.Stage.IsBossStage)
         {
-            mainCam.DOOrthoSize(Managers.Data.GameData.bossStageSize, 0.3f)
-            .SetEase(Ease.OutCubic)
-            .SetUpdate(true)
-            .OnUpdate(() =>
+            // [완벽하게 분리된 코드] 매니저에게 카메라 전환만 지시합니다!
+            Managers.Camera.ChangeCamera(Define.CameraType.Boss);
+
+            // 시네머신이 줌아웃을 하는 동안(약 0.3초) 맵을 갱신해주기 위한 가짜(Virtual) 트윈
+            DOVirtual.Float(0f, 1f, 0.3f, (value) =>
             {
                 Managers.Map.UpdateMap();
-            });
+            })
+            .SetEase(Ease.OutCubic)
+            .SetUpdate(true);
 
             // 1. 일반 메테오 스폰 속도를 무한대로 늘리거나 스포너를 멈춤
             spawner.StopSpawn(); // 혹은 스폰 딜레이를 9999로 변경

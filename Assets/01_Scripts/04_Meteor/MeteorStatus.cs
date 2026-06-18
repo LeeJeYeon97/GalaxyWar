@@ -14,7 +14,7 @@ public class MeteorStatus : MonoBehaviour
     private Coroutine _burnCoroutine;
 
     public GameObject auraBuffEffectPrefab;
-    private GameObject auraBuff;
+    //private GameObject auraBuff;
     public GameObject shockDeBuffEffectPrefab;
     private GameObject shockDeBuffEffect;
     public bool HasShockDebuff { get; private set; } = false;
@@ -31,12 +31,12 @@ public class MeteorStatus : MonoBehaviour
 
         if (auraBuffEffectPrefab != null)
         {
-            auraBuff = Managers.Resource.Instantiate(auraBuffEffectPrefab);
-            auraBuff.transform.SetParent(this.transform, false);
-
-            // 수정: 부모의 정중앙을 기준으로 Z축만 -3 당깁니다.
-            auraBuff.transform.localPosition = new Vector3(0, 0, -3);
-            auraBuff.SetActive(false);
+            //auraBuff = Managers.Resource.Instantiate(auraBuffEffectPrefab);
+            //auraBuff.transform.SetParent(this.transform, false);
+            //
+            //// 수정: 부모의 정중앙을 기준으로 Z축만 -3 당깁니다.
+            //auraBuff.transform.localPosition = new Vector3(0, 0, -3);
+            //auraBuff.SetActive(false);
         }
         if (shockDeBuffEffectPrefab != null)
         {
@@ -62,7 +62,7 @@ public class MeteorStatus : MonoBehaviour
         icePuddleSlowPercent = 0f;
 
         _auraBuffEndTime = 0f;
-        auraBuff.SetActive(false);
+        //auraBuff.SetActive(false);
         shockDeBuffEffect.SetActive(false);
 
         if (_freezeCoroutine != null) StopCoroutine(_freezeCoroutine);
@@ -80,28 +80,28 @@ public class MeteorStatus : MonoBehaviour
 
     private void Update()
     {
-        if (HasAuraBuff && Time.time > _auraBuffEndTime)
-        {
-            HasAuraBuff = false;
-            if (auraBuff != null)
-            {
-                auraBuff.SetActive(false);
-            }
-        }
+        //if (HasAuraBuff && Time.time > _auraBuffEndTime)
+        //{
+        //    HasAuraBuff = false;
+        //    if (auraBuff != null)
+        //    {
+        //        auraBuff.SetActive(false);
+        //    }
+        //}
     }
 
     public void ReceiveAuraBuff(float duration)
     {
-        _auraBuffEndTime = Time.time + duration;
-        if (!HasAuraBuff)
-        {
-            HasAuraBuff = true;
-            //_controller.Visual.SetColor(Color.yellow);
-            if(auraBuff != null)
-            {
-                auraBuff.SetActive(true);
-            }
-        }
+        //_auraBuffEndTime = Time.time + duration;
+        //if (!HasAuraBuff)
+        //{
+        //    HasAuraBuff = true;
+        //    //_controller.Visual.SetColor(Color.yellow);
+        //    if(auraBuff != null)
+        //    {
+        //        auraBuff.SetActive(true);
+        //    }
+        //}
     }
 
     #region 감전

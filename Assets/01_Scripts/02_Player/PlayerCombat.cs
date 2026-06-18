@@ -23,6 +23,9 @@ public class PlayerCombat : MonoBehaviour
     private Vector2 _currentAimDir;
     private Coroutine _reloadCoroutine;
 
+    // [추가] 지뢰 설치 타이머
+    private float _lastMineDropTime;
+
     // 자동 조준 관련
     private GameObject _target;
     private float _targetTimer = 0f;
@@ -35,12 +38,12 @@ public class PlayerCombat : MonoBehaviour
     private ContactFilter2D _bossFilter;
 
 
-    public event Action<List<BulletController>> OnReload;
     public void Init(PlayerController player)
     {
         _player = player;
         isReloading = false;
         _lastHomingShotTime = 0f;
+        _lastMineDropTime = 0f; // 초기화
 
         //  일반 적(메테오) 전용 필터
         _contactFilter = new ContactFilter2D();
@@ -68,6 +71,8 @@ public class PlayerCombat : MonoBehaviour
         FindTarget();
         Shoot();
         HomingShot();
+        // [추가] 매 프레임 지뢰 설치 로직 체크
+        DropMineAuto();
     }
 
     private void FixedUpdate()
@@ -361,6 +366,42 @@ public class PlayerCombat : MonoBehaviour
     }
     #endregion
 
+    #region Mine Skill
+    //  [수정] 시간에 따라 자동으로 설치하도록 로직 변경
+    private void DropMineAuto()
+    {
+        // 1. 지뢰 스킬이 활성화되어 있는지 확인 (스탯이나 해금 플래그 필요)
+        if (!_player.Stat.isMineEnabled) return;
+
+        // 2. 타이머 갱신
+        _lastMineDropTime += Time.deltaTime;
+
+        // 3. 설정된 딜레이(쿨타임) 확인
+        // TODO: _player.Stat.mineDropDelay 속성이 없다면 추가해야 합니다.
+        if (_lastMineDropTime >= _player.Stat.mineDropDelay.TotalValue)
+        {
+            FireMine();
+            _lastMineDropTime = 0f; // 타이머 초기화
+        }
+    }
+
+    public void FireMine()
+    {
+        // 풀링 매니저에서 지뢰 하나를 가져옵니다.
+        GameObject mineObj = Managers.Resource.Instantiate(_player.Stat.minePrefab);
+        MineController mine = mineObj.GetComponent<MineController>();
+
+        //  우주선이 바라보는 반대 방향(뒤)으로 지정된 거리만큼 떨어진 곳에 즉시 설치
+        Vector2 spawnPos = transform.position;
+        Vector2 dropDirection = -transform.up;
+        float dropDistance = 1.5f; // 너무 멀리 깔리면 이상할 수 있으니 수치 조정 가능
+        Vector2 targetPos = spawnPos + (dropDirection * dropDistance);
+
+        float damage = _player.Stat.damage.TotalValue * (1 + (_player.Stat.mineDamageValue.TotalValue / 100));
+
+        mine.PlantMine(targetPos, damage, _player.Stat.mineExplodeRadius.TotalValue);
+    }
+    #endregion
 
     #region Gizmos
     // 플레이어 오브젝트를 클릭(Select)했을 때만 씬 뷰에 그려주는 함수입니다.

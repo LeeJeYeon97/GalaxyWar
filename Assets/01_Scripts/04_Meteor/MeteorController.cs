@@ -150,7 +150,6 @@ public class MeteorController : BaseController, IDamageable
     {
         Stat.Behavior?.OnUpdate(this);
     }
-
     public void OnDamage(float damage, bool isCritical = false)
     {
         if (!gameObject.activeInHierarchy || _currentHp <= 0) return;

@@ -50,6 +50,7 @@ public class Managers : MonoBehaviour
     private RemoteConfigManager _remoteConfig;
     private LeaderboardManager _leaderboard;
     private UpgradeManager _upgrade;
+    private CameraManager _camera;
 
     // ========================================================== //
     // 프로퍼티를 통해 외부에서 접근하도록 설정
@@ -81,6 +82,7 @@ public class Managers : MonoBehaviour
     public static RemoteConfigManager RemoteConfig => Instance._remoteConfig;
     public static LeaderboardManager Leaderboard => Instance._leaderboard;
     public static UpgradeManager Upgrade => Instance._upgrade;
+    public static CameraManager Camera => Instance._camera;
     // ========================================================== //
 
     // 추가: 외부에서 Managers.Coroutine.StartCoroutine() 으로 접근할 수 있게 열어줍니다!
@@ -131,6 +133,7 @@ public class Managers : MonoBehaviour
             _instance._remoteConfig = new RemoteConfigManager();
             _instance._leaderboard = new LeaderboardManager();
             _instance._upgrade = new UpgradeManager();
+            _instance._camera = new CameraManager();
 
             // 컴포넌트 형태의 매니저들은 여기서 초기화하거나 자식으로 붙임
             _instance._game = Util.GetOrAddComponent<GameManager>(go);
@@ -169,9 +172,12 @@ public class Managers : MonoBehaviour
     private void Update()
     {
         // 다른 매니저들 업데이트 돌리기
+        
+        
     }
     private void LateUpdate()
     {
+        Map?.OnUpdate();
         Effect.OnLateUpdate();
     }
     public void Clear()
@@ -179,7 +185,7 @@ public class Managers : MonoBehaviour
         _scene.Clear();
         _sound.Clear();
         _ui.Clear();
-
+        _map.Clear();
         if (_coroutine != null)
         {
             _coroutine.StopAllCoroutines();

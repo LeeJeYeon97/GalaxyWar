@@ -10,8 +10,7 @@ public class MeteorMovement : MonoBehaviour
     private Vector2 _moveDir;
     private float _baseAngularVelocity;
 
-    public bool _hasEnteredView = false;
-    private float _checkOffset = 2.0f;
+    //public bool _hasEnteredView = false;
 
     private Vector2 _savedVelocity;
     private float _savedAngularVelocity;
@@ -19,6 +18,14 @@ public class MeteorMovement : MonoBehaviour
 
     //  1. 유도탄 여부를 저장할 변수 추가
     private bool _isChasing = false;
+
+    public bool _isStopped = false;
+
+
+    // [수정됨] 화면 안팎 체크 변수 삭제, 대신 '삭제될 거리의 제곱값' 설정
+    // 예: 40유닛 이상 멀어지면 삭제 -> 40 * 40 = 1600f
+    // 카메라 사이즈(15~20)를 고려해 화면 밖 여유 공간을 넉넉히 줍니다.
+    [SerializeField] private float _despawnDistance = 50f;
 
     private void Awake()
     {
@@ -28,7 +35,7 @@ public class MeteorMovement : MonoBehaviour
 
     public void Init(Vector2 pos, MeteorStat stat)
     {
-        _hasEnteredView = false;
+        //_hasEnteredView = false;
         transform.position = pos;
 
         //  2. 스탯에서 추적 여부를 받아와 저장합니다.
@@ -41,6 +48,7 @@ public class MeteorMovement : MonoBehaviour
         currentSpeed.Init(finalSpeed);
         _baseAngularVelocity = UnityEngine.Random.Range(-100f, 100f);
 
+        _isStopped = false;
         _rb.simulated = true;
         UpdateVelocity();
     }
@@ -81,7 +89,8 @@ public class MeteorMovement : MonoBehaviour
             {
                 UpdateChaseDirection();
             }
-            CheckBoundaries();
+            //CheckBoundaries();
+            CheckDespawnDistance();
         }
     }
     // 4. 플레이어 방향으로 꺾어주는 함수 추가
@@ -99,22 +108,36 @@ public class MeteorMovement : MonoBehaviour
 
         UpdateVelocity();
     }
-    private void CheckBoundaries()
+    //private void CheckBoundaries()
+    //{
+    //    Vector3 pos = transform.position;
+    //    var min = Managers.Map.PlayZoneMin;
+    //    var max = Managers.Map.PlayZoneMax;
+
+    //    bool isInView = pos.x > min.x && pos.x < max.x && pos.y > min.y && pos.y < max.y;
+    //    if (isInView) _hasEnteredView = true;
+
+    //    if (_hasEnteredView)
+    //    {
+    //        if (pos.x < min.x - _checkOffset || pos.x > max.x + _checkOffset ||
+    //            pos.y < min.y - _checkOffset || pos.y > max.y + _checkOffset)
+    //        {
+    //            Managers.Resource.Destroy(gameObject);
+    //        }
+    //    }
+    //}
+    private void CheckDespawnDistance()
     {
-        Vector3 pos = transform.position;
-        var min = Managers.Map.PlayZoneMin;
-        var max = Managers.Map.PlayZoneMax;
+        if (Managers.Game._player == null) return;
 
-        bool isInView = pos.x > min.x && pos.x < max.x && pos.y > min.y && pos.y < max.y;
-        if (isInView) _hasEnteredView = true;
+        Vector2 playerPos = Managers.Game._player.transform.position;
+        Vector2 myPos = transform.position;
 
-        if (_hasEnteredView)
+        //  핵심: 입력받은 실제 거리를 코드에서 스스로 제곱(_despawnDistance * _despawnDistance)하여 비교합니다.
+        if ((playerPos - myPos).sqrMagnitude > (_despawnDistance * _despawnDistance))
         {
-            if (pos.x < min.x - _checkOffset || pos.x > max.x + _checkOffset ||
-                pos.y < min.y - _checkOffset || pos.y > max.y + _checkOffset)
-            {
-                Managers.Resource.Destroy(gameObject);
-            }
+            // Debug.Log("test");
+            Managers.Resource.Destroy(gameObject);
         }
     }
 }

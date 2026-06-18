@@ -51,8 +51,6 @@ MonoBehaviour:
   screenEffect: {fileID: 207495765307802987}
   sourceCamera: {fileID: 0}
   fallbackDistance: 0.05
-  snapOnStart: 1
-  parentToCameraOnStart: 1
 --- !u!198 &207495765307802987
 ParticleSystem:
   m_ObjectHideFlags: 0

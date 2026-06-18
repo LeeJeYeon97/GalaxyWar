@@ -97,18 +97,51 @@ public class ItemController : MonoBehaviour
             CheckBoundaries();
         }
     }
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        //  이미 획득 연출이 시작되었다면 무시
-        if (_isCollecting) return;
+    //private void OnTriggerEnter2D(Collider2D collision)
+    //{
+    //    //  이미 획득 연출이 시작되었다면 무시
+    //    if (_isCollecting) return;
 
-        // 아이템 획득// 수정된 코드 (콜라이더가 리지드바디에 붙어있지 않을 수도 있으므로 ? 연산자 사용)
-        //콜라이더를 지배하고 있는 리지드바디(부모)로 다이렉트로 접근해서 스크립트를 가져옵니다.
-        //PlayerController player = collision.GetComponentInParent<PlayerController>();
-        PlayerController player = collision.attachedRigidbody?.GetComponent<PlayerController>();
+    //    // 아이템 획득// 수정된 코드 (콜라이더가 리지드바디에 붙어있지 않을 수도 있으므로 ? 연산자 사용)
+    //    //콜라이더를 지배하고 있는 리지드바디(부모)로 다이렉트로 접근해서 스크립트를 가져옵니다.
+    //    //PlayerController player = collision.GetComponentInParent<PlayerController>();
+    //    PlayerController player = collision.attachedRigidbody?.GetComponent<PlayerController>();
+    //    if (player == null) return;
+
+    //    //  1. 획득 시작: 물리 연산 끄기 및 콜라이더 비활성화
+    //    _isCollecting = true;
+
+    //    _rb.simulated = false;
+
+    //    _rb.linearVelocity = Vector2.zero;
+    //    _rb.angularVelocity = 0f;
+    //    _collider.enabled = false; // 중복 충돌 완벽 방지
+
+    //    //통통 튀기 스크립트 끄기!
+    //    if (_anim != null)
+    //    {
+    //        _anim.enabled = false; // "이제 그만 통통 튀고 플레이어한테 끌려가!"
+    //    }
+    //    //  2. 연출 코루틴 시작//
+    //    //  DOTween 쫀득 연출 시작!
+    //    DoCollectTween(player);
+
+    //}
+
+    // ==========================================================
+    //  DOTween 쫀득 애니메이션 로직
+    // ==========================================================
+
+    // ==========================================================
+    // ?? [수정됨] 플레이어의 자석 범위에 닿았을 때 콜렉터가 호출해줄 public 함수
+    // ==========================================================
+    public void TriggerCollection(PlayerController player)
+    {
+        // 이미 획득 연출이 시작되었다면 무시
+        if (_isCollecting) return;
         if (player == null) return;
 
-        //  1. 획득 시작: 물리 연산 끄기 및 콜라이더 비활성화
+        // 1. 획득 시작: 물리 연산 끄기 및 콜라이더 비활성화
         _isCollecting = true;
 
         _rb.simulated = false;
@@ -117,20 +150,17 @@ public class ItemController : MonoBehaviour
         _rb.angularVelocity = 0f;
         _collider.enabled = false; // 중복 충돌 완벽 방지
 
-        //통통 튀기 스크립트 끄기!
+        // 통통 튀기 스크립트 끄기!
         if (_anim != null)
         {
             _anim.enabled = false; // "이제 그만 통통 튀고 플레이어한테 끌려가!"
         }
-        //  2. 연출 코루틴 시작//
-        //  DOTween 쫀득 연출 시작!
-        DoCollectTween(player);
 
+        // 2. 연출 코루틴 시작
+        // DOTween 쫀득 연출 시작! (기존에 짜두신 완벽한 로직 그대로 실행)
+        DoCollectTween(player);
     }
 
-    // ==========================================================
-    //  DOTween 쫀득 애니메이션 로직
-    // ==========================================================
     private void DoCollectTween(PlayerController player)
     {
         Vector2 startPos = transform.position;

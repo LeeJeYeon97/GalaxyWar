@@ -36,42 +36,112 @@ public class PlayerDataManager
     }
     private async void InitializePlayer()
     {
-        try
+        int attempt = 1;
+        int retryDelay = 1000; // 재시도 간격 (2초)
+
+        // 현재 떠 있는 로그인 씬을 찾아서 UI를 제어할 준비를 합니다.
+        UI_LoginScene loginScene = UnityEngine.Object.FindAnyObjectByType<UI_LoginScene>();
+
+        //  팝업 없이 성공할 때까지 무한정 재시도하는 루프입니다.
+        while (true)
         {
-            // 추가: 로그인이 성공해서 UGS가 완전히 켜진 지금 세팅합니다!
-            
-            // 추가: Auth 시스템이 가지고 있는 내 닉네임(태그 포함)을 가져옵니다.
-            string myName = AuthenticationService.Instance.PlayerName;
-
-            var playerDataResponse = await playerDataServiceBindings.HandlePlayerSignIn(myName);
-
-            PlayerDataLocal = playerDataResponse.PlayerData;
-            PlayerDataUpdated?.Invoke(PlayerDataLocal);
-
-            Managers.PlayerEconomy.HandleEconomyUpdate(playerDataResponse.PlayerEconomyData);
-            Managers.PlayerEconomy.CheckAdRemovalStatus();
-            // =========================================================
-            // [핵심 추가] 서버에서 받아온 업그레이드 데이터를 UpgradeManager에 세팅!
-            // =========================================================
-            if (playerDataResponse.PlayerUpgradeData != null)
+            try
             {
-                Managers.Upgrade.InitializeServerData(playerDataResponse.PlayerUpgradeData.UpgradeLevels);
+                Debug.Log($"[PlayerDataManager] 서버 데이터 동기화 시도 중... ({attempt}회차)");
+
+                // 1회차가 아니라 재시도 중이라면, 멈춘 게 아님을 텍스트로 보여줍니다.
+                if (attempt > 1 && loginScene != null)
+                {
+                    // 테이블에 "LoadingText_Reconnecting" (예: "서버 재접속 중...") 키를 만들어서 쓰시거나,
+                    // 당장 급하시다면 아래처럼 임시 텍스트를 직접 던져주셔도 됩니다.
+                    loginScene.UpdateProgress(0.7f, "LoadingText_Reconnecting");
+                }
+
+                //  원래 서버 통신 로직
+                string myName = AuthenticationService.Instance.PlayerName;
+                var playerDataResponse = await playerDataServiceBindings.HandlePlayerSignIn(myName);
+
+                // --- 통신 성공 시 데이터 세팅 ---
+                PlayerDataLocal = playerDataResponse.PlayerData;
+                PlayerDataUpdated?.Invoke(PlayerDataLocal);
+
+                Managers.PlayerEconomy.HandleEconomyUpdate(playerDataResponse.PlayerEconomyData);
+                Managers.PlayerEconomy.CheckAdRemovalStatus();
+
+                if (playerDataResponse.PlayerUpgradeData != null)
+                {
+                    Managers.Upgrade.InitializeServerData(playerDataResponse.PlayerUpgradeData.UpgradeLevels);
+                }
+
+                LogResponse(playerDataResponse);
+                Debug.Log("[시스템] 서버 데이터 로딩 완료! 이제 상점 카탈로그와 IAP를 시작합니다.");
+                Managers.PlayerEconomy.SyncEconomyConfig();
+
+                //  통신에 성공하면 return을 만나 무한 루프를 완전히 탈출합니다!
+                return;
+            }
+            catch (CloudCodeException e)
+            {
+                // 실패 시 로그만 찍고 팝업은 띄우지 않습니다.
+                Debug.LogWarning($"[PlayerDataManager] UGS 데이터 로드 실패 ({attempt}회차): {e.Message}");
+            }
+            catch (System.Exception ex)
+            {
+                Debug.LogException(ex);
             }
 
-            LogResponse(playerDataResponse);
-
-            // =======================================================
-            //  2. 교통정리 끝! 데이터가 무조건 존재함이 보장되는 이 시점에 IAP를 켭니다.
-            // =======================================================
-            Debug.Log("[시스템] 서버 데이터 로딩 완료! 이제 상점 카탈로그와 IAP를 시작합니다.");
-            Managers.PlayerEconomy.SyncEconomyConfig();
-
-        }
-        catch(CloudCodeException e)
-        {
-            Debug.LogException(e);
+            // 실패했을 경우 (catch 블록을 거쳐 여기로 옴)
+            // 횟수를 1 올리고 1초를 대기한 뒤 루프의 처음으로 돌아가 다시 시도합니다.
+            attempt++;
+            await Task.Delay(retryDelay);
         }
     }
+
+    //private void ShowNetworkErrorPopup()
+    //{
+    //    // 1. 현재 로그인 씬 UI를 찾아서 유저에게 통신 지연 상태임을 텍스트로 알립니다.
+    //    // (70% 상태로 게이지가 멈춰있더라도 텍스트가 바뀌면 프리징이 아닌 예외 처리 상태로 인식됩니다)
+    //    UI_LoginScene loginScene = UnityEngine.Object.FindAnyObjectByType<UI_LoginScene>();
+    //    if (loginScene != null)
+    //    {
+    //        // 로컬라이제이션 테이블에 "LoadingText_Failure" 또는 "LoadingText_Retry" 등으로 등록해둔 키를 사용하세요.
+    //        // 예: "서버 연결에 실패했습니다. 확인을 눌러 다시 시도하세요."
+    //        loginScene.UpdateProgress(0.7f, "LoadingText_Failure");
+    //    }
+
+    //    // 2. 대표님이 만드신 시스템 팝업을 UI 매니저를 통해 호출합니다.
+    //    var popup = Managers.UI.ShowPopupUI<UI_SystemPopup>();
+
+    //    if (popup != null)
+    //    {
+    //        // 번역 테이블에서 알림창에 띄울 문구를 가져옵니다.
+    //        // 예: "서버 응답 시간이 초과되었습니다.\n다시 시도하시겠습니까?"
+    //        string alertMessage = Util.GetLocalizeString("UI", "SystemPopup_NetworkTimeoutRetry");
+
+    //        // 3. 팝업에 문구와 함께 [확인/종료] 버튼을 눌렀을 때 실행될 콜백(Action)을 넘겨줍니다.
+    //        popup.SetInfo(alertMessage, onCloseCallback: () =>
+    //        {
+    //            // [확인] 버튼을 누르면 실행되는 구역:
+    //            Debug.Log("[ShowNetworkErrorPopup] 유저가 재시도를 선택했습니다. 다시 연결을 시도합니다.");
+
+    //            if (loginScene != null)
+    //            {
+    //                // 로딩 텍스트를 다시 "데이터 불러오는 중..."으로 원상복구 시킵니다.
+    //                loginScene.UpdateProgress(0.7f, "LoadingText_PlayerDataLoad");
+    //            }
+
+    //            // 다시 처음부터 로그인 및 데이터 로딩 프로세스를 태웁니다!
+    //            // 이미 UGS가 로그인된 상태라면 1번 시도만에 바로 통과되며 100%로 뚫릴 것입니다.
+    //            InitializePlayer();
+    //        });
+    //    }
+    //    else
+    //    {
+    //        Debug.LogError("[PlayerDataManager] UI_SystemPopup을 로드하는 데 실패했습니다. 방어 코드로 재시도를 바로 실행합니다.");
+    //        // 만약 팝업 자체가 안 뜨는 최악의 상황을 대비한 2차 방어선
+    //        InitializePlayer();
+    //    }
+    //}
     public void UpdatedPlayerData(PlayerData data)
     {
         PlayerDataLocal = data;

@@ -54,7 +54,18 @@ public class UI_LevelUpPopup : UI_Popup
         UpdateReloadButtonState(); //  팝업이 켜질 때 코인 버튼 상태 체크!
         RefreshCards();
     }
+    // [핵심 추가] 최후의 안전장치: 에러나 버그로 팝업이 강제로 꺼질 때 무조건 실행됨
+    private void OnDisable()
+    {
+        // 팝업이 꺼질 때 여전히 레벨매니저가 '팝업 열림' 상태로 착각하고 있다면?
+        if (Managers.Level.IsLevelUpPopupOpen)
+        {
+            // 강제로 꼬인 상태를 풀고 남은 레벨업을 체크합니다!
+            Managers.Level.CheckPendingLevelUp();
+        }
+    }
     // [추가] DOTween Null 에러 완벽 방어! UI가 파괴될 때 모든 애니메이션 강제 종료
+
     private void OnDestroy()
     {
         for (int i = 0; i < cards.Length; i++)
@@ -87,6 +98,7 @@ public class UI_LevelUpPopup : UI_Popup
             {
                 Debug.Log("광고 시청에 실패했거나 취소했습니다.");
                 // 필요하다면 유저에게 "광고 시청 실패" 안내 메시지 띄우기
+                _isSelecting = false; // 실패 시 다시 클릭 가능하게 풀어줌
             }
         });
     }
@@ -141,14 +153,14 @@ public class UI_LevelUpPopup : UI_Popup
         Managers.UI.ClosePopupUI();
         _isSelecting = false;
 
-        if (Managers.Game.currentGameState == GameState.Pause)
-        {
-            Managers.Game.ChangeGameState(GameState.Resume);
-        }
+        //if (Managers.Game.currentGameState == GameState.Pause)
+        //{
+        //    Managers.Game.ChangeGameState(GameState.Resume);
+        //}
 
-        // 여기에 유저에게 보여줄 알림 팝업(예: UI_Toast)을 추가하면 더 좋습니다.
-        Debug.LogWarning(message);
-        UpdateReloadButtonState();
+        //// 여기에 유저에게 보여줄 알림 팝업(예: UI_Toast)을 추가하면 더 좋습니다.
+        //Debug.LogWarning(message);
+        //UpdateReloadButtonState();
     }
 
     private void UpdateReloadButtonState()
@@ -307,7 +319,7 @@ public class UI_LevelUpPopup : UI_Popup
                         RefreshCards();
                     }
                     else
-                    {
+                    {                        
                         Managers.Level.IsLevelUpPopupOpen = false;
                         // 모두 끝났다면 게임 재개 및 팝업 닫기
                         Managers.Game.ChangeGameState(GameState.Resume);

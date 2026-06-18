@@ -153,18 +153,24 @@ public class PlayerDataService
 
         try
         {
-            // Save new Player Data
+            _logger.LogInformation($"[신규유저 생성 시작] PlayerId: {context.PlayerId}");
+
+            // 1번 트랩
+            _logger.LogInformation("-> 1. PlayerData 저장 시도 중...");
             await SaveData(context, gameApiClient, ServerDefine.k_PlayerDataKey, newPlayerData);
+            _logger.LogInformation("-> 1. PlayerData 저장 완료!");
 
-            // Initialize new Player inventory
+            // 2번 트랩
+            _logger.LogInformation("-> 2. Economy 초기화 시도 중...");
             newEconomyData = await _playerEconomyService.InitializeNewPlayerEconomy(context, gameApiClient);
+            _logger.LogInformation("-> 2. Economy 초기화 완료!");
 
-            //  [새로 추가!] 신규 유저의 업그레이드 데이터를 클라우드에 빈 바구니로 생성
-            //await SaveUpgradeData(context, gameApiClient, newUpgradeData);
+            // 3번 트랩
+            _logger.LogInformation("-> 3. UpgradeData 저장 시도 중...");
             await SaveData(context, gameApiClient, ServerDefine.k_PlayerUpgradeKey, newUpgradeData);
+            _logger.LogInformation("-> 3. UpgradeData 저장 완료!");
 
-            _logger.LogInformation($"New Player Initialized : {context.PlayerId}");
-
+            _logger.LogInformation($"[신규유저 생성 최종 성공] : {context.PlayerId}");
         }
         catch (Exception ex)
         {

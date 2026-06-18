@@ -1,6 +1,5 @@
 using UnityEngine;
 
-
 namespace Hovl
 {
     [ExecuteAlways]
@@ -9,15 +8,12 @@ namespace Hovl
         public ParticleSystem screenEffect;
         public Camera sourceCamera;
 
-        // If the effect is placed in front of the camera, this is a fallback distance in case calculation fails
-        // Also used as the snap distance on start if snapping is enabled
-        public float fallbackDistance = 0.05f;
+        // 카메라 앞으로 얼마나 띄울지 결정하는 거리
+        public float fallbackDistance = 10f; // 2D 환경이면 카메라가 -10에 있으니 10정도가 적당할 수 있습니다.
 
-        // Snap the effect to a fixed distance from the camera automatically on start (play mode only)
-        public bool snapOnStart = true;
-
-        // Parent the effect to the camera on start so it follows the camera
-        public bool parentToCameraOnStart = true;
+        //  [수정됨] 이제 부모 자식 관계를 사용하지 않으므로 불필요한 변수들은 제거 또는 주석 처리해도 됩니다.
+        // public bool snapOnStart = true;
+        // public bool parentToCameraOnStart = true;
 
         void Reset()
         {
@@ -30,65 +26,30 @@ namespace Hovl
             if (sourceCamera == null)
                 sourceCamera = Camera.main;
 
-            //  Start()에 있던 '카메라에 맞추는 로직'을 OnEnable로 가져왔습니다! (풀링 대응)
-            if (Application.isPlaying && snapOnStart)
-            {
-                Camera cam = sourceCamera != null ? sourceCamera : Camera.main;
-                if (cam != null)
-                {
-                    transform.position = cam.transform.position + cam.transform.forward * fallbackDistance;
-
-                    if (parentToCameraOnStart)
-                    {
-                        transform.SetParent(cam.transform, true);
-                        transform.localPosition = Vector3.forward * fallbackDistance;
-                        transform.localRotation = Quaternion.identity;
-                    }
-                }
-            }
-
+            // OnEnable에 있던 복잡한 SetParent 로직을 과감히 삭제합니다.
+            // 이제 LateUpdate에서 매 프레임 완벽하게 추적할 것입니다.
             UpdateSize();
         }
 
-        //void Start()
-        //{
-        //    // Only snap when entering Play mode
-        //    if (!Application.isPlaying)
-        //        return;
-
-        //    if (!snapOnStart)
-        //        return;
-
-        //    Camera cam = sourceCamera != null ? sourceCamera : Camera.main;
-        //    if (cam == null)
-        //        return;
-
-        //    // Place the effect directly in front of the camera at the configured distance
-        //    transform.position = cam.transform.position + cam.transform.forward * fallbackDistance;
-
-        //    // Optionally keep the effect facing the camera by matching rotation (comment out if not desired)
-        //    // transform.rotation = cam.transform.rotation;
-
-        //    // Parent to camera so the effect follows it
-        //    if (parentToCameraOnStart)
-        //    {
-        //        // Make the camera the parent and set a local offset forward at fallbackDistance
-        //        transform.SetParent(cam.transform, true);
-        //        transform.localPosition = Vector3.forward * fallbackDistance;
-        //        transform.localRotation = Quaternion.identity;
-        //    }
-
-        //    UpdateSize();
-        //}
-
         void LateUpdate()
         {
+            //  1. 매 프레임 카메라 위치를 추적 (시네머신 이동이 끝난 후인 LateUpdate가 최적)
+            Camera cam = sourceCamera != null ? sourceCamera : Camera.main;
+            if (cam != null)
+            {
+                // 카메라의 위치 + 앞으로 설정한 거리만큼 떨어져서 따라다님
+                transform.position = cam.transform.position + cam.transform.forward * fallbackDistance;
+
+                // 회전도 카메라와 완벽하게 일치시킴
+                transform.rotation = cam.transform.rotation;
+            }
+
+            // 2. 화면 사이즈 갱신
             UpdateSize();
         }
 
         void OnValidate()
         {
-            // Keep editor changes live
             UpdateSize();
         }
 
@@ -101,7 +62,6 @@ namespace Hovl
             if (cam == null)
                 return;
 
-            // distance from camera to this transform along camera forward (positive in front of camera)
             float dist = cam.transform.InverseTransformPoint(transform.position).z;
             if (dist <= 0f)
                 dist = fallbackDistance;
@@ -119,14 +79,12 @@ namespace Hovl
 
             float width = height * cam.aspect;
 
-            // Set particle start size to match the world size (enable3D start size)
             var main = screenEffect.main;
             main.startSize3D = true;
             main.startSizeX = new ParticleSystem.MinMaxCurve(width);
             main.startSizeY = new ParticleSystem.MinMaxCurve(height);
             main.startSizeZ = new ParticleSystem.MinMaxCurve(1f);
 
-            // If the particle system uses a shape quad / box, update its scale too so emission area matches
             var shape = screenEffect.shape;
             shape.scale = new Vector3(width, height, 1f);
         }

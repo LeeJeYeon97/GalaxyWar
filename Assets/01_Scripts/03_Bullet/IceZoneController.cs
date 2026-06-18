@@ -71,7 +71,7 @@ public class IceZoneController : MonoBehaviour
         }
 
         // 2. 2.5초 뒤 폭발! (데미지 처리)
-        //Managers.Sound.Play(Define.SoundID.Sfx_IceShatter); // 쨍그랑! 터지는 사운드
+        Managers.Sound.Play(Define.SoundID.Sfx_IceExplosion); // 쨍그랑! 터지는 사운드
         int finalHitCount = Physics2D.OverlapCircle(transform.position, _radius, _filter, _colliders);
         for (int i = 0; i < finalHitCount; i++)
         {

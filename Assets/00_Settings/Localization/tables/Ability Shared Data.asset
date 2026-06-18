@@ -431,6 +431,54 @@ MonoBehaviour:
     m_Key: Weapon_PierceBullet_Name
     m_Metadata:
       m_Items: []
+  - m_Id: 20953622075559936
+    m_Key: Passive_PlayerMagnet_Name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 20953793421266944
+    m_Key: Passive_PlayerMagnet_Desc_0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 20953876158107648
+    m_Key: Passive_PlayerMagnet_Desc_1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 20953888652939264
+    m_Key: Passive_PlayerMagnet_Desc_2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 20953897641332736
+    m_Key: Passive_PlayerMagnet_Desc_3
+    m_Metadata:
+      m_Items: []
+  - m_Id: 20953910559789056
+    m_Key: Passive_PlayerMagnet_Desc_4
+    m_Metadata:
+      m_Items: []
+  - m_Id: 22760880803565568
+    m_Key: Weapon_Mine_Name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 22761030573772800
+    m_Key: Weapon_Mine_Desc_0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 22761080200777728
+    m_Key: Weapon_Mine_Desc_1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 22761082864160768
+    m_Key: Weapon_Mine_Desc_2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 22761085426880512
+    m_Key: Weapon_Mine_Desc_3
+    m_Metadata:
+      m_Items: []
+  - m_Id: 22761104729067520
+    m_Key: Weapon_Mine_Desc_4
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

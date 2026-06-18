@@ -21,7 +21,7 @@ MonoBehaviour:
   Damage: 10
   Score: 100
   Exp: 10
-  spawnPhase: 0
+  spawnPhase: 3
   targetChase: 1
   dropTable:
   - itemType: 3
@@ -35,3 +35,9 @@ MonoBehaviour:
   sludgePuddle: {fileID: 0}
   fragmentMeteor: {fileID: 0}
   auraRadius: 0
+  poisonTick: 0
+  poisonDamage: 0
+  poisonRadius: 0
+  explosionRadius: 0
+  explosionDelay: 0
+  explosionTargetRadius: 0

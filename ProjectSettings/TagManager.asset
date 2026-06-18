@@ -26,9 +26,9 @@ TagManager:
   - UI_Background
   - Boss
   - BossBullet
-  - 
-  - 
-  - 
+  - PlayerMagnetic
+  - Mine
+  - MeteorFire
   - 
   - 
   - 

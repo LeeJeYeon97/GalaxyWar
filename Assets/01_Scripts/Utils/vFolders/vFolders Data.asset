@@ -1,0 +1,62 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: adb9c12a8c6c949f7af83a3d238359d0, type: 3}
+  m_Name: vFolders Data
+  m_EditorClassIdentifier: VFolders::VFolders.VFoldersData
+  folderDatas_byGuid:
+    keys:
+    - c83842e1db1c3654fa270205637e9384
+    - 109e9bdd0fcc649c5bc59085c35bdc83
+    - 5fb17f313742dc442897c38748d3377d
+    - 5b6476f6001b9574089defd0685c71ae
+    - df6f81ce1f8f8b84797adbf30149e89e
+    - c744ade6baceb254abcb9ad816147601
+    - 71621acb860a00047b730fbcb055a2b5
+    - 23afa6ca8ecc3de47ababce641bea26a
+    values:
+    - iconNameOrGuid: cs Script Icon
+      colorIndex: 1
+      isIconRecursive: 0
+      isColorRecursive: 0
+    - iconNameOrGuid: 
+      colorIndex: 2
+      isIconRecursive: 0
+      isColorRecursive: 0
+    - iconNameOrGuid: 
+      colorIndex: 10
+      isIconRecursive: 0
+      isColorRecursive: 0
+    - iconNameOrGuid: Material Icon
+      colorIndex: 3
+      isIconRecursive: 0
+      isColorRecursive: 0
+    - iconNameOrGuid: Texture Icon
+      colorIndex: 5
+      isIconRecursive: 0
+      isColorRecursive: 0
+    - iconNameOrGuid: 
+      colorIndex: 7
+      isIconRecursive: 0
+      isColorRecursive: 0
+    - iconNameOrGuid: Settings Icon
+      colorIndex: 0
+      isIconRecursive: 0
+      isColorRecursive: 0
+    - iconNameOrGuid: AudioSource Icon
+      colorIndex: 3
+      isIconRecursive: 0
+      isColorRecursive: 0
+  bookmarks:
+  - guid: 5fb17f313742dc442897c38748d3377d
+  - guid: 23afa6ca8ecc3de47ababce641bea26a
+  - guid: c744ade6baceb254abcb9ad816147601
+  - guid: c83842e1db1c3654fa270205637e9384

@@ -3,68 +3,85 @@ using UnityEngine.UI;
 
 public class InfiniteBackGround : MonoBehaviour
 {
-    [Header("연결할 컴포넌트")]
-    public RawImage backgroundImage;
-    public Transform playerTransform; // 플레이어 위치 (따라갈 대상)
+    [Header("배경 타일 프리팹 (SpriteRenderer 필수)")]
+    public GameObject bgPrefab;
 
-    [Header("스크롤 설정")]
-    public float parallaxSpeed = 0.05f;  // 플레이어 이동 시 배경이 반응하는 속도 (수치가 작을수록 배경이 멀리 있는 느낌)
+    private Transform _playerTransform;
+    private Transform[] _tiles = new Transform[9]; // 3x3 = 총 9개의 타일 풀링
 
-    [Header("회전 감도 설정")]
-    public bool useRotation = true;
-    [Range(0f, 1f)]
-    public float rotationMultiplier = 0.3f;
-    public float rotationSmoothSpeed = 5f;
-
-    // ★ 튀김 현상 방지를 위한 내부 변수 추가
-    private float _prevPlayerRotation;  // 이전 프레임의 플레이어 각도
-    private float _currentBgRotation;   // 배경의 진짜 누적 각도
-    private bool _isInitialized = false;
+    private float _tileSizeX;
+    private float _tileSizeY;
 
     private void Start()
     {
-        playerTransform = Managers.Game._player.transform;
+        // 1. 플레이어 찾기
+        _playerTransform = Managers.Game._player.transform;
+
+        // 2. 맵 초기 세팅
+        InitBackground();
     }
-    void Update()
+
+    private void InitBackground()
     {
-        if (backgroundImage == null || playerTransform == null) return;
-
-        // 1. 이동 스크롤
-        float finalOffsetX = playerTransform.position.x * parallaxSpeed;
-        float finalOffsetY = playerTransform.position.y * parallaxSpeed;
-        backgroundImage.uvRect = new Rect(finalOffsetX, finalOffsetY, 1f, 1f);
-
-        // 2. 부드러운 회전 적용 (튀김 버그 완벽 해결)
-        if (useRotation)
+        // 프리팹의 실제 스프라이트 크기를 자동으로 계산해서 가져옵니다! (수동 입력 방지)
+        SpriteRenderer sr = bgPrefab.GetComponent<SpriteRenderer>();
+        if (sr == null)
         {
-            float currentPlayerRotation = playerTransform.eulerAngles.z;
+            Debug.LogError("[InfiniteMap] 배경 프리팹에 SpriteRenderer가 없습니다!");
+            return;
+        }
 
-            // 게임 시작 직후 딱 한 번, 이전 각도를 현재 각도로 초기화해줍니다.
-            if (!_isInitialized)
+        _tileSizeX = sr.bounds.size.x;
+        _tileSizeY = sr.bounds.size.y;
+
+        int index = 0;
+        // 플레이어를 중심으로 3x3 그리드 형태로 9개의 타일을 찍어냅니다.
+        for (int x = -1; x <= 1; x++)
+        {
+            for (int y = -1; y <= 1; y++)
             {
-                _prevPlayerRotation = currentPlayerRotation;
-                _isInitialized = true;
+                Vector2 spawnPos = new Vector2(_playerTransform.position.x + (x * _tileSizeX),
+                                               _playerTransform.position.y + (y * _tileSizeY));
+
+                // 타일을 생성하고 이 매니저의 자식으로 둡니다.
+                GameObject tile = Instantiate(bgPrefab, spawnPos, Quaternion.identity, transform);
+                _tiles[index] = tile.transform;
+                index++;
+            }
+        }
+    }
+
+    private void LateUpdate()
+    {
+        if (_playerTransform == null) return;
+
+        Vector2 playerPos = _playerTransform.position;
+
+        // 9개의 타일을 매 프레임 검사합니다.
+        for (int i = 0; i < _tiles.Length; i++)
+        {
+            Transform tile = _tiles[i];
+
+            // 플레이어와 현재 타일의 거리 차이 (X축, Y축 각각 계산)
+            float diffX = playerPos.x - tile.position.x;
+            float diffY = playerPos.y - tile.position.y;
+
+            //  [핵심] 타일이 화면 밖으로 완전히 벗어났다면? (타일 크기의 1.5배 이상 멀어짐)
+            // 타일을 반대편 끝(진행 방향의 제일 앞쪽)으로 3칸만큼 텔레포트 시킵니다!
+
+            // 가로축 재배치
+            if (Mathf.Abs(diffX) >= _tileSizeX * 1.5f)
+            {
+                float dirX = diffX > 0 ? 1 : -1;
+                tile.Translate(Vector3.right * dirX * _tileSizeX * 3f);
             }
 
-            // 핵심: 플레이어가 '이번 프레임에 실제로 움직인 순수 각도'를 구합니다.
-            // Mathf.DeltaAngle은 359 -> 0이 될 때 -359가 아니라 +1이라고 똑똑하게 계산해 줍니다!
-            float deltaRotation = Mathf.DeltaAngle(_prevPlayerRotation, currentPlayerRotation);
-
-            // 플레이어가 움직인 만큼 배율을 곱해서 배경 각도에 '누적'시킵니다. (반대로 돌아야 하니 빼줍니다)
-            _currentBgRotation -= deltaRotation * rotationMultiplier;
-
-            // 목표 회전값 세팅
-            Quaternion targetRotation = Quaternion.Euler(0f, 0f, _currentBgRotation);
-
-            // 부드럽게 회전 적용
-            backgroundImage.rectTransform.localRotation = Quaternion.Lerp(
-                backgroundImage.rectTransform.localRotation,
-                targetRotation,
-                Time.deltaTime * rotationSmoothSpeed
-            );
-
-            // 다음 프레임 계산을 위해 현재 각도를 저장해 둡니다.
-            _prevPlayerRotation = currentPlayerRotation;
+            // 세로축 재배치
+            if (Mathf.Abs(diffY) >= _tileSizeY * 1.5f)
+            {
+                float dirY = diffY > 0 ? 1 : -1;
+                tile.Translate(Vector3.up * dirY * _tileSizeY * 3f);
+            }
         }
     }
 }

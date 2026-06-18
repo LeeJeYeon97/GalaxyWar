@@ -287,6 +287,18 @@ MonoBehaviour:
     m_Key: SystempPopup_Title
     m_Metadata:
       m_Items: []
+  - m_Id: 21289079871262720
+    m_Key: LoadingText_Failure
+    m_Metadata:
+      m_Items: []
+  - m_Id: 21289231382106112
+    m_Key: SystemPopup_NetworkTimeoutRetry
+    m_Metadata:
+      m_Items: []
+  - m_Id: 21296672148705280
+    m_Key: LoadingText_Reconnecting
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

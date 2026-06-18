@@ -18,6 +18,7 @@ public class AbilityManager
     {
         if (Managers.Data.AbilityDataDict.Count <= 0) return null;
 
+        Debug.Log("GetRandomAbility 불림");
         // 후보군 필터링 (현재 레벨이 데이터의 MaxLevel보다 작은 것만)
         List<AbilityDataSO> candidates = new List<AbilityDataSO>();
         foreach (var data in Managers.Data.AbilityDataDict.Values)

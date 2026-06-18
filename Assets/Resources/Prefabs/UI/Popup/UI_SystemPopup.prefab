@@ -719,8 +719,8 @@ MonoBehaviour:
   targetGO: {fileID: 0}
   tweenTargetIsTargetGO: 1
   delay: 0
-  duration: 0.5
-  easeType: 18
+  duration: 0.2
+  easeType: 7
   easeCurve:
     serializedVersion: 2
     m_Curve:
@@ -761,8 +761,8 @@ MonoBehaviour:
   forcedTargetType: 0
   autoPlay: 1
   useTargetAsV3: 0
-  endValueFloat: 0.1
-  endValueV3: {x: 0, y: 0, z: 0}
+  endValueFloat: 1
+  endValueV3: {x: 0, y: 1, z: 1}
   endValueV2: {x: 0, y: 0}
   endValueColor: {r: 1, g: 1, b: 1, a: 1}
   endValueString: 
@@ -773,7 +773,7 @@ MonoBehaviour:
     width: 0
     height: 0
   endValueTransform: {fileID: 0}
-  optionalBool0: 1
+  optionalBool0: 0
   optionalBool1: 0
   optionalFloat0: 0
   optionalInt0: 0

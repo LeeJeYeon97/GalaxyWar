@@ -33,6 +33,16 @@ public struct PatternBalanceData
     public float bulletSpeed;
     public float spreadAngle;
     public float angleStep;
+
+    // 워프패턴
+    public float fadeOutTime; // 사라지는 데 걸리는 시간
+    public float fadeInTime;  // 나타나는 데 걸리는 시간
+    public float warpRadius;  // NearPlayer일 경우, 플레이어 주변 몇 거리 안으로 떨어질지
+
+    // 돌진
+    public float warningTime; // 돌진 전 타겟을 응시하며 멈춰있는 시간 (경고)
+    public float dashSpeed;    // 돌진하는 속도
+    public float overshoot;     // 플레이어 위치를 뚫고 얼마나 더 지나갈 것인가 (여유 거리)
 }
 
 // 모든 보스 패턴의 뼈대가 되는 추상 클래스

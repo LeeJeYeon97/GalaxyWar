@@ -16,6 +16,7 @@ public class PlayerController : BaseController, IDamageable
     public PlayerMovement Movement { get; private set; } // 모듈 접근용 변수 추가
     public PlayerCombat Combat { get; private set; }
     public AttackRangeIndicator AttackRangeIndicator { get; private set; }
+    public PlayerMagnetic Magnetic { get; private set; }
 
 
     [Header("State")]
@@ -70,6 +71,9 @@ public class PlayerController : BaseController, IDamageable
 
         Combat = GetComponent<PlayerCombat>();
         if (Combat != null) Combat.Init(this);
+
+        Magnetic = GetComponentInChildren<PlayerMagnetic>();
+        if (Magnetic != null) Magnetic.Init(this);
 
         // HUD업데이트 이벤트 발생
         OnStatusEvent();

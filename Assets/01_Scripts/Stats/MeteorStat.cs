@@ -33,6 +33,17 @@ public class MeteorStat
     public GameObject magmaPuddle;
     public GameObject fragment;
 
+    [Header("Poison Meteor Setting")]
+    public Stat poisonTick = new Stat();
+    public Stat poisonDamage = new Stat();
+    public Stat poisonRadius = new Stat();
+
+    [Header("Explosion Meteor Setting")]
+    public Stat explosionRadius = new Stat();
+    public Stat explosionDelay = new Stat();
+    public Stat explosionTargetRadius = new Stat();
+
+
     public void Init(MeteorStatDataSO data)
     {
         if (data == null) return;
@@ -56,6 +67,16 @@ public class MeteorStat
         sludgePuddle = data.sludgePuddle;
         fragment = data.fragmentMeteor;
         targetChase = data.targetChase;
+
+        poisonTick.Init(data.poisonTick);
+        poisonRadius.Init(data.poisonRadius);
+        poisonDamage.Init(data.poisonDamage);
+
+        explosionDelay.Init(data.explosionDelay);
+        explosionRadius.Init(data.explosionRadius); 
+        explosionTargetRadius.Init(data.explosionTargetRadius); 
+
+
         // ... Ω∫≈» √ ±‚»≠ ...
         Behavior = CreateBehavior(data);
     }

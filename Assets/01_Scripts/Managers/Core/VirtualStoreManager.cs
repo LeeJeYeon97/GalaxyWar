@@ -11,8 +11,6 @@ public class VirtualStoreManager
 {
     private StoreServiceBindings _storeServiceBindings;
 
-    public event Action<string> OnPurchaseSuccess;
-    public event Action<string> OnPurchaseFailed;
 
     private Dictionary<string, int> _itemCosts = new Dictionary<string, int>();
 

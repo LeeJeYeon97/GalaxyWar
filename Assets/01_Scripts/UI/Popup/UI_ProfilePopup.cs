@@ -161,7 +161,7 @@ public class UI_ProfilePopup : UI_Popup
 
         // 3. 성공 팝업 띄우기! 
         // (유저님이 만들어두신 시스템/알림 팝업 UI 클래스 이름으로 교체해서 사용하세요)
-        Managers.UI.ShowPopupUI<UI_SystemPopup>().SetText("구글 계정 연동이 완료되었습니다!");
+        Managers.UI.ShowPopupUI<UI_SystemPopup>().SetInfo("구글 계정 연동이 완료되었습니다!");
     }
     public void OnClickExitButton()
     {

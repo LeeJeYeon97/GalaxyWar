@@ -42,6 +42,12 @@ public struct PlayerStatData
     public bool isHomingShotEnabled;
     public float homingShotDelay;
     public float homingRange;
+
+    [Header("Áö·Ú °ü·Ã")]
+    public bool isMineEnabled;
+    public float minMineDelay;
+    public float mineDamageValue;
+    public float mineExplodeRadius;
 }
 [CreateAssetMenu(fileName = "PlayerStatData", menuName = "ScriptableObjects/PlayerStatData")]
 public class PlayerStatDataSO : ScriptableObject

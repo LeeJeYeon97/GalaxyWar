@@ -110,6 +110,8 @@ public class RemoteConfigManager
                             targetSO.Exp = serverData.Exp;
                             targetSO.targetChase = serverData.targetChase;
 
+
+
                             // 3. PhaseType Enum 변환
                             if (Enum.TryParse(serverData.spawnPhase, true, out Define.PhaseType parsedPhaseType))
                             {
@@ -119,6 +121,15 @@ public class RemoteConfigManager
                             // 2. 특수 기믹 스탯 덮어씌우기
                             targetSO.magmaTick = serverData.magmaTick;
                             targetSO.auraRadius = serverData.auraRadius;
+
+                            targetSO.poisonTick = serverData.poisonTick;
+                            targetSO.poisonDamage = serverData.poisonDamage;
+                            targetSO.poisonRadius = serverData.poisonRadius;
+
+                            targetSO.explosionRadius = serverData.explosionRadius;
+                            targetSO.explosionDelay = serverData.explosionDelay;
+                            targetSO.explosionTargetRadius = serverData.explosionTargetRadius;
+
                             // 아이템 드랍 테이블도 string -> Enum으로 변환해서 다시 덮어씌워 줍니다.
                             if (serverData.dropTable != null)
                             {
@@ -364,6 +375,10 @@ public class RemoteConfigManager
                                 {
                                     splitSO.splitIncreases = serverData.splitBulletData;
                                 }
+                                else if (playerAbilitySO is MineAbilityDataSO mineSO && serverData.mineStats != null)
+                                {
+                                    mineSO.values = serverData.mineStats;
+                                }
                             }
                         }
                     }
@@ -503,6 +518,18 @@ public class RemoteConfigManager
                                 wallGapSO.waveCount = serverData.waveCount;
                                 wallGapSO.waveDelay = serverData.waveDelay;
                                 wallGapSO.bulletSpeed = serverData.bulletSpeed;
+                            }
+                            else if(targetSO is Pattern_WarpSO warpSO)
+                            {
+                                warpSO.warpRadius = serverData.warpRadius;
+                                warpSO.fadeOutTime = serverData.fadeOutTime;
+                                warpSO.fadeInTime = serverData.fadeInTime;
+                            }
+                            else if(targetSO is Pattern_DashSO dashSO)
+                            {
+                                dashSO.dashSpeed = serverData.dashSpeed;
+                                dashSO.overshoot = serverData.overshoot;
+                                dashSO.warningTime = serverData.warningTime;    
                             }
                         }
                         else

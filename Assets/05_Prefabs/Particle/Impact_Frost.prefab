@@ -4711,8 +4711,8 @@ GameObject:
   - component: {fileID: 6648929964555825515}
   - component: {fileID: 6648929964555825512}
   - component: {fileID: 6648929964555825513}
-  - component: {fileID: -2370592396037728893}
-  - component: {fileID: -4502126720807943384}
+  - component: {fileID: 3977773303538894831}
+  - component: {fileID: 6316145937988004238}
   m_Layer: 0
   m_Name: Impact_Frost
   m_TagString: Untagged
@@ -9628,7 +9628,7 @@ ParticleSystemRenderer:
   m_MeshWeighting1: 1
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
---- !u!114 &-2370592396037728893
+--- !u!114 &3977773303538894831
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -9642,7 +9642,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Poolable
   IsUsing: 0
   IsPooled: 1
---- !u!114 &-4502126720807943384
+--- !u!114 &6316145937988004238
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

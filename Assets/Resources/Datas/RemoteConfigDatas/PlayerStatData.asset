@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerStatDataSO
   statData:
     speed: 2.5
+    damage: 0
     maxHp: 200
     maxDefenceCount: 0
     reloadCount: 7
@@ -37,3 +38,7 @@ MonoBehaviour:
     isHomingShotEnabled: 0
     homingShotDelay: 1.5
     homingRange: 5
+    isMineEnabled: 0
+    minMineDelay: 0
+    mineDamageValue: 0
+    mineExplodeRadius: 0

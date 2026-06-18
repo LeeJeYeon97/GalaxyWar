@@ -224,7 +224,7 @@ public class IAPStoreManager
             Managers.PlayerEconomy.HandleEconomyUpdate(response.PlayerEconomyData);
 
             // 인벤토리 티켓 로직 실행
-            ApplyPurchaseBenefit(pid);
+            await ApplyPurchaseBenefit(pid);
 
             // 5. 서버 보상까지 완벽히 끝났으니, 스토어에 "결제 확정(Confirm)해 줘!" 라고 알립니다.
             // (이걸 안 부르면 며칠 뒤에 유저에게 환불 처리됩니다.)
