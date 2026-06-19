@@ -46,8 +46,11 @@ public struct AbilityBalanceData
     public List<int> ShieldAbilityData;
     public List<float> shotTimeDownData;
     public List<float> speedUpData;
+    public List<float> attackRangeUpData;
+    public List<float> magnetData;
     public List<SplitShotLevelData> splitBulletData;
     public List<mineStatData> mineStats;
+    public List<EnergyFieldStatData> energyFieldStats;
 }
 
 // 아이콘(Sprite)을 제외하고 서버에서 받아올 순수 수치들만 담은 구조체

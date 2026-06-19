@@ -37,6 +37,7 @@ public class PlayerCombat : MonoBehaviour
 
     private ContactFilter2D _bossFilter;
 
+    public GameObject energyField;
 
     public void Init(PlayerController player)
     {
@@ -56,8 +57,8 @@ public class PlayerCombat : MonoBehaviour
         _bossFilter.useLayerMask = true;
         _bossFilter.layerMask = LayerMask.GetMask("Boss"); // 보스만 걸러줘!
         _bossFilter.useTriggers = true;
-
-        Reload(); ;
+        energyField.SetActive(false);
+        Reload();
     }
 
     private void Update()
@@ -403,6 +404,23 @@ public class PlayerCombat : MonoBehaviour
     }
     #endregion
 
+    public void ActivateEnergyField(EnergyFieldStatData statData)
+    {
+        // 1. 켜져 있지 않다면 켭니다.
+        if (!energyField.activeSelf)
+        {
+            energyField.SetActive(true);
+        }
+
+        // 2. 로컬 좌표를 0,0으로 강제하여 중심에 고정
+        energyField.transform.localPosition = Vector3.zero;
+
+        // 3. 컨트롤러 초기화 (내부에서 Scale과 Collider 크기 변경)
+        if (energyField.TryGetComponent(out EnergyFieldController controller))
+        {
+            controller.Init(statData.damageValue, statData.radius, statData.damageInterval);
+        }
+    }
     #region Gizmos
     // 플레이어 오브젝트를 클릭(Select)했을 때만 씬 뷰에 그려주는 함수입니다.
     // (항상 보이게 하려면 OnDrawGizmos() 로 이름을 바꾸시면 됩니다!)

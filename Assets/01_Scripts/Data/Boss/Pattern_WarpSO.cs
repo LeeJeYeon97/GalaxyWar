@@ -33,7 +33,7 @@ public class Pattern_WarpSO : BossPatternSO
             sr.DOFade(0f, fadeOutTime).SetId(boss.gameObject);
         }
 
-        yield return new WaitForSeconds(fadeOutTime);
+        yield return new WaitForGameTime(fadeOutTime);
 
         // [수정된 부분] 0부터 2까지의 숫자 중 하나를 랜덤으로 뽑아 Enum으로 변환합니다.
         // Random.Range에서 int를 사용할 때 최대값(exclusive)은 포함되지 않으므로 0, 1, 2가 나옵니다.
@@ -68,11 +68,11 @@ public class Pattern_WarpSO : BossPatternSO
             sr.DOFade(1f, fadeInTime).SetId(boss.gameObject);
         }
 
-        yield return new WaitForSeconds(fadeInTime);
+        yield return new WaitForGameTime(fadeInTime);
 
         // 무적 해제
         if (col != null) col.enabled = true;
 
-        yield return new WaitForSeconds(nextPatternDelay);
+        yield return new WaitForGameTime(nextPatternDelay);
     }
 }

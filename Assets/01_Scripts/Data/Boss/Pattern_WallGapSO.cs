@@ -51,7 +51,7 @@ public class Pattern_WallGapSO : BossPatternSO
             }
 
             // 한 번 쏘고 설정된 시간만큼 대기 (다음 번 쏠 땐 플레이어 위치를 '다시' 조준합니다!)
-            yield return new WaitForSeconds(waveDelay);
+            yield return new WaitForGameTime(waveDelay);
         }
     }
 }

@@ -479,6 +479,54 @@ MonoBehaviour:
     m_Key: Weapon_Mine_Desc_4
     m_Metadata:
       m_Items: []
+  - m_Id: 23115320588914688
+    m_Key: Weapon_EnergyField_Name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 23115399290834944
+    m_Key: Weapon_EnergyField_Desc_0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 23115417754161152
+    m_Key: Weapon_EnergyField_Desc_1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 23115420820197376
+    m_Key: Weapon_EnergyField_Desc_2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 23115436343316480
+    m_Key: Weapon_EnergyField_Desc_3
+    m_Metadata:
+      m_Items: []
+  - m_Id: 23115443339415552
+    m_Key: Weapon_EnergyField_Desc_4
+    m_Metadata:
+      m_Items: []
+  - m_Id: 23139888917532672
+    m_Key: Passive_AttackRangeUp_Name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 23139996459487232
+    m_Key: Passive_AttackRangeUp_Desc_0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 23140016487288832
+    m_Key: Passive_AttackRangeUp_Desc_1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 23140024510992384
+    m_Key: Passive_AttackRangeUp_Desc_2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 23140032878628864
+    m_Key: Passive_AttackRangeUp_Desc_3
+    m_Metadata:
+      m_Items: []
+  - m_Id: 23140041002995712
+    m_Key: Passive_AttackRangeUp_Desc_4
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

@@ -76,6 +76,7 @@ public class Define
         Sfx_Poison,
         Sfx_ExplosionMeteorAlaram,
         Sfx_ExplosionMeteor,
+        Sfx_EnergyFieldHit,
 
     }
     public enum UIEvent
@@ -121,6 +122,7 @@ public class Define
         MineExplosion,
         MeteorPoison,
         MeteorExplosion,
+        EnergyFieldHit,
     }
     public enum AbilityType
     {
@@ -141,6 +143,7 @@ public class Define
         Passive_AllBulletBounceCountUp = 10,// 모든 총알의 바운스(튕기는) 횟수 증가
         Passive_PlayerHeal,
         Passive_PlayerMagnet,
+        Passive_AttackRangeUp,
         
         // 특수 기능
         Passive_SplitBullet = 20,           // 분열 기능 업그레이드
@@ -160,7 +163,7 @@ public class Define
         Weapon_BlackHoleBullet = 107,         // 블랙홀탄
         Weapon_PoisonBullet = 108,            // 맹독탄
         Weapon_Mine = 109,
-        Weapon_ShockBullet = 110,
+        Weapon_EnergyField = 110,
         
     }
     public enum UpgradeType 
@@ -215,7 +218,8 @@ public class Define
         Pinball,
         WallGap,
         Warp,
-        Dash
+        Dash,
+        BlackHole,
     }
     public enum ItemType
     {

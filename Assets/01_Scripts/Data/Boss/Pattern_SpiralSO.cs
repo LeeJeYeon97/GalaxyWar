@@ -26,7 +26,7 @@ public class Pattern_SpiralSO : BossPatternSO
             boss.FireBullet(shootDir, bulletSpeed);
 
             currentAngle += angleStep;
-            yield return new WaitForSeconds(fireDelay);
+            yield return new WaitForGameTime(fireDelay);
         }
     }
 }

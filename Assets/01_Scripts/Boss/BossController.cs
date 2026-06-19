@@ -153,6 +153,11 @@ public class BossController : BaseController, IDamageable
 
         while (!_isDead)
         {
+            // [핵심] 게임이 Pause 상태라면, 다시 Play 상태가 될 때까지 기다립니다.
+            if (Managers.Game.currentGameState == GameState.Pause)
+            {
+                yield return new WaitUntil(() => Managers.Game.currentGameState == GameState.Playing);
+            }
             // 패턴 리스트가 비어있지 않고, 공격 중이 아닐 때
             if (!_isAttacking && Stat.myPatterns.Count > 0)
             {

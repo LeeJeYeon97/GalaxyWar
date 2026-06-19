@@ -29,7 +29,7 @@ public class Pattern_CircleBurstSO : BossPatternSO
                 boss.FireBullet(shootDir, bulletSpeed);
             }
 
-            yield return new WaitForSeconds(burstDelay);
+            yield return new WaitForGameTime(burstDelay);
         }
     }
 }

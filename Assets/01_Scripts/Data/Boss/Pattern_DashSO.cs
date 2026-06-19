@@ -22,7 +22,7 @@ public class Pattern_DashSO : BossPatternSO
             sr.DOColor(Color.red, warningTime).SetId(boss.gameObject);
         }
 
-        yield return new WaitForSeconds(warningTime);
+        yield return new WaitForGameTime(warningTime);
 
         // 💡 [수정된 핵심 포인트] 경고 시간이 끝난 '돌진 직전'에 플레이어의 현재 위치를 조준합니다!
         if (boss._isDead || Managers.Game._player == null) yield break; // 대기하는 동안 플레이어가 죽었을 수도 있으니 안전 검사
@@ -39,7 +39,7 @@ public class Pattern_DashSO : BossPatternSO
         // 3. 콰쾅! 돌진 시작
         boss.transform.DOMove(endPos, duration).SetEase(Ease.InExpo).SetId(boss.gameObject);
 
-        yield return new WaitForSeconds(duration);
+        yield return new WaitForGameTime(duration);
 
         // 4. 돌진 종료 후 원래 색상 복귀
         if (sr != null)
@@ -48,6 +48,6 @@ public class Pattern_DashSO : BossPatternSO
         }
 
         // 5. 공통 후딜레이
-        yield return new WaitForSeconds(nextPatternDelay);
+        yield return new WaitForGameTime(nextPatternDelay);
     }
 }

@@ -24,7 +24,7 @@ public class Pattern_PinballSO : BossPatternSO
 
             boss.FireBullet(shootDir, bulletSpeed);
 
-            yield return new WaitForSeconds(fireDelay);
+            yield return new WaitForGameTime(fireDelay);
         }
     }
 }

@@ -27,11 +27,11 @@ public class Pattern_SniperSO : BossPatternSO
                 if (boss._isDead) yield break;
 
                 boss.FireBullet(shootDir, bulletSpeed);
-                yield return new WaitForSeconds(fireDelay);
+                yield return new WaitForGameTime(fireDelay);
             }
 
             // 3. 유저가 피할 시간을 주고 다시 조준
-            yield return new WaitForSeconds(repeatDelay);
+            yield return new WaitForGameTime(repeatDelay);
         }
     }
 }

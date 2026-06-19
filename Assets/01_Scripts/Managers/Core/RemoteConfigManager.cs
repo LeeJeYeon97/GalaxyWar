@@ -379,6 +379,18 @@ public class RemoteConfigManager
                                 {
                                     mineSO.values = serverData.mineStats;
                                 }
+                                else if (playerAbilitySO is PlayerMagnetAbilityDataSO magnetSO && serverData.magnetData != null)
+                                {
+                                    magnetSO.values = serverData.magnetData;
+                                }
+                                else if (playerAbilitySO is PlayerAttackRangeUpDataSO attackRangeDataSO && serverData.attackRangeUpData != null)
+                                {
+                                    attackRangeDataSO.values = serverData.attackRangeUpData;
+                                }
+                                else if (playerAbilitySO is EnergyFieldAbilityDataSO energySO && serverData.energyFieldStats != null)
+                                {
+                                    energySO.increases = serverData.energyFieldStats;
+                                }
                             }
                         }
                     }
@@ -530,6 +542,16 @@ public class RemoteConfigManager
                                 dashSO.dashSpeed = serverData.dashSpeed;
                                 dashSO.overshoot = serverData.overshoot;
                                 dashSO.warningTime = serverData.warningTime;    
+                            }
+                            else if (targetSO is Pattern_BlackHoleSO blackHoleSO)
+                            {
+                                blackHoleSO.pullForce = serverData.blackHolePullForce;
+                                blackHoleSO.fireDelay = serverData.blackHoleFireDelay;
+                                blackHoleSO.bulletSpeed = serverData.blackHoleBulletSpeed;
+                                blackHoleSO.centerDamage = serverData.blackHoleCenterDamage;
+                                blackHoleSO.travelDistance = serverData.blackHoleTravelDistance;
+                                blackHoleSO.damageInterval = serverData.blackHoleDamageInterval;
+                                blackHoleSO.lifeTime = serverData.blackHoleLifeTime;
                             }
                         }
                         else

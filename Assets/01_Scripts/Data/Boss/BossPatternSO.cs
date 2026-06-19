@@ -43,6 +43,15 @@ public struct PatternBalanceData
     public float warningTime; // 돌진 전 타겟을 응시하며 멈춰있는 시간 (경고)
     public float dashSpeed;    // 돌진하는 속도
     public float overshoot;     // 플레이어 위치를 뚫고 얼마나 더 지나갈 것인가 (여유 거리)
+
+    
+    public float blackHoleFireDelay;
+    public float blackHoleBulletSpeed;     // 발사되어 날아가는 속도
+    public float blackHoleLifeTime;         // 블랙홀이 맵에 존재하는 총 시간
+    public float blackHolePullForce;       // 빨아들이는 힘
+    public float blackHoleCenterDamage;     // 중심부 데미지
+    public float blackHoleDamageInterval; // 데미지 간격
+    public float blackHoleTravelDistance;   //  [추가] 멈추기 전까지 날아갈 거리
 }
 
 // 모든 보스 패턴의 뼈대가 되는 추상 클래스
