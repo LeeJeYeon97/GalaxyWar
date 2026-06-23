@@ -505,7 +505,127 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 20953793421266944
-    m_Localized: 
+    m_Localized: Collection range increased by {0}%
+    m_Metadata:
+      m_Items: []
+  - m_Id: 20953876158107648
+    m_Localized: Collection range increased by {0}%
+    m_Metadata:
+      m_Items: []
+  - m_Id: 20953888652939264
+    m_Localized: Collection range increased by {0}%
+    m_Metadata:
+      m_Items: []
+  - m_Id: 20953897641332736
+    m_Localized: Collection range increased by {0}%
+    m_Metadata:
+      m_Items: []
+  - m_Id: 20953910559789056
+    m_Localized: Collection range increased by {0}%
+    m_Metadata:
+      m_Items: []
+  - m_Id: 22760880803565568
+    m_Localized: Plasma Mine
+    m_Metadata:
+      m_Items: []
+  - m_Id: 22761030573772800
+    m_Localized: Places a mine that deals area damage at regular intervals.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 22761080200777728
+    m_Localized: 'Explosion damage ratio increased by 10%
+
+      Explosion range
+      increased'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 22761082864160768
+    m_Localized: 'Explosion damage ratio increased by 10%
+
+      Explosion range
+      increased'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 22761085426880512
+    m_Localized: 'Explosion damage ratio increased by 10%
+
+      Explosion range
+      increased'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 22761104729067520
+    m_Localized: 'Explosion damage ratio increased by 10%
+
+      Explosion range
+      increased'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 23115320588914688
+    m_Localized: Energy Field
+    m_Metadata:
+      m_Items: []
+  - m_Id: 23115399290834944
+    m_Localized: Generates an energy field that damages nearby enemies.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 23115417754161152
+    m_Localized: 'Damage increased by 10%
+
+      Damage interval reduced by 0.1s
+
+      Range
+      increased by 1'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 23115420820197376
+    m_Localized: 'Damage increased by 10%
+
+      Damage interval reduced by 0.1s
+
+      Range
+      increased by 1'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 23115436343316480
+    m_Localized: 'Damage increased by 10%
+
+      Damage interval reduced by 0.1s
+
+      Range
+      increased by 1'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 23115443339415552
+    m_Localized: 'Damage increased by 10%
+
+      Damage interval reduced by 0.1s
+
+      Range
+      increased by 2'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 23139888917532672
+    m_Localized: Increased Range
+    m_Metadata:
+      m_Items: []
+  - m_Id: 23139996459487232
+    m_Localized: Attack range increased by {0}.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 23140016487288832
+    m_Localized: Attack range increased by {0}.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 23140024510992384
+    m_Localized: Attack range increased by {0}.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 23140032878628864
+    m_Localized: Attack range increased by {0}.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 23140041002995712
+    m_Localized: Attack range increased by {0}.
     m_Metadata:
       m_Items: []
   references:

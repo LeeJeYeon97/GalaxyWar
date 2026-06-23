@@ -261,6 +261,8 @@ public class RemoteConfigManager
                         {
                             // 2. 공통 스탯 (AbilityDataSO 영역) 업데이트
                             targetSO.maxLevel = serverData.maxLevel;
+                            targetSO.isExclude = serverData.isExclude;
+
                             if (Enum.TryParse(serverData.requiredAbility, true, out Define.AbilityType reqAbility))
                             {
                                 targetSO._requiredAbility = reqAbility;

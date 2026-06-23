@@ -26,7 +26,7 @@ public class MeteorFire : MonoBehaviour
                 {
                     Debug.Log("불기둥 맞음");
                     // 불기둥 전용 데미지 적용 (밀어내기 없음!)
-                    player.OnDamage(tickDamage);
+                    player.OnDamage(tickDamage,false, this.gameObject);
                 }
             }
         }

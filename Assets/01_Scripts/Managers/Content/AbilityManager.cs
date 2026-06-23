@@ -39,6 +39,10 @@ public class AbilityManager
                 if (GetCurrentLevel(data._requiredAbility) <= 0)
                     continue;
             }
+            if(data.isExclude == true)
+            {
+                continue;
+            }
 
             // 후보군 등록
             candidates.Add(data);

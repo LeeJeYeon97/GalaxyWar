@@ -14,8 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::UpgradeDataSO
   type: 0
   upgradeName: "\uCCB4\uB825 \uAC15\uD654"
-  iconSprite: {fileID: 21300000, guid: 89f78f41ef69d6147a1a5ae4b9949936, type: 3}
-  upgradeOrder: 0
+  iconSprite: {fileID: 21300000, guid: b404f23bace0ff541a4cd7334a953a19, type: 3}
   levelInfos:
   - cost: 10
     statValue: 10

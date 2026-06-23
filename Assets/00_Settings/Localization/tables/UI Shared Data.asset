@@ -299,6 +299,10 @@ MonoBehaviour:
     m_Key: LoadingText_Reconnecting
     m_Metadata:
       m_Items: []
+  - m_Id: 24691847654952960
+    m_Key: ShopItem_PurchaseComplete
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

@@ -15,13 +15,17 @@ public class PoisonZoneController : MonoBehaviour
     // 잔상 대기 시간: 파티클 생성이 멈춘 후, 화면에 남은 연기들이 마저 사라질 때까지 기다리는 시간입니다.
     // 파티클의 'Start Lifetime' 최대값과 비슷하게 맞추면 정밀합니다.
     public float fadeOutDuration = 1.0f;
-    private ParticleSystem _particleSystem;
+    public ParticleSystem _particleSystem;
 
     private void Awake()
     {
         // 파티클 컴포넌트 캐싱 
         // (만약 파티클이 자식 오브젝트에 들어있다면 GetComponentInChildren<ParticleSystem>()을 사용하세요)
-        _particleSystem = GetComponentInChildren<ParticleSystem>();
+        if(_particleSystem == null)
+        {
+            _particleSystem = GetComponentInChildren<ParticleSystem>();
+        }
+        
     }
 
     public void Init(float damage, float radius, float duration)
@@ -68,7 +72,7 @@ public class PoisonZoneController : MonoBehaviour
                 PlayerController player = collision.GetComponentInParent<PlayerController>();
                 if (player != null)
                 {
-                    player.OnDamage(_tickDamage);
+                    player.OnDamage(_tickDamage,false, this.gameObject);
                 }
             }
         }

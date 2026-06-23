@@ -171,7 +171,7 @@ public class IAPStoreManager
         Debug.Log($"[IAP] 구매 승인 대기 중 (Ask to Buy)");
     }
 
-    //[핵심] 결제 대기 상태(구글/애플에서 결제는 성공했고, 우리가 보상을 줄 차례)
+    //[핵심] 결제 결과 대기 상태(구글/애플에서 결제는 성공했고, 우리가 보상을 줄 차례)
     private async void OnPurchasePending(PendingOrder pending)
     {
         try
@@ -224,7 +224,7 @@ public class IAPStoreManager
             Managers.PlayerEconomy.HandleEconomyUpdate(response.PlayerEconomyData);
 
             // 인벤토리 티켓 로직 실행
-            await ApplyPurchaseBenefit(pid);
+            ApplyPurchaseBenefit(pid);
 
             // 5. 서버 보상까지 완벽히 끝났으니, 스토어에 "결제 확정(Confirm)해 줘!" 라고 알립니다.
             // (이걸 안 부르면 며칠 뒤에 유저에게 환불 처리됩니다.)
@@ -352,9 +352,6 @@ public class IAPStoreManager
 
             // 3. 상품 타입 지정 (광고 제거는 1번만 사는 거니까 비소모성(NonConsumable)이어야 합니다!)
             ProductType pType = (baseId == Define.k_IAP_RemoveAd) ? ProductType.NonConsumable : ProductType.Consumable;
-
-            //// [임시 수정 코드] 구글 캐시를 날리기 위해 묻지도 따지지도 않고 전부 소모성으로 세팅!
-            //ProductType pType = ProductType.Consumable;
 
             // 4. [핵심] 생성자에 baseId와 storeSpecificId를 둘 다 넣어줍니다!
             // 이렇게 해야 IAP가 "내부에서는 IAP_REMOVE_AD로 부르고, 구글한테는 iap_remove_ad로 물어봐야지!" 라고 똑똑하게 작동합니다.
@@ -487,7 +484,7 @@ public class IAPStoreManager
     }
 
     // 결제/복원 성공 시 Economy 인벤토리에 아이템을 넣어주는 공통 함수
-    private async Task ApplyPurchaseBenefit(string productId)
+    private void ApplyPurchaseBenefit(string productId)
     {
         if (productId == Define.k_IAP_RemoveAd)
         {
@@ -497,38 +494,39 @@ public class IAPStoreManager
 
             Managers.AD.IsAdsRemoved = true;
 
-            // 3. [UI] 상점 UI 새로고침 (결제창에서 '보유 중'으로 버튼 변경)
-            // 예시: Managers.UI.FindPopup<UI_ShopPanel>()?.RefreshUI();
+            
 
-            // =======================================================
-            //  4. [서버 동기화] 새로운 익명 계정일 경우를 대비해 서버에 덮어씌우기
-            // =======================================================
-            try
-            {
-                // ① 내 메모리에 들고 있는 플레이어 데이터 원본의 값을 먼저 true로 바꿔줍니다.
-                // (※ Managers.PlayerData.PlayerDataLocal 부분은 대표님이 실제로 데이터를 담아두신 변수명으로 맞춰주세요!)
-                if (Managers.PlayerData.PlayerDataLocal != null)
-                {
-                    Managers.PlayerData.PlayerDataLocal.IsAdsRemoved = true;
+            // UI 보유중으로 바꾸기
 
-                    // ② 그 덩어리 전체를 "PLAYER_DATA"라는 키 값으로 다시 포장합니다.
-                    var data = new Dictionary<string, object>
-                {
-                    { "PLAYER_DATA", Managers.PlayerData.PlayerDataLocal }
-                };
+            //// =======================================================
+            ////  4. [서버 동기화] 새로운 익명 계정일 경우를 대비해 서버에 덮어씌우기
+            //// =======================================================
+            //try
+            //{
+            //    //  내 메모리에 들고 있는 플레이어 데이터 원본의 값을 먼저 true로 바꿔줍니다.
+            //    // (※ Managers.PlayerData.PlayerDataLocal 부분은 대표님이 실제로 데이터를 담아두신 변수명으로 맞춰주세요!)
+            //    if (Managers.PlayerData.PlayerDataLocal != null)
+            //    {
+            //        Managers.PlayerData.PlayerDataLocal.IsAdsRemoved = true;
 
-                    // ③ 통째로 서버에 덮어씌웁니다!
-                    await CloudSaveService.Instance.Data.Player.SaveAsync(data);
+            //        //  그 덩어리 전체를 "PLAYER_DATA"라는 키 값으로 다시 포장합니다.
+            //        var data = new Dictionary<string, object>
+            //    {
+            //        { "PLAYER_DATA", Managers.PlayerData.PlayerDataLocal }
+            //    };
 
-                    Debug.Log("[UGS] PLAYER_DATA 내부의 광고 제거 상태가 성공적으로 갱신되었습니다!");
-                }
-            }
-            catch (System.Exception e)
-            {
-                // 네트워크가 끊겨서 저장을 실패해도 괜찮습니다.
-                // 어차피 구글 영수증은 폰에 남아있어서 다음 번에 게임을 켤 때 또 복구(ApplyPurchaseBenefit)를 시도하기 때문입니다!
-                Debug.LogWarning($"[UGS] 서버 동기화 실패 (다음 접속 시 재시도): {e.Message}");
-            }
+            //        // 통째로 서버에 덮어씌웁니다!
+            //        await CloudSaveService.Instance.Data.Player.SaveAsync(data);
+
+            //        Debug.Log("[UGS] PLAYER_DATA 내부의 광고 제거 상태가 성공적으로 갱신되었습니다!");
+            //    }
+            //}
+            //catch (System.Exception e)
+            //{
+            //    // 네트워크가 끊겨서 저장을 실패해도 괜찮습니다.
+            //    // 어차피 구글 영수증은 폰에 남아있어서 다음 번에 게임을 켤 때 또 복구(ApplyPurchaseBenefit)를 시도하기 때문입니다!
+            //    Debug.LogWarning($"[UGS] 서버 동기화 실패 (다음 접속 시 재시도): {e.Message}");
+            //}
         }
     }
 

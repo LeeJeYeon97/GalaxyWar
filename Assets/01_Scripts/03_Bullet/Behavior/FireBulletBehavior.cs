@@ -24,11 +24,12 @@ public class FireBulletBehavior : IBulletBehavior
         if (activeStat is FireBulletStat stat)
         {
             // 1~5레벨 공통: 맞은 위치에 무조건 마그마 장판 생성
-            GameObject puddleGo = Managers.Resource.Instantiate("Bullets/FirePuddle");
+            GameObject puddleGo = Managers.Effect.Play(Define.EffectType.PlayerFireZone, target.transform.position);
+            //GameObject puddleGo = Managers.Resource.Instantiate("Bullets/FirePuddle");
 
             if (puddleGo != null)
             {
-                puddleGo.transform.position = target.transform.position;
+                //puddleGo.transform.position = target.transform.position;
 
                 // 기본 장판 크기 세팅
                 float size = stat.fireZoneSize.TotalValue;

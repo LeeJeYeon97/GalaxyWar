@@ -182,7 +182,7 @@ public class PlayerController : BaseController, IDamageable
         }
     }
     #region 피격 및 사망
-    public void OnDamage(float damage, bool isCrit = false)
+    public void OnDamage(float damage, bool isCrit = false, GameObject attacker = null)
     {
 #if UNITY_EDITOR
         if(Managers.Data.GameData.playerGod)
@@ -216,6 +216,12 @@ public class PlayerController : BaseController, IDamageable
         // 방어막 없으면
         else
         {
+            // 공격자가 있을 경우 이름과 ID를 가져오고, 없으면 "알 수 없음"으로 처리
+            string attackerName = attacker != null ? attacker.name : "알 수 없음";
+            int attackerID = attacker != null ? attacker.GetInstanceID() : 0;
+
+            // 시간, 데미지, 공격자 이름, 고유 ID를 한 번에 출력
+            Debug.Log($"[피격] 데미지: {damage} | 맞은 시간: {Time.time:F3} | 때린 놈: {attackerName} | 인스턴스 ID: {attackerID}");
             currentHp -= damage;
             Managers.Sound.Play(SoundID.Sfx_PlayerHit);
             // 그냥 히트 이펙트

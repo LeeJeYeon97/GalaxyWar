@@ -4791,6 +4791,8 @@ GameObject:
   - component: {fileID: 2135222606322278289}
   - component: {fileID: 2135222606336454371}
   - component: {fileID: 2135222606336304737}
+  - component: {fileID: 6536437216142619038}
+  - component: {fileID: 2632042347855585355}
   m_Layer: 0
   m_Name: "\uC790\uAE30\uC7A5\uD788\uD2B8"
   m_TagString: Untagged
@@ -9616,6 +9618,34 @@ ParticleSystemRenderer:
   m_MeshWeighting1: 1
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
+--- !u!114 &6536437216142619038
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2135222606322628325}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9dfc2a9e58f7044d9d3bdd8b456ca92, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Poolable
+  IsUsing: 0
+  IsPooled: 1
+--- !u!114 &2632042347855585355
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2135222606322628325}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 591aac7f2a1e1e04db53e738a192da98, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EffectController
+  returnMode: 0
+  customTime: 2
 --- !u!1 &2135222606322629305
 GameObject:
   m_ObjectHideFlags: 0

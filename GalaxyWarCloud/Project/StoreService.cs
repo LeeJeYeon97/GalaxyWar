@@ -140,11 +140,13 @@ public class StoreService
             // 3. [추가] 결제가 완전히 끝났으므로 최신 PlayerData와 Economy 데이터를 모두 불러옵니다.
             var (playerExists, playerData) = await _playerDataService.TryGetPlayerData(context, gameApiClient);
             var economyData = await _playerEconomyService.GetPlayerEconomyData(context, gameApiClient);
+            var upgradeData = await _playerDataService.TryGetPlayerUpgradeData(context, gameApiClient);
 
             return new PlayerDataResponse
             {
                 PlayerData = playerData,
                 PlayerEconomyData = economyData,
+                PlayerUpgradeData = upgradeData,
                 IsNewPlayer = false
             };
         }
@@ -564,11 +566,13 @@ public class StoreService
         // 3. 복구 작업이 끝난 최신 유저 데이터를 클라이언트에 반환합니다.
         var (_, updatedPlayerData) = await _playerDataService.TryGetPlayerData(context, gameApiClient);
         var economyData = await _playerEconomyService.GetPlayerEconomyData(context, gameApiClient);
+        var upgradeData = await _playerDataService.TryGetPlayerUpgradeData(context, gameApiClient);
 
         return new PlayerDataResponse
         {
             PlayerData = updatedPlayerData,
             PlayerEconomyData = economyData,
+            PlayerUpgradeData = upgradeData, //채워주기!
             IsNewPlayer = false
         };
     }

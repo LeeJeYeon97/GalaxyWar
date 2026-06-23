@@ -31,7 +31,6 @@ public class FireZoneController : MonoBehaviour
     {
         // 1. 운석인지 확인
         MeteorController meteor = collision.gameObject.GetComponent<MeteorController>();
-
         if (meteor != null)
         {
             // 2. 이전에 만든 ApplyBurn 함수를 호출하여 화상 상태 이상 부여!

@@ -17,6 +17,7 @@ public struct AbilityBalanceData
 {
     public string type; // Define.AbilityType
     public int maxLevel;
+    public bool isExclude;
     public string requiredAbility;
 
     public string bulletType;
@@ -70,6 +71,7 @@ public abstract class AbilityDataSO : ScriptableObject
 
     public Sprite icon;
     public int maxLevel = 5;
+    public bool isExclude = false;
 
     // 필요한 선행능력
     public Define.AbilityType _requiredAbility = AbilityType.Unknown;

@@ -52,12 +52,16 @@ public class UI_ShopItem : UI_Base
     {
         LocalizationSettings.SelectedLocaleChanged -= OnLocaleChanged;
         LocalizationSettings.SelectedLocaleChanged += OnLocaleChanged;
+
+        Managers.IAPStore.SuccessfullyPurchased -= OnChangedText;
+        Managers.IAPStore.SuccessfullyPurchased += OnChangedText;
     }
 
     //  [추가] 오브젝트가 비활성화되거나 파괴될 때 메모리 누수 방지를 위해 구독을 해제합니다.
     private void OnDisable()
     {
         LocalizationSettings.SelectedLocaleChanged -= OnLocaleChanged;
+        Managers.IAPStore.SuccessfullyPurchased -= OnChangedText;
     }
     // [추가] 유저가 기기나 설정창에서 언어를 바꾸면 유니티가 이 함수를 자동으로 실행해 줍니다.
     private void OnLocaleChanged(Locale locale)
@@ -67,6 +71,11 @@ public class UI_ShopItem : UI_Base
         Debug.Log($"[ShopUI] 언어가 {locale.Identifier.Code}로 변경되어 상점 텍스트를 재갱신합니다.");
         // 언어가 바뀔 때 유저가 그 사이에 보상을 받았을 수도 있으니 상태를 먼저 체크합니다.
         RefreshItemState();
+        UpdateLocalizationTexts();
+    }
+
+    private void OnChangedText(string message)
+    {
         UpdateLocalizationTexts();
     }
     
@@ -126,6 +135,7 @@ public class UI_ShopItem : UI_Base
                         // 상태와 텍스트를 즉시 새로고침
                         // 수정됨: this.transform 대신 btn.transform을 사용하여 '버튼'에서 코인이 터지도록 변경!
                         _ = UIEffectUtil.PlayCoinFlyEffect(btn.transform.position, 10); // 개수도 10개 정도로 늘리면 더 예쁩니다.
+                        Managers.Sound.Play(SoundID.Sfx_GetGold);
                         RefreshItemState();
                         UpdateLocalizationTexts();
                     }
@@ -175,6 +185,14 @@ public class UI_ShopItem : UI_Base
             {
                 GetTMP((int)Texts.Text_Amount).text = $"x{_rData.Rewards[0].Amount}";
             }
+
+            if(_rData.Id == Define.k_IAP_RemoveAd && Managers.PlayerData.PlayerDataLocal.IsAdsRemoved)
+            {
+                GetButton((int)Buttons.Button_Purchase).interactable = false;
+                string textKey = "ShopItem_PurchaseComplete";
+                GetTMP((int)Texts.Text_Price).text = LocalizationSettings.StringDatabase.GetLocalizedString(UI_TABLE_NAME, textKey);
+            }
+
         }
         else if (_vData != null)
         {

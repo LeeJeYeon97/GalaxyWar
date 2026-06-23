@@ -199,7 +199,7 @@ public class BossController : BaseController, IDamageable
     // =========================================================
     // 데미지 처리 및 사망 로직
     // =========================================================
-    public void OnDamage(float damage, bool isCrit = false)
+    public void OnDamage(float damage, bool isCrit = false, GameObject attacker = null)
     {
         if (_isDead) return;
 
@@ -216,6 +216,8 @@ public class BossController : BaseController, IDamageable
         {
             damageText.Init(textPos, Mathf.FloorToInt(damage), isCrit);
         }
+
+        Managers.Sound.Play(Define.SoundID.Sfx_NormalBulletHit);
 
         if (currentHp <= 0)
         {

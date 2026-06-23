@@ -123,6 +123,7 @@ public class Define
         MeteorPoison,
         MeteorExplosion,
         EnergyFieldHit,
+        PlayerFireZone,
     }
     public enum AbilityType
     {

@@ -92,7 +92,7 @@ public class AdsManager
 
     // 전면 광고 쿨타임 (예: 180초 = 3분)
     private float _rewardAdCooldownSeconds = 5f;
-    private float _interstitialAdCooldownSeconds = 180f; // 10분
+    private float _interstitialAdCooldownSeconds = 600f; // 10분
 
     // 레벨플레이 광고 객체
     private LevelPlayBannerAd bannerAd;

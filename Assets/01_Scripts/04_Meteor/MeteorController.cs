@@ -95,7 +95,7 @@ public class MeteorController : BaseController, IDamageable
             PlayerController player = collision.GetComponentInParent<PlayerController>();
             if (player != null)
             {
-                player.OnDamage(Stat.Damage.TotalValue);
+                player.OnDamage(Stat.Damage.TotalValue, false, this.gameObject);
                 _currentDamageTimer = 0f; // 데미지를 줬으니 타이머 초기화
             }
         }
@@ -123,7 +123,7 @@ public class MeteorController : BaseController, IDamageable
                 PlayerController player = collision.GetComponentInParent<PlayerController>();
                 if (player != null)
                 {
-                    player.OnDamage(Stat.Damage.TotalValue);
+                    player.OnDamage(Stat.Damage.TotalValue, false, this.gameObject);
                 }
             }
         }
@@ -150,7 +150,7 @@ public class MeteorController : BaseController, IDamageable
     {
         Stat.Behavior?.OnUpdate(this);
     }
-    public void OnDamage(float damage, bool isCritical = false)
+    public void OnDamage(float damage, bool isCritical = false, GameObject attacker = null)
     {
         if (!gameObject.activeInHierarchy || _currentHp <= 0) return;
 
@@ -170,8 +170,12 @@ public class MeteorController : BaseController, IDamageable
                 Managers.Effect.Play(EffectType.Meteor_ShockHit, transform.position);
                 Managers.Sound.Play(Define.SoundID.Sfx_Lightning_Hit);
             }
+            else
+            {
+                Managers.Sound.Play(Define.SoundID.Sfx_NormalBulletHit);
+            }
 
-            _currentHp -= damage;
+                _currentHp -= damage;
             ShowDamageText(damage, isCritical);
             Visual.PlayHitFlash();
 
@@ -204,7 +208,8 @@ public class MeteorController : BaseController, IDamageable
         if (Status.hasIcePuddleMark)
         {
             // 1. 풀링 매니저에서 얼음 장판 꺼내기
-            GameObject puddleGo = Managers.Resource.Instantiate("Bullets/IcePuddle");
+            GameObject puddleGo = Managers.Effect.Play(Define.EffectType.IceBullet_Explosion, transform.position);
+            //GameObject puddleGo = Managers.Resource.Instantiate("Bullets/IcePuddle");
 
             if (puddleGo != null)
             {
