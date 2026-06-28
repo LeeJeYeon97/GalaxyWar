@@ -48,7 +48,6 @@ public class UI_SettingsPopup : UI_Popup
         // 언어 설정
         SetupCyclicLanguageSelector();
     }
-
     private void SetupToggles()
     {
         // --- BGM 설정 ---

@@ -48,7 +48,8 @@ public class IceBulletBehavior : IBulletBehavior
                         // 속박(Freeze) 및 슬로우 광역 적용
                         // 적이 죽을 때 터지는 '얼음 파편(Ice Shatter)' 예약 마커 부여
                         // (파편 데미지는 기본 데미지의 40% 등으로 기획에 맞게 조절하세요)
-                        nearbyMeteor.Status.AddIcePuddleMark(stat.damage.TotalValue, 2.0f, stat.slowValue.TotalValue);
+                        float damage = bullet.CurDamage;
+                        nearbyMeteor.Status.AddIcePuddleMark(damage, 2.0f, stat.slowValue.TotalValue);
 
                         nearbyMeteor.Status.ApplyFreeze(stat.freezeTime.TotalValue, stat.slowValue.TotalValue, stat.slowTime.TotalValue);
                         

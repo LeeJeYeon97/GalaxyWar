@@ -113,10 +113,15 @@ public class RemoteConfigManager
 
 
                             // 3. PhaseType Enum º¯È¯
-                            if (Enum.TryParse(serverData.spawnPhase, true, out Define.PhaseType parsedPhaseType))
+                            if (Enum.TryParse(serverData.minPhase, true, out Define.PhaseType parsedMinPhaseType))
                             {
-                                targetSO.spawnPhase = parsedPhaseType;
+                                targetSO.minPhase = parsedMinPhaseType;
                             }
+                            if (Enum.TryParse(serverData.maxPhase, true, out Define.PhaseType parsedMaxPhaseType))
+                            {
+                                targetSO.maxPhase = parsedMaxPhaseType;
+                            }
+                            //targetSO.weight = serverData.weight;
 
                             // 2. Æ¯¼ö ±â¹Í ½ºÅÈ µ¤¾î¾º¿ì±â
                             targetSO.magmaTick = serverData.magmaTick;

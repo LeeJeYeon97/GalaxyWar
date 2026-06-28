@@ -21,7 +21,9 @@ MonoBehaviour:
   Damage: 20
   Score: 300
   Exp: 40
-  spawnPhase: 4
+  minPhase: 3
+  maxPhase: 4
+  weight: 30
   targetChase: 1
   dropTable:
   - itemType: 3

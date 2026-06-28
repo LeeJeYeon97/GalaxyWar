@@ -116,7 +116,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UI_HpWarningPopup
   canvasRenderMode: 1
-  maxAlpha: 0.25
+  maxAlpha: 0.5
   flashSpeed: 0.7
 --- !u!1 &6073304941890866451
 GameObject:

@@ -494,8 +494,6 @@ public class IAPStoreManager
 
             Managers.AD.IsAdsRemoved = true;
 
-            
-
             // UI 보유중으로 바꾸기
 
             //// =======================================================
@@ -632,4 +630,5 @@ public class IAPStoreManager
             return false;
         }
     }
+
 }

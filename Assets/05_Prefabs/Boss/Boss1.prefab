@@ -44,6 +44,7 @@ GameObject:
   - component: {fileID: 3438824462657232888}
   - component: {fileID: 2810268638376958326}
   - component: {fileID: 8512639558958862464}
+  - component: {fileID: 2159239501024532431}
   m_Layer: 16
   m_Name: Boss1
   m_TagString: Untagged
@@ -309,3 +310,21 @@ PolygonCollider2D:
       - {x: -0.099999994, y: -0.45}
       - {x: -0.11, y: -0.45}
   m_UseDelaunayMesh: 1
+--- !u!114 &2159239501024532431
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7521002130601087132}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ff8e98497c4a7e042826a8d26f514ba2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StatusEffectReceiver
+  auraBuffEffectPrefab: {fileID: 0}
+  shockDeBuffEffectPrefab: {fileID: 0}
+  hasIcePuddleMark: 0
+  icePuddleDamage: 0
+  icePuddleRadius: 0
+  icePuddleSlowPercent: 0

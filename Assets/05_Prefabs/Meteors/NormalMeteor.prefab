@@ -14,9 +14,9 @@ GameObject:
   - component: {fileID: 7992666610410687526}
   - component: {fileID: 1188643473008936867}
   - component: {fileID: -6167231940959947004}
-  - component: {fileID: -4536323944372638811}
   - component: {fileID: 2581412912446768269}
   - component: {fileID: 6432550161040967635}
+  - component: {fileID: 8193676919574385909}
   m_Layer: 7
   m_Name: NormalMeteor
   m_TagString: Meteor
@@ -151,21 +151,8 @@ MonoBehaviour:
     _baseValue: 0
     _additionalValue: 0
     _multiplier: 1
-  _hasEnteredView: 0
---- !u!114 &-4536323944372638811
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7634854350376040158}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aaa49deacd67842459894086255a0a9a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::MeteorStatus
-  auraBuffEffectPrefab: {fileID: 7185266531788639084, guid: 5380baab2bde6fc4badbce3ca08e5c1d, type: 3}
-  shockDeBuffEffectPrefab: {fileID: 9027514048236820045, guid: effb650189dc5714e9e9801b1cfb3991, type: 3}
+  _isStopped: 0
+  _despawnDistance: 50
 --- !u!114 &2581412912446768269
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -237,3 +224,20 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
+--- !u!114 &8193676919574385909
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7634854350376040158}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ff8e98497c4a7e042826a8d26f514ba2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StatusEffectReceiver
+  shockDeBuffEffectPrefab: {fileID: 9027514048236820045, guid: effb650189dc5714e9e9801b1cfb3991, type: 3}
+  hasIcePuddleMark: 0
+  icePuddleDamage: 0
+  icePuddleRadius: 0
+  icePuddleSlowPercent: 0

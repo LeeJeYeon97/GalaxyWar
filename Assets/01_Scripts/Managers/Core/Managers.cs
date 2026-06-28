@@ -51,6 +51,7 @@ public class Managers : MonoBehaviour
     private LeaderboardManager _leaderboard;
     private UpgradeManager _upgrade;
     private CameraManager _camera;
+    private UpdateManager _versionUpdate;
 
     // ========================================================== //
     // 프로퍼티를 통해 외부에서 접근하도록 설정
@@ -69,6 +70,7 @@ public class Managers : MonoBehaviour
     public static MapManager Map => Instance._map;
     public static EventManager Event => Instance._event;
     public static AdsManager AD => Instance._ad;
+    public static UpdateManager VersisonUpdate => Instance._versionUpdate;
 
     public static LoginManager Login => Instance._login;
     public static PlayerDataManager PlayerData => Instance._playerData;
@@ -134,6 +136,7 @@ public class Managers : MonoBehaviour
             _instance._leaderboard = new LeaderboardManager();
             _instance._upgrade = new UpgradeManager();
             _instance._camera = new CameraManager();
+            _instance._versionUpdate = new UpdateManager();
 
             // 컴포넌트 형태의 매니저들은 여기서 초기화하거나 자식으로 붙임
             _instance._game = Util.GetOrAddComponent<GameManager>(go);

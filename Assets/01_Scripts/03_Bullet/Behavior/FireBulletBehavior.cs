@@ -40,7 +40,8 @@ public class FireBulletBehavior : IBulletBehavior
                 if (puddle != null)
                 {
                     // 장판 컨트롤러가 알아서 스탯(데미지, 지속시간 등)을 바탕으로 화상을 입히도록 넘겨줍니다.
-                    puddle.Init(stat);
+                    float baseDamage = bullet.CurDamage * (stat.fireDamageValue.TotalValue / 100);
+                    puddle.Init(stat, baseDamage);
                 }
             }
         }

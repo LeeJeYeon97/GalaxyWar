@@ -124,18 +124,41 @@ public class StatManager
                 continue;
             }
 
-            if ((int)currentPhase < (int)stat.spawnPhase) continue;
-            
+            // 현재 페이즈가 최소/최대 페이즈 범위를 벗어나면 제외
+            if ((int)currentPhase > (int)stat.maxPhase || (int)currentPhase < (int)stat.minPhase)
+            {
+                continue;
+            }
 
             validStats.Add(stat);
         }
         // 만약 다 걸러져서 바구니에 남은 게 하나도 없다면 null 반환
         if (validStats.Count == 0) return null;
 
-        // 5. 안전하게 모인 바구니 안에서 랜덤으로 하나를 뽑습니다.
-        int randIdx = UnityEngine.Random.Range(0, validStats.Count);
+        // 3. [핵심 추가] 가중치 기반 랜덤 뽑기 (룰렛 휠 방식)
+        // 인스펙터나 데이터에 spawnWeight(가중치)가 있다면 사용하고, 없으면 기본값 1f로 처리합니다.
+        float totalWeight = 0f;
+        foreach (var stat in validStats)
+        {
+            totalWeight += stat.weight;
+        }
 
-        return validStats[randIdx];
+
+        float randomValue = UnityEngine.Random.Range(0f, totalWeight);
+        float currentWeight = 0f;
+
+        // 가중치를 누적해가며 어떤 메테오가 당첨되었는지 확인
+        foreach (var stat in validStats)
+        {
+            currentWeight += stat.weight;
+            if (randomValue <= currentWeight)
+            {
+                return stat;
+            }
+        }
+
+        // 예외 오차 방지용 안전 장치
+        return validStats[0];
 
     }
 

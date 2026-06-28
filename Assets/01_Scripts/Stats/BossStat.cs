@@ -30,16 +30,33 @@ public class BossStat
     {
         originalPrefab = data.originalPrefab;
         bossBulletPrefab = data.bossBulletPrefab;
-
         Type = data.Type;
+        myPatterns = data.myPatterns;
 
-        MaxHp.Init(data.MaxHp);
+        // =========================================================
+        // 1. 스테이지 밸런스 배율 계산
+        // =========================================================
+        
+        // 만약 UGS RemoteConfig로 받아오는 StageData에 증가율(증폭값) 변수가 있다면 그걸 쓰시면 됩니다.
+        float hpIncreaseRate = Managers.Data.StageData.bossHpIncrease;
+        float damageIncreaseRate = Managers.Data.StageData.bossDamageIncrease;
+        float hpMultiplier = 1f + (hpIncreaseRate / 100);
+        float damageMultiplier = 1f + (damageIncreaseRate / 100);
+
+
+        // =========================================================
+        // 2. 배율을 적용하여 최종 스탯 초기화
+        // =========================================================
+
+        // 원본 SO 데이터에 배율을 곱한 뒤 정수로 변환(권장)하여 세팅합니다.
+        MaxHp.Init(Mathf.RoundToInt(data.MaxHp * hpMultiplier));
+
+        Damage.Init(Mathf.RoundToInt(data.Damage * damageMultiplier));
 
         Speed.Init(data.Speed);
 
-        Damage.Init(data.Damage);
-
-        myPatterns = data.myPatterns;
+        // 점수(Score)도 스테이지가 오를수록 더 많이 주도록 배율을 적용할 수 있습니다.
+        Score = data.Score * hpMultiplier;
     }
 }
 

@@ -29,7 +29,10 @@ public struct MeteorBalanceData
     public float Score;
     public float Exp;
 
-    public string spawnPhase;
+    public string minPhase;
+    public string maxPhase;
+    public float weight;
+
     public bool targetChase;
 
     //  특수 기믹 밸런스 수치 추가!
@@ -71,8 +74,13 @@ public class MeteorStatDataSO : ScriptableObject
     public float Score;
     public float Exp;
 
-    public Define.PhaseType spawnPhase;
+    [Header("Phase Settings")]
+    public Define.PhaseType minPhase; // 등장하기 시작하는 페이즈 (예: 2)
+    public Define.PhaseType maxPhase; // 마지막으로 등장하는 페이즈 (예: 3, 즉 4부터는 안 나옴. 0이면 무한히 나옴)
 
+    [Header("Spawn Chance")]
+    public float weight; // 스폰 가중치 (이 값이 높을수록 자주 뽑힘)
+    
     public bool targetChase;
 
     [Header("Drop Item Settings")]

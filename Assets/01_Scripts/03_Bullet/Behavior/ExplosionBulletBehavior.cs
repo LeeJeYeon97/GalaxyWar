@@ -16,7 +16,7 @@ public class ExplosionBulletBehavior : IBulletBehavior
         if (activeStat is ExplosionBulletStat stat)
         {
             float radius = stat.explosionRange.TotalValue;
-            float finalExplosionDmg = stat.damage.TotalValue * (stat.explosionDamage.TotalValue / 100f);
+            float finalExplosionDmg = bullet.CurDamage * (stat.explosionDamage.TotalValue / 100f);
 
             //  1. 레이어 마스크 업데이트: 적(보스, 엘리트)과 메테오 레이어를 모두 포함시킵니다!
             // (유니티에 세팅하신 실제 레이어 이름들을 콤마로 연결해서 넣어주세요)

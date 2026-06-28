@@ -188,7 +188,7 @@ public class PlayerDataManager
             // 서버에서 방금 업데이트된 가장 정확한 최고 스테이지(MaxClearStage)를 리더보드로 보냅니다.
             // 리더보드 설정이 'Keep best(최고 기록 유지)'로 되어 있다면, 
             // 매판마다 기록을 던져도 알아서 최고 스테이지만 저장해 줍니다!
-            if (Managers.Leaderboard != null)
+            if (Managers.Leaderboard != null && isCleared == true)
             {
                 Managers.Leaderboard.SubmitScore(updatedData.MaxClearStage);
             }

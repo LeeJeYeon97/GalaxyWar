@@ -46,7 +46,7 @@ public class MeteorVisual : MonoBehaviour
     {
         if (_spriteRenderer != null && _controller.Status != null)
         {
-            SetColor(_controller.Status.GetCurrentStatusColor());
+            ResetFlashColor();
         }
     }
 

@@ -223,6 +223,14 @@ public class GameManager : MonoBehaviour
         {
             ItemController item = activeItems[i];
 
+            // 아이템이 꺼져있거나 null이면 무시
+            if (item == null || !item.gameObject.activeInHierarchy)
+                continue;
+
+            if(item._data.type != ItemType.Exp)
+            {
+                continue;
+            }
             // 2. 시각적으로 빨려 들어가는 연출 실행
             item.AbsorbToPlayer(_player.transform);
         }

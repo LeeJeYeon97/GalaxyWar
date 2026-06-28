@@ -254,9 +254,11 @@ public class ItemController : MonoBehaviour
         Collider2D col = GetComponent<Collider2D>();
         if (col != null) col.enabled = false;
 
-        // 코루틴으로 유도탄 연출 실행
-        StartCoroutine(CoAbsorb(playerTransform));
-
+        // 오브젝트가 하이어라키에서 활성화된 상태일 때만 코루틴 실행
+        if (this.gameObject.activeInHierarchy)
+        {
+            StartCoroutine(CoAbsorb(playerTransform)); // 실제 코루틴 이름
+        }
         //float duration = UnityEngine.Random.Range(0.4f, 1.0f);
         //
         //// [추가 1] 출발 시간에 랜덤 딜레이를 줘서 "순차적으로 쫘르륵" 날아오게 만듭니다.

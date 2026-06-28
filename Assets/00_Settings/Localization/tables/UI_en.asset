@@ -306,6 +306,11 @@ MonoBehaviour:
     m_Localized: Server request timed out. Would you like to try again?
     m_Metadata:
       m_Items: []
+  - m_Id: 24936066462142464
+    m_Localized: A mandatory update is required for a better gaming experience. Redirecting
+      to the store.
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

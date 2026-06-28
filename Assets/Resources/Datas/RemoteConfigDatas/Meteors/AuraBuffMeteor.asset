@@ -14,14 +14,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MeteorStatDataSO
   Type: 10
   originalPrefabs: {fileID: 5089178002345023113, guid: 5ce1e9a82d535aa44a2b59d3c356bcbc, type: 3}
-  isExclude: 0
+  isExclude: 1
   MaxHp: 25
   MaxSpeed: 0.6
   MinSpeed: 0.4
   Damage: 10
   Score: 500
   Exp: 70
-  spawnPhase: 4
+  minPhase: 0
+  maxPhase: 0
+  weight: 10
   targetChase: 1
   dropTable:
   - itemType: 3
@@ -33,3 +35,9 @@ MonoBehaviour:
   sludgePuddle: {fileID: 0}
   fragmentMeteor: {fileID: 0}
   auraRadius: 2
+  poisonTick: 0
+  poisonDamage: 0
+  poisonRadius: 0
+  explosionRadius: 0
+  explosionDelay: 0
+  explosionTargetRadius: 0

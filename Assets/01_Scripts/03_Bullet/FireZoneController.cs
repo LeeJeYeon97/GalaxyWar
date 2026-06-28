@@ -9,12 +9,12 @@ public class FireZoneController : MonoBehaviour
     private FireBulletStat _stat;
     private float _damage;
 
-    public void Init(FireBulletStat stat)
+    public void Init(FireBulletStat stat, float baseDamage)
     {
         _stat = stat;
 
         // 장판 자체의 공격력 계산 (총알 데미지 * 화염 배율)
-        _damage = _stat.damage.TotalValue * (_stat.fireDamageValue.TotalValue/100);
+        _damage = baseDamage;
 
         ParticleSystem ps = GetComponent<ParticleSystem>();
 

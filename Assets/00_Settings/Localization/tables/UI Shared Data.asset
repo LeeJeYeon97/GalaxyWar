@@ -303,6 +303,10 @@ MonoBehaviour:
     m_Key: ShopItem_PurchaseComplete
     m_Metadata:
       m_Items: []
+  - m_Id: 24936066462142464
+    m_Key: UpdatePopup_Text
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

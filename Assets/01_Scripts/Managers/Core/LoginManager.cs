@@ -29,12 +29,10 @@ public class LoginManager
     public void Init()
     {
         _LoadingPopup = null;
-        //  기존: 무조건 익명(게스트) 로그인부터 시작함
-        // StartAnonymousSignIn();
 
-        // 변경: 구글 플레이 게임즈 '자동 로그인(Silent Login)'을 가장 먼저 시도합니다!
+        // 구글 플레이 게임즈 '자동 로그인(Silent Login)'을 가장 먼저 시도합니다!
 #if UNITY_ANDROID
-        Debug.Log("게임 시작! 구글 자동 로그인을 시도합니다...");
+        Debug.Log("구글 자동 로그인을 시도합니다...");
         LoginGooglePlayGames();
 #else
         // 유니티 에디터나 iOS 환경에서는 구글 로그인이 안 되니 바로 익명 로그인으로 빠집니다.

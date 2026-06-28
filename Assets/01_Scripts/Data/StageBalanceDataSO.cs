@@ -24,6 +24,9 @@ public class StageBalanceDataSO : ScriptableObject
 
     [Header("보스 스테이지 지정 데이터 리스트")]
     public int bossStageInterval = 5;          // 몇 스테이지마다 보스가 나올 것인가? (예: 5)
+    public float bossHpIncrease = 10f;         // 스테이지마다 보스 체력 증가 퍼센트 비율
+    public float bossDamageIncrease = 10f;
+    
 }
 
 [System.Serializable]

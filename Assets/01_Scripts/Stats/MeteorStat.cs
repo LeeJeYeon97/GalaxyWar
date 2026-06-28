@@ -17,10 +17,14 @@ public class MeteorStat
     public Stat Damage = new Stat();
     public Stat Score = new Stat();
     public Stat Exp = new Stat();
-
     public Stat auraRadius = new Stat();
 
-    public Define.PhaseType spawnPhase;
+    [Header("Phase Settings")]
+    public Define.PhaseType minPhase; // 등장하기 시작하는 페이즈 (예: 2)
+    public Define.PhaseType maxPhase; // 마지막으로 등장하는 페이즈 (예: 3, 즉 4부터는 안 나옴. 0이면 무한히 나옴)
+
+    [Header("Spawn Chance")]
+    public float weight; // 스폰 가중치 (이 값이 높을수록 자주 뽑힘)
 
     public bool targetChase;
 
@@ -58,7 +62,10 @@ public class MeteorStat
 
         dropTable = data.dropTable;
 
-        spawnPhase = data.spawnPhase;
+        minPhase = data.minPhase;
+        maxPhase = data.maxPhase;
+        weight = data.weight;
+
         auraRadius.Init(data.auraRadius);
 
         originalPrefabs = data.originalPrefabs;
@@ -75,6 +82,8 @@ public class MeteorStat
         explosionDelay.Init(data.explosionDelay);
         explosionRadius.Init(data.explosionRadius); 
         explosionTargetRadius.Init(data.explosionTargetRadius); 
+
+
 
 
         // ... 스탯 초기화 ...

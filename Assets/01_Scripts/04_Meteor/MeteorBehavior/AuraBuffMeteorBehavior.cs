@@ -59,7 +59,7 @@ public class AuraBuffMeteorBehavior : IMeteorBehavior
                 // 나 자신은 제외하고, 다른 운석들에게만 0.3초짜리 버프를 쏴줍니다!
                 if (otherMeteor != null && otherMeteor != meteor)
                 {
-                    otherMeteor.Status.ReceiveAuraBuff(0.3f);
+                    //otherMeteor.Status.ReceiveAuraBuff(0.3f);
                 }
             }
         }

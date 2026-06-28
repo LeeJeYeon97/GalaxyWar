@@ -304,7 +304,13 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 24691847654952960
-    m_Localized: "\uBCF4\uC720 \uC911"
+    m_Localized: "\uBCF4\uC720\uC911"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 24936066462142464
+    m_Localized: "\uB354 \uB098\uC740 \uAC8C\uC784 \uD658\uACBD\uC744 \uC704\uD574
+      \uD544\uC218 \uC5C5\uB370\uC774\uD2B8\uAC00 \uD544\uC694\uD569\uB2C8\uB2E4.
+      \uC2A4\uD1A0\uC5B4\uB85C \uC774\uB3D9\uD569\uB2C8\uB2E4."
     m_Metadata:
       m_Items: []
   references:

@@ -38,7 +38,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 175, y: 25}
+  m_SizeDelta: {x: 100, y: 15}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6886315281329946441
 CanvasRenderer:
@@ -91,6 +91,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Poolable
   IsUsing: 0
+  IsPooled: 1
 --- !u!114 &5359351951439538346
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -104,7 +105,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UI_HpBar
   _hpSlider: {fileID: 3651010842370466640}
-  _offset: {x: 0, y: -0.7, z: 0}
+  _offset: {x: 0, y: -0.5, z: 0}
 --- !u!1 &9196309163481660909
 GameObject:
   m_ObjectHideFlags: 0

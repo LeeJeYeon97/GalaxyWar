@@ -62,6 +62,18 @@ public class InitManager
                 Debug.Log("Unity Services Initialized Successfully!");
             }
 
+            // [수정] 버전 체크 함수를 비동기로 호출하고 결과를 기다립니다.
+            // 프로퍼티 이름 오타(VersisonUpdate) 반영해 드렸습니다!
+            bool isVersionOk = await Managers.VersisonUpdate.InitAsync();
+
+            if (isVersionOk == false)
+            {
+                // 최신 버전이 아니어서 강제 업데이트 팝업이 떴다면, 
+                // 아래의 로그인 로직을 타지 못하게 여기서 Init 함수를 완전히 종료시킵니다!
+                Debug.LogWarning("구버전 클라이언트 감지: 초기화 및 로그인을 중단합니다.");
+                return;
+            }
+
             OnUnityServiceInit?.Invoke();
 
             // 2. 애널리틱스 동의 상태 세팅
