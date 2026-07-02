@@ -73,8 +73,14 @@ public class ExplosionMeteorBehavior : IMeteorBehavior
 
             //  변경점 1: 스케일은 처음부터 최종 폭발 크기로 빵! 고정해버립니다.
             float targetRadius = meteor.Stat.explosionRadius.TotalValue;
+
+            // [수정된 부분] 부모(메테오)의 스케일이 1이 아닐 경우를 대비해 나누어 줍니다.
+            // 지름 = targetRadius * 2
+            float exactScaleX = (targetRadius * 2f) / meteor.transform.localScale.x;
+            float exactScaleY = (targetRadius * 2f) / meteor.transform.localScale.y;
+
             //  지름(2 * 반지름)만큼 스케일을 키워야 반지름 targetRadius와 일치합니다.
-            indicator.localScale = new Vector3(targetRadius * 2f, targetRadius * 2f, 1f);
+            indicator.localScale = new Vector3(exactScaleX, exactScaleY, 1f);
 
             SpriteRenderer indicatorSr = indicator.GetComponent<SpriteRenderer>();
             if (indicatorSr != null)

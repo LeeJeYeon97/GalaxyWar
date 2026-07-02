@@ -309,4 +309,19 @@ public class MeteorController : BaseController, IDamageable, IStatusTarget
         // 비주얼 컴포넌트를 원래 색상으로 복구
         Visual.SetColor(Color.white);
     }
+    // MeteorController.cs 내부
+    private void OnDrawGizmosSelected()
+    {
+        // 현재 행동이 ExplosionMeteorBehavior 타입일 때만 그립니다.
+        if (Stat.Behavior is ExplosionMeteorBehavior)
+        {
+            Gizmos.color = Color.red;
+            // 폭발 반경(explosionRadius)을 기즈모로 표시
+            Gizmos.DrawWireSphere(transform.position, Stat.explosionRadius.TotalValue);
+
+            // 추가로 감지 반경도 확인하고 싶다면 아래 주석 해제
+            // Gizmos.color = Color.yellow;
+            // Gizmos.DrawWireSphere(transform.position, Stat.explosionTargetRadius.TotalValue);
+        }
+    }
 }
